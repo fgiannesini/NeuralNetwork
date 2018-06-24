@@ -19,6 +19,18 @@ public enum ActivationFunctionType {
         public ActivationFunctionApplyer getActivationFunction() {
             return new TanhFunctionApplyer();
         }
+    },
+    RELU {
+        @Override
+        public ActivationFunctionApplyer getActivationFunction() {
+            return new ReluFunctionApplyer();
+        }
+    },
+    LEAKY_RELU {
+        @Override
+        public ActivationFunctionApplyer getActivationFunction() {
+            return new LeakyReluFunctionApplyer();
+        }
     };
 
     public abstract ActivationFunctionApplyer getActivationFunction();
