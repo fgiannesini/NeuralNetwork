@@ -39,7 +39,7 @@ public class NeuralNetworkModelBuilder {
 
   public NeuralNetworkModelBuilder addLayer(int layerNodeCount) {
     layerNodeCounts.add(layerNodeCount);
-      layerActivationFunctions.add(ActivationFunctionType.NONE);
+      layerActivationFunctions.add(ActivationFunctionType.RELU);
     return this;
   }
 

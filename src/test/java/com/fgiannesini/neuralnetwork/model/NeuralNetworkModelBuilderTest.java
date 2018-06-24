@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-class NeuralNetworkModelTest {
+class NeuralNetworkModelBuilderTest {
 
     @Test
     void create_Network_Model_Missing_InputSize_Throw_Exception() {
@@ -56,7 +56,7 @@ class NeuralNetworkModelTest {
                 () -> Assertions.assertEquals(5, firstLayer.getWeightMatrix().columns),
                 () -> Assertions.assertEquals(1, firstLayer.getBiasMatrix().rows),
                 () -> Assertions.assertEquals(5, firstLayer.getBiasMatrix().columns),
-                () -> Assertions.assertEquals(ActivationFunctionType.NONE, firstLayer.getActivationFunctionType(), "Default layer activation function is not None")
+                () -> Assertions.assertEquals(ActivationFunctionType.RELU, firstLayer.getActivationFunctionType(), "Default layer activation function is not None")
         );
 
         Layer secondLayer = layers.get(1);
