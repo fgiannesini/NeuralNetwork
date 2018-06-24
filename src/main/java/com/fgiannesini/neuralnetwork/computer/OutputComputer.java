@@ -18,10 +18,18 @@ public class OutputComputer {
     }
 
     public float[] compute(float[] input) {
-        FloatMatrix currentMatrix = new FloatMatrix(input);
+        return compute(new FloatMatrix(input)).toArray();
+    }
+
+    public float[][] compute(float[][] input) {
+        FloatMatrix inputMatrix = new FloatMatrix(input).transpose();
+        return compute(inputMatrix).transpose().toArray2();
+    }
+
+    private FloatMatrix compute(FloatMatrix currentMatrix) {
         for (LayerComputer layerComputer : layerComputers) {
             currentMatrix = layerComputer.compute(currentMatrix);
         }
-        return currentMatrix.data;
+        return currentMatrix;
     }
 }

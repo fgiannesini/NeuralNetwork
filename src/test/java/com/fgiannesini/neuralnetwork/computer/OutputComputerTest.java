@@ -12,7 +12,7 @@ import java.util.Arrays;
 class OutputComputerTest {
 
     @Test
-    void compute_output_One_hidden_layer() {
+    void compute_one_dimension_output_with_one_hidden_layer() {
         NeuralNetworkModel model = NeuralNetworkModelBuilder.init()
                 .inputSize(3)
                 .addLayer(4)
@@ -32,7 +32,7 @@ class OutputComputerTest {
     }
 
     @Test
-    void compute_output_Three_hidden_layers() {
+    void compute_one_dimension_output_with_three_hidden_layers() {
         NeuralNetworkModel model = NeuralNetworkModelBuilder.init()
                 .inputSize(3)
                 .addLayer(2)
@@ -51,5 +51,30 @@ class OutputComputerTest {
                 .build()
                 .compute(inputData);
         Assertions.assertArrayEquals(new float[]{39, 39}, output);
+    }
+
+    @Test
+    void compute_two_dimension_output_with_three_hidden_layers() {
+        NeuralNetworkModel model = NeuralNetworkModelBuilder.init()
+                .inputSize(3)
+                .addLayer(2)
+                .addLayer(2)
+                .addLayer(2)
+                .outputSize(2)
+                .useInitializer(InitializerType.ONES)
+                .build();
+
+        float[][] inputData = {
+                {1, 1, 1},
+                {2, 2, 2}
+        };
+
+        float[][] output = OutputComputerBuilder.init()
+                .withModel(model)
+                .withActivationFunction(ActivationFunctionType.NONE)
+                .build()
+                .compute(inputData);
+        float[][] expected = {{39, 39}, {63, 63}};
+        Assertions.assertArrayEquals(expected, output);
     }
 }

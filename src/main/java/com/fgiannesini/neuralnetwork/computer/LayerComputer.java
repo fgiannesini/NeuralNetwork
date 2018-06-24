@@ -15,7 +15,8 @@ public class LayerComputer {
     }
 
     public FloatMatrix compute(FloatMatrix input) {
-        FloatMatrix z = layer.getWeightMatrix().transpose().mmul(input).addi(layer.getBiasMatrix());
+        //Wt.X + b
+        FloatMatrix z = layer.getWeightMatrix().transpose().mmul(input).addiColumnVector(layer.getBiasMatrix());
         return activationFunctionApplyer.apply(z);
     }
 
