@@ -11,8 +11,8 @@ public class NeuralNetworkModelBuilder {
 
   private int inputSize;
   private int outputSize;
-  private List<Integer> layerNodeCounts;
-    private List<ActivationFunctionType> layerActivationFunctions;
+    private final List<Integer> layerNodeCounts;
+    private final List<ActivationFunctionType> layerActivationFunctions;
     private InitializerType initializerType;
     private ActivationFunctionType outputActivationFunctionType;
 
@@ -61,8 +61,7 @@ public class NeuralNetworkModelBuilder {
 
   public NeuralNetworkModel build() {
     checkInputs();
-      NeuralNetworkModel neuralNetworkModel = buildNeuralNetworkModel();
-      return neuralNetworkModel;
+      return buildNeuralNetworkModel();
   }
 
     private NeuralNetworkModel buildNeuralNetworkModel() {

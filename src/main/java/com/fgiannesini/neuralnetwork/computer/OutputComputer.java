@@ -12,7 +12,7 @@ public class OutputComputer {
 
     OutputComputer(NeuralNetworkModel model) {
         layerComputers = model.getLayers().stream()
-                .map(layer -> new LayerComputer(layer))
+                .map(LayerComputer::new)
                 .collect(Collectors.toList());
     }
 

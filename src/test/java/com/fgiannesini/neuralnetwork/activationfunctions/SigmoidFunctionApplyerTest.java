@@ -6,13 +6,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
-class SigmoidFunctionApplyerTest {
+class SigmoidFunctionApplierTest {
 
-    private SigmoidFunctionApplyer sigmoidFunctionApplyer;
+    private SigmoidFunctionApplier sigmoidFunctionApplier;
 
     @BeforeEach
     void setUp() {
-        sigmoidFunctionApplyer = new SigmoidFunctionApplyer();
+        sigmoidFunctionApplier = new SigmoidFunctionApplier();
     }
 
     @Test
@@ -26,6 +26,6 @@ class SigmoidFunctionApplyerTest {
     }
 
     private Executable checkSigmoid(float[] expected, float[] input) {
-        return () -> Assertions.assertArrayEquals(expected, sigmoidFunctionApplyer.apply(new FloatMatrix(input)).data, 0.0001f);
+        return () -> Assertions.assertArrayEquals(expected, sigmoidFunctionApplier.apply(new FloatMatrix(input)).data, 0.0001f);
     }
 }

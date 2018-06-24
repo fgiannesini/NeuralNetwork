@@ -4,34 +4,34 @@ public enum ActivationFunctionType {
 
     NONE {
         @Override
-        public ActivationFunctionApplyer getActivationFunction() {
+        public ActivationFunctionApplier getActivationFunction() {
             return matrix -> matrix;
         }
     },
     SIGMOID {
         @Override
-        public ActivationFunctionApplyer getActivationFunction() {
-            return new SigmoidFunctionApplyer();
+        public ActivationFunctionApplier getActivationFunction() {
+            return new SigmoidFunctionApplier();
         }
     },
     TANH {
         @Override
-        public ActivationFunctionApplyer getActivationFunction() {
-            return new TanhFunctionApplyer();
+        public ActivationFunctionApplier getActivationFunction() {
+            return new TanhFunctionApplier();
         }
     },
     RELU {
         @Override
-        public ActivationFunctionApplyer getActivationFunction() {
-            return new ReluFunctionApplyer();
+        public ActivationFunctionApplier getActivationFunction() {
+            return new ReluFunctionApplier();
         }
     },
     LEAKY_RELU {
         @Override
-        public ActivationFunctionApplyer getActivationFunction() {
-            return new LeakyReluFunctionApplyer();
+        public ActivationFunctionApplier getActivationFunction() {
+            return new LeakyReluFunctionApplier();
         }
     };
 
-    public abstract ActivationFunctionApplyer getActivationFunction();
+    public abstract ActivationFunctionApplier getActivationFunction();
 }

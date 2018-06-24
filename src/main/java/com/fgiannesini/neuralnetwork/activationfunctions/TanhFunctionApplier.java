@@ -1,11 +1,12 @@
 package com.fgiannesini.neuralnetwork.activationfunctions;
 
 import org.jblas.FloatMatrix;
+import org.jblas.MatrixFunctions;
 
-public class ReluFunctionApplyer implements ActivationFunctionApplyer {
+public class TanhFunctionApplier implements ActivationFunctionApplier {
 
     @Override
     public FloatMatrix apply(FloatMatrix input) {
-        return input.max(0);
+        return MatrixFunctions.tanh(input);
     }
 }

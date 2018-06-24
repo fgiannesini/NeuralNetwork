@@ -6,13 +6,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
-class LeakyReluFunctionApplyerTest {
+class LeakyReluFunctionApplierTest {
 
-    private LeakyReluFunctionApplyer sigmoidFunctionApplyer;
+    private LeakyReluFunctionApplier sigmoidFunctionApplier;
 
     @BeforeEach
     void setUp() {
-        sigmoidFunctionApplyer = new LeakyReluFunctionApplyer();
+        sigmoidFunctionApplier = new LeakyReluFunctionApplier();
     }
 
     @Test
@@ -26,6 +26,6 @@ class LeakyReluFunctionApplyerTest {
     }
 
     private Executable checkLeakyRelu(float[] expected, float[] input) {
-        return () -> Assertions.assertArrayEquals(expected, sigmoidFunctionApplyer.apply(new FloatMatrix(input)).data, 0.0001f);
+        return () -> Assertions.assertArrayEquals(expected, sigmoidFunctionApplier.apply(new FloatMatrix(input)).data, 0.0001f);
     }
 }

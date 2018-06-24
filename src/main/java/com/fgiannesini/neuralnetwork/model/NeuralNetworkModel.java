@@ -10,8 +10,8 @@ public class NeuralNetworkModel {
 
   private final int inputSize;
   private final int outputSize;
-  private Initializer initializer;
-  private List<Layer> layers;
+  private final Initializer initializer;
+  private final List<Layer> layers;
 
   public NeuralNetworkModel(int inputSize, int outputSize, Initializer initializer) {
     this.inputSize = inputSize;

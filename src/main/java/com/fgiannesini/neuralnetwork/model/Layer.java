@@ -6,11 +6,11 @@ import org.jblas.FloatMatrix;
 
 public class Layer {
 
-    private int inputLayerSize;
-    private int outputLayerSize;
-    private ActivationFunctionType activationFunctionType;
-    private FloatMatrix weightMatrix;
-    private FloatMatrix biasMatrix;
+    private final int inputLayerSize;
+    private final int outputLayerSize;
+    private final ActivationFunctionType activationFunctionType;
+    private final FloatMatrix weightMatrix;
+    private final FloatMatrix biasMatrix;
 
     public Layer(int inputLayerSize, int outputLayerSize, Initializer initializer, ActivationFunctionType activationFunctionType) {
         this.inputLayerSize = inputLayerSize;

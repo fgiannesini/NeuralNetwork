@@ -6,13 +6,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
-class ReluFunctionApplyerTest {
+class ReluFunctionApplierTest {
 
-    private ReluFunctionApplyer reluFunctionApplyer;
+    private ReluFunctionApplier reluFunctionApplier;
 
     @BeforeEach
     void setUp() {
-        reluFunctionApplyer = new ReluFunctionApplyer();
+        reluFunctionApplier = new ReluFunctionApplier();
     }
 
     @Test
@@ -26,6 +26,6 @@ class ReluFunctionApplyerTest {
     }
 
     private Executable checkRelu(float[] expected, float[] input) {
-        return () -> Assertions.assertArrayEquals(expected, reluFunctionApplyer.apply(new FloatMatrix(input)).data, 0.0001f);
+        return () -> Assertions.assertArrayEquals(expected, reluFunctionApplier.apply(new FloatMatrix(input)).data, 0.0001f);
     }
 }

@@ -3,7 +3,7 @@ package com.fgiannesini.neuralnetwork.activationfunctions;
 import org.jblas.FloatMatrix;
 import org.jblas.MatrixFunctions;
 
-public class SigmoidFunctionApplyer implements ActivationFunctionApplyer {
+public class SigmoidFunctionApplier implements ActivationFunctionApplier {
 
     @Override
     public FloatMatrix apply(FloatMatrix input) {

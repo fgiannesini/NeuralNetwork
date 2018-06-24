@@ -6,13 +6,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
-class TanhFunctionApplyerTest {
+class TanhFunctionApplierTest {
 
-    private TanhFunctionApplyer tanhFunctionApplyer;
+    private TanhFunctionApplier tanhFunctionApplier;
 
     @BeforeEach
     void setUp() {
-        tanhFunctionApplyer = new TanhFunctionApplyer();
+        tanhFunctionApplier = new TanhFunctionApplier();
     }
 
     @Test
@@ -26,6 +26,6 @@ class TanhFunctionApplyerTest {
     }
 
     private Executable checkTanh(float[] expected, float[] input) {
-        return () -> Assertions.assertArrayEquals(expected, tanhFunctionApplyer.apply(new FloatMatrix(input)).data, 0.0001f);
+        return () -> Assertions.assertArrayEquals(expected, tanhFunctionApplier.apply(new FloatMatrix(input)).data, 0.0001f);
     }
 }
