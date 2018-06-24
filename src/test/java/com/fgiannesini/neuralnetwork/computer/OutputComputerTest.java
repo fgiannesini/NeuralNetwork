@@ -15,8 +15,9 @@ class OutputComputerTest {
     void compute_one_dimension_output_with_one_hidden_layer() {
         NeuralNetworkModel model = NeuralNetworkModelBuilder.init()
                 .inputSize(3)
-                .addLayer(4)
+                .addLayer(4, ActivationFunctionType.NONE)
                 .outputSize(2)
+                .outputActivationFunction(ActivationFunctionType.NONE)
                 .useInitializer(InitializerType.ONES)
                 .build();
 
@@ -25,7 +26,6 @@ class OutputComputerTest {
 
         float[] output = OutputComputerBuilder.init()
                 .withModel(model)
-                .withActivationFunction(ActivationFunctionType.NONE)
                 .build()
                 .compute(inputData);
         Assertions.assertArrayEquals(new float[]{17, 17}, output);
@@ -35,10 +35,11 @@ class OutputComputerTest {
     void compute_one_dimension_output_with_three_hidden_layers() {
         NeuralNetworkModel model = NeuralNetworkModelBuilder.init()
                 .inputSize(3)
-                .addLayer(2)
-                .addLayer(2)
-                .addLayer(2)
+                .addLayer(2, ActivationFunctionType.NONE)
+                .addLayer(2, ActivationFunctionType.NONE)
+                .addLayer(2, ActivationFunctionType.NONE)
                 .outputSize(2)
+                .outputActivationFunction(ActivationFunctionType.NONE)
                 .useInitializer(InitializerType.ONES)
                 .build();
 
@@ -47,7 +48,6 @@ class OutputComputerTest {
 
         float[] output = OutputComputerBuilder.init()
                 .withModel(model)
-                .withActivationFunction(ActivationFunctionType.NONE)
                 .build()
                 .compute(inputData);
         Assertions.assertArrayEquals(new float[]{39, 39}, output);
@@ -57,10 +57,11 @@ class OutputComputerTest {
     void compute_two_dimension_output_with_three_hidden_layers() {
         NeuralNetworkModel model = NeuralNetworkModelBuilder.init()
                 .inputSize(3)
-                .addLayer(2)
-                .addLayer(2)
-                .addLayer(2)
+                .addLayer(2, ActivationFunctionType.NONE)
+                .addLayer(2, ActivationFunctionType.NONE)
+                .addLayer(2, ActivationFunctionType.NONE)
                 .outputSize(2)
+                .outputActivationFunction(ActivationFunctionType.NONE)
                 .useInitializer(InitializerType.ONES)
                 .build();
 
@@ -71,7 +72,6 @@ class OutputComputerTest {
 
         float[][] output = OutputComputerBuilder.init()
                 .withModel(model)
-                .withActivationFunction(ActivationFunctionType.NONE)
                 .build()
                 .compute(inputData);
         float[][] expected = {{39, 39}, {63, 63}};

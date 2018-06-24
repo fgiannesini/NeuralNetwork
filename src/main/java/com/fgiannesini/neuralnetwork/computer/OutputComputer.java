@@ -1,6 +1,5 @@
 package com.fgiannesini.neuralnetwork.computer;
 
-import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionApplyer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.FloatMatrix;
 
@@ -11,9 +10,9 @@ public class OutputComputer {
 
     private final List<LayerComputer> layerComputers;
 
-    OutputComputer(NeuralNetworkModel model, ActivationFunctionApplyer activationFunctionApplyer) {
+    OutputComputer(NeuralNetworkModel model) {
         layerComputers = model.getLayers().stream()
-                .map(layer -> new LayerComputer(layer, activationFunctionApplyer))
+                .map(layer -> new LayerComputer(layer))
                 .collect(Collectors.toList());
     }
 

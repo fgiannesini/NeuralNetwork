@@ -1,5 +1,6 @@
 package com.fgiannesini.neuralnetwork.model;
 
+import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import com.fgiannesini.neuralnetwork.initializer.Initializer;
 
 import java.util.ArrayList;
@@ -19,8 +20,8 @@ public class NeuralNetworkModel {
     this.layers = new ArrayList<>();
   }
 
-  public void addLayer(int inputLayerSize, int outputLayerSize) {
-    layers.add(new Layer(inputLayerSize, outputLayerSize, initializer));
+  public void addLayer(int inputLayerSize, int outputLayerSize, ActivationFunctionType activationFunctionType) {
+    layers.add(new Layer(inputLayerSize, outputLayerSize, initializer, activationFunctionType));
   }
 
   public List<Layer> getLayers() {

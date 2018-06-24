@@ -9,9 +9,9 @@ public class LayerComputer {
     private final Layer layer;
     private final ActivationFunctionApplyer activationFunctionApplyer;
 
-    public LayerComputer(Layer layer, ActivationFunctionApplyer activationFunctionApplyer) {
+    public LayerComputer(Layer layer) {
         this.layer = layer;
-        this.activationFunctionApplyer = activationFunctionApplyer;
+        activationFunctionApplyer = layer.getActivationFunctionType().getActivationFunction();
     }
 
     public FloatMatrix compute(FloatMatrix input) {
