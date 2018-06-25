@@ -6,6 +6,6 @@ public class LeakyReluFunctionApplier implements ActivationFunctionApplier {
 
     @Override
     public FloatMatrix apply(FloatMatrix input) {
-        return input.max(input.mul(0.1f));
+        return input.max(input.mul(0.01f));
     }
 }
