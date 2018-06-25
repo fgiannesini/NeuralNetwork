@@ -5,7 +5,7 @@ public enum ActivationFunctionType {
     NONE {
         @Override
         public ActivationFunctionApplier getActivationFunction() {
-            return new NoneFunctionApplier();
+            return new IdentityFunctionApplier();
         }
     },
     SIGMOID {

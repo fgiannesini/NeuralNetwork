@@ -11,6 +11,7 @@ public class ReluFunctionApplier implements ActivationFunctionApplier {
 
     @Override
     public FloatMatrix derivate(FloatMatrix input) {
+        // if input>=0 1, else 0
         return input.ge(0);
     }
 }

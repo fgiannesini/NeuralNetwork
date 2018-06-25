@@ -16,16 +16,30 @@ class ReluFunctionApplierTest {
     }
 
     @Test
-    void nominal() {
+    void apply() {
         Assertions.assertAll(
-                checkRelu(new float[]{0}, new float[]{0}),
-                checkRelu(new float[]{1}, new float[]{1}),
-                checkRelu(new float[]{0}, new float[]{-1}),
-                checkRelu(new float[]{1f, 2f, 3f, 4f, 5f}, new float[]{1, 2, 3, 4, 5})
+                checkReluApply(new float[]{0}, new float[]{0}),
+                checkReluApply(new float[]{1}, new float[]{1}),
+                checkReluApply(new float[]{0}, new float[]{-1}),
+                checkReluApply(new float[]{1f, 2f, 3f, 4f, 5f}, new float[]{1, 2, 3, 4, 5})
         );
     }
 
-    private Executable checkRelu(float[] expected, float[] input) {
+    private Executable checkReluApply(float[] expected, float[] input) {
         return () -> Assertions.assertArrayEquals(expected, reluFunctionApplier.apply(new FloatMatrix(input)).data, 0.0001f);
+    }
+
+    @Test
+    void derivate() {
+        Assertions.assertAll(
+                checkReluDerivate(new float[]{1}, new float[]{0}),
+                checkReluDerivate(new float[]{1}, new float[]{2}),
+                checkReluDerivate(new float[]{0}, new float[]{-2}),
+                checkReluDerivate(new float[]{1f, 1f, 1f, 1f, 1f}, new float[]{1, 2, 3, 4, 5})
+        );
+    }
+
+    private Executable checkReluDerivate(float[] expected, float[] input) {
+        return () -> Assertions.assertArrayEquals(expected, reluFunctionApplier.derivate(new FloatMatrix(input)).data, 0.0001f);
     }
 }

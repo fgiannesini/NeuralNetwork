@@ -16,6 +16,7 @@ public class SigmoidFunctionApplier implements ActivationFunctionApplier {
 
     @Override
     public FloatMatrix derivate(FloatMatrix input) {
-        return FloatMatrix.ones(input.rows,input.columns).subi(input).muli(input);
+        //(1-a)*a
+        return input.neg().addi(1).muli(input);
     }
 }
