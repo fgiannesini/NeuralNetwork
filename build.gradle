@@ -1,16 +1,15 @@
 apply plugin: 'idea'
-apply plugin: 'java'
+apply plugin: 'java-library'
 
 sourceCompatibility = 1.8
-
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    compile group: 'org.jblas', name: 'jblas', version: '1.2.4'
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '+'
+    implementation group: 'org.jblas', name: 'jblas', version: '1.2.4'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '+'
 }
 
 task wrapper(type: Wrapper) {
