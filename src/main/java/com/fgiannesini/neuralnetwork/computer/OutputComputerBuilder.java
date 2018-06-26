@@ -9,7 +9,7 @@ public class OutputComputerBuilder {
     private OutputComputerBuilder() {
     }
 
-    static OutputComputerBuilder init() {
+    public static OutputComputerBuilder init() {
         return new OutputComputerBuilder();
     }
 
@@ -19,6 +19,9 @@ public class OutputComputerBuilder {
     }
 
     public OutputComputer build() {
+        if (neuralNetworkModel == null) {
+            throw new IllegalArgumentException("Missing neural Network");
+        }
         return new OutputComputer(neuralNetworkModel);
     }
 
