@@ -4,6 +4,7 @@ import com.fgiannesini.neuralnetwork.computer.OutputComputer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.FloatMatrix;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class GradientPropagationLearner {
     }
 
     private List<FloatMatrix> getLayerResultMatrices(FloatMatrix input) {
-        List<FloatMatrix> layerResults = outputComputer.computeLayerResults(input);
+        List<FloatMatrix> layerResults = new ArrayList<>();
         Collections.reverse(layerResults);
         return layerResults;
     }

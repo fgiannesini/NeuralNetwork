@@ -7,29 +7,26 @@ import org.jblas.FloatMatrix;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class LayerComputerTest {
+class LayerComputerHelperTest {
 
     @Test
     void compute_on_one_weight() {
         Layer layer = new Layer(1, 1, InitializerType.ONES.getInitializer(), ActivationFunctionType.NONE);
-        LayerComputer layerComputer = new LayerComputer(layer);
-        FloatMatrix output = layerComputer.compute(FloatMatrix.scalar(3f));
+        FloatMatrix output = LayerComputerHelper.computeAFromInput(FloatMatrix.scalar(3f),layer);
         Assertions.assertArrayEquals(new float[]{4}, output.data);
     }
 
     @Test
     void compute_on_weight_array() {
         Layer layer = new Layer(5, 1, InitializerType.ONES.getInitializer(), ActivationFunctionType.NONE);
-        LayerComputer layerComputer = new LayerComputer(layer);
-        FloatMatrix output = layerComputer.compute(FloatMatrix.ones(5).mul(3f));
+        FloatMatrix output = LayerComputerHelper.computeAFromInput(FloatMatrix.ones(5).mul(3f),layer);
         Assertions.assertArrayEquals(new float[]{16}, output.data);
     }
 
     @Test
     void compute_on_weight_matrix() {
         Layer layer = new Layer(5, 2, InitializerType.ONES.getInitializer(), ActivationFunctionType.NONE);
-        LayerComputer layerComputer = new LayerComputer(layer);
-        FloatMatrix output = layerComputer.compute(FloatMatrix.ones(5).mul(3f));
+        FloatMatrix output = LayerComputerHelper.computeAFromInput(FloatMatrix.ones(5).mul(3f),layer);
         Assertions.assertArrayEquals(new float[]{16, 16}, output.data);
     }
 
