@@ -25,7 +25,7 @@ class GradientPropagationLearnerTest {
         OutputComputer outputComputer = OutputComputerBuilder.init()
                 .withModel(neuralNetworkModel)
                 .build();
-        GradientPropagationLearner gradientPropagationLearner = new GradientPropagationLearner(neuralNetworkModel, outputComputer);
+        GradientPropagationLearner gradientPropagationLearner = new GradientPropagationLearner(neuralNetworkModel);
         float[] input = new float[]{1f, 2f, 3f};
         float[] output = new float[]{-1f, -2f};
 

@@ -27,7 +27,7 @@ public class GradientPropagationComputerBuilder {
         OutputComputer outputComputer = OutputComputerBuilder.init()
                 .withModel(neuralNetworkModel)
                 .build();
-        return new GradientPropagationLearner(neuralNetworkModel, outputComputer);
+        return new GradientPropagationLearner(neuralNetworkModel);
     }
 
 }

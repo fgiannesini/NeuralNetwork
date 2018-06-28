@@ -4,7 +4,7 @@ import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionAppli
 import com.fgiannesini.neuralnetwork.model.Layer;
 import org.jblas.FloatMatrix;
 
-class LayerComputerHelper {
+public class LayerComputerHelper {
 
   public static FloatMatrix computeAFromZ(FloatMatrix z, Layer layer) {
     ActivationFunctionApplier activationFunctionApplier = layer.getActivationFunctionType().getActivationFunction();
