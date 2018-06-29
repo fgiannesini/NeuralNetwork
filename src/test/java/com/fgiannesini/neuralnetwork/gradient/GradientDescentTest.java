@@ -14,116 +14,143 @@ import java.util.List;
 
 class GradientDescentTest {
 
-    @Test
-    void learn_on_vector_with_one_hidden_layer_learning_is_optimal() {
-        NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
-                .useInitializer(InitializerType.ONES)
-                .inputSize(3)
-                .addLayer(4, ActivationFunctionType.NONE)
-                .outputSize(2)
-                .outputActivationFunction(ActivationFunctionType.NONE)
-                .build();
-        GradientDescent gradientDescent = new GradientDescent(neuralNetworkModel, 0.01f);
+  @Test
+  void learn_on_vector_with_one_hidden_layer_learning_is_optimal() {
+    NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
+      .useInitializer(InitializerType.ONES)
+      .inputSize(3)
+      .addLayer(4, ActivationFunctionType.NONE)
+      .outputSize(2)
+      .outputActivationFunction(ActivationFunctionType.NONE)
+      .build();
+    GradientDescent gradientDescent = new GradientDescent(neuralNetworkModel, 0.01f);
 
-        float[] input = new float[]{1f, 2f, 3f};
-        float[] output = new float[]{29f, 29f};
+    float[] input = new float[]{1f, 2f, 3f};
+    float[] output = new float[]{29f, 29f};
 
-        NeuralNetworkModel optimizedNeuralNetworkModel = gradientDescent.learn(input, output);
+    NeuralNetworkModel optimizedNeuralNetworkModel = gradientDescent.learn(input, output);
 
-        checkSameNeuralNetworks(neuralNetworkModel, optimizedNeuralNetworkModel);
+    checkSameNeuralNetworks(neuralNetworkModel, optimizedNeuralNetworkModel);
+  }
+
+  @Test
+  void learn_on_matrix_with_one_hidden_layer_learning_is_optimal() {
+    NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
+      .useInitializer(InitializerType.ONES)
+      .inputSize(3)
+      .addLayer(4, ActivationFunctionType.NONE)
+      .outputSize(2)
+      .outputActivationFunction(ActivationFunctionType.NONE)
+      .build();
+    GradientDescent gradientDescent = new GradientDescent(neuralNetworkModel, 0.01f);
+
+    float[][] input = new float[][]{
+      {1f, 2f, 3f},
+      {3f, 2f, 1f}
+    };
+    float[][] output = new float[][]{
+      {29f, 29f},
+      {29f, 29f}
+    };
+
+    NeuralNetworkModel optimizedNeuralNetworkModel = gradientDescent.learn(input, output);
+
+    checkSameNeuralNetworks(neuralNetworkModel, optimizedNeuralNetworkModel);
+
+  }
+
+  @Test
+  void learn_on_vector_with_four_hidden_layers_learning_is_optimal() {
+    NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
+      .useInitializer(InitializerType.ONES)
+      .inputSize(3)
+      .addLayer(4, ActivationFunctionType.NONE)
+      .addLayer(5, ActivationFunctionType.NONE)
+      .addLayer(6, ActivationFunctionType.NONE)
+      .addLayer(5, ActivationFunctionType.NONE)
+      .outputSize(2)
+      .outputActivationFunction(ActivationFunctionType.NONE)
+      .build();
+    GradientDescent gradientDescent = new GradientDescent(neuralNetworkModel, 0.01f);
+
+    float[] input = new float[]{1f, 2f, 3f};
+    float[] output = new float[]{4386f, 4386f};
+
+    NeuralNetworkModel optimizedNeuralNetworkModel = gradientDescent.learn(input, output);
+
+    checkSameNeuralNetworks(neuralNetworkModel, optimizedNeuralNetworkModel);
+  }
+
+  @Test
+  void learn_on_matrix_with_four_hidden_layers_learning_is_optimal() {
+    NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
+      .useInitializer(InitializerType.ONES)
+      .inputSize(3)
+      .addLayer(4, ActivationFunctionType.NONE)
+      .addLayer(5, ActivationFunctionType.NONE)
+      .addLayer(6, ActivationFunctionType.NONE)
+      .addLayer(5, ActivationFunctionType.NONE)
+      .outputSize(2)
+      .outputActivationFunction(ActivationFunctionType.NONE)
+      .build();
+    GradientDescent gradientDescent = new GradientDescent(neuralNetworkModel, 0.01f);
+
+    float[][] input = new float[][]{
+      {1f, 2f, 3f},
+      {3f, 2f, 1f}
+    };
+    float[][] output = new float[][]{
+      {4386f, 4386f},
+      {4386f, 4386f}
+    };
+
+    NeuralNetworkModel optimizedNeuralNetworkModel = gradientDescent.learn(input, output);
+
+    checkSameNeuralNetworks(neuralNetworkModel, optimizedNeuralNetworkModel);
+  }
+
+  @Test
+  void learn_on_matrix_with_four_hidden_layers_with_activation_functions_learning_is_optimal() {
+    NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
+      .useInitializer(InitializerType.ONES)
+      .inputSize(3)
+      .addLayer(4)
+      .addLayer(5)
+      .addLayer(6)
+      .addLayer(5)
+      .outputSize(2)
+      .build();
+    GradientDescent gradientDescent = new GradientDescent(neuralNetworkModel, 0.01f);
+
+    float[][] input = new float[][]{
+      {1f, 2f, 3f},
+      {3f, 2f, 1f}
+    };
+    float[][] output = new float[][]{
+      {1f, 1f},
+      {1f, 1f}
+    };
+
+    NeuralNetworkModel optimizedNeuralNetworkModel = gradientDescent.learn(input, output);
+
+    checkSameNeuralNetworks(neuralNetworkModel, optimizedNeuralNetworkModel);
+  }
+
+  private void checkSameNeuralNetworks(NeuralNetworkModel neuralNetworkModel, NeuralNetworkModel optimizedNeuralNetworkModel) {
+    Assertions.assertAll(
+      () -> Assertions.assertEquals(neuralNetworkModel.getOutputSize(), optimizedNeuralNetworkModel.getOutputSize()),
+      () -> Assertions.assertEquals(neuralNetworkModel.getInputSize(), optimizedNeuralNetworkModel.getInputSize())
+    );
+
+    List<Layer> layers = neuralNetworkModel.getLayers();
+    List<Layer> optimizedLayers = optimizedNeuralNetworkModel.getLayers();
+    List<Executable> executables = new ArrayList<>();
+    for (int i = 1; i < optimizedLayers.size(); i++) {
+      Layer layer = layers.get(i);
+      Layer optimizedLayer = optimizedLayers.get(i);
+      executables.add(() -> Assertions.assertEquals(layer.getWeightMatrix(), optimizedLayer.getWeightMatrix()));
+      executables.add(() -> Assertions.assertEquals(layer.getBiasMatrix(), optimizedLayer.getBiasMatrix()));
     }
-
-    @Test
-    void learn_on_matrix_with_one_hidden_layer_learning_is_optimal() {
-        NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
-                .useInitializer(InitializerType.ONES)
-                .inputSize(3)
-                .addLayer(4, ActivationFunctionType.NONE)
-                .outputSize(2)
-                .outputActivationFunction(ActivationFunctionType.NONE)
-                .build();
-        GradientDescent gradientDescent = new GradientDescent(neuralNetworkModel, 0.01f);
-
-        float[][] input = new float[][]{
-                {1f, 2f, 3f},
-                {3f, 2f, 1f}
-        };
-        float[][] output = new float[][]{
-                {29f, 29f},
-                {29f, 29f}
-        };
-
-        NeuralNetworkModel optimizedNeuralNetworkModel = gradientDescent.learn(input, output);
-
-        checkSameNeuralNetworks(neuralNetworkModel, optimizedNeuralNetworkModel);
-
-    }
-
-    @Test
-    void learn_on_vector_with_four_hidden_layers_learning_is_optimal() {
-        NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
-                .useInitializer(InitializerType.ONES)
-                .inputSize(3)
-                .addLayer(4, ActivationFunctionType.NONE)
-                .addLayer(5, ActivationFunctionType.NONE)
-                .addLayer(6, ActivationFunctionType.NONE)
-                .addLayer(5, ActivationFunctionType.NONE)
-                .outputSize(2)
-                .outputActivationFunction(ActivationFunctionType.NONE)
-                .build();
-        GradientDescent gradientDescent = new GradientDescent(neuralNetworkModel, 0.01f);
-
-        float[] input = new float[]{1f, 2f, 3f};
-        float[] output = new float[]{4836f, 4836f};
-
-        NeuralNetworkModel optimizedNeuralNetworkModel = gradientDescent.learn(input, output);
-
-        checkSameNeuralNetworks(neuralNetworkModel, optimizedNeuralNetworkModel);
-    }
-
-    @Test
-    void learn_on_matrix_with_four_hidden_layers_learning_is_optimal() {
-        NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
-                .useInitializer(InitializerType.ONES)
-                .inputSize(3)
-                .addLayer(4, ActivationFunctionType.NONE)
-                .addLayer(5, ActivationFunctionType.NONE)
-                .addLayer(6, ActivationFunctionType.NONE)
-                .addLayer(5, ActivationFunctionType.NONE)
-                .outputSize(2)
-                .outputActivationFunction(ActivationFunctionType.NONE)
-                .build();
-        GradientDescent gradientDescent = new GradientDescent(neuralNetworkModel, 0.01f);
-
-        float[][] input = new float[][]{
-                {1f, 2f, 3f},
-                {3f, 2f, 1f}
-        };
-        float[][] output = new float[][]{
-                {29f, 29f},
-                {29f, 29f}
-        };
-
-        NeuralNetworkModel optimizedNeuralNetworkModel = gradientDescent.learn(input, output);
-
-        checkSameNeuralNetworks(neuralNetworkModel, optimizedNeuralNetworkModel);
-    }
-
-    private void checkSameNeuralNetworks(NeuralNetworkModel neuralNetworkModel, NeuralNetworkModel optimizedNeuralNetworkModel) {
-        Assertions.assertAll(
-                () -> Assertions.assertEquals(neuralNetworkModel.getOutputSize(), optimizedNeuralNetworkModel.getOutputSize()),
-                () -> Assertions.assertEquals(neuralNetworkModel.getInputSize(), optimizedNeuralNetworkModel.getInputSize())
-        );
-
-        List<Layer> layers = neuralNetworkModel.getLayers();
-        List<Layer> optimizedLayers = optimizedNeuralNetworkModel.getLayers();
-        List<Executable> executables = new ArrayList<>();
-        for (int i = 1; i < optimizedLayers.size(); i++) {
-            Layer layer = layers.get(i);
-            Layer optimizedLayer = optimizedLayers.get(i);
-            executables.add(() -> Assertions.assertEquals(layer.getWeightMatrix(), optimizedLayer.getWeightMatrix()));
-            executables.add(() -> Assertions.assertEquals(layer.getBiasMatrix(), optimizedLayer.getBiasMatrix()));
-        }
-        Assertions.assertAll(executables);
-    }
+    Assertions.assertAll(executables);
+  }
 }
