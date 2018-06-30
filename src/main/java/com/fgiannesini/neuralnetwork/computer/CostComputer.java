@@ -26,7 +26,7 @@ public class CostComputer {
         double inputCount = input.columns;
         DoubleMatrix computedOutput = outputComputer.computeOutput(input);
         DoubleMatrix firstPart = MatrixFunctions.log(computedOutput).muli(output);
-        DoubleMatrix secondPart = MatrixFunctions.log(computedOutput.sub(1).muli(-1)).muli(output.sub(1).muli(-1));
+        DoubleMatrix secondPart = MatrixFunctions.logi(computedOutput.sub(1).muli(-1)).muli(output.sub(1).muli(-1));
         return firstPart.addi(secondPart).sum() / inputCount;
     }
 }

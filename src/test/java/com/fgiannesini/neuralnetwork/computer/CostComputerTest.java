@@ -15,11 +15,11 @@ class CostComputerTest {
                 .useInitializer(InitializerType.ONES)
                 .input(3)
                 .addLayer(4, ActivationFunctionType.NONE)
-                .output(2)
+                .output(2, ActivationFunctionType.SIGMOID)
                 .build();
         double cost = new CostComputer(neuralNetworkModel)
-                .compute(new double[]{1f, 1f, 1f}, new double[]{12, 12});
-        Assertions.assertEquals(0, cost);
+                .compute(new double[]{1f, 1f, 1f}, new double[]{1, 1});
+        Assertions.assertEquals(0, cost, 0.01);
     }
 
     @Test
@@ -28,17 +28,17 @@ class CostComputerTest {
                 .useInitializer(InitializerType.ONES)
                 .input(3)
                 .addLayer(4, ActivationFunctionType.NONE)
-                .output(2)
+                .output(2, ActivationFunctionType.SIGMOID)
                 .build();
         double cost = new CostComputer(neuralNetworkModel)
                 .compute(new double[][]{
                         {1f, 1f, 1f},
                         {1f, 1f, 1f}
                 }, new double[][]{
-                        {12, 12},
-                        {12, 12}
+                        {1, 1},
+                        {1, 1}
                 });
-        Assertions.assertEquals(0, cost);
+        Assertions.assertEquals(0, cost, 0.01);
     }
 
 }
