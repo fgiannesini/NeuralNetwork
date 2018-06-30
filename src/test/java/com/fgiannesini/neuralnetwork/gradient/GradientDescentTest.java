@@ -18,10 +18,9 @@ class GradientDescentTest {
   void learn_on_vector_with_one_hidden_layer_learning_is_optimal() {
     NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
       .useInitializer(InitializerType.ONES)
-      .inputSize(3)
+            .input(3)
       .addLayer(4, ActivationFunctionType.NONE)
-      .outputSize(2)
-      .outputActivationFunction(ActivationFunctionType.NONE)
+            .output(2, ActivationFunctionType.NONE)
       .build();
     GradientDescent gradientDescent = new GradientDescent(neuralNetworkModel, 0.01f);
 
@@ -37,10 +36,9 @@ class GradientDescentTest {
   void learn_on_matrix_with_one_hidden_layer_learning_is_optimal() {
     NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
       .useInitializer(InitializerType.ONES)
-      .inputSize(3)
+            .input(3)
       .addLayer(4, ActivationFunctionType.NONE)
-      .outputSize(2)
-      .outputActivationFunction(ActivationFunctionType.NONE)
+            .output(2, ActivationFunctionType.NONE)
       .build();
     GradientDescent gradientDescent = new GradientDescent(neuralNetworkModel, 0.01f);
 
@@ -63,13 +61,12 @@ class GradientDescentTest {
   void learn_on_vector_with_four_hidden_layers_learning_is_optimal() {
     NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
       .useInitializer(InitializerType.ONES)
-      .inputSize(3)
+            .input(3)
       .addLayer(4, ActivationFunctionType.NONE)
       .addLayer(5, ActivationFunctionType.NONE)
       .addLayer(6, ActivationFunctionType.NONE)
       .addLayer(5, ActivationFunctionType.NONE)
-      .outputSize(2)
-      .outputActivationFunction(ActivationFunctionType.NONE)
+            .output(2, ActivationFunctionType.NONE)
       .build();
     GradientDescent gradientDescent = new GradientDescent(neuralNetworkModel, 0.01f);
 
@@ -85,13 +82,12 @@ class GradientDescentTest {
   void learn_on_matrix_with_four_hidden_layers_learning_is_optimal() {
     NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
       .useInitializer(InitializerType.ONES)
-      .inputSize(3)
+            .input(3)
       .addLayer(4, ActivationFunctionType.NONE)
       .addLayer(5, ActivationFunctionType.NONE)
       .addLayer(6, ActivationFunctionType.NONE)
       .addLayer(5, ActivationFunctionType.NONE)
-      .outputSize(2)
-      .outputActivationFunction(ActivationFunctionType.NONE)
+            .output(2, ActivationFunctionType.NONE)
       .build();
     GradientDescent gradientDescent = new GradientDescent(neuralNetworkModel, 0.01f);
 
@@ -113,12 +109,12 @@ class GradientDescentTest {
   void learn_on_matrix_with_four_hidden_layers_with_activation_functions_learning_is_optimal() {
     NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
       .useInitializer(InitializerType.ONES)
-      .inputSize(3)
+            .input(3)
       .addLayer(4)
       .addLayer(5)
       .addLayer(6)
       .addLayer(5)
-      .outputSize(2)
+            .output(2)
       .build();
     GradientDescent gradientDescent = new GradientDescent(neuralNetworkModel, 0.01f);
 

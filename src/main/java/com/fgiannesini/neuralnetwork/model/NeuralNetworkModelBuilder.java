@@ -27,15 +27,21 @@ public class NeuralNetworkModelBuilder {
         return new NeuralNetworkModelBuilder();
     }
 
-  public NeuralNetworkModelBuilder inputSize(int inputSize) {
+    public NeuralNetworkModelBuilder input(int inputSize) {
     this.inputSize = inputSize;
     return this;
   }
 
-  public NeuralNetworkModelBuilder outputSize(int outputSize) {
+    public NeuralNetworkModelBuilder output(int outputSize) {
     this.outputSize = outputSize;
     return this;
   }
+
+    public NeuralNetworkModelBuilder output(int outputSize, ActivationFunctionType outputActivationFunctionType) {
+        this.outputSize = outputSize;
+        this.outputActivationFunctionType = outputActivationFunctionType;
+        return this;
+    }
 
   public NeuralNetworkModelBuilder addLayer(int layerNodeCount) {
     layerNodeCounts.add(layerNodeCount);
@@ -51,11 +57,6 @@ public class NeuralNetworkModelBuilder {
 
     public NeuralNetworkModelBuilder useInitializer(InitializerType type) {
         this.initializerType = type;
-        return this;
-    }
-
-    public NeuralNetworkModelBuilder outputActivationFunction(ActivationFunctionType outputActivationFunctionType) {
-        this.outputActivationFunctionType = outputActivationFunctionType;
         return this;
     }
 

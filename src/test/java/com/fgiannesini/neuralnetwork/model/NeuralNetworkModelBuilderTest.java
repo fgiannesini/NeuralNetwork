@@ -13,14 +13,14 @@ class NeuralNetworkModelBuilderTest {
         Assertions.assertThrows(IllegalArgumentException.class, () -> NeuralNetworkModelBuilder.init()
                 .addLayer(5)
                 .addLayer(7)
-                .outputSize(10)
+                .output(10)
                 .build());
     }
 
     @Test
     void create_Network_Model_Missing_OutputSize_Throw_Exception() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> NeuralNetworkModelBuilder.init()
-                .inputSize(10)
+                .input(10)
                 .addLayer(5)
                 .addLayer(7)
                 .build());
@@ -29,17 +29,17 @@ class NeuralNetworkModelBuilderTest {
     @Test
     void create_Network_Model_Missing_Layer_Throw_Exception() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> NeuralNetworkModelBuilder.init()
-                .inputSize(10)
-                .outputSize(10)
+                .input(10)
+                .output(10)
                 .build());
     }
 
     @Test
     void create_Network_Model_Default_Activation_Function() {
         NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
-                .inputSize(10)
+                .input(10)
                 .addLayer(5)
-                .outputSize(3)
+                .output(3)
                 .build();
 
         Assertions.assertAll(
@@ -72,11 +72,10 @@ class NeuralNetworkModelBuilderTest {
   @Test
   void create_Network_Model_Override_Activation_Function() {
       NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
-      .inputSize(10)
+              .input(10)
               .addLayer(5, ActivationFunctionType.NONE)
               .addLayer(7, ActivationFunctionType.NONE)
-      .outputSize(10)
-              .outputActivationFunction(ActivationFunctionType.SIGMOID)
+              .output(10, ActivationFunctionType.SIGMOID)
       .build();
 
       Assertions.assertAll(

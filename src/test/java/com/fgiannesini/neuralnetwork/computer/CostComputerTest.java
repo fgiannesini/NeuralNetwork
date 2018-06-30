@@ -13,9 +13,9 @@ class CostComputerTest {
     void compute_cost_on_vector_result_is_zero() {
         NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                 .useInitializer(InitializerType.ONES)
-                .inputSize(3)
+                .input(3)
                 .addLayer(4, ActivationFunctionType.NONE)
-                .outputSize(2)
+                .output(2)
                 .build();
         float cost = new CostComputer(neuralNetworkModel)
                 .compute(new float[]{1f, 1f, 1f}, new float[]{12, 12});
@@ -26,9 +26,9 @@ class CostComputerTest {
     void compute_cost_on_matrix_cost_is_zero() {
         NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                 .useInitializer(InitializerType.ONES)
-                .inputSize(3)
+                .input(3)
                 .addLayer(4, ActivationFunctionType.NONE)
-                .outputSize(2)
+                .output(2)
                 .build();
         float cost = new CostComputer(neuralNetworkModel)
                 .compute(new float[][]{

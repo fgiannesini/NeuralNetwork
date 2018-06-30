@@ -14,10 +14,9 @@ class OutputComputerTest {
     @Test
     void compute_one_dimension_output_with_one_hidden_layer() {
         NeuralNetworkModel model = NeuralNetworkModelBuilder.init()
-                .inputSize(3)
+                .input(3)
                 .addLayer(4, ActivationFunctionType.NONE)
-                .outputSize(2)
-                .outputActivationFunction(ActivationFunctionType.NONE)
+                .output(2, ActivationFunctionType.NONE)
                 .useInitializer(InitializerType.ONES)
                 .build();
 
@@ -34,12 +33,11 @@ class OutputComputerTest {
     @Test
     void compute_one_dimension_output_with_three_hidden_layers() {
         NeuralNetworkModel model = NeuralNetworkModelBuilder.init()
-                .inputSize(3)
+                .input(3)
                 .addLayer(2, ActivationFunctionType.NONE)
                 .addLayer(2, ActivationFunctionType.NONE)
                 .addLayer(2, ActivationFunctionType.NONE)
-                .outputSize(2)
-                .outputActivationFunction(ActivationFunctionType.NONE)
+                .output(2, ActivationFunctionType.NONE)
                 .useInitializer(InitializerType.ONES)
                 .build();
 
@@ -56,12 +54,11 @@ class OutputComputerTest {
     @Test
     void compute_two_dimension_output_with_three_hidden_layers() {
         NeuralNetworkModel model = NeuralNetworkModelBuilder.init()
-                .inputSize(3)
+                .input(3)
                 .addLayer(2, ActivationFunctionType.NONE)
                 .addLayer(2, ActivationFunctionType.NONE)
                 .addLayer(2, ActivationFunctionType.NONE)
-                .outputSize(2)
-                .outputActivationFunction(ActivationFunctionType.NONE)
+                .output(2, ActivationFunctionType.NONE)
                 .useInitializer(InitializerType.ONES)
                 .build();
 
