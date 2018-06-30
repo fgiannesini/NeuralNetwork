@@ -1,16 +1,16 @@
 package com.fgiannesini.neuralnetwork.activationfunctions;
 
-import org.jblas.FloatMatrix;
+import org.jblas.DoubleMatrix;
 
 public class IdentityFunctionApplier implements ActivationFunctionApplier {
 
     @Override
-    public FloatMatrix apply(FloatMatrix input) {
+    public DoubleMatrix apply(DoubleMatrix input) {
         return input.dup();
     }
 
     @Override
-    public FloatMatrix derivate(FloatMatrix input) {
+    public DoubleMatrix derivate(DoubleMatrix input) {
         return input.dup();
     }
 }

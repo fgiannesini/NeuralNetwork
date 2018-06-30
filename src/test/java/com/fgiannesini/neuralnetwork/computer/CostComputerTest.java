@@ -17,8 +17,8 @@ class CostComputerTest {
                 .addLayer(4, ActivationFunctionType.NONE)
                 .output(2)
                 .build();
-        float cost = new CostComputer(neuralNetworkModel)
-                .compute(new float[]{1f, 1f, 1f}, new float[]{12, 12});
+        double cost = new CostComputer(neuralNetworkModel)
+                .compute(new double[]{1f, 1f, 1f}, new double[]{12, 12});
         Assertions.assertEquals(0, cost);
     }
 
@@ -30,11 +30,11 @@ class CostComputerTest {
                 .addLayer(4, ActivationFunctionType.NONE)
                 .output(2)
                 .build();
-        float cost = new CostComputer(neuralNetworkModel)
-                .compute(new float[][]{
+        double cost = new CostComputer(neuralNetworkModel)
+                .compute(new double[][]{
                         {1f, 1f, 1f},
                         {1f, 1f, 1f}
-                }, new float[][]{
+                }, new double[][]{
                         {12, 12},
                         {12, 12}
                 });

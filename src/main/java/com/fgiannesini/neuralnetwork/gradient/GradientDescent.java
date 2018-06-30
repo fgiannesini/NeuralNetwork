@@ -5,7 +5,7 @@ import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import com.fgiannesini.neuralnetwork.computer.LayerComputerHelper;
 import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
-import org.jblas.FloatMatrix;
+import org.jblas.DoubleMatrix;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,15 +13,15 @@ import java.util.List;
 
 public class GradientDescent implements LearningAlgorithm {
   private NeuralNetworkModel neuralNetworkModel;
-  private float learningRate;
+    private double learningRate;
 
-  GradientDescent(NeuralNetworkModel neuralNetworkModel, float learningRate) {
+    GradientDescent(NeuralNetworkModel neuralNetworkModel, double learningRate) {
     this.neuralNetworkModel = neuralNetworkModel.clone();
     this.learningRate = learningRate;
   }
 
   @Override
-  public NeuralNetworkModel learn(FloatMatrix inputMatrix, FloatMatrix y) {
+  public NeuralNetworkModel learn(DoubleMatrix inputMatrix, DoubleMatrix y) {
     List<GradientDescentLayerResult> gradientDescentLayerData = launchForwardComputation(inputMatrix);
     List<GradientDescentCorrection> gradientDescentCorrections = launchBackwardComputation(gradientDescentLayerData, y, inputMatrix);
     return applyGradientDescentCorrections(gradientDescentCorrections);
@@ -38,8 +38,8 @@ public class GradientDescent implements LearningAlgorithm {
     return neuralNetworkModel;
   }
 
-  private List<GradientDescentCorrection> launchBackwardComputation(List<GradientDescentLayerResult> gradientDescentLayerData, FloatMatrix y,
-                                                                    FloatMatrix inputMatrix) {
+    private List<GradientDescentCorrection> launchBackwardComputation(List<GradientDescentLayerResult> gradientDescentLayerData, DoubleMatrix y,
+                                                                      DoubleMatrix inputMatrix) {
     List<GradientDescentCorrection> gradientDescentCorrections = new ArrayList<>(gradientDescentLayerData.size());
     List<GradientDescentLayerResult> reverseGradientDescentLayerData = new ArrayList<>(gradientDescentLayerData);
     Collections.reverse(reverseGradientDescentLayerData);
@@ -47,9 +47,9 @@ public class GradientDescent implements LearningAlgorithm {
 
     GradientDescentLayerResult currentGradientDescentLayerResult = reverseGradientDescentLayerData.get(0);
     GradientDescentLayerResult nextGradientDescentLayerResult = reverseGradientDescentLayerData.get(1);
-    FloatMatrix dz = currentGradientDescentLayerResult.getaLayerResults().sub(y); //dZ2 = A2 - Y
-    FloatMatrix weightCorrection = dz.mmul(nextGradientDescentLayerResult.getaLayerResults().transpose()).divi(inputCount); //dW2 = 1/m * dZ2 * A1t
-    FloatMatrix biasCorrection = dz.rowSums().divi(inputCount); //dB2 = 1/m * sum(dZ2)
+        DoubleMatrix dz = currentGradientDescentLayerResult.getaLayerResults().sub(y); //dZ2 = A2 - Y
+        DoubleMatrix weightCorrection = dz.mmul(nextGradientDescentLayerResult.getaLayerResults().transpose()).divi(inputCount); //dW2 = 1/m * dZ2 * A1t
+        DoubleMatrix biasCorrection = dz.rowSums().divi(inputCount); //dB2 = 1/m * sum(dZ2)
 
     gradientDescentCorrections.add(new GradientDescentCorrection(weightCorrection, biasCorrection));
 
@@ -77,15 +77,15 @@ public class GradientDescent implements LearningAlgorithm {
     return gradientDescentCorrections;
   }
 
-  private List<GradientDescentLayerResult> launchForwardComputation(FloatMatrix inputMatrix) {
+    private List<GradientDescentLayerResult> launchForwardComputation(DoubleMatrix inputMatrix) {
     List<Layer> layers = neuralNetworkModel.getLayers();
     List<GradientDescentLayerResult> gradientDescentLayerResults = new ArrayList<>();
-    FloatMatrix currentResult = inputMatrix;
+        DoubleMatrix currentResult = inputMatrix;
     for (Layer layer : layers) {
       GradientDescentLayerResult gradientDescentLayerResult = new GradientDescentLayerResult(layer.getActivationFunctionType());
-      FloatMatrix zResult = LayerComputerHelper.computeZFromInput(currentResult, layer);
+        DoubleMatrix zResult = LayerComputerHelper.computeZFromInput(currentResult, layer);
       gradientDescentLayerResult.setZResultLayer(zResult);
-      FloatMatrix aResult = LayerComputerHelper.computeAFromZ(zResult, layer);
+        DoubleMatrix aResult = LayerComputerHelper.computeAFromZ(zResult, layer);
       gradientDescentLayerResult.setAResultLayer(aResult);
       gradientDescentLayerResults.add(gradientDescentLayerResult);
       currentResult = aResult;
@@ -94,8 +94,8 @@ public class GradientDescent implements LearningAlgorithm {
   }
 
   private static class GradientDescentLayerResult {
-    private FloatMatrix zLayerResults;
-    private FloatMatrix aLayerResults;
+      private DoubleMatrix zLayerResults;
+      private DoubleMatrix aLayerResults;
 
     private ActivationFunctionType activationFunctionType;
 
@@ -107,38 +107,38 @@ public class GradientDescent implements LearningAlgorithm {
       return activationFunctionType;
     }
 
-    void setZResultLayer(FloatMatrix zLayerResult) {
+      void setZResultLayer(DoubleMatrix zLayerResult) {
       zLayerResults = zLayerResult;
     }
 
-    void setAResultLayer(FloatMatrix aLayerResult) {
+      void setAResultLayer(DoubleMatrix aLayerResult) {
       aLayerResults = aLayerResult;
     }
 
-    public FloatMatrix getzLayerResults() {
+      public DoubleMatrix getzLayerResults() {
       return zLayerResults;
     }
 
-    public FloatMatrix getaLayerResults() {
+      public DoubleMatrix getaLayerResults() {
       return aLayerResults;
     }
 
   }
 
   private static class GradientDescentCorrection {
-    private FloatMatrix weightCorrectionResults;
-    private FloatMatrix biasCorrectionResults;
+      private DoubleMatrix weightCorrectionResults;
+      private DoubleMatrix biasCorrectionResults;
 
-    public GradientDescentCorrection(FloatMatrix weightCorrectionResults, FloatMatrix biasCorrectionResults) {
+      public GradientDescentCorrection(DoubleMatrix weightCorrectionResults, DoubleMatrix biasCorrectionResults) {
       this.weightCorrectionResults = weightCorrectionResults;
       this.biasCorrectionResults = biasCorrectionResults;
     }
 
-    public FloatMatrix getWeightCorrectionResults() {
+      public DoubleMatrix getWeightCorrectionResults() {
       return weightCorrectionResults;
     }
 
-    public FloatMatrix getBiasCorrectionResults() {
+      public DoubleMatrix getBiasCorrectionResults() {
       return biasCorrectionResults;
     }
   }

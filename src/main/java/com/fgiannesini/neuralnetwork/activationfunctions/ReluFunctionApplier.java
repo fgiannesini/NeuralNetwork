@@ -1,16 +1,16 @@
 package com.fgiannesini.neuralnetwork.activationfunctions;
 
-import org.jblas.FloatMatrix;
+import org.jblas.DoubleMatrix;
 
 public class ReluFunctionApplier implements ActivationFunctionApplier {
 
     @Override
-    public FloatMatrix apply(FloatMatrix input) {
+    public DoubleMatrix apply(DoubleMatrix input) {
         return input.max(0);
     }
 
     @Override
-    public FloatMatrix derivate(FloatMatrix input) {
+    public DoubleMatrix derivate(DoubleMatrix input) {
         // if input>=0 1, else 0
         return input.ge(0);
     }

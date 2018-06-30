@@ -1,7 +1,7 @@
 package com.fgiannesini.neuralnetwork.computer;
 
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
-import org.jblas.FloatMatrix;
+import org.jblas.DoubleMatrix;
 import org.jblas.MatrixFunctions;
 
 public class CostComputer {
@@ -14,19 +14,19 @@ public class CostComputer {
                 .build();
     }
 
-    public float compute(float[] input, float[] output) {
-        return compute(new FloatMatrix(input), new FloatMatrix(output));
+    public double compute(double[] input, double[] output) {
+        return compute(new DoubleMatrix(input), new DoubleMatrix(output));
     }
 
-    public float compute(float[][] input, float[][] output) {
-        return compute(new FloatMatrix(input).transpose(), new FloatMatrix(output).transpose());
+    public double compute(double[][] input, double[][] output) {
+        return compute(new DoubleMatrix(input).transpose(), new DoubleMatrix(output).transpose());
     }
 
-    public float compute(FloatMatrix input, FloatMatrix output) {
-        float inputCount = input.columns;
-        FloatMatrix computedOutput = outputComputer.computeOutput(input);
-        FloatMatrix firstPart = MatrixFunctions.log(computedOutput).muli(output);
-        FloatMatrix secondPart = MatrixFunctions.log(computedOutput.sub(1).muli(-1)).muli(output.sub(1).muli(-1));
+    public double compute(DoubleMatrix input, DoubleMatrix output) {
+        double inputCount = input.columns;
+        DoubleMatrix computedOutput = outputComputer.computeOutput(input);
+        DoubleMatrix firstPart = MatrixFunctions.log(computedOutput).muli(output);
+        DoubleMatrix secondPart = MatrixFunctions.log(computedOutput.sub(1).muli(-1)).muli(output.sub(1).muli(-1));
         return firstPart.addi(secondPart).sum() / inputCount;
     }
 }

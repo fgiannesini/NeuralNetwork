@@ -1,17 +1,17 @@
 package com.fgiannesini.neuralnetwork.activationfunctions;
 
-import org.jblas.FloatMatrix;
+import org.jblas.DoubleMatrix;
 import org.jblas.MatrixFunctions;
 
 public class TanhFunctionApplier implements ActivationFunctionApplier {
 
     @Override
-    public FloatMatrix apply(FloatMatrix input) {
+    public DoubleMatrix apply(DoubleMatrix input) {
         return MatrixFunctions.tanh(input);
     }
 
     @Override
-    public FloatMatrix derivate(FloatMatrix input) {
+    public DoubleMatrix derivate(DoubleMatrix input) {
         //1-a²
         return MatrixFunctions.pow(input, 2).negi().addi(1);
     }

@@ -20,14 +20,14 @@ class OutputComputerTest {
                 .useInitializer(InitializerType.ONES)
                 .build();
 
-        float[] inputData = new float[3];
+        double[] inputData = new double[3];
         Arrays.fill(inputData, 1);
 
-        float[] output = OutputComputerBuilder.init()
+        double[] output = OutputComputerBuilder.init()
                 .withModel(model)
                 .build()
                 .compute(inputData);
-        Assertions.assertArrayEquals(new float[]{17, 17}, output);
+        Assertions.assertArrayEquals(new double[]{17, 17}, output);
     }
 
     @Test
@@ -41,14 +41,14 @@ class OutputComputerTest {
                 .useInitializer(InitializerType.ONES)
                 .build();
 
-        float[] inputData = new float[3];
+        double[] inputData = new double[3];
         Arrays.fill(inputData, 1);
 
-        float[] output = OutputComputerBuilder.init()
+        double[] output = OutputComputerBuilder.init()
                 .withModel(model)
                 .build()
                 .compute(inputData);
-        Assertions.assertArrayEquals(new float[]{39, 39}, output);
+        Assertions.assertArrayEquals(new double[]{39, 39}, output);
     }
 
     @Test
@@ -62,16 +62,16 @@ class OutputComputerTest {
                 .useInitializer(InitializerType.ONES)
                 .build();
 
-        float[][] inputData = {
+        double[][] inputData = {
                 {1, 1, 1},
                 {2, 2, 2}
         };
 
-        float[][] output = OutputComputerBuilder.init()
+        double[][] output = OutputComputerBuilder.init()
                 .withModel(model)
                 .build()
                 .compute(inputData);
-        float[][] expected = {{39, 39}, {63, 63}};
+        double[][] expected = {{39, 39}, {63, 63}};
         Assertions.assertArrayEquals(expected, output);
     }
 }

@@ -2,7 +2,7 @@ package com.fgiannesini.neuralnetwork.model;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import com.fgiannesini.neuralnetwork.initializer.Initializer;
-import org.jblas.FloatMatrix;
+import org.jblas.DoubleMatrix;
 
 import java.util.Objects;
 
@@ -11,15 +11,15 @@ public class Layer implements Cloneable {
     private final int inputLayerSize;
     private final int outputLayerSize;
     private final ActivationFunctionType activationFunctionType;
-    private FloatMatrix weightMatrix;
-    private FloatMatrix biasMatrix;
+    private DoubleMatrix weightMatrix;
+    private DoubleMatrix biasMatrix;
 
     public Layer(int inputLayerSize, int outputLayerSize, Initializer initializer, ActivationFunctionType activationFunctionType) {
         this.inputLayerSize = inputLayerSize;
         this.outputLayerSize = outputLayerSize;
         this.activationFunctionType = activationFunctionType;
-        weightMatrix = initializer.initFloatMatrix(inputLayerSize, outputLayerSize);
-        biasMatrix = initializer.initFloatMatrix(1, outputLayerSize);
+        weightMatrix = initializer.initDoubleMatrix(inputLayerSize, outputLayerSize);
+        biasMatrix = initializer.initDoubleMatrix(1, outputLayerSize);
     }
 
     public int getInputLayerSize() {
@@ -30,11 +30,11 @@ public class Layer implements Cloneable {
         return outputLayerSize;
     }
 
-    public FloatMatrix getWeightMatrix() {
+    public DoubleMatrix getWeightMatrix() {
         return weightMatrix;
     }
 
-    public FloatMatrix getBiasMatrix() {
+    public DoubleMatrix getBiasMatrix() {
         return biasMatrix;
     }
 

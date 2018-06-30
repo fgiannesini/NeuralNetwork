@@ -1,11 +1,11 @@
 package com.fgiannesini.neuralnetwork.initializer;
 
-import org.jblas.FloatMatrix;
+import org.jblas.DoubleMatrix;
 
 public class RandomInitializer implements Initializer {
 
     @Override
-    public FloatMatrix initFloatMatrix(int inputSize, int outputSize) {
-        return FloatMatrix.rand(inputSize, outputSize);
+    public DoubleMatrix initDoubleMatrix(int inputSize, int outputSize) {
+        return DoubleMatrix.rand(inputSize, outputSize);
     }
 }

@@ -1,10 +1,10 @@
 package com.fgiannesini.neuralnetwork.activationfunctions;
 
-import org.jblas.FloatMatrix;
+import org.jblas.DoubleMatrix;
 
 public interface ActivationFunctionApplier {
 
-    FloatMatrix apply(FloatMatrix input);
+    DoubleMatrix apply(DoubleMatrix input);
 
-    FloatMatrix derivate(FloatMatrix input);
+    DoubleMatrix derivate(DoubleMatrix input);
 }

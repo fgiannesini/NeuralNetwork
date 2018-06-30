@@ -2,7 +2,7 @@ package com.fgiannesini.neuralnetwork.computer;
 
 import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
-import org.jblas.FloatMatrix;
+import org.jblas.DoubleMatrix;
 
 public class OutputComputer {
 
@@ -12,17 +12,17 @@ public class OutputComputer {
     this.model = model;
   }
 
-  public float[] compute(float[] input) {
-    return computeOutput(new FloatMatrix(input)).toArray();
+  public double[] compute(double[] input) {
+    return computeOutput(new DoubleMatrix(input)).toArray();
   }
 
-  public float[][] compute(float[][] input) {
-    FloatMatrix inputMatrix = new FloatMatrix(input).transpose();
+  public double[][] compute(double[][] input) {
+    DoubleMatrix inputMatrix = new DoubleMatrix(input).transpose();
     return computeOutput(inputMatrix).transpose().toArray2();
   }
 
-  public FloatMatrix computeOutput(FloatMatrix inputMatrix) {
-    FloatMatrix currentMatrix = inputMatrix.dup();
+  public DoubleMatrix computeOutput(DoubleMatrix inputMatrix) {
+    DoubleMatrix currentMatrix = inputMatrix.dup();
     for (Layer layer : model.getLayers()) {
       currentMatrix = LayerComputerHelper.computeAFromInput(currentMatrix, layer);
     }

@@ -1,19 +1,19 @@
 package com.fgiannesini.neuralnetwork.activationfunctions;
 
-import org.jblas.FloatMatrix;
+import org.jblas.DoubleMatrix;
 
 public class LeakyReluFunctionApplier implements ActivationFunctionApplier {
 
     @Override
-    public FloatMatrix apply(FloatMatrix input) {
+    public DoubleMatrix apply(DoubleMatrix input) {
         return input.max(input.mul(0.01f));
     }
 
     @Override
-    public FloatMatrix derivate(FloatMatrix input) {
+    public DoubleMatrix derivate(DoubleMatrix input) {
         // if input>=0 1, else -0.01
-        FloatMatrix greaterEqualZero = input.ge(0);
-        FloatMatrix lesserThanZero = input.lt(0).negi().muli(0.01f);
+        DoubleMatrix greaterEqualZero = input.ge(0);
+        DoubleMatrix lesserThanZero = input.lt(0).negi().muli(0.01f);
         return greaterEqualZero.addi(lesserThanZero);
     }
 }

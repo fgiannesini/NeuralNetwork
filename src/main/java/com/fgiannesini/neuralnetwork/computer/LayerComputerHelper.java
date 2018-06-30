@@ -2,22 +2,22 @@ package com.fgiannesini.neuralnetwork.computer;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionApplier;
 import com.fgiannesini.neuralnetwork.model.Layer;
-import org.jblas.FloatMatrix;
+import org.jblas.DoubleMatrix;
 
 public class LayerComputerHelper {
 
-  public static FloatMatrix computeAFromZ(FloatMatrix z, Layer layer) {
+  public static DoubleMatrix computeAFromZ(DoubleMatrix z, Layer layer) {
     ActivationFunctionApplier activationFunctionApplier = layer.getActivationFunctionType().getActivationFunction();
     return activationFunctionApplier.apply(z);
   }
 
-  public static FloatMatrix computeZFromInput(FloatMatrix input, Layer layer) {
+  public static DoubleMatrix computeZFromInput(DoubleMatrix input, Layer layer) {
     //Wt.X + b
     return layer.getWeightMatrix().transpose().mmul(input).addiColumnVector(layer.getBiasMatrix());
   }
 
-  public static FloatMatrix computeAFromInput(FloatMatrix input, Layer layer) {
-    FloatMatrix z = computeZFromInput(input,layer);
+  public static DoubleMatrix computeAFromInput(DoubleMatrix input, Layer layer) {
+    DoubleMatrix z = computeZFromInput(input, layer);
     return computeAFromZ(z,layer);
   }
 

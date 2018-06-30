@@ -24,8 +24,8 @@ class GradientDescentTest {
       .build();
     GradientDescent gradientDescent = new GradientDescent(neuralNetworkModel, 0.01f);
 
-    float[] input = new float[]{1f, 2f, 3f};
-    float[] output = new float[]{29f, 29f};
+    double[] input = new double[]{1f, 2f, 3f};
+    double[] output = new double[]{29f, 29f};
 
     NeuralNetworkModel optimizedNeuralNetworkModel = gradientDescent.learn(input, output);
 
@@ -42,11 +42,11 @@ class GradientDescentTest {
       .build();
     GradientDescent gradientDescent = new GradientDescent(neuralNetworkModel, 0.01f);
 
-    float[][] input = new float[][]{
+    double[][] input = new double[][]{
       {1f, 2f, 3f},
       {3f, 2f, 1f}
     };
-    float[][] output = new float[][]{
+    double[][] output = new double[][]{
       {29f, 29f},
       {29f, 29f}
     };
@@ -70,8 +70,8 @@ class GradientDescentTest {
       .build();
     GradientDescent gradientDescent = new GradientDescent(neuralNetworkModel, 0.01f);
 
-    float[] input = new float[]{1f, 2f, 3f};
-    float[] output = new float[]{4386f, 4386f};
+    double[] input = new double[]{1f, 2f, 3f};
+    double[] output = new double[]{4386f, 4386f};
 
     NeuralNetworkModel optimizedNeuralNetworkModel = gradientDescent.learn(input, output);
 
@@ -91,11 +91,11 @@ class GradientDescentTest {
       .build();
     GradientDescent gradientDescent = new GradientDescent(neuralNetworkModel, 0.01f);
 
-    float[][] input = new float[][]{
+    double[][] input = new double[][]{
       {1f, 2f, 3f},
       {3f, 2f, 1f}
     };
-    float[][] output = new float[][]{
+    double[][] output = new double[][]{
       {4386f, 4386f},
       {4386f, 4386f}
     };
@@ -118,11 +118,11 @@ class GradientDescentTest {
       .build();
     GradientDescent gradientDescent = new GradientDescent(neuralNetworkModel, 0.01f);
 
-    float[][] input = new float[][]{
+    double[][] input = new double[][]{
       {1f, 2f, 3f},
       {3f, 2f, 1f}
     };
-    float[][] output = new float[][]{
+    double[][] output = new double[][]{
       {1f, 1f},
       {1f, 1f}
     };

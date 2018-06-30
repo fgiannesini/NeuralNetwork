@@ -1,21 +1,21 @@
 package com.fgiannesini.neuralnetwork.gradient;
 
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
-import org.jblas.FloatMatrix;
+import org.jblas.DoubleMatrix;
 
 public interface LearningAlgorithm {
 
-    default NeuralNetworkModel learn(float[] input, float[] expected) {
-        FloatMatrix inputMatrix = new FloatMatrix(input);
-        FloatMatrix y = new FloatMatrix(expected);
+    default NeuralNetworkModel learn(double[] input, double[] expected) {
+        DoubleMatrix inputMatrix = new DoubleMatrix(input);
+        DoubleMatrix y = new DoubleMatrix(expected);
         return learn(inputMatrix, y);
     }
 
-    default NeuralNetworkModel learn(float[][] input, float[][] expected) {
-        FloatMatrix inputMatrix = new FloatMatrix(input).transpose();
-        FloatMatrix y = new FloatMatrix(expected).transpose();
+    default NeuralNetworkModel learn(double[][] input, double[][] expected) {
+        DoubleMatrix inputMatrix = new DoubleMatrix(input).transpose();
+        DoubleMatrix y = new DoubleMatrix(expected).transpose();
         return learn(inputMatrix, y);
     }
 
-    NeuralNetworkModel learn(FloatMatrix inputMatrix, FloatMatrix y);
+    NeuralNetworkModel learn(DoubleMatrix inputMatrix, DoubleMatrix y);
 }

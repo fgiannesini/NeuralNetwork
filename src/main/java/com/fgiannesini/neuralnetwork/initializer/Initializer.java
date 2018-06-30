@@ -1,8 +1,8 @@
 package com.fgiannesini.neuralnetwork.initializer;
 
-import org.jblas.FloatMatrix;
+import org.jblas.DoubleMatrix;
 
 public interface Initializer {
 
-    FloatMatrix initFloatMatrix(int inputSize, int outputSize);
+    DoubleMatrix initDoubleMatrix(int inputSize, int outputSize);
 }
