@@ -8,22 +8,22 @@ import org.junit.jupiter.api.Test;
 
 class GradientDescentTest {
 
-  @Test
-  void learn_on_vector_with_one_hidden_layer_learning_is_optimal() {
-    NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
-            .useInitializer(InitializerType.ONES)
-            .input(2)
-            .addLayer(2, ActivationFunctionType.NONE)
-            .build();
-      LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, 0.01f);
+    @Test
+    void learn_on_vector_with_one_hidden_layer_learning_is_optimal() {
+        NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
+                .useInitializer(InitializerType.ONES)
+                .input(2)
+                .addLayer(2, ActivationFunctionType.NONE)
+                .build();
+        LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, 0.01f);
 
-      double[] input = new double[]{1f, 2f};
-      double[] output = new double[]{4f, 4f};
+        double[] input = new double[]{1f, 2f};
+        double[] output = new double[]{4f, 4f};
 
-    NeuralNetworkModel optimizedNeuralNetworkModel = gradientDescent.learn(input, output);
+        NeuralNetworkModel optimizedNeuralNetworkModel = gradientDescent.learn(input, output);
 
-      NeuralNetworkAssertions.checkSameNeuralNetworks(neuralNetworkModel, optimizedNeuralNetworkModel);
-  }
+        NeuralNetworkAssertions.checkSameNeuralNetworks(neuralNetworkModel, optimizedNeuralNetworkModel);
+    }
 
     @Test
     void learn_on_vector_with_two_hidden_layers_learning_is_optimal() {
@@ -64,7 +64,7 @@ class GradientDescentTest {
 
         NeuralNetworkModel optimizedNeuralNetworkModel = gradientDescent.learn(input, output);
         NeuralNetworkAssertions.checkSameNeuralNetworks(neuralNetworkModel, optimizedNeuralNetworkModel);
-  }
+    }
 
     @Test
     void learn_on_vector_with_one_hidden_layer() {
@@ -157,31 +157,5 @@ class GradientDescentTest {
         double[] expectedSecondBiasMatrix = {0.985, 0.985};
         NeuralNetworkAssertions.checkNeuralNetworksLayer(optimizedNeuralNetworkModel, 1, expectedSecondWeightMatrix, expectedSecondBiasMatrix);
     }
-
-  @Test
-  void test_gradient_descents_have_same_result_on_vector() {
-    NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
-            .useInitializer(InitializerType.ONES)
-            .input(3)
-            .addLayer(4)
-            .addLayer(2, ActivationFunctionType.SIGMOID)
-            .build();
-
-      LearningAlgorithm gradientDescent = LearningAlgorithmBuilder.init()
-              .withModel(neuralNetworkModel)
-              .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT)
-              .build();
-
-      LearningAlgorithm gradientDescentDerivation = LearningAlgorithmBuilder.init()
-              .withModel(neuralNetworkModel)
-              .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_DERIVATION)
-              .build();
-
-      double[] input = new double[]{1, 2, 3};
-      double[] output = new double[]{0.3, 0.7};
-      NeuralNetworkModel gradientDescentNeuralNetworkModel = gradientDescent.learn(input, output);
-      NeuralNetworkModel gradientDescentDerivativeNeuralNetworkModel = gradientDescentDerivation.learn(input, output);
-      NeuralNetworkAssertions.checkSameNeuralNetworks(gradientDescentNeuralNetworkModel, gradientDescentDerivativeNeuralNetworkModel);
-  }
 
 }

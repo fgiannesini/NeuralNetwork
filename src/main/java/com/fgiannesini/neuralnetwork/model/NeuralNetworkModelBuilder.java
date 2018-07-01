@@ -9,31 +9,31 @@ import java.util.stream.IntStream;
 
 public class NeuralNetworkModelBuilder {
 
-  private int inputSize;
     private final List<Integer> layerNodeCounts;
     private final List<ActivationFunctionType> layerActivationFunctions;
+    private int inputSize;
     private InitializerType initializerType;
 
-  private NeuralNetworkModelBuilder() {
-    layerNodeCounts = new ArrayList<>();
-      initializerType = InitializerType.RANDOM;
-      layerActivationFunctions = new ArrayList<>();
-  }
+    private NeuralNetworkModelBuilder() {
+        layerNodeCounts = new ArrayList<>();
+        initializerType = InitializerType.RANDOM;
+        layerActivationFunctions = new ArrayList<>();
+    }
 
     public static NeuralNetworkModelBuilder init() {
         return new NeuralNetworkModelBuilder();
     }
 
     public NeuralNetworkModelBuilder input(int inputSize) {
-    this.inputSize = inputSize;
-    return this;
-  }
+        this.inputSize = inputSize;
+        return this;
+    }
 
-  public NeuralNetworkModelBuilder addLayer(int layerNodeCount) {
-      layerNodeCounts.add(layerNodeCount);
-      layerActivationFunctions.add(ActivationFunctionType.RELU);
-    return this;
-  }
+    public NeuralNetworkModelBuilder addLayer(int layerNodeCount) {
+        layerNodeCounts.add(layerNodeCount);
+        layerActivationFunctions.add(ActivationFunctionType.RELU);
+        return this;
+    }
 
     public NeuralNetworkModelBuilder addLayer(int layerNodeCount, ActivationFunctionType activationFunctionType) {
         layerNodeCounts.add(layerNodeCount);
@@ -46,10 +46,10 @@ public class NeuralNetworkModelBuilder {
         return this;
     }
 
-  public NeuralNetworkModel build() {
-    checkInputs();
-      return buildNeuralNetworkModel();
-  }
+    public NeuralNetworkModel build() {
+        checkInputs();
+        return buildNeuralNetworkModel();
+    }
 
     private NeuralNetworkModel buildNeuralNetworkModel() {
         int outputSize = layerNodeCounts.get(layerNodeCounts.size() - 1);
@@ -64,12 +64,12 @@ public class NeuralNetworkModelBuilder {
         return neuralNetworkModel;
     }
 
-  private void checkInputs() {
-    if (inputSize <= 0) {
-      throw new IllegalArgumentException("Size of input data should be set");
+    private void checkInputs() {
+        if (inputSize <= 0) {
+            throw new IllegalArgumentException("Size of input data should be set");
+        }
+        if (layerNodeCounts.isEmpty()) {
+            throw new IllegalArgumentException("At least one hidden layer should be set");
+        }
     }
-    if (layerNodeCounts.isEmpty()) {
-      throw new IllegalArgumentException("At least one hidden layer should be set");
-    }
-  }
 }
