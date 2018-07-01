@@ -16,7 +16,7 @@ class OutputComputerTest {
         NeuralNetworkModel model = NeuralNetworkModelBuilder.init()
                 .input(3)
                 .addLayer(4, ActivationFunctionType.NONE)
-                .output(2, ActivationFunctionType.NONE)
+                .addLayer(2, ActivationFunctionType.NONE)
                 .useInitializer(InitializerType.ONES)
                 .build();
 
@@ -37,7 +37,7 @@ class OutputComputerTest {
                 .addLayer(2, ActivationFunctionType.NONE)
                 .addLayer(2, ActivationFunctionType.NONE)
                 .addLayer(2, ActivationFunctionType.NONE)
-                .output(2, ActivationFunctionType.NONE)
+                .addLayer(2, ActivationFunctionType.NONE)
                 .useInitializer(InitializerType.ONES)
                 .build();
 
@@ -58,7 +58,7 @@ class OutputComputerTest {
                 .addLayer(2, ActivationFunctionType.NONE)
                 .addLayer(2, ActivationFunctionType.NONE)
                 .addLayer(2, ActivationFunctionType.NONE)
-                .output(2, ActivationFunctionType.NONE)
+                .addLayer(2, ActivationFunctionType.NONE)
                 .useInitializer(InitializerType.ONES)
                 .build();
 

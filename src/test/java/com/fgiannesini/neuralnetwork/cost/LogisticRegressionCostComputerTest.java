@@ -1,4 +1,4 @@
-package com.fgiannesini.neuralnetwork.computer;
+package com.fgiannesini.neuralnetwork.cost;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
@@ -7,7 +7,7 @@ import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class CostComputerTest {
+class LogisticRegressionCostComputerTest {
 
     @Test
     void compute_cost_on_vector_result_is_zero() {
@@ -15,9 +15,9 @@ class CostComputerTest {
                 .useInitializer(InitializerType.ONES)
                 .input(3)
                 .addLayer(4, ActivationFunctionType.NONE)
-                .output(2, ActivationFunctionType.SIGMOID)
+                .addLayer(2, ActivationFunctionType.SIGMOID)
                 .build();
-        double cost = new CostComputer(neuralNetworkModel)
+        double cost = new LogisticRegressionCostComputer(neuralNetworkModel)
                 .compute(new double[]{1f, 1f, 1f}, new double[]{1, 1});
         Assertions.assertEquals(0, cost, 0.01);
     }
@@ -28,9 +28,9 @@ class CostComputerTest {
                 .useInitializer(InitializerType.ONES)
                 .input(3)
                 .addLayer(4, ActivationFunctionType.NONE)
-                .output(2, ActivationFunctionType.SIGMOID)
+                .addLayer(2, ActivationFunctionType.SIGMOID)
                 .build();
-        double cost = new CostComputer(neuralNetworkModel)
+        double cost = new LogisticRegressionCostComputer(neuralNetworkModel)
                 .compute(new double[][]{
                         {1f, 1f, 1f},
                         {1f, 1f, 1f}

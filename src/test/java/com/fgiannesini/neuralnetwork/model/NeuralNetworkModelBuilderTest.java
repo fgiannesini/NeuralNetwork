@@ -13,16 +13,7 @@ class NeuralNetworkModelBuilderTest {
         Assertions.assertThrows(IllegalArgumentException.class, () -> NeuralNetworkModelBuilder.init()
                 .addLayer(5)
                 .addLayer(7)
-                .output(10)
-                .build());
-    }
-
-    @Test
-    void create_Network_Model_Missing_OutputSize_Throw_Exception() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> NeuralNetworkModelBuilder.init()
-                .input(10)
-                .addLayer(5)
-                .addLayer(7)
+                .addLayer(10)
                 .build());
     }
 
@@ -30,7 +21,6 @@ class NeuralNetworkModelBuilderTest {
     void create_Network_Model_Missing_Layer_Throw_Exception() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> NeuralNetworkModelBuilder.init()
                 .input(10)
-                .output(10)
                 .build());
     }
 
@@ -39,7 +29,7 @@ class NeuralNetworkModelBuilderTest {
         NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                 .input(10)
                 .addLayer(5)
-                .output(3)
+                .addLayer(3)
                 .build();
 
         Assertions.assertAll(
@@ -65,7 +55,7 @@ class NeuralNetworkModelBuilderTest {
                 () -> Assertions.assertEquals(3, secondLayer.getWeightMatrix().columns),
                 () -> Assertions.assertEquals(1, secondLayer.getBiasMatrix().rows),
                 () -> Assertions.assertEquals(3, secondLayer.getBiasMatrix().columns),
-                () -> Assertions.assertEquals(ActivationFunctionType.SIGMOID, secondLayer.getActivationFunctionType(), "Last layer activation function is not Sigmoid")
+                () -> Assertions.assertEquals(ActivationFunctionType.RELU, secondLayer.getActivationFunctionType(), "Last layer activation function is not Sigmoid")
         );
     }
 
@@ -75,7 +65,7 @@ class NeuralNetworkModelBuilderTest {
               .input(10)
               .addLayer(5, ActivationFunctionType.NONE)
               .addLayer(7, ActivationFunctionType.NONE)
-              .output(10, ActivationFunctionType.SIGMOID)
+              .addLayer(10, ActivationFunctionType.SIGMOID)
       .build();
 
       Assertions.assertAll(
