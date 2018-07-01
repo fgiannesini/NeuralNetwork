@@ -19,9 +19,9 @@ class TanhFunctionApplierTest {
     void apply() {
         Assertions.assertAll(
                 checkTanhApply(new double[]{0}, new double[]{0}),
-                checkTanhApply(new double[]{0.7615f}, new double[]{1}),
-                checkTanhApply(new double[]{-0.7615f}, new double[]{-1}),
-                checkTanhApply(new double[]{0.7615f, 0.9640f, 0.9950f, 0.9993f, 0.9999f}, new double[]{1, 2, 3, 4, 5})
+                checkTanhApply(new double[]{0.7615}, new double[]{1}),
+                checkTanhApply(new double[]{-0.7615}, new double[]{-1}),
+                checkTanhApply(new double[]{0.7615, 0.9640, 0.9950, 0.9993, 0.9999}, new double[]{1, 2, 3, 4, 5})
         );
     }
 
@@ -32,10 +32,10 @@ class TanhFunctionApplierTest {
     @Test
     void derivate() {
         Assertions.assertAll(
-                checkTanhDerivate(new double[]{1f}, new double[]{0}),
-                checkTanhDerivate(new double[]{-3f}, new double[]{2}),
-                checkTanhDerivate(new double[]{-3f}, new double[]{-2}),
-                checkTanhDerivate(new double[]{0f, -3f, -8f, -15f, -24f}, new double[]{1, 2, 3, 4, 5})
+                checkTanhDerivate(new double[]{1}, new double[]{0}),
+                checkTanhDerivate(new double[]{-3}, new double[]{2}),
+                checkTanhDerivate(new double[]{-3}, new double[]{-2}),
+                checkTanhDerivate(new double[]{0, -3, -8, -15, -24}, new double[]{1, 2, 3, 4, 5})
         );
     }
 

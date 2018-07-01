@@ -21,7 +21,7 @@ class ReluFunctionApplierTest {
                 checkReluApply(new double[]{0}, new double[]{0}),
                 checkReluApply(new double[]{1}, new double[]{1}),
                 checkReluApply(new double[]{0}, new double[]{-1}),
-                checkReluApply(new double[]{1f, 2f, 3f, 4f, 5f}, new double[]{1, 2, 3, 4, 5})
+                checkReluApply(new double[]{1, 2, 3, 4, 5}, new double[]{1, 2, 3, 4, 5})
         );
     }
 
@@ -35,7 +35,7 @@ class ReluFunctionApplierTest {
                 checkReluDerivate(new double[]{1}, new double[]{0}),
                 checkReluDerivate(new double[]{1}, new double[]{2}),
                 checkReluDerivate(new double[]{0}, new double[]{-2}),
-                checkReluDerivate(new double[]{1f, 1f, 1f, 1f, 1f}, new double[]{1, 2, 3, 4, 5})
+                checkReluDerivate(new double[]{1, 1, 1, 1, 1}, new double[]{1, 2, 3, 4, 5})
         );
     }
 

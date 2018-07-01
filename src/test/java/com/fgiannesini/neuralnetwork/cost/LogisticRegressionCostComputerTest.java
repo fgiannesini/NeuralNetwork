@@ -18,7 +18,7 @@ class LogisticRegressionCostComputerTest {
                 .addLayer(2, ActivationFunctionType.SIGMOID)
                 .build();
         double cost = new LogisticRegressionCostComputer(neuralNetworkModel)
-                .compute(new double[]{1f, 1f, 1f}, new double[]{1, 1});
+                .compute(new double[]{1, 1, 1}, new double[]{1, 1});
         Assertions.assertEquals(0, cost, 0.01);
     }
 
@@ -32,8 +32,8 @@ class LogisticRegressionCostComputerTest {
                 .build();
         double cost = new LogisticRegressionCostComputer(neuralNetworkModel)
                 .compute(new double[][]{
-                        {1f, 1f, 1f},
-                        {1f, 1f, 1f}
+                        {1, 1, 1},
+                        {1, 1, 1}
                 }, new double[][]{
                         {1, 1},
                         {1, 1}

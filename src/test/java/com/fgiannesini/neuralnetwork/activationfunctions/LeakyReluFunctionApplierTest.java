@@ -18,10 +18,10 @@ class LeakyReluFunctionApplierTest {
     @Test
     void apply() {
         Assertions.assertAll(
-                checkLeakyReluApply(new double[]{0f}, new double[]{0}),
-                checkLeakyReluApply(new double[]{1f}, new double[]{1}),
-                checkLeakyReluApply(new double[]{-0.01f}, new double[]{-1}),
-                checkLeakyReluApply(new double[]{1f, 2f, 3f, 4f, 5f}, new double[]{1, 2, 3, 4, 5})
+                checkLeakyReluApply(new double[]{0}, new double[]{0}),
+                checkLeakyReluApply(new double[]{1}, new double[]{1}),
+                checkLeakyReluApply(new double[]{-0.01}, new double[]{-1}),
+                checkLeakyReluApply(new double[]{1, 2, 3, 4, 5}, new double[]{1, 2, 3, 4, 5})
         );
     }
 
@@ -32,10 +32,10 @@ class LeakyReluFunctionApplierTest {
     @Test
     void derivate() {
         Assertions.assertAll(
-                checkLeakyReluDerivate(new double[]{1f}, new double[]{0}),
-                checkLeakyReluDerivate(new double[]{1f}, new double[]{2}),
-                checkLeakyReluDerivate(new double[]{-0.01f}, new double[]{-2}),
-                checkLeakyReluDerivate(new double[]{1f, 1f, 1f, 1f, 1f}, new double[]{1, 2, 3, 4, 5})
+                checkLeakyReluDerivate(new double[]{1}, new double[]{0}),
+                checkLeakyReluDerivate(new double[]{1}, new double[]{2}),
+                checkLeakyReluDerivate(new double[]{-0.01}, new double[]{-2}),
+                checkLeakyReluDerivate(new double[]{1, 1, 1, 1, 1}, new double[]{1, 2, 3, 4, 5})
         );
     }
 

@@ -18,10 +18,10 @@ class SigmoidFunctionApplierTest {
     @Test
     void apply() {
         Assertions.assertAll(
-                checkSigmoidApply(new double[]{0.5f}, new double[]{0}),
-                checkSigmoidApply(new double[]{0.7310f}, new double[]{1}),
-                checkSigmoidApply(new double[]{0.2689f}, new double[]{-1}),
-                checkSigmoidApply(new double[]{0.7310f, 0.88079f, 0.95257f, 0.98201f, 0.99330f}, new double[]{1, 2, 3, 4, 5})
+                checkSigmoidApply(new double[]{0.5}, new double[]{0}),
+                checkSigmoidApply(new double[]{0.7310}, new double[]{1}),
+                checkSigmoidApply(new double[]{0.2689}, new double[]{-1}),
+                checkSigmoidApply(new double[]{0.7310, 0.88079, 0.95257, 0.98201, 0.99330}, new double[]{1, 2, 3, 4, 5})
         );
     }
 
@@ -32,10 +32,10 @@ class SigmoidFunctionApplierTest {
     @Test
     void derivate() {
         Assertions.assertAll(
-                checkSigmoidDerivate(new double[]{0f}, new double[]{0}),
-                checkSigmoidDerivate(new double[]{-2f}, new double[]{2}),
-                checkSigmoidDerivate(new double[]{-6f}, new double[]{-2}),
-                checkSigmoidDerivate(new double[]{0f, -2f, -6f, -12f, -20f}, new double[]{1, 2, 3, 4, 5})
+                checkSigmoidDerivate(new double[]{0}, new double[]{0}),
+                checkSigmoidDerivate(new double[]{-2}, new double[]{2}),
+                checkSigmoidDerivate(new double[]{-6}, new double[]{-2}),
+                checkSigmoidDerivate(new double[]{0, -2, -6, -12, -20}, new double[]{1, 2, 3, 4, 5})
         );
     }
 
