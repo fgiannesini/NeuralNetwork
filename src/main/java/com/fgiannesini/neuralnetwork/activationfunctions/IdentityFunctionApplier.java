@@ -11,6 +11,6 @@ public class IdentityFunctionApplier implements ActivationFunctionApplier {
 
     @Override
     public DoubleMatrix derivate(DoubleMatrix input) {
-        return input.dup();
+        return DoubleMatrix.ones(input.rows, input.columns);
     }
 }

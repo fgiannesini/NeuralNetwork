@@ -45,9 +45,13 @@ public class GradientDescent implements LearningAlgorithm {
 
         GradientDescentLayerResult currentGradientDescentLayerResult = reverseGradientDescentLayerData.get(0);
         GradientDescentLayerResult nextGradientDescentLayerResult = reverseGradientDescentLayerData.get(1);
-        DoubleMatrix dz = currentGradientDescentLayerResult.getaLayerResults().sub(y); //dZ2 = A2 - Y
-        DoubleMatrix weightCorrection = nextGradientDescentLayerResult.getaLayerResults().mmul(dz.transpose()).divi(inputCount); //dW2 = 1/m * A1 * dZ2t
-        DoubleMatrix biasCorrection = dz.rowSums().divi(inputCount); //dB2 = 1/m * sum(dZ2)
+        ActivationFunctionApplier activationFunction = currentGradientDescentLayerResult.getActivationFunctionType().getActivationFunction();
+        //dZ2 = (A2 - Y) .* g2'(A2)
+        DoubleMatrix dz = currentGradientDescentLayerResult.getaLayerResults()
+                .sub(y)
+                .muli(activationFunction.derivate(currentGradientDescentLayerResult.getaLayerResults()));
+        DoubleMatrix weightCorrection = computeWeightCorrection(nextGradientDescentLayerResult, dz, inputCount);
+        DoubleMatrix biasCorrection = computeBiasCorrection(dz, inputCount);
 
         gradientDescentCorrections.add(new GradientDescentCorrection(weightCorrection, biasCorrection));
 
@@ -55,17 +59,33 @@ public class GradientDescent implements LearningAlgorithm {
             GradientDescentLayerResult previousGradientDescentLayerResult = reverseGradientDescentLayerData.get(layerIndex - 1);
             currentGradientDescentLayerResult = reverseGradientDescentLayerData.get(layerIndex);
             nextGradientDescentLayerResult = reverseGradientDescentLayerData.get(layerIndex + 1);
-            ActivationFunctionApplier activationFunction = currentGradientDescentLayerResult.getActivationFunctionType().getActivationFunction();
-            dz = previousGradientDescentLayerResult.getWeightMatrix().mmul(dz)
-                    .muli(activationFunction.derivate(currentGradientDescentLayerResult.getzLayerResults())); //dZ1 = W2 * dZ2 .* g1'(Z1)
-            weightCorrection = nextGradientDescentLayerResult.getaLayerResults().mmul(dz.transpose()).divi(inputCount); //dW1 = 1/m * A0 * dZ1t
-            biasCorrection = dz.rowSums().divi(inputCount); //dB1 = 1/m * sum(dZ1)
+            activationFunction = currentGradientDescentLayerResult.getActivationFunctionType().getActivationFunction();
+            //dZ2 = W2 * dZ2 .* g1'(A1)
+            dz = previousGradientDescentLayerResult.getWeightMatrix()
+                    .mmul(dz)
+                    .muli(activationFunction.derivate(currentGradientDescentLayerResult.getaLayerResults()));
+            weightCorrection = computeWeightCorrection(nextGradientDescentLayerResult, dz, inputCount);
+            biasCorrection = computeBiasCorrection(dz, inputCount);
             gradientDescentCorrections.add(new GradientDescentCorrection(weightCorrection, biasCorrection));
         }
 
         Collections.reverse(gradientDescentCorrections);
 
         return gradientDescentCorrections;
+    }
+
+    private DoubleMatrix computeBiasCorrection(DoubleMatrix dz, int inputCount) {
+        //dB = sum(dZ) ./ m
+        return dz.rowSums()
+                .divi(inputCount);
+    }
+
+
+    private DoubleMatrix computeWeightCorrection(GradientDescentLayerResult nextGradientDescentLayerResult, DoubleMatrix dz, int inputCount) {
+        //dW1 = A0 * dZ1t ./m
+        return nextGradientDescentLayerResult.getaLayerResults()
+                .mmul(dz.transpose())
+                .divi(inputCount);
     }
 
     private List<GradientDescentLayerResult> buildReverseGradientDescentLayerResults(List<GradientDescentLayerResult> gradientDescentLayerData, DoubleMatrix inputMatrix) {

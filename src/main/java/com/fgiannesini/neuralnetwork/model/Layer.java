@@ -34,8 +34,16 @@ public class Layer implements Cloneable {
         return weightMatrix;
     }
 
+    public void setWeightMatrix(DoubleMatrix weightMatrix) {
+        this.weightMatrix = weightMatrix;
+    }
+
     public DoubleMatrix getBiasMatrix() {
         return biasMatrix;
+    }
+
+    public void setBiasMatrix(DoubleMatrix biasMatrix) {
+        this.biasMatrix = biasMatrix;
     }
 
     public ActivationFunctionType getActivationFunctionType() {

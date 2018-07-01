@@ -19,9 +19,9 @@ class IdentityFunctionApplierTest {
     void apply() {
         Assertions.assertAll(
                 checkTanhApply(new double[]{0}, new double[]{0}),
-                checkTanhApply(new double[]{1f}, new double[]{1}),
-                checkTanhApply(new double[]{-1f}, new double[]{-1}),
-                checkTanhApply(new double[]{1f, 2f, 3f, 4f, 5f}, new double[]{1, 2, 3, 4, 5})
+                checkTanhApply(new double[]{1}, new double[]{1}),
+                checkTanhApply(new double[]{-1}, new double[]{-1}),
+                checkTanhApply(new double[]{1, 2, 3, 4, 5}, new double[]{1, 2, 3, 4, 5})
         );
     }
 
@@ -32,14 +32,14 @@ class IdentityFunctionApplierTest {
     @Test
     void derivate() {
         Assertions.assertAll(
-                checkTanhDerivate(new double[]{0f}, new double[]{0}),
-                checkTanhDerivate(new double[]{2f}, new double[]{2}),
-                checkTanhDerivate(new double[]{-2f}, new double[]{-2}),
-                checkTanhDerivate(new double[]{1f, 2f, 3f, 4f, 5f}, new double[]{1, 2, 3, 4, 5})
+                checkIdentityDerivate(new double[]{1}, new double[]{0}),
+                checkIdentityDerivate(new double[]{1}, new double[]{2}),
+                checkIdentityDerivate(new double[]{1}, new double[]{-2}),
+                checkIdentityDerivate(new double[]{1, 1, 1, 1, 1}, new double[]{1, 2, 3, 4, 5})
         );
     }
 
-    private Executable checkTanhDerivate(double[] expected, double[] input) {
+    private Executable checkIdentityDerivate(double[] expected, double[] input) {
         return () -> Assertions.assertArrayEquals(expected, identityFunctionApplier.derivate(new DoubleMatrix(input)).data, 0.0001f);
     }
 }

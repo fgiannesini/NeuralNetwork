@@ -30,11 +30,11 @@ public class NeuralNetworkAssertions {
         Assertions.assertAll(executables);
     }
 
-    private static List<Executable> getMatrixAssertions(DoubleMatrix firstMatrix, DoubleMatrix secondMatrix, String assertedMatrix) {
+    private static List<Executable> getMatrixAssertions(DoubleMatrix currentMatrix, DoubleMatrix expectedMatrix, String assertedMatrix) {
         return Arrays.asList(
-                () -> Assertions.assertEquals(firstMatrix.getColumns(), secondMatrix.getColumns()),
-                () -> Assertions.assertEquals(firstMatrix.getRows(), secondMatrix.getRows()),
-                () -> Assertions.assertArrayEquals(firstMatrix.data, secondMatrix.data, 0.00001, assertedMatrix + " are differents")
+                () -> Assertions.assertEquals(expectedMatrix.getColumns(), currentMatrix.getColumns()),
+                () -> Assertions.assertEquals(expectedMatrix.getRows(), currentMatrix.getRows()),
+                () -> Assertions.assertArrayEquals(expectedMatrix.data, currentMatrix.data, 0.00001, assertedMatrix + " are differents")
         );
     }
 
