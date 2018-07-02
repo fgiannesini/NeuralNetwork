@@ -42,20 +42,20 @@ class NeuralNetworkModelBuilderTest {
 
         Layer firstLayer = layers.get(0);
         Assertions.assertAll(
-                () -> Assertions.assertEquals(10, firstLayer.getWeightMatrix().rows),
-                () -> Assertions.assertEquals(5, firstLayer.getWeightMatrix().columns),
-                () -> Assertions.assertEquals(1, firstLayer.getBiasMatrix().rows),
-                () -> Assertions.assertEquals(5, firstLayer.getBiasMatrix().columns),
-                () -> Assertions.assertEquals(ActivationFunctionType.RELU, firstLayer.getActivationFunctionType(), "Default layer activation function is not None")
+          () -> Assertions.assertEquals(5, firstLayer.getWeightMatrix().rows),
+          () -> Assertions.assertEquals(10, firstLayer.getWeightMatrix().columns),
+          () -> Assertions.assertEquals(5, firstLayer.getBiasMatrix().rows),
+          () -> Assertions.assertEquals(1, firstLayer.getBiasMatrix().columns),
+          () -> Assertions.assertEquals(ActivationFunctionType.RELU, firstLayer.getActivationFunctionType(), "Default layer activation function is not None")
         );
 
         Layer secondLayer = layers.get(1);
         Assertions.assertAll(
-                () -> Assertions.assertEquals(5, secondLayer.getWeightMatrix().rows),
-                () -> Assertions.assertEquals(3, secondLayer.getWeightMatrix().columns),
-                () -> Assertions.assertEquals(1, secondLayer.getBiasMatrix().rows),
-                () -> Assertions.assertEquals(3, secondLayer.getBiasMatrix().columns),
-                () -> Assertions.assertEquals(ActivationFunctionType.RELU, secondLayer.getActivationFunctionType(), "Last layer activation function is not Sigmoid")
+          () -> Assertions.assertEquals(3, secondLayer.getWeightMatrix().rows),
+          () -> Assertions.assertEquals(5, secondLayer.getWeightMatrix().columns),
+          () -> Assertions.assertEquals(3, secondLayer.getBiasMatrix().rows),
+          () -> Assertions.assertEquals(1, secondLayer.getBiasMatrix().columns),
+          () -> Assertions.assertEquals(ActivationFunctionType.RELU, secondLayer.getActivationFunctionType(), "Last layer activation function is not Sigmoid")
         );
     }
 
@@ -78,29 +78,29 @@ class NeuralNetworkModelBuilderTest {
 
         Layer firstLayer = layers.get(0);
         Assertions.assertAll(
-                () -> Assertions.assertEquals(10, firstLayer.getWeightMatrix().rows),
-                () -> Assertions.assertEquals(5, firstLayer.getWeightMatrix().columns),
-                () -> Assertions.assertEquals(1, firstLayer.getBiasMatrix().rows),
-                () -> Assertions.assertEquals(5, firstLayer.getBiasMatrix().columns),
-                () -> Assertions.assertEquals(ActivationFunctionType.NONE, firstLayer.getActivationFunctionType())
+          () -> Assertions.assertEquals(5, firstLayer.getWeightMatrix().rows),
+          () -> Assertions.assertEquals(10, firstLayer.getWeightMatrix().columns),
+          () -> Assertions.assertEquals(5, firstLayer.getBiasMatrix().rows),
+          () -> Assertions.assertEquals(1, firstLayer.getBiasMatrix().columns),
+          () -> Assertions.assertEquals(ActivationFunctionType.NONE, firstLayer.getActivationFunctionType())
         );
 
         Layer secondLayer = layers.get(1);
         Assertions.assertAll(
-                () -> Assertions.assertEquals(5, secondLayer.getWeightMatrix().rows),
-                () -> Assertions.assertEquals(7, secondLayer.getWeightMatrix().columns),
-                () -> Assertions.assertEquals(1, secondLayer.getBiasMatrix().rows),
-                () -> Assertions.assertEquals(7, secondLayer.getBiasMatrix().columns),
-                () -> Assertions.assertEquals(ActivationFunctionType.NONE, secondLayer.getActivationFunctionType())
+          () -> Assertions.assertEquals(7, secondLayer.getWeightMatrix().rows),
+          () -> Assertions.assertEquals(5, secondLayer.getWeightMatrix().columns),
+          () -> Assertions.assertEquals(7, secondLayer.getBiasMatrix().rows),
+          () -> Assertions.assertEquals(1, secondLayer.getBiasMatrix().columns),
+          () -> Assertions.assertEquals(ActivationFunctionType.NONE, secondLayer.getActivationFunctionType())
         );
 
         Layer thirdLayer = layers.get(2);
         Assertions.assertAll(
-                () -> Assertions.assertEquals(7, thirdLayer.getWeightMatrix().rows),
-                () -> Assertions.assertEquals(10, thirdLayer.getWeightMatrix().columns),
-                () -> Assertions.assertEquals(1, thirdLayer.getBiasMatrix().rows),
-                () -> Assertions.assertEquals(10, thirdLayer.getBiasMatrix().columns),
-                () -> Assertions.assertEquals(ActivationFunctionType.SIGMOID, thirdLayer.getActivationFunctionType())
+          () -> Assertions.assertEquals(10, thirdLayer.getWeightMatrix().rows),
+          () -> Assertions.assertEquals(7, thirdLayer.getWeightMatrix().columns),
+          () -> Assertions.assertEquals(10, thirdLayer.getBiasMatrix().rows),
+          () -> Assertions.assertEquals(1, thirdLayer.getBiasMatrix().columns),
+          () -> Assertions.assertEquals(ActivationFunctionType.SIGMOID, thirdLayer.getActivationFunctionType())
         );
     }
 

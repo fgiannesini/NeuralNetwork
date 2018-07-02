@@ -173,16 +173,16 @@ class GradientDescentTest {
                 {0.25, 0.3}
         };
         double[] firstBiasMatrix = new double[]{0.35, 0.35};
-        neuralNetworkModel.getLayers().get(0).setWeightMatrix(new DoubleMatrix(firstWeightMatrix).transpose());
-        neuralNetworkModel.getLayers().get(0).setBiasMatrix(new DoubleMatrix(firstBiasMatrix).transpose());
+        neuralNetworkModel.getLayers().get(0).setWeightMatrix(new DoubleMatrix(firstWeightMatrix));
+        neuralNetworkModel.getLayers().get(0).setBiasMatrix(new DoubleMatrix(firstBiasMatrix));
 
         double[][] secondWeightMatrix = new double[][]{
                 {0.40, 0.45},
                 {0.50, 0.55}
         };
         double[] secondBiasMatrix = new double[]{0.6, 0.6};
-        neuralNetworkModel.getLayers().get(1).setWeightMatrix(new DoubleMatrix(secondWeightMatrix).transpose());
-        neuralNetworkModel.getLayers().get(1).setBiasMatrix(new DoubleMatrix(secondBiasMatrix).transpose());
+        neuralNetworkModel.getLayers().get(1).setWeightMatrix(new DoubleMatrix(secondWeightMatrix));
+        neuralNetworkModel.getLayers().get(1).setBiasMatrix(new DoubleMatrix(secondBiasMatrix));
 
         LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, 0.5f);
 

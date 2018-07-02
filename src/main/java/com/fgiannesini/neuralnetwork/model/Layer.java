@@ -18,8 +18,8 @@ public class Layer implements Cloneable {
         this.inputLayerSize = inputLayerSize;
         this.outputLayerSize = outputLayerSize;
         this.activationFunctionType = activationFunctionType;
-        weightMatrix = initializer.initDoubleMatrix(inputLayerSize, outputLayerSize);
-        biasMatrix = initializer.initDoubleMatrix(1, outputLayerSize);
+        weightMatrix = initializer.initDoubleMatrix(outputLayerSize, inputLayerSize);
+        biasMatrix = initializer.initDoubleMatrix(outputLayerSize, 1);
     }
 
     public int getInputLayerSize() {

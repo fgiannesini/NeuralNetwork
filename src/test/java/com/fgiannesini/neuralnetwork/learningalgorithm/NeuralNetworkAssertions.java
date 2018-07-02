@@ -39,8 +39,8 @@ public class NeuralNetworkAssertions {
     }
 
     public static void checkNeuralNetworksLayer(NeuralNetworkModel neuralNetworkModel, int layerIndex, double[][] expectedWeights, double[] expectedBias) {
-        DoubleMatrix expectedWeightsMatrix = new DoubleMatrix(expectedWeights);
-        DoubleMatrix expectedBiasMatrix = new DoubleMatrix(expectedBias).transpose();
+        DoubleMatrix expectedWeightsMatrix = new DoubleMatrix(expectedWeights).transpose();
+        DoubleMatrix expectedBiasMatrix = new DoubleMatrix(expectedBias);
         Layer layer = neuralNetworkModel.getLayers().get(layerIndex);
         List<Executable> matrixAssertions = new ArrayList<>();
         matrixAssertions.addAll(getMatrixAssertions(layer.getWeightMatrix(), expectedWeightsMatrix, "WeightMatrix"));
