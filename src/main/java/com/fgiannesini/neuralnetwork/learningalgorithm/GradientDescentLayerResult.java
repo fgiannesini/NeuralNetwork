@@ -4,9 +4,8 @@ import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import org.jblas.DoubleMatrix;
 
 class GradientDescentLayerResult {
-    private DoubleMatrix zLayerResults;
     private DoubleMatrix aLayerResults;
-    private DoubleMatrix weightMatrix;
+    private final DoubleMatrix weightMatrix;
 
     private ActivationFunctionType activationFunctionType;
 
@@ -27,16 +26,8 @@ class GradientDescentLayerResult {
         return weightMatrix;
     }
 
-    void setZResultLayer(DoubleMatrix zLayerResult) {
-        zLayerResults = zLayerResult;
-    }
-
     void setAResultLayer(DoubleMatrix aLayerResult) {
         aLayerResults = aLayerResult;
-    }
-
-    public DoubleMatrix getzLayerResults() {
-        return zLayerResults;
     }
 
     public DoubleMatrix getaLayerResults() {

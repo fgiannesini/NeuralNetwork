@@ -7,7 +7,7 @@ import org.jblas.DoubleMatrix;
 
 public class LinearRegressionCostComputer implements CostComputer {
 
-    private OutputComputer outputComputer;
+    private final OutputComputer outputComputer;
 
     public LinearRegressionCostComputer(NeuralNetworkModel neuralNetworkModel) {
         outputComputer = OutputComputerBuilder.init().withModel(neuralNetworkModel).build();

@@ -3,8 +3,8 @@ package com.fgiannesini.neuralnetwork.learningalgorithm;
 import org.jblas.DoubleMatrix;
 
 class GradientDescentCorrection {
-    private DoubleMatrix weightCorrectionResults;
-    private DoubleMatrix biasCorrectionResults;
+    private final DoubleMatrix weightCorrectionResults;
+    private final DoubleMatrix biasCorrectionResults;
 
     public GradientDescentCorrection(DoubleMatrix weightCorrectionResults, DoubleMatrix biasCorrectionResults) {
         this.weightCorrectionResults = weightCorrectionResults;

@@ -11,10 +11,10 @@ import java.util.List;
 
 public class GradientDescentWithDerivation implements LearningAlgorithm {
 
-    private NeuralNetworkModel originalNeuralNetworkModel;
-    private CostType costType;
-    private double learningRate;
-    private double step = 0.0001;
+    private final NeuralNetworkModel originalNeuralNetworkModel;
+    private final CostType costType;
+    private final double learningRate;
+    private final double step = 0.0001;
 
     public GradientDescentWithDerivation(NeuralNetworkModel neuralNetworkModel, CostType costType, double learningRate) {
         this.originalNeuralNetworkModel = neuralNetworkModel;

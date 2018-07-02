@@ -11,8 +11,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class GradientDescent implements LearningAlgorithm {
-  private NeuralNetworkModel neuralNetworkModel;
-  private double learningRate;
+  private final NeuralNetworkModel neuralNetworkModel;
+  private final double learningRate;
 
   GradientDescent(NeuralNetworkModel neuralNetworkModel, double learningRate) {
     this.neuralNetworkModel = neuralNetworkModel.clone();
@@ -60,7 +60,7 @@ public class GradientDescent implements LearningAlgorithm {
       currentGradientDescentLayerResult = reverseGradientDescentLayerData.get(layerIndex);
       nextGradientDescentLayerResult = reverseGradientDescentLayerData.get(layerIndex + 1);
       activationFunction = currentGradientDescentLayerResult.getActivationFunctionType().getActivationFunction();
-      //dZ2 = W2t * dZ2 .* g1'(A1)
+      //dZ1 = W2t * dZ2 .* g1'(A1)
       dz = previousGradientDescentLayerResult.getWeightMatrix().transpose()
         .mmul(dz)
         .muli(activationFunction.derivate(currentGradientDescentLayerResult.getaLayerResults()));
@@ -93,7 +93,6 @@ public class GradientDescent implements LearningAlgorithm {
     Collections.reverse(reverseGradientDescentLayerData);
     GradientDescentLayerResult inputResult = new GradientDescentLayerResult();
     inputResult.setAResultLayer(inputMatrix);
-    inputResult.setZResultLayer(inputMatrix);
     reverseGradientDescentLayerData.add(inputResult);
     return reverseGradientDescentLayerData;
   }
@@ -106,7 +105,6 @@ public class GradientDescent implements LearningAlgorithm {
       GradientDescentLayerResult gradientDescentLayerResult = new GradientDescentLayerResult(layer.getWeightMatrix(),
                                                                                              layer.getActivationFunctionType());
       DoubleMatrix zResult = LayerComputerHelper.computeZFromInput(currentResult, layer);
-      gradientDescentLayerResult.setZResultLayer(zResult);
       DoubleMatrix aResult = LayerComputerHelper.computeAFromZ(zResult, layer);
       gradientDescentLayerResult.setAResultLayer(aResult);
       gradientDescentLayerResults.add(gradientDescentLayerResult);
