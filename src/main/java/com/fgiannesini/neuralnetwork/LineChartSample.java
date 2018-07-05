@@ -22,10 +22,10 @@ import java.util.concurrent.Executors;
 
 public class LineChartSample extends Application {
 
-    ObservableList<XYChart.Data<String, Integer>> xyList1 = FXCollections.observableArrayList();
-    ObservableList<XYChart.Data<String, Integer>> xyList2 = FXCollections.observableArrayList();
+    private final ObservableList<XYChart.Data<String, Integer>> xyList1 = FXCollections.observableArrayList();
+    private final ObservableList<XYChart.Data<String, Integer>> xyList2 = FXCollections.observableArrayList();
 
-    ObservableList<String> myXaxisCategories = FXCollections.observableArrayList();
+    private final ObservableList<String> myXaxisCategories = FXCollections.observableArrayList();
 
     private Task<Date> task;
     private LineChart<String, Number> lineChart;
@@ -56,7 +56,7 @@ public class LineChartSample extends Application {
 
         task = new Task<Date>() {
             @Override
-            protected Date call() throws Exception {
+            protected Date call() {
                 while (true) {
                     try {
                         Thread.sleep(1000);
@@ -75,8 +75,8 @@ public class LineChartSample extends Application {
         };
 
         task.valueProperty().addListener(new ChangeListener<Date>() {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-            Random random = new Random();
+            final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+            final Random random = new Random();
 
             @Override
             public void changed(ObservableValue<? extends Date> observableValue, Date oldDate, Date newDate) {
@@ -84,8 +84,8 @@ public class LineChartSample extends Application {
                 String strDate = dateFormat.format(newDate);
                 myXaxisCategories.add(strDate);
 
-                xyList1.add(new XYChart.Data(strDate, Integer.valueOf(newDate.getMinutes() + random.nextInt(100500))));
-                xyList2.add(new XYChart.Data(strDate, Integer.valueOf(newDate.getMinutes() + random.nextInt(100500) - random.nextInt(10050))));
+                xyList1.add(new XYChart.Data(strDate, newDate.getMinutes() + random.nextInt(100500)));
+                xyList2.add(new XYChart.Data(strDate, newDate.getMinutes() + random.nextInt(100500) - random.nextInt(10050)));
 
             }
         });
@@ -109,9 +109,7 @@ public class LineChartSample extends Application {
         stage.setScene(scene);
         stage.show();
 
-        stage.setOnCloseRequest(windowEvent -> {
-            task.cancel();
-        });
+        stage.setOnCloseRequest(windowEvent -> task.cancel());
     }
 
     public static void main(String[] args) {

@@ -30,10 +30,10 @@ public class Pong extends Application {
     private int scoreP1 = 0;
     private int scoreP2 = 0;
     private boolean gameStarted;
-    private int playerOneXPos = 0;
-    private double playerTwoXPos = width - PLAYER_WIDTH;
+    private final int playerOneXPos = 0;
+    private final double playerTwoXPos = width - PLAYER_WIDTH;
 
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         Canvas canvas = new Canvas(width, height);
         GraphicsContext gc = canvas.getGraphicsContext2D();
         Timeline tl = new Timeline(new KeyFrame(Duration.millis(10), e -> run(gc)));

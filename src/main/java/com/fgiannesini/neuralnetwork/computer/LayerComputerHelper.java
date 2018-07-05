@@ -12,7 +12,7 @@ public class LayerComputerHelper {
     }
 
     public static DoubleMatrix computeZFromInput(DoubleMatrix input, Layer layer) {
-        //Wt.X + b
+        //W.X + b
         return layer.getWeightMatrix().mmul(input).addiColumnVector(layer.getBiasMatrix());
     }
 
