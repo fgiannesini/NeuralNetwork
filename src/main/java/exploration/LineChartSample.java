@@ -1,4 +1,4 @@
-package com.fgiannesini.neuralnetwork;
+package exploration;
 
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -84,8 +84,8 @@ public class LineChartSample extends Application {
                 String strDate = dateFormat.format(newDate);
                 myXaxisCategories.add(strDate);
 
-                xyList1.add(new XYChart.Data(strDate, newDate.getMinutes() + random.nextInt(100500)));
-                xyList2.add(new XYChart.Data(strDate, newDate.getMinutes() + random.nextInt(100500) - random.nextInt(10050)));
+                xyList1.add(new XYChart.Data<>(strDate, newDate.getMinutes() + random.nextInt(100500)));
+                xyList2.add(new XYChart.Data<>(strDate, newDate.getMinutes() + random.nextInt(100500) - random.nextInt(10050)));
 
             }
         });
