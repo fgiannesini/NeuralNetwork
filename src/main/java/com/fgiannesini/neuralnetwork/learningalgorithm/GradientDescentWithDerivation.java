@@ -33,10 +33,7 @@ public class GradientDescentWithDerivation implements LearningAlgorithm {
             DoubleMatrix originalWeightMatrix = layer.getWeightMatrix();
             for (int elementIndex = 0; elementIndex < originalWeightMatrix.length; elementIndex++) {
                 NeuralNetworkModel modifiedNeuralNetworkModel = originalNeuralNetworkModel.clone();
-                CostComputer costComputer = CostComputerBuilder.init()
-                        .withNeuralNetworkModel(modifiedNeuralNetworkModel)
-                        .withType(costType)
-                        .build();
+                CostComputer costComputer = buildCostComputer(modifiedNeuralNetworkModel);
 
                 DoubleMatrix modifiedWeightMatrix = modifiedNeuralNetworkModel.getLayers().get(layerIndex).getWeightMatrix();
 
@@ -56,11 +53,7 @@ public class GradientDescentWithDerivation implements LearningAlgorithm {
             DoubleMatrix originalBiasMatrix = layer.getBiasMatrix();
             for (int elementIndex = 0; elementIndex < originalBiasMatrix.length; elementIndex++) {
                 NeuralNetworkModel modifiedNeuralNetworkModel = originalNeuralNetworkModel.clone();
-                CostComputer costComputer = CostComputerBuilder.init()
-                        .withNeuralNetworkModel(modifiedNeuralNetworkModel)
-                        .withType(costType)
-                        .build();
-
+                CostComputer costComputer = buildCostComputer(modifiedNeuralNetworkModel);
                 DoubleMatrix modifiedBiasMatrix = modifiedNeuralNetworkModel.getLayers().get(layerIndex).getBiasMatrix();
 
                 modifiedBiasMatrix.put(elementIndex, modifiedBiasMatrix.get(elementIndex) + step);
@@ -79,5 +72,12 @@ public class GradientDescentWithDerivation implements LearningAlgorithm {
         }
 
         return resultNeuralNetworkModel;
+    }
+
+    protected CostComputer buildCostComputer(NeuralNetworkModel modifiedNeuralNetworkModel) {
+        return CostComputerBuilder.init()
+                .withNeuralNetworkModel(modifiedNeuralNetworkModel)
+                .withType(costType)
+                .build();
     }
 }

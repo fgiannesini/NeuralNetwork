@@ -10,11 +10,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class GradientDescent implements LearningAlgorithm {
-    private final NeuralNetworkModel neuralNetworkModel;
+    private final NeuralNetworkModel correctedNeuralNetworkModel;
     private final double learningRate;
 
-    GradientDescent(NeuralNetworkModel neuralNetworkModel, double learningRate) {
-        this.neuralNetworkModel = neuralNetworkModel.clone();
+    GradientDescent(NeuralNetworkModel originalNeuralNetworkModel, double learningRate) {
+        this.correctedNeuralNetworkModel = originalNeuralNetworkModel.clone();
         this.learningRate = learningRate;
     }
 
@@ -22,18 +22,18 @@ public class GradientDescent implements LearningAlgorithm {
     public NeuralNetworkModel learn(DoubleMatrix inputMatrix, DoubleMatrix y) {
         GradientLayerProvider provider = launchForwardComputation(inputMatrix);
         List<GradientDescentCorrection> gradientDescentCorrections = launchBackwardComputation(provider, y);
-        return applyGradientDescentCorrections(gradientDescentCorrections);
+        return applyGradientDescentCorrections(gradientDescentCorrections, y.getColumns());
     }
 
-    private NeuralNetworkModel applyGradientDescentCorrections(List<GradientDescentCorrection> gradientDescentCorrections) {
-        List<Layer> layers = neuralNetworkModel.getLayers();
+    protected NeuralNetworkModel applyGradientDescentCorrections(List<GradientDescentCorrection> gradientDescentCorrections, int inputCount) {
+        List<Layer> layers = correctedNeuralNetworkModel.getLayers();
         for (int layerIndex = 0; layerIndex < layers.size(); layerIndex++) {
             GradientDescentCorrection gradientDescentCorrection = gradientDescentCorrections.get(layerIndex);
             Layer layer = layers.get(layerIndex);
             layer.getWeightMatrix().subi(gradientDescentCorrection.getWeightCorrectionResults().mul(learningRate));
             layer.getBiasMatrix().subi(gradientDescentCorrection.getBiasCorrectionResults().mul(learningRate));
         }
-        return neuralNetworkModel;
+        return correctedNeuralNetworkModel;
     }
 
     private List<GradientDescentCorrection> launchBackwardComputation(GradientLayerProvider provider, DoubleMatrix y) {
@@ -79,8 +79,8 @@ public class GradientDescent implements LearningAlgorithm {
     }
 
     private GradientLayerProvider launchForwardComputation(DoubleMatrix inputMatrix) {
-        List<Layer> layers = neuralNetworkModel.getLayers();
-        GradientLayerProvider gradientLayerProvider = new GradientLayerProvider(neuralNetworkModel.getLayers());
+        List<Layer> layers = correctedNeuralNetworkModel.getLayers();
+        GradientLayerProvider gradientLayerProvider = new GradientLayerProvider(correctedNeuralNetworkModel.getLayers());
         gradientLayerProvider.addGradientLayerResult(inputMatrix);
         DoubleMatrix currentResult = inputMatrix;
         for (Layer layer : layers) {
