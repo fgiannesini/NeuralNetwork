@@ -9,6 +9,7 @@ repositories {
 
 dependencies {
     implementation group: 'org.jblas', name: 'jblas', version: '1.2.4'
+    implementation group: 'net.java.dev.jna', name: 'jna-platform', version: '4.5.1'
 
     test.useJUnitPlatform()
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:+'

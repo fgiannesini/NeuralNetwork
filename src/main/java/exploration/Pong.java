@@ -1,4 +1,4 @@
-package com.fgiannesini.neuralnetwork;
+package exploration;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
