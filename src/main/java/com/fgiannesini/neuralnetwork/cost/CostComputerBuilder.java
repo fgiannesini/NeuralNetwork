@@ -1,12 +1,16 @@
 package com.fgiannesini.neuralnetwork.cost;
 
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
+import org.jblas.DoubleMatrix;
+
+import java.util.List;
 
 public class CostComputerBuilder {
 
     private NeuralNetworkModel neuralNetworkModel;
     private CostType costType;
     private Double l2RegularizationCoeff;
+    private List<DoubleMatrix> dropOutMatrix;
 
     private CostComputerBuilder() {
         costType = CostType.LINEAR_REGRESSION;
@@ -31,6 +35,11 @@ public class CostComputerBuilder {
         return this;
     }
 
+    public CostComputerBuilder withDropOutRegularization(List<DoubleMatrix> dropOutMatrix) {
+        this.dropOutMatrix = dropOutMatrix;
+        return this;
+    }
+
     public CostComputer build() {
         if (neuralNetworkModel == null) {
             throw new IllegalArgumentException("NeuralNetworkModel missing");
@@ -48,8 +57,13 @@ public class CostComputerBuilder {
         }
 
         if (l2RegularizationCoeff != null) {
-            costComputer = new CostComputerWithL2LinearRegression(neuralNetworkModel, costComputer, l2RegularizationCoeff);
+            costComputer = new CostComputerWithL2Regularization(neuralNetworkModel, costComputer, l2RegularizationCoeff);
+        }
+
+        if (dropOutMatrix != null) {
+//            costComputer = new CostComputerWithDropOutRegularization(neuralNetworkModel, dropOutMatrix);
         }
         return costComputer;
     }
+
 }

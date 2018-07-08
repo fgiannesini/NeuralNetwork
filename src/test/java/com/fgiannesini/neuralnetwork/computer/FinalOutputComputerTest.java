@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-class OutputComputerTest {
+class FinalOutputComputerTest {
 
     @Test
     void compute_one_dimension_output_with_one_hidden_layer() {
@@ -25,7 +25,7 @@ class OutputComputerTest {
 
         double[] output = OutputComputerBuilder.init()
                 .withModel(model)
-                .build()
+                .buildFinalOutputComputer()
                 .compute(inputData);
         Assertions.assertArrayEquals(new double[]{17, 17}, output);
     }
@@ -46,7 +46,7 @@ class OutputComputerTest {
 
         double[] output = OutputComputerBuilder.init()
                 .withModel(model)
-                .build()
+                .buildFinalOutputComputer()
                 .compute(inputData);
         Assertions.assertArrayEquals(new double[]{39, 39}, output);
     }
@@ -69,7 +69,7 @@ class OutputComputerTest {
 
         double[][] output = OutputComputerBuilder.init()
                 .withModel(model)
-                .build()
+                .buildFinalOutputComputer()
                 .compute(inputData);
         double[][] expected = {{39, 39}, {63, 63}};
         Assertions.assertArrayEquals(expected, output);

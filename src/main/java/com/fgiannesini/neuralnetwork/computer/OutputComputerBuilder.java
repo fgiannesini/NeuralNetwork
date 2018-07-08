@@ -18,11 +18,19 @@ public class OutputComputerBuilder {
         return this;
     }
 
-    public OutputComputer build() {
+    public FinalOutputComputer buildFinalOutputComputer() {
+        checkParameters();
+        return new FinalOutputComputer(neuralNetworkModel);
+    }
+
+    public IntermediateOutputComputer buildIntermediateOutputComputer() {
+        checkParameters();
+        return new IntermediateOutputComputer(neuralNetworkModel);
+    }
+
+    private void checkParameters() {
         if (neuralNetworkModel == null) {
             throw new IllegalArgumentException("Missing neural Network");
         }
-        return new OutputComputer(neuralNetworkModel);
     }
-
 }

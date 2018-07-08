@@ -4,13 +4,13 @@ import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
 import org.jblas.MatrixFunctions;
 
-public class CostComputerWithL2LinearRegression implements CostComputer {
+public class CostComputerWithL2Regularization implements CostComputer {
 
     private final NeuralNetworkModel neuralNetworkModel;
     private final CostComputer costComputer;
     private double regularizationCoeff;
 
-    public CostComputerWithL2LinearRegression(NeuralNetworkModel neuralNetworkModel, CostComputer costComputer, double regularizationCoeff) {
+    public CostComputerWithL2Regularization(NeuralNetworkModel neuralNetworkModel, CostComputer costComputer, double regularizationCoeff) {
         this.neuralNetworkModel = neuralNetworkModel;
         this.costComputer = costComputer;
         this.regularizationCoeff = regularizationCoeff;

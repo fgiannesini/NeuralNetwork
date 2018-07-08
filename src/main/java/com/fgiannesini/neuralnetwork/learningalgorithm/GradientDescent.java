@@ -1,6 +1,7 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm;
 
-import com.fgiannesini.neuralnetwork.computer.LayerComputerHelper;
+import com.fgiannesini.neuralnetwork.computer.IntermediateOutputComputer;
+import com.fgiannesini.neuralnetwork.computer.OutputComputerBuilder;
 import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
@@ -13,7 +14,7 @@ public class GradientDescent implements LearningAlgorithm {
     private final NeuralNetworkModel correctedNeuralNetworkModel;
     private final double learningRate;
 
-    GradientDescent(NeuralNetworkModel originalNeuralNetworkModel, double learningRate) {
+    public GradientDescent(NeuralNetworkModel originalNeuralNetworkModel, double learningRate) {
         this.correctedNeuralNetworkModel = originalNeuralNetworkModel.clone();
         this.learningRate = learningRate;
     }
@@ -80,16 +81,11 @@ public class GradientDescent implements LearningAlgorithm {
 
     private GradientLayerProvider launchForwardComputation(DoubleMatrix inputMatrix) {
         List<Layer> layers = correctedNeuralNetworkModel.getLayers();
-        GradientLayerProvider gradientLayerProvider = new GradientLayerProvider(correctedNeuralNetworkModel.getLayers());
-        gradientLayerProvider.addGradientLayerResult(inputMatrix);
-        DoubleMatrix currentResult = inputMatrix;
-        for (Layer layer : layers) {
-            DoubleMatrix zResult = LayerComputerHelper.computeZFromInput(currentResult, layer);
-            DoubleMatrix aResult = LayerComputerHelper.computeAFromZ(zResult, layer);
-            gradientLayerProvider.addGradientLayerResult(aResult);
-            currentResult = aResult;
-        }
-        return gradientLayerProvider;
+        IntermediateOutputComputer intermediateOutputComputer = OutputComputerBuilder.init()
+                .withModel(correctedNeuralNetworkModel)
+                .buildIntermediateOutputComputer();
+        List<DoubleMatrix> intermediateResults = intermediateOutputComputer.compute(inputMatrix);
+        return new GradientLayerProvider(layers, intermediateResults);
     }
 
 }

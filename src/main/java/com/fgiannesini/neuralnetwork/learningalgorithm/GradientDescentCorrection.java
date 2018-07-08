@@ -2,7 +2,7 @@ package com.fgiannesini.neuralnetwork.learningalgorithm;
 
 import org.jblas.DoubleMatrix;
 
-class GradientDescentCorrection {
+public class GradientDescentCorrection {
     private final DoubleMatrix weightCorrectionResults;
     private final DoubleMatrix biasCorrectionResults;
 

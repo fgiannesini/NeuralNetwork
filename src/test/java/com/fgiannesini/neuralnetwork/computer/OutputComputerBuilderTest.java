@@ -7,7 +7,8 @@ class OutputComputerBuilderTest {
 
     @Test
     void test_exception_if_neuralNetworkModel_missing() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> OutputComputerBuilder.init().build());
+        Assertions.assertThrows(IllegalArgumentException.class, () -> OutputComputerBuilder.init().buildFinalOutputComputer());
+        Assertions.assertThrows(IllegalArgumentException.class, () -> OutputComputerBuilder.init().buildIntermediateOutputComputer());
     }
 
 }

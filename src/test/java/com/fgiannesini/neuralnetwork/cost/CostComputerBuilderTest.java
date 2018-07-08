@@ -30,7 +30,7 @@ class CostComputerBuilderTest {
                 .withL2Regularization(0.5)
                 .build();
 
-        Assertions.assertTrue(costComputer instanceof CostComputerWithL2LinearRegression);
+        Assertions.assertTrue(costComputer instanceof CostComputerWithL2Regularization);
     }
 
     @Test

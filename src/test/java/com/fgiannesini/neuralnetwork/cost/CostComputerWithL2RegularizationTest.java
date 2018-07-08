@@ -6,7 +6,7 @@ import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class CostComputerWithL2LinearRegressionTest {
+class CostComputerWithL2RegularizationTest {
 
     @Test
     void compute() {
@@ -20,8 +20,8 @@ class CostComputerWithL2LinearRegressionTest {
         double[][] input = {{1, 2, 3}, {1, 2, 3}, {1, 2, 3}};
         double[][] output = {{1, 2, 3}, {1, 2, 3}, {1, 2, 3}};
 
-        CostComputerWithL2LinearRegression costComputerWithL2LinearRegression = new CostComputerWithL2LinearRegression(neuralNetworkModel, (inputMatrix, outputMatrix) -> 0, 0.5);
-        double cost = costComputerWithL2LinearRegression.compute(input, output);
+        CostComputerWithL2Regularization costComputerWithL2Regularization = new CostComputerWithL2Regularization(neuralNetworkModel, (inputMatrix, outputMatrix) -> 0, 0.5);
+        double cost = costComputerWithL2Regularization.compute(input, output);
         Assertions.assertEquals(1.6666, cost, 0.0001);
     }
 }

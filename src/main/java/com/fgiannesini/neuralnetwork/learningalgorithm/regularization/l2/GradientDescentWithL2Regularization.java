@@ -1,5 +1,7 @@
-package com.fgiannesini.neuralnetwork.learningalgorithm;
+package com.fgiannesini.neuralnetwork.learningalgorithm.regularization.l2;
 
+import com.fgiannesini.neuralnetwork.learningalgorithm.GradientDescent;
+import com.fgiannesini.neuralnetwork.learningalgorithm.GradientDescentCorrection;
 import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 
@@ -10,7 +12,7 @@ public class GradientDescentWithL2Regularization extends GradientDescent {
     private final double regularizationCoeff;
     private final NeuralNetworkModel originalNeuralNetworkModel;
 
-    GradientDescentWithL2Regularization(NeuralNetworkModel originalNeuralNetworkModel, double learningRate, double regularizationCoeff) {
+    public GradientDescentWithL2Regularization(NeuralNetworkModel originalNeuralNetworkModel, double learningRate, double regularizationCoeff) {
         super(originalNeuralNetworkModel, learningRate);
         this.originalNeuralNetworkModel = originalNeuralNetworkModel;
         this.learningRate = learningRate;

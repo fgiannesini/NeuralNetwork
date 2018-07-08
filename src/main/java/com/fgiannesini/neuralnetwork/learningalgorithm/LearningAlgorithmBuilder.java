@@ -1,7 +1,11 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm;
 
 import com.fgiannesini.neuralnetwork.cost.CostType;
+import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.l2.GradientDescentWithDerivationAndL2Regularization;
+import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.l2.GradientDescentWithL2Regularization;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
+
+import java.util.Arrays;
 
 public class LearningAlgorithmBuilder {
 
@@ -11,6 +15,7 @@ public class LearningAlgorithmBuilder {
     private double learningRate;
     private CostType costType;
     private Double l2RegularizationCoeff;
+    private double[] dropOutRegularizationCoeffs;
 
     private LearningAlgorithmBuilder() {
         learningAlgorithmType = LearningAlgorithmType.GRADIENT_DESCENT;
@@ -47,10 +52,13 @@ public class LearningAlgorithmBuilder {
         return this;
     }
 
+    public LearningAlgorithmBuilder withDropOutRegularitation(double... dropOutRegularizationCoeffs) {
+        this.dropOutRegularizationCoeffs = dropOutRegularizationCoeffs;
+        return this;
+    }
+
     public LearningAlgorithm build() {
-        if (neuralNetworkModel == null) {
-            throw new IllegalArgumentException("NeuralNetworkModel missing");
-        }
+        checkInputs();
         LearningAlgorithm learningAlgorithm;
         switch (learningAlgorithmType) {
             case GRADIENT_DESCENT:
@@ -71,6 +79,21 @@ public class LearningAlgorithmBuilder {
                 throw new IllegalArgumentException(learningAlgorithmType + " instantiation is not implemented");
         }
         return learningAlgorithm;
+    }
+
+    private void checkInputs() {
+        if (neuralNetworkModel == null) {
+            throw new IllegalArgumentException("NeuralNetworkModel missing");
+        }
+        if (dropOutRegularizationCoeffs != null && l2RegularizationCoeff != null) {
+            throw new IllegalArgumentException("You can't use several regularization methods");
+        }
+        if (dropOutRegularizationCoeffs != null && dropOutRegularizationCoeffs.length != neuralNetworkModel.getLayers().size() + 1) {
+            throw new IllegalArgumentException("Drop out Regularization need " + (neuralNetworkModel.getLayers().size() + 1) + " parameters");
+        }
+        if (dropOutRegularizationCoeffs != null && Arrays.stream(dropOutRegularizationCoeffs).anyMatch(d -> d > 1 || d < 0)) {
+            throw new IllegalArgumentException("Drop out Regularization coeffs should be between 0 and 1");
+        }
     }
 
 }
