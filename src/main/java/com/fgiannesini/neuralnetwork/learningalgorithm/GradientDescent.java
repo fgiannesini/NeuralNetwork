@@ -1,7 +1,7 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm;
 
-import com.fgiannesini.neuralnetwork.computer.IntermediateOutputComputer;
 import com.fgiannesini.neuralnetwork.computer.OutputComputerBuilder;
+import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IIntermediateOutputComputer;
 import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
@@ -81,7 +81,7 @@ public class GradientDescent implements LearningAlgorithm {
 
     private GradientLayerProvider launchForwardComputation(DoubleMatrix inputMatrix) {
         List<Layer> layers = correctedNeuralNetworkModel.getLayers();
-        IntermediateOutputComputer intermediateOutputComputer = OutputComputerBuilder.init()
+        IIntermediateOutputComputer intermediateOutputComputer = OutputComputerBuilder.init()
                 .withModel(correctedNeuralNetworkModel)
                 .buildIntermediateOutputComputer();
         List<DoubleMatrix> intermediateResults = intermediateOutputComputer.compute(inputMatrix);

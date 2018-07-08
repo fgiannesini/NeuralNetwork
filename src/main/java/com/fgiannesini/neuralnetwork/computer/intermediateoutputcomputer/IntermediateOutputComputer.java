@@ -1,5 +1,6 @@
-package com.fgiannesini.neuralnetwork.computer;
+package com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer;
 
+import com.fgiannesini.neuralnetwork.computer.LayerComputerHelper;
 import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
@@ -8,11 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class IntermediateOutputComputer {
+public class IntermediateOutputComputer implements IIntermediateOutputComputer {
 
     private final NeuralNetworkModel model;
 
-    IntermediateOutputComputer(NeuralNetworkModel model) {
+    public IntermediateOutputComputer(NeuralNetworkModel model) {
         this.model = model;
     }
 

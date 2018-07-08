@@ -1,7 +1,6 @@
 package com.fgiannesini.neuralnetwork.computer;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
-import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IIntermediateOutputComputer;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
@@ -9,12 +8,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collections;
 
-class IntermediateOutputComputerTest {
+class FinalOutputComputerWithDropOutRegularizationTest {
 
     @Test
     void compute_one_dimension_output_with_one_hidden_layer() {
+        Assertions.fail("Not yet implemented");
         NeuralNetworkModel model = NeuralNetworkModelBuilder.init()
                 .input(3)
                 .addLayer(4, ActivationFunctionType.NONE)
@@ -25,19 +25,17 @@ class IntermediateOutputComputerTest {
         double[] inputData = new double[3];
         Arrays.fill(inputData, 1);
 
-        IIntermediateOutputComputer outputComputer = OutputComputerBuilder.init()
+        double[] output = OutputComputerBuilder.init()
                 .withModel(model)
-                .buildIntermediateOutputComputer();
-
-        List<double[]> output = outputComputer
+                .withDropOutParameters(Collections.EMPTY_LIST)
+                .buildFinalOutputComputer()
                 .compute(inputData);
-        Assertions.assertArrayEquals(inputData, output.get(0));
-        Assertions.assertArrayEquals(new double[]{4, 4, 4, 4}, output.get(1));
-        Assertions.assertArrayEquals(new double[]{17, 17}, output.get(2));
+        Assertions.assertArrayEquals(new double[]{17, 17}, output);
     }
 
     @Test
     void compute_one_dimension_output_with_three_hidden_layers() {
+        Assertions.fail("Not yet implemented");
         NeuralNetworkModel model = NeuralNetworkModelBuilder.init()
                 .input(3)
                 .addLayer(2, ActivationFunctionType.NONE)
@@ -50,19 +48,16 @@ class IntermediateOutputComputerTest {
         double[] inputData = new double[3];
         Arrays.fill(inputData, 1);
 
-        List<double[]> output = OutputComputerBuilder.init()
+        double[] output = OutputComputerBuilder.init()
                 .withModel(model)
-                .buildIntermediateOutputComputer()
+                .buildFinalOutputComputer()
                 .compute(inputData);
-        Assertions.assertArrayEquals(inputData, output.get(0));
-        Assertions.assertArrayEquals(new double[]{4, 4}, output.get(1));
-        Assertions.assertArrayEquals(new double[]{9, 9}, output.get(2));
-        Assertions.assertArrayEquals(new double[]{19, 19}, output.get(3));
-        Assertions.assertArrayEquals(new double[]{39, 39}, output.get(4));
+        Assertions.assertArrayEquals(new double[]{39, 39}, output);
     }
 
     @Test
     void compute_two_dimension_output_with_three_hidden_layers() {
+        Assertions.fail("Not yet implemented");
         NeuralNetworkModel model = NeuralNetworkModelBuilder.init()
                 .input(3)
                 .addLayer(2, ActivationFunctionType.NONE)
@@ -77,15 +72,11 @@ class IntermediateOutputComputerTest {
                 {2, 2, 2}
         };
 
-        List<double[][]> output = OutputComputerBuilder.init()
+        double[][] output = OutputComputerBuilder.init()
                 .withModel(model)
-                .buildIntermediateOutputComputer()
+                .buildFinalOutputComputer()
                 .compute(inputData);
-
-        Assertions.assertArrayEquals(inputData, output.get(0));
-        Assertions.assertArrayEquals(new double[][]{{4, 4}, {7, 7}}, output.get(1));
-        Assertions.assertArrayEquals(new double[][]{{9, 9}, {15, 15}}, output.get(2));
-        Assertions.assertArrayEquals(new double[][]{{19, 19}, {31, 31}}, output.get(3));
-        Assertions.assertArrayEquals(new double[][]{{39, 39}, {63, 63}}, output.get(4));
+        double[][] expected = {{39, 39}, {63, 63}};
+        Assertions.assertArrayEquals(expected, output);
     }
 }
