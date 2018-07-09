@@ -5,6 +5,7 @@ import com.fgiannesini.neuralnetwork.computer.finaloutputcomputer.FinalOutputCom
 import com.fgiannesini.neuralnetwork.computer.finaloutputcomputer.IFinalOutputComputer;
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IIntermediateOutputComputer;
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IntermediateOutputComputer;
+import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IntermediateOutputComputerWithDropOutRegularization;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
 import org.jblas.DoubleMatrix;
@@ -76,7 +77,6 @@ class OutputComputerBuilderTest {
                 .withDropOutParameters(Collections.singletonList(DoubleMatrix.EMPTY))
                 .buildIntermediateOutputComputer();
 
-//        Assertions.assertTrue(outputComputer instanceof IntermediateOutputComputer);
-        Assertions.fail("Not yet implemented");
+        Assertions.assertTrue(outputComputer instanceof IntermediateOutputComputerWithDropOutRegularization);
     }
 }

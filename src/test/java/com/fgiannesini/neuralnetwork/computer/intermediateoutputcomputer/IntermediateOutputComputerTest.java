@@ -1,6 +1,7 @@
-package com.fgiannesini.neuralnetwork.computer;
+package com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
+import com.fgiannesini.neuralnetwork.computer.OutputComputerBuilder;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
@@ -8,8 +9,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.List;
 
-class FinalOutputComputerTest {
+class IntermediateOutputComputerTest {
 
     @Test
     void compute_one_dimension_output_with_one_hidden_layer() {
@@ -23,11 +25,15 @@ class FinalOutputComputerTest {
         double[] inputData = new double[3];
         Arrays.fill(inputData, 1);
 
-        double[] output = OutputComputerBuilder.init()
+        IIntermediateOutputComputer outputComputer = OutputComputerBuilder.init()
                 .withModel(model)
-                .buildFinalOutputComputer()
+                .buildIntermediateOutputComputer();
+
+        List<double[]> output = outputComputer
                 .compute(inputData);
-        Assertions.assertArrayEquals(new double[]{17, 17}, output);
+        Assertions.assertArrayEquals(inputData, output.get(0));
+        Assertions.assertArrayEquals(new double[]{4, 4, 4, 4}, output.get(1));
+        Assertions.assertArrayEquals(new double[]{17, 17}, output.get(2));
     }
 
     @Test
@@ -44,11 +50,15 @@ class FinalOutputComputerTest {
         double[] inputData = new double[3];
         Arrays.fill(inputData, 1);
 
-        double[] output = OutputComputerBuilder.init()
+        List<double[]> output = OutputComputerBuilder.init()
                 .withModel(model)
-                .buildFinalOutputComputer()
+                .buildIntermediateOutputComputer()
                 .compute(inputData);
-        Assertions.assertArrayEquals(new double[]{39, 39}, output);
+        Assertions.assertArrayEquals(inputData, output.get(0));
+        Assertions.assertArrayEquals(new double[]{4, 4}, output.get(1));
+        Assertions.assertArrayEquals(new double[]{9, 9}, output.get(2));
+        Assertions.assertArrayEquals(new double[]{19, 19}, output.get(3));
+        Assertions.assertArrayEquals(new double[]{39, 39}, output.get(4));
     }
 
     @Test
@@ -67,11 +77,15 @@ class FinalOutputComputerTest {
                 {2, 2, 2}
         };
 
-        double[][] output = OutputComputerBuilder.init()
+        List<double[][]> output = OutputComputerBuilder.init()
                 .withModel(model)
-                .buildFinalOutputComputer()
+                .buildIntermediateOutputComputer()
                 .compute(inputData);
-        double[][] expected = {{39, 39}, {63, 63}};
-        Assertions.assertArrayEquals(expected, output);
+
+        Assertions.assertArrayEquals(inputData, output.get(0));
+        Assertions.assertArrayEquals(new double[][]{{4, 4}, {7, 7}}, output.get(1));
+        Assertions.assertArrayEquals(new double[][]{{9, 9}, {15, 15}}, output.get(2));
+        Assertions.assertArrayEquals(new double[][]{{19, 19}, {31, 31}}, output.get(3));
+        Assertions.assertArrayEquals(new double[][]{{39, 39}, {63, 63}}, output.get(4));
     }
 }

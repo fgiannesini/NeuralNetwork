@@ -10,7 +10,7 @@ public interface IIntermediateOutputComputer {
     default List<double[]> compute(double[] input) {
         return compute(new DoubleMatrix(input))
                 .stream()
-                .map(result -> result.toArray())
+                .map(DoubleMatrix::toArray)
                 .collect(Collectors.toList());
     }
 

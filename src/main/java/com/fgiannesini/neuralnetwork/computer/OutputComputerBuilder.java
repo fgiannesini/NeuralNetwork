@@ -5,6 +5,7 @@ import com.fgiannesini.neuralnetwork.computer.finaloutputcomputer.FinalOutputCom
 import com.fgiannesini.neuralnetwork.computer.finaloutputcomputer.IFinalOutputComputer;
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IIntermediateOutputComputer;
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IntermediateOutputComputer;
+import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IntermediateOutputComputerWithDropOutRegularization;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
 
@@ -48,7 +49,7 @@ public class OutputComputerBuilder {
         checkParameters();
         IIntermediateOutputComputer intermediateOutputComputer;
         if (dropOutMatrixList != null) {
-            throw new UnsupportedOperationException();
+            intermediateOutputComputer = new IntermediateOutputComputerWithDropOutRegularization(neuralNetworkModel, dropOutMatrixList);
         } else {
             intermediateOutputComputer = new IntermediateOutputComputer(neuralNetworkModel);
         }
