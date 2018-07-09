@@ -10,10 +10,6 @@ import java.io.IOException;
 
 public class GetWindowRect {
 
-    public static void main(String[] args) throws IOException {
-        new GetWindowRect().getWindowRect();
-    }
-
     public Rectangle getWindowRect() throws IOException {
         Desktop desktop = Desktop.getDesktop();
         desktop.open(new File("C:\\Program Files\\VideoLAN\\VLC\\vlc.exe"));
@@ -32,4 +28,7 @@ public class GetWindowRect {
         return rect.toRectangle();
     }
 
+    public static void main(String[] args) throws IOException {
+        new GetWindowRect().getWindowRect();
+    }
 }
