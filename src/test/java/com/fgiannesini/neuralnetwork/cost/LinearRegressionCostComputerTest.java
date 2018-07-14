@@ -1,6 +1,8 @@
 package com.fgiannesini.neuralnetwork.cost;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
+import com.fgiannesini.neuralnetwork.computer.OutputComputerBuilder;
+import com.fgiannesini.neuralnetwork.computer.finaloutputcomputer.IFinalOutputComputer;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
@@ -16,10 +18,13 @@ class LinearRegressionCostComputerTest {
                 .input(2)
                 .addLayer(2, ActivationFunctionType.NONE)
                 .build();
+        IFinalOutputComputer outputComputer = OutputComputerBuilder.init()
+                .withModel(neuralNetworkModel)
+                .buildFinalOutputComputer();
 
         double[] input = {1, 2};
         double[] output = {5, 6};
-        double cost = new LinearRegressionCostComputer(neuralNetworkModel)
+        double cost = new LinearRegressionCostComputer(outputComputer)
                 .compute(input, output);
         Assertions.assertEquals(2.5, cost);
     }
@@ -31,6 +36,9 @@ class LinearRegressionCostComputerTest {
                 .input(2)
                 .addLayer(2, ActivationFunctionType.NONE)
                 .build();
+        IFinalOutputComputer outputComputer = OutputComputerBuilder.init()
+                .withModel(neuralNetworkModel)
+                .buildFinalOutputComputer();
 
         double[][] input = {
                 {1, 2},
@@ -40,7 +48,7 @@ class LinearRegressionCostComputerTest {
                 {5, 6},
                 {9, 10}
         };
-        double cost = new LinearRegressionCostComputer(neuralNetworkModel)
+        double cost = new LinearRegressionCostComputer(outputComputer)
                 .compute(input, output);
         Assertions.assertEquals(2.5, cost);
     }

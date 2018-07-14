@@ -5,11 +5,23 @@ import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 class CostComputerBuilderTest {
 
     @Test
     void check_neural_network_is_mandatory() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> CostComputerBuilder.init().build());
+    }
+
+    @Test
+    void check_exception_if_many_regularization_method() {
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> CostComputerBuilder.init()
+                        .withNeuralNetworkModel(buildNeuralNetworkModel())
+                        .withL2Regularization(0.5)
+                        .withDropOutRegularization(new ArrayList<>())
+                        .build());
     }
 
     @Test

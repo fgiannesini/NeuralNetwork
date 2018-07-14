@@ -42,20 +42,14 @@ public class GradientDescent implements LearningAlgorithm {
         List<GradientDescentCorrection> gradientDescentCorrections = new ArrayList<>();
         int inputCount = y.getColumns();
 
-        //dZ2 = (A2 - Y) .* g2'(A2)
-        DoubleMatrix dz = provider.getCurrentResult()
-                .sub(y)
-                .muli(provider.getCurrentActivationFunction().derivate(provider.getCurrentResult()));
+        DoubleMatrix dz = computeFirstError(provider, y);
         DoubleMatrix weightCorrection = computeWeightCorrection(provider.getPreviousResult(), dz, inputCount);
         DoubleMatrix biasCorrection = computeBiasCorrection(dz, inputCount);
 
         gradientDescentCorrections.add(new GradientDescentCorrection(weightCorrection, biasCorrection));
 
         for (provider.nextLayer(); provider.hasNextLayer(); provider.nextLayer()) {
-            //dZ1 = W2t * dZ2 .* g1'(A1)
-            dz = provider.getPreviousWeightMatrix().transpose()
-                    .mmul(dz)
-                    .muli(provider.getCurrentActivationFunction().derivate(provider.getCurrentResult()));
+            dz = computeError(provider, dz);
             weightCorrection = computeWeightCorrection(provider.getPreviousResult(), dz, inputCount);
             biasCorrection = computeBiasCorrection(dz, inputCount);
             gradientDescentCorrections.add(new GradientDescentCorrection(weightCorrection, biasCorrection));
@@ -64,6 +58,21 @@ public class GradientDescent implements LearningAlgorithm {
         Collections.reverse(gradientDescentCorrections);
 
         return gradientDescentCorrections;
+    }
+
+    protected DoubleMatrix computeError(GradientLayerProvider provider, DoubleMatrix previousError) {
+        //dZ1 = W2t * dZ2 .* g1'(A1)
+        previousError = provider.getPreviousWeightMatrix().transpose()
+                .mmul(previousError)
+                .muli(provider.getCurrentActivationFunction().derivate(provider.getCurrentResult()));
+        return previousError;
+    }
+
+    protected DoubleMatrix computeFirstError(GradientLayerProvider provider, DoubleMatrix y) {
+        //dZ2 = (A2 - Y) .* g2'(A2)
+        return provider.getCurrentResult()
+                .sub(y)
+                .muli(provider.getCurrentActivationFunction().derivate(provider.getCurrentResult()));
     }
 
     private DoubleMatrix computeBiasCorrection(DoubleMatrix dz, int inputCount) {
@@ -81,11 +90,15 @@ public class GradientDescent implements LearningAlgorithm {
 
     private GradientLayerProvider launchForwardComputation(DoubleMatrix inputMatrix) {
         List<Layer> layers = correctedNeuralNetworkModel.getLayers();
-        IIntermediateOutputComputer intermediateOutputComputer = OutputComputerBuilder.init()
-                .withModel(correctedNeuralNetworkModel)
-                .buildIntermediateOutputComputer();
+        IIntermediateOutputComputer intermediateOutputComputer = buildOutputComputer(correctedNeuralNetworkModel);
         List<DoubleMatrix> intermediateResults = intermediateOutputComputer.compute(inputMatrix);
         return new GradientLayerProvider(layers, intermediateResults);
+    }
+
+    protected IIntermediateOutputComputer buildOutputComputer(NeuralNetworkModel neuralNetworkModel) {
+        return OutputComputerBuilder.init()
+                .withModel(neuralNetworkModel)
+                .buildIntermediateOutputComputer();
     }
 
 }

@@ -1,18 +1,14 @@
 package com.fgiannesini.neuralnetwork.cost;
 
-import com.fgiannesini.neuralnetwork.computer.OutputComputerBuilder;
 import com.fgiannesini.neuralnetwork.computer.finaloutputcomputer.IFinalOutputComputer;
-import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
 
 public class LogisticRegressionCostComputer implements CostComputer {
 
     private final IFinalOutputComputer outputComputer;
 
-    public LogisticRegressionCostComputer(NeuralNetworkModel neuralNetworkModel) {
-        outputComputer = OutputComputerBuilder.init()
-                .withModel(neuralNetworkModel)
-                .buildFinalOutputComputer();
+    public LogisticRegressionCostComputer(IFinalOutputComputer outputComputer) {
+        this.outputComputer = outputComputer;
     }
 
     @Override

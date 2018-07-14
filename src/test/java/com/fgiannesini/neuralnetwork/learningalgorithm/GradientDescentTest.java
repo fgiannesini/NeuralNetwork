@@ -196,6 +196,7 @@ class GradientDescentTest {
 
     @Nested
     public class DataExpectation {
+
         @Test
         void learn_on_vector_with_two_hidden_layers_and_sigmoid_activation_function() {
             NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()

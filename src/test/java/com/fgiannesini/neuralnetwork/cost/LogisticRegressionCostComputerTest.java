@@ -1,6 +1,8 @@
 package com.fgiannesini.neuralnetwork.cost;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
+import com.fgiannesini.neuralnetwork.computer.OutputComputerBuilder;
+import com.fgiannesini.neuralnetwork.computer.finaloutputcomputer.IFinalOutputComputer;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
@@ -17,7 +19,10 @@ class LogisticRegressionCostComputerTest {
                 .addLayer(4, ActivationFunctionType.NONE)
                 .addLayer(2, ActivationFunctionType.SIGMOID)
                 .build();
-        double cost = new LogisticRegressionCostComputer(neuralNetworkModel)
+        IFinalOutputComputer outputComputer = OutputComputerBuilder.init()
+                .withModel(neuralNetworkModel)
+                .buildFinalOutputComputer();
+        double cost = new LogisticRegressionCostComputer(outputComputer)
                 .compute(new double[]{1, 1, 1}, new double[]{1, 1});
         Assertions.assertEquals(0, cost, 0.01);
     }
@@ -30,7 +35,10 @@ class LogisticRegressionCostComputerTest {
                 .addLayer(4, ActivationFunctionType.NONE)
                 .addLayer(2, ActivationFunctionType.SIGMOID)
                 .build();
-        double cost = new LogisticRegressionCostComputer(neuralNetworkModel)
+        IFinalOutputComputer outputComputer = OutputComputerBuilder.init()
+                .withModel(neuralNetworkModel)
+                .buildFinalOutputComputer();
+        double cost = new LogisticRegressionCostComputer(outputComputer)
                 .compute(new double[][]{
                         {1, 1, 1},
                         {1, 1, 1}

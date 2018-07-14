@@ -32,9 +32,9 @@ class IdentityFunctionApplierTest {
     @Test
     void derivate() {
         Assertions.assertAll(
-                checkIdentityDerivate(new double[]{1}, new double[]{0}),
+                checkIdentityDerivate(new double[]{0}, new double[]{0}),
                 checkIdentityDerivate(new double[]{1}, new double[]{2}),
-                checkIdentityDerivate(new double[]{1}, new double[]{-2}),
+                checkIdentityDerivate(new double[]{-1}, new double[]{-2}),
                 checkIdentityDerivate(new double[]{1, 1, 1, 1, 1}, new double[]{1, 2, 3, 4, 5})
         );
     }

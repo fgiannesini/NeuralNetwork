@@ -21,8 +21,9 @@ public class FinalOutputComputerWithDropOutRegularization implements IFinalOutpu
         DoubleMatrix currentMatrix = inputMatrix.dup().muliColumnVector(dropOutMatrixList.get(0));
         for (int layerIndex = 0, dropOutIndex = 1; layerIndex < model.getLayers().size(); layerIndex++, dropOutIndex++) {
             Layer layer = model.getLayers().get(layerIndex);
-            currentMatrix = LayerComputerHelper.computeAFromInput(currentMatrix, layer);
+            currentMatrix = LayerComputerHelper.computeZFromInput(currentMatrix, layer);
             currentMatrix.muliColumnVector(dropOutMatrixList.get(dropOutIndex));
+            currentMatrix = LayerComputerHelper.computeAFromZ(currentMatrix, layer);
         }
         return currentMatrix;
     }

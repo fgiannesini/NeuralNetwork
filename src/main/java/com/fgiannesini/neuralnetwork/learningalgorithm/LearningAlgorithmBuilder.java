@@ -1,11 +1,16 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm;
 
 import com.fgiannesini.neuralnetwork.cost.CostType;
+import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout.DropOutUtils;
+import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout.GradientDescentWithDerivationAndDropOutRegularization;
+import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout.GradientDescentWithDropOutRegularization;
 import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.l2.GradientDescentWithDerivationAndL2Regularization;
 import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.l2.GradientDescentWithL2Regularization;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
+import org.jblas.DoubleMatrix;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class LearningAlgorithmBuilder {
 
@@ -62,14 +67,20 @@ public class LearningAlgorithmBuilder {
         LearningAlgorithm learningAlgorithm;
         switch (learningAlgorithmType) {
             case GRADIENT_DESCENT:
-                if (l2RegularizationCoeff != null) {
+                if (dropOutRegularizationCoeffs != null) {
+                    List<DoubleMatrix> dropOutMatrices = DropOutUtils.init().getDropOutMatrix(dropOutRegularizationCoeffs, neuralNetworkModel.getLayers());
+                    learningAlgorithm = new GradientDescentWithDropOutRegularization(neuralNetworkModel, learningRate, dropOutMatrices);
+                } else if (l2RegularizationCoeff != null) {
                     learningAlgorithm = new GradientDescentWithL2Regularization(neuralNetworkModel, learningRate, l2RegularizationCoeff);
                 } else {
                     learningAlgorithm = new GradientDescent(neuralNetworkModel, learningRate);
                 }
                 break;
             case GRADIENT_DESCENT_DERIVATION:
-                if (l2RegularizationCoeff != null) {
+                if (dropOutRegularizationCoeffs != null) {
+                    List<DoubleMatrix> dropOutMatrices = DropOutUtils.init().getDropOutMatrix(dropOutRegularizationCoeffs, neuralNetworkModel.getLayers());
+                    learningAlgorithm = new GradientDescentWithDerivationAndDropOutRegularization(neuralNetworkModel, costType, learningRate, dropOutMatrices);
+                } else if (l2RegularizationCoeff != null) {
                     learningAlgorithm = new GradientDescentWithDerivationAndL2Regularization(neuralNetworkModel, costType, learningRate, l2RegularizationCoeff);
                 } else {
                     learningAlgorithm = new GradientDescentWithDerivation(neuralNetworkModel, costType, learningRate);

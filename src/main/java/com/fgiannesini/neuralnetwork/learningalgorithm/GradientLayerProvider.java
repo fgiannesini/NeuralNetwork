@@ -6,7 +6,7 @@ import org.jblas.DoubleMatrix;
 
 import java.util.List;
 
-class GradientLayerProvider {
+public class GradientLayerProvider {
 
     private final List<DoubleMatrix> results;
     private final List<Layer> layers;
@@ -40,6 +40,10 @@ class GradientLayerProvider {
 
     public DoubleMatrix getCurrentResult() {
         return results.get(currentLayerIndex);
+    }
+
+    public int getCurrentLayerIndex() {
+        return currentLayerIndex;
     }
 
 }

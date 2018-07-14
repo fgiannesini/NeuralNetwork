@@ -1,5 +1,7 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm;
 
+import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout.GradientDescentWithDerivationAndDropOutRegularization;
+import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout.GradientDescentWithDropOutRegularization;
 import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.l2.GradientDescentWithDerivationAndL2Regularization;
 import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.l2.GradientDescentWithL2Regularization;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
@@ -89,6 +91,17 @@ class LearningAlgorithmBuilderTest {
         }
 
         @Test
+        void test_GradientDescentWithDropOutRegularization_instance_creation() {
+            LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
+                    .withModel(buildNeuralNetworkModel())
+                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT)
+                    .withDropOutRegularitation(0.1, 0.2)
+                    .build();
+
+            Assertions.assertTrue(learningAlgorithm instanceof GradientDescentWithDropOutRegularization);
+        }
+
+        @Test
         void test_GradientDescentWithDerivation_instance_creation() {
             LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
                     .withModel(buildNeuralNetworkModel())
@@ -107,6 +120,17 @@ class LearningAlgorithmBuilderTest {
                     .build();
 
             Assertions.assertTrue(learningAlgorithm instanceof GradientDescentWithDerivationAndL2Regularization);
+        }
+
+        @Test
+        void test_GradientDescentWithDerivationAndDropOutRegularization_instance_creation() {
+            LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
+                    .withModel(buildNeuralNetworkModel())
+                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_DERIVATION)
+                    .withDropOutRegularitation(0.1, 0.2)
+                    .build();
+
+            Assertions.assertTrue(learningAlgorithm instanceof GradientDescentWithDerivationAndDropOutRegularization);
         }
     }
 }
