@@ -1,6 +1,7 @@
 package com.fgiannesini.neuralnetwork;
 
 import com.fgiannesini.neuralnetwork.computer.OutputComputerBuilder;
+import com.fgiannesini.neuralnetwork.converter.DataFormatConverter;
 import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithm;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
@@ -15,14 +16,14 @@ public class NeuralNetwork {
     }
 
     void learn(double[] input, double[] expected) {
-        DoubleMatrix inputMatrix = new DoubleMatrix(input);
-        DoubleMatrix y = new DoubleMatrix(expected);
+        DoubleMatrix inputMatrix = DataFormatConverter.fromTabToDoubleMatrix(input);
+        DoubleMatrix y = DataFormatConverter.fromTabToDoubleMatrix(expected);
         learn(inputMatrix, y);
     }
 
     void learn(double[][] input, double[][] expected) {
-        DoubleMatrix inputMatrix = new DoubleMatrix(input).transpose();
-        DoubleMatrix y = new DoubleMatrix(expected).transpose();
+        DoubleMatrix inputMatrix = DataFormatConverter.fromDoubleTabToDoubleMatrix(input);
+        DoubleMatrix y = DataFormatConverter.fromDoubleTabToDoubleMatrix(expected);
         learn(inputMatrix, y);
     }
 

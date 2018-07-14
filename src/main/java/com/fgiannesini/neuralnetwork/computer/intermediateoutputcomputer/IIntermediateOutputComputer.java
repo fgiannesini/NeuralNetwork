@@ -1,5 +1,6 @@
 package com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer;
 
+import com.fgiannesini.neuralnetwork.converter.DataFormatConverter;
 import org.jblas.DoubleMatrix;
 
 import java.util.List;
@@ -8,17 +9,18 @@ import java.util.stream.Collectors;
 public interface IIntermediateOutputComputer {
 
     default List<double[]> compute(double[] input) {
-        return compute(new DoubleMatrix(input))
+        DoubleMatrix inputMatrix = DataFormatConverter.fromTabToDoubleMatrix(input);
+        return compute(inputMatrix)
                 .stream()
-                .map(DoubleMatrix::toArray)
+                .map(DataFormatConverter::fromDoubleMatrixToTab)
                 .collect(Collectors.toList());
     }
 
     default List<double[][]> compute(double[][] input) {
-        DoubleMatrix inputMatrix = new DoubleMatrix(input).transpose();
+        DoubleMatrix inputMatrix = DataFormatConverter.fromDoubleTabToDoubleMatrix(input);
         return compute(inputMatrix)
                 .stream()
-                .map(result -> result.transpose().toArray2())
+                .map(DataFormatConverter::fromDoubleMatrixToDoubleTab)
                 .collect(Collectors.toList());
     }
 

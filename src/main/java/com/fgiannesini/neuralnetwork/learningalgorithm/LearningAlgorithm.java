@@ -1,19 +1,20 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm;
 
+import com.fgiannesini.neuralnetwork.converter.DataFormatConverter;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
 
 public interface LearningAlgorithm {
 
     default NeuralNetworkModel learn(double[] input, double[] expected) {
-        DoubleMatrix inputMatrix = new DoubleMatrix(input);
-        DoubleMatrix y = new DoubleMatrix(expected);
+        DoubleMatrix inputMatrix = DataFormatConverter.fromTabToDoubleMatrix(input);
+        DoubleMatrix y = DataFormatConverter.fromTabToDoubleMatrix(expected);
         return learn(inputMatrix, y);
     }
 
     default NeuralNetworkModel learn(double[][] input, double[][] expected) {
-        DoubleMatrix inputMatrix = new DoubleMatrix(input).transpose();
-        DoubleMatrix y = new DoubleMatrix(expected).transpose();
+        DoubleMatrix inputMatrix = DataFormatConverter.fromDoubleTabToDoubleMatrix(input);
+        DoubleMatrix y = DataFormatConverter.fromDoubleTabToDoubleMatrix(expected);
         return learn(inputMatrix, y);
     }
 

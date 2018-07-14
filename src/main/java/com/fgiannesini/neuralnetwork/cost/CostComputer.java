@@ -1,15 +1,20 @@
 package com.fgiannesini.neuralnetwork.cost;
 
+import com.fgiannesini.neuralnetwork.converter.DataFormatConverter;
 import org.jblas.DoubleMatrix;
 
 public interface CostComputer {
 
     default double compute(double[] input, double[] output) {
-        return compute(new DoubleMatrix(input), new DoubleMatrix(output));
+        DoubleMatrix inputMatrix = DataFormatConverter.fromTabToDoubleMatrix(input);
+        DoubleMatrix outputMatrix = DataFormatConverter.fromTabToDoubleMatrix(output);
+        return compute(inputMatrix, outputMatrix);
     }
 
     default double compute(double[][] input, double[][] output) {
-        return compute(new DoubleMatrix(input).transpose(), new DoubleMatrix(output).transpose());
+        DoubleMatrix inputMatrix = DataFormatConverter.fromDoubleTabToDoubleMatrix(input);
+        DoubleMatrix outputMatrix = DataFormatConverter.fromDoubleTabToDoubleMatrix(output);
+        return compute(inputMatrix, outputMatrix);
     }
 
     double compute(DoubleMatrix input, DoubleMatrix output);
