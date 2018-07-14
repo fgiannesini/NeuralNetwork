@@ -1,10 +1,13 @@
 package com.fgiannesini.neuralnetwork.model;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
+import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 class NeuralNetworkModelBuilderTest {
 
@@ -102,6 +105,25 @@ class NeuralNetworkModelBuilderTest {
           () -> Assertions.assertEquals(1, thirdLayer.getBiasMatrix().columns),
           () -> Assertions.assertEquals(ActivationFunctionType.SIGMOID, thirdLayer.getActivationFunctionType())
         );
+    }
+
+    @Test
+    void check_random_weight_boudaries() {
+        NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
+                .useInitializer(InitializerType.RANDOM)
+                .input(256)
+                .addLayer(100)
+                .addLayer(100)
+                .build();
+
+        Assertions.assertTrue(
+                Stream.concat(
+                        neuralNetworkModel.getLayers().stream().map(Layer::getWeightMatrix),
+                        neuralNetworkModel.getLayers().stream().map(Layer::getBiasMatrix)
+                ).flatMapToDouble(m -> Arrays.stream(m.data))
+                        .allMatch(d -> d < 0.01 && d > 0)
+        );
+
     }
 
 }
