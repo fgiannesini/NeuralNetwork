@@ -100,7 +100,7 @@ public class LearningAlgorithmBuilder {
             throw new IllegalArgumentException("You can't use several regularization methods");
         }
         if (dropOutRegularizationCoeffs != null && dropOutRegularizationCoeffs.length != neuralNetworkModel.getLayers().size() + 1) {
-            throw new IllegalArgumentException("Drop out Regularization need " + (neuralNetworkModel.getLayers().size() + 1) + " parameters");
+            throw new IllegalArgumentException("Drop out Regularization needs " + (neuralNetworkModel.getLayers().size() + 1) + " parameters");
         }
         if (dropOutRegularizationCoeffs != null && Arrays.stream(dropOutRegularizationCoeffs).anyMatch(d -> d > 1 || d < 0)) {
             throw new IllegalArgumentException("Drop out Regularization coeffs should be between 0 and 1");
