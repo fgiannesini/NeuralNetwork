@@ -4,6 +4,7 @@ import com.fgiannesini.neuralnetwork.computer.OutputComputerBuilder;
 import com.fgiannesini.neuralnetwork.converter.DataFormatConverter;
 import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithm;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
+import com.fgiannesini.neuralnetwork.normalizer.INormalizer;
 import org.jblas.DoubleMatrix;
 
 public class NeuralNetwork {
@@ -11,7 +12,7 @@ public class NeuralNetwork {
     private final LearningAlgorithm learningAlgorithm;
     private NeuralNetworkModel neuralNetworkModel;
 
-    NeuralNetwork(LearningAlgorithm learningAlgorithm) {
+    NeuralNetwork(LearningAlgorithm learningAlgorithm, INormalizer normalizer) {
         this.learningAlgorithm = learningAlgorithm;
     }
 

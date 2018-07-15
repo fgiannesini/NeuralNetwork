@@ -1,12 +1,16 @@
 package com.fgiannesini.neuralnetwork;
 
 import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithm;
+import com.fgiannesini.neuralnetwork.normalizer.INormalizer;
+import com.fgiannesini.neuralnetwork.normalizer.NormalizerType;
 
 public class NeuralNetworkBuilder {
 
     private LearningAlgorithm learningAlgorithm;
+    private INormalizer normalizer;
 
     private NeuralNetworkBuilder() {
+        normalizer = NormalizerType.NONE.get();
     }
 
     public static NeuralNetworkBuilder init() {
@@ -18,9 +22,14 @@ public class NeuralNetworkBuilder {
         return this;
     }
 
+    public NeuralNetworkBuilder withNormalizer(INormalizer normalizer) {
+        this.normalizer = normalizer;
+        return this;
+    }
+
     public NeuralNetwork build() {
         checkInputs();
-        return new NeuralNetwork(learningAlgorithm);
+        return new NeuralNetwork(learningAlgorithm, normalizer);
     }
 
     private void checkInputs() {
