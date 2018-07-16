@@ -1,25 +1,25 @@
 package com.fgiannesini.neuralnetwork;
 
 import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithm;
+import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithmBuilder;
+import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithmType;
+import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.normalizer.INormalizer;
 import com.fgiannesini.neuralnetwork.normalizer.NormalizerType;
 
 public class NeuralNetworkBuilder {
 
-    private LearningAlgorithm learningAlgorithm;
     private INormalizer normalizer;
+    private NeuralNetworkModel neuralNetworkModel;
+    private LearningAlgorithmType learningAlgorithmType;
 
     private NeuralNetworkBuilder() {
         normalizer = NormalizerType.NONE.get();
+        learningAlgorithmType = LearningAlgorithmType.GRADIENT_DESCENT;
     }
 
     public static NeuralNetworkBuilder init() {
         return new NeuralNetworkBuilder();
-    }
-
-    public NeuralNetworkBuilder withLearningAlgorithm(LearningAlgorithm learningAlgorithm) {
-        this.learningAlgorithm = learningAlgorithm;
-        return this;
     }
 
     public NeuralNetworkBuilder withNormalizer(INormalizer normalizer) {
@@ -27,14 +27,27 @@ public class NeuralNetworkBuilder {
         return this;
     }
 
+    public NeuralNetworkBuilder withNeuralNetworkModel(NeuralNetworkModel neuralNetworkModel) {
+        this.neuralNetworkModel = neuralNetworkModel;
+        return this;
+    }
+
+    public NeuralNetworkBuilder withLearningAlgorithmType(LearningAlgorithmType learningAlgorithmType) {
+        this.learningAlgorithmType = learningAlgorithmType;
+        return this;
+    }
+
     public NeuralNetwork build() {
         checkInputs();
+        LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
+                .withModel(neuralNetworkModel)
+                .build();
         return new NeuralNetwork(learningAlgorithm, normalizer);
     }
 
     private void checkInputs() {
-        if (learningAlgorithm == null) {
-            throw new IllegalArgumentException("A learning algorithm should be set");
+        if (neuralNetworkModel == null) {
+            throw new IllegalArgumentException("A neuralNetworkModel type should be set");
         }
     }
 }

@@ -1,7 +1,5 @@
 package com.fgiannesini.neuralnetwork;
 
-import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithm;
-import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithmBuilder;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
 import org.junit.jupiter.api.Assertions;
@@ -14,7 +12,7 @@ class NeuralNetworkBuilderTest {
     class CheckInputs {
 
         @Test
-        void launch_exception_if_no_learningAlgorithm() {
+        void launch_exception_if_no_NeuralNetworkModel() {
             Assertions.assertThrows(
                     IllegalArgumentException.class,
                     () -> NeuralNetworkBuilder.init().build()
@@ -31,11 +29,8 @@ class NeuralNetworkBuilderTest {
                     .input(1)
                     .addLayer(1)
                     .build();
-            LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
-                    .withModel(neuralNetworkModel)
-                    .build();
             NeuralNetwork neuralNetwork = NeuralNetworkBuilder.init()
-                    .withLearningAlgorithm(learningAlgorithm)
+                    .withNeuralNetworkModel(neuralNetworkModel)
                     .build();
             Assertions.assertTrue(neuralNetwork instanceof NeuralNetwork);
         }
