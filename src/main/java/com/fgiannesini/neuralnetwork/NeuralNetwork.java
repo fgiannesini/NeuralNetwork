@@ -52,10 +52,10 @@ public class NeuralNetwork {
                     .withNeuralNetworkModel(neuralNetworkModel)
                     .withType(costType)
                     .build();
-            double inputCost = costComputer.compute(normalizedInput, normalizedTestInput);
-            double outputCost = costComputer.compute(normalizedInput, normalizedTestOutput);
-            System.out.println("inputCost = " + inputCost);
-            System.out.println("outputCost = " + outputCost);
+            double learningCost = costComputer.compute(normalizedInput, normalizedOutput);
+            double testCost = costComputer.compute(normalizedTestInput, normalizedTestOutput);
+            System.out.println("learningCost = " + learningCost);
+            System.out.println("testCost = " + testCost);
             System.out.println();
         }
     }
