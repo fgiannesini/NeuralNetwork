@@ -18,4 +18,12 @@ class MeanAndDeviationNormalizerTest {
         DoubleMatrix output = NormalizerType.MEAN_AND_DEVIATION.get().normalize(input);
         Assertions.assertArrayEquals(new double[]{0.3163, 0.7072, 0.7072, -0.3163, -0.7072, -0.7072}, output.data, 0.0001);
     }
+
+    @Test
+    void check_keep_normalization_params_on_matrices() {
+        DoubleMatrix input = new DoubleMatrix(3, 2, -1000, 0, 1000, -2000, -1000, 0);
+        DoubleMatrix output = NormalizerType.MEAN_AND_DEVIATION.get().normalize(input);
+        Assertions.assertArrayEquals(new double[]{0.3163, 0.7072, 0.7072, -0.3163, -0.7072, -0.7072}, output.data, 0.0001);
+        Assertions.fail("To be Tested");
+    }
 }

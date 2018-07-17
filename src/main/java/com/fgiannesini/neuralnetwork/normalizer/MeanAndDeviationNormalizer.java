@@ -5,15 +5,22 @@ import org.jblas.MatrixFunctions;
 
 public class MeanAndDeviationNormalizer implements INormalizer {
 
+    private DoubleMatrix means;
+    private DoubleMatrix standardDeviation;
+
     @Override
     public DoubleMatrix normalize(DoubleMatrix input) {
-        //mu
-        DoubleMatrix means = input.rowMeans();
-        //sigma
-        DoubleMatrix standardDeviation = MatrixFunctions.sqrt(MatrixFunctions.pow(input, 2).rowMeans());
-        standardDeviation = standardDeviation.not().addi(standardDeviation);
+        if (means == null || standardDeviation == null) {
+            //mu
+            means = input.rowMeans();
+
+            //sigma
+            standardDeviation = MatrixFunctions.sqrt(MatrixFunctions.pow(input, 2).rowMeans());
+            standardDeviation = standardDeviation.not().addi(standardDeviation);
+        }
         //(x-mu)/sigma
-        DoubleMatrix output = input.subColumnVector(means).diviColumnVector(standardDeviation);
-        return output;
+        return input.subColumnVector(means).diviColumnVector(standardDeviation);
     }
+
+
 }
