@@ -4,7 +4,6 @@ import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.scene.Scene;
@@ -32,26 +31,18 @@ public class LineChartSample extends Application {
     private XYChart.Series xySeries1;
     private XYChart.Series xySeries2;
     private CategoryAxis xAxis;
-    private int lastObservedSize;
 
     @Override
     public void start(Stage stage) {
 
-        xyList1.addListener((ListChangeListener<XYChart.Data<String, Integer>>) change -> {
-            if (change.getList().size() - lastObservedSize > 10) {
-                lastObservedSize += 10;
-                xAxis.getCategories().remove(0, 10);
-            }
-        });
-
-        stage.setTitle("Line Chart Sample");
+        stage.setTitle("Cost evolution");
         xAxis = new CategoryAxis();
-        xAxis.setLabel("Month");
+        xAxis.setLabel("Hour");
 
         final NumberAxis yAxis = new NumberAxis();
         lineChart = new LineChart<>(xAxis, yAxis);
 
-        lineChart.setTitle("Woohoo, 2010");
+        lineChart.setTitle("Cost evolution");
         lineChart.setAnimated(false);
 
         task = new Task<Date>() {
@@ -113,6 +104,6 @@ public class LineChartSample extends Application {
     }
 
     public static void main(String[] args) {
-        launch(args);
+        launch();
     }
 }
