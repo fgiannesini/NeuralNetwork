@@ -10,6 +10,8 @@ import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.normalizer.INormalizer;
 import org.jblas.DoubleMatrix;
 
+import java.util.Observable;
+
 public class NeuralNetwork {
 
     private final LearningAlgorithm learningAlgorithm;
@@ -17,12 +19,14 @@ public class NeuralNetwork {
     private final CostType costType;
     private NeuralNetworkModel neuralNetworkModel;
     private int learningIterationCount;
+    private Observable statObservable;
 
     NeuralNetwork(LearningAlgorithm learningAlgorithm, INormalizer normalizer, CostType costType) {
         this.learningAlgorithm = learningAlgorithm;
         this.normalizer = normalizer;
         this.costType = costType;
         this.learningIterationCount = 100;
+        statObservable = new Observable();
     }
 
     void learn(double[] input, double[] expected, double[] testInput, double[] testExpected) {
@@ -54,9 +58,8 @@ public class NeuralNetwork {
                     .build();
             double learningCost = costComputer.compute(normalizedInput, normalizedOutput);
             double testCost = costComputer.compute(normalizedTestInput, normalizedTestOutput);
-            System.out.println("learningCost = " + learningCost);
-            System.out.println("testCost = " + testCost);
-            System.out.println();
+            NeuralNetworkStats stats = new NeuralNetworkStats(learningCost, testCost);
+            statObservable.notifyObservers(stats);
         }
     }
 
@@ -78,4 +81,7 @@ public class NeuralNetwork {
                 .compute(normalizedInput);
     }
 
+    public Observable getStatsObservable() {
+        return statObservable;
+    }
 }
