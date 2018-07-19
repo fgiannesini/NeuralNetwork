@@ -8,14 +8,16 @@ import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 public class GradientDescentWithDropOutRegularization extends GradientDescent {
 
-    private final List<DoubleMatrix> dropOutMatrices;
+    private List<DoubleMatrix> dropOutMatrices;
+    private final Supplier<List<DoubleMatrix>> dropOutMatricesSupplier;
 
-    public GradientDescentWithDropOutRegularization(NeuralNetworkModel neuralNetworkModel, double learningRate, List<DoubleMatrix> dropOutMatrices) {
+    public GradientDescentWithDropOutRegularization(NeuralNetworkModel neuralNetworkModel, double learningRate, Supplier<List<DoubleMatrix>> dropOutMatricesSupplier) {
         super(neuralNetworkModel, learningRate);
-        this.dropOutMatrices = dropOutMatrices;
+        this.dropOutMatricesSupplier = dropOutMatricesSupplier;
     }
 
     @Override
@@ -28,6 +30,7 @@ public class GradientDescentWithDropOutRegularization extends GradientDescent {
 
     @Override
     public NeuralNetworkModel learn(DoubleMatrix inputMatrix, DoubleMatrix y) {
+        dropOutMatrices = dropOutMatricesSupplier.get();
         DoubleMatrix dropOutOutput = y.mulColumnVector(dropOutMatrices.get(dropOutMatrices.size() - 1));
         return super.learn(inputMatrix, dropOutOutput);
     }

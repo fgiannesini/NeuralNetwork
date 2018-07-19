@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Supplier;
 
 class GradientDescentWithDropOutRegularizationTest {
 
@@ -26,7 +27,7 @@ class GradientDescentWithDropOutRegularizationTest {
         double[] input = new double[]{1, 2};
         double[] output = new double[]{3, 5};
 
-        List<DoubleMatrix> dropOutMatrices = Arrays.asList(
+        Supplier<List<DoubleMatrix>> dropOutMatrices = () -> Arrays.asList(
                 new DoubleMatrix(new double[]{1, 1}),
                 new DoubleMatrix(new double[]{0, 2})
         );
@@ -51,7 +52,7 @@ class GradientDescentWithDropOutRegularizationTest {
 
         double[] output = new double[]{15, 15};
 
-        List<DoubleMatrix> dropOutMatrices = Arrays.asList(
+        Supplier<List<DoubleMatrix>> dropOutMatrices = () -> Arrays.asList(
                 new DoubleMatrix(new double[]{1, 1}),
                 new DoubleMatrix(new double[]{1.5, 0, 1.5}),
                 new DoubleMatrix(new double[]{0, 2})
@@ -77,7 +78,7 @@ class GradientDescentWithDropOutRegularizationTest {
 
         double[] output = new double[]{15, 15};
 
-        List<DoubleMatrix> dropOutMatrices = Arrays.asList(
+        Supplier<List<DoubleMatrix>> dropOutMatrices = () -> Arrays.asList(
                 new DoubleMatrix(new double[]{1, 1}),
                 new DoubleMatrix(new double[]{1.5, 0, 1.5}),
                 new DoubleMatrix(new double[]{0, 2})
@@ -110,7 +111,7 @@ class GradientDescentWithDropOutRegularizationTest {
                 {20, 20}
         };
 
-        List<DoubleMatrix> dropOutMatrices = Arrays.asList(
+        Supplier<List<DoubleMatrix>> dropOutMatrices = () -> Arrays.asList(
                 new DoubleMatrix(new double[]{1, 1}),
                 new DoubleMatrix(new double[]{1.5, 0, 1.5}),
                 new DoubleMatrix(new double[]{0, 2})
@@ -141,8 +142,9 @@ class GradientDescentWithDropOutRegularizationTest {
                 {20, 20}
         };
 
-        List<DoubleMatrix> dropOutMatrices = DropOutUtils.init()
+        List<DoubleMatrix> dropOutMatrix = DropOutUtils.init()
                 .getDropOutMatrix(new double[]{1, 2d / 3d, 0.5}, neuralNetworkModel.getLayers());
+        Supplier<List<DoubleMatrix>> dropOutMatrices = () -> dropOutMatrix;
 
         LearningAlgorithm gradientDescent = new GradientDescentWithDropOutRegularization(neuralNetworkModel, 0.01, dropOutMatrices);
         NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
