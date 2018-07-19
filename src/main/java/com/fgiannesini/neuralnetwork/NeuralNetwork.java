@@ -25,8 +25,14 @@ public class NeuralNetwork {
         this.learningAlgorithm = learningAlgorithm;
         this.normalizer = normalizer;
         this.costType = costType;
-        this.learningIterationCount = 100;
-        statObservable = new Observable();
+        this.learningIterationCount = 200;
+        statObservable = new Observable() {
+            @Override
+            public void notifyObservers(Object arg) {
+                this.setChanged();
+                super.notifyObservers(arg);
+            }
+        };
     }
 
     void learn(double[] input, double[] expected, double[] testInput, double[] testExpected) {
@@ -58,7 +64,7 @@ public class NeuralNetwork {
                     .build();
             double learningCost = costComputer.compute(normalizedInput, normalizedOutput);
             double testCost = costComputer.compute(normalizedTestInput, normalizedTestOutput);
-            NeuralNetworkStats stats = new NeuralNetworkStats(learningCost, testCost);
+            NeuralNetworkStats stats = new NeuralNetworkStats(learningCost, testCost, i);
             statObservable.notifyObservers(stats);
         }
     }
