@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 public class GradientDescentWithDerivationAndDropOutRegularization extends GradientDescentWithDerivation {
 
     private List<DoubleMatrix> dropOutMatrices;
-    private CostType costType;
+    private final CostType costType;
     private final Supplier<List<DoubleMatrix>> dropOutMatricesSupplier;
 
     public GradientDescentWithDerivationAndDropOutRegularization(NeuralNetworkModel neuralNetworkModel, CostType costType, double learningRate, Supplier<List<DoubleMatrix>> dropOutMatricesSupplier) {

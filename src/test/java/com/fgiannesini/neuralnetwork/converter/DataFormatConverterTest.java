@@ -37,8 +37,6 @@ class DataFormatConverterTest {
         double[][] result = DataFormatConverter.fromDoubleMatrixToDoubleTab(input);
         double[][] expected = {{0, 1, 2}, {3, 4, 5}};
         Assertions.assertEquals(expected.length, result.length);
-        IntStream.range(0, expected.length).forEach(index -> {
-            Assertions.assertArrayEquals(expected[index], result[index], 0.0001);
-        });
+        IntStream.range(0, expected.length).forEach(index -> Assertions.assertArrayEquals(expected[index], result[index], 0.0001));
     }
 }

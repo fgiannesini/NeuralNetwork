@@ -10,7 +10,7 @@ import java.util.List;
 public class FinalOutputComputerWithDropOutRegularization implements IFinalOutputComputer {
 
     private final NeuralNetworkModel model;
-    private List<DoubleMatrix> dropOutMatrixList;
+    private final List<DoubleMatrix> dropOutMatrixList;
 
     public FinalOutputComputerWithDropOutRegularization(NeuralNetworkModel model, List<DoubleMatrix> dropOutMatrixList) {
         this.model = model;

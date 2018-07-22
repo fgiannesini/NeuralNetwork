@@ -1,9 +1,9 @@
 package com.fgiannesini.neuralnetwork;
 
 public class NeuralNetworkStats {
-    private double learningCost;
-    private double testCost;
-    private int iterationCount;
+    private final double learningCost;
+    private final double testCost;
+    private final int iterationCount;
 
     NeuralNetworkStats(double learningCost, double testCost, int iterationCount) {
         this.learningCost = learningCost;

@@ -11,7 +11,7 @@ import java.util.List;
 public class IntermediateOutputComputerWithDropOutRegularization implements IIntermediateOutputComputer {
 
     private final NeuralNetworkModel model;
-    private List<DoubleMatrix> dropOutMatrixList;
+    private final List<DoubleMatrix> dropOutMatrixList;
 
     public IntermediateOutputComputerWithDropOutRegularization(NeuralNetworkModel model, List<DoubleMatrix> dropOutMatrixList) {
         this.model = model;
