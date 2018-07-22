@@ -8,6 +8,8 @@ import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.normalizer.INormalizer;
 import com.fgiannesini.neuralnetwork.normalizer.NormalizerType;
 
+import java.util.function.Consumer;
+
 public class NeuralNetworkBuilder {
 
     private INormalizer normalizer;
@@ -17,11 +19,14 @@ public class NeuralNetworkBuilder {
     private Double l2RegularizationCoeff;
     private Double learningRate;
     private CostType costType;
+    private Consumer<NeuralNetworkStats> statsUpdateAction;
 
     private NeuralNetworkBuilder() {
         normalizer = NormalizerType.NONE.get();
         learningAlgorithmType = LearningAlgorithmType.GRADIENT_DESCENT;
         costType = CostType.LINEAR_REGRESSION;
+        statsUpdateAction = neuralNetworkStats -> {
+        };
     }
 
     public static NeuralNetworkBuilder init() {
@@ -63,6 +68,11 @@ public class NeuralNetworkBuilder {
         return this;
     }
 
+    public NeuralNetworkBuilder withNeuralNetworkStatsConsumer(Consumer<NeuralNetworkStats> statsUpdateAction) {
+        this.statsUpdateAction = statsUpdateAction;
+        return this;
+    }
+
     public NeuralNetwork build() {
         checkInputs();
         LearningAlgorithmBuilder learningAlgorithmBuilder = LearningAlgorithmBuilder.init()
@@ -79,7 +89,7 @@ public class NeuralNetworkBuilder {
             learningAlgorithmBuilder.withLearningRate(learningRate);
         }
         LearningAlgorithm learningAlgorithm = learningAlgorithmBuilder.build();
-        return new NeuralNetwork(learningAlgorithm, normalizer, costType);
+        return new NeuralNetwork(learningAlgorithm, normalizer, costType, statsUpdateAction);
     }
 
     private void checkInputs() {

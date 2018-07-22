@@ -10,24 +10,31 @@ import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
 import org.jblas.DoubleMatrix;
 
-import java.util.Observable;
+import java.util.function.Consumer;
 
 public class FloorExampleLauncher {
 
-    public static void main(String[] args) {
-        FloorExampleLauncher floorExampleLauncher = new FloorExampleLauncher();
-        NeuralNetwork neuralNetwork = floorExampleLauncher.prepare();
-        Observable statsObservable = neuralNetwork.getStatsObservable();
-        statsObservable.addObserver((observable, arg) -> {
-            NeuralNetworkStats neuralNetworkStats = (NeuralNetworkStats) arg;
-            System.out.println("learningCost = " + neuralNetworkStats.getLearningCost());
-            System.out.println("testCost = " + neuralNetworkStats.getTestCost());
-            System.out.println();
-        });
-        floorExampleLauncher.launch(neuralNetwork);
+    private final Consumer<NeuralNetworkStats> statsUpdateAction;
+
+    public FloorExampleLauncher(Consumer<NeuralNetworkStats> statsUpdateAction) {
+        this.statsUpdateAction = statsUpdateAction;
     }
 
-    public void launch(NeuralNetwork neuralNetwork) {
+    public static void main(String[] args) {
+        Consumer<NeuralNetworkStats> statsUpdateAction = neuralNetworkStats -> {
+            System.out.println("Iteration number " + neuralNetworkStats.getIterationCount());
+            System.out.println("LearningCost = " + neuralNetworkStats.getLearningCost());
+            System.out.println("TestCost = " + neuralNetworkStats.getTestCost());
+            System.out.println();
+        };
+        FloorExampleLauncher floorExampleLauncher = new FloorExampleLauncher(statsUpdateAction);
+        double successRate = floorExampleLauncher.launch();
+        System.out.println("Success Rate: " + successRate + "%");
+    }
+
+    public double launch() {
+        NeuralNetwork neuralNetwork = prepare();
+
         int learningSize = 1000;
         DoubleMatrix inputMatrix = ExampleDataManager.generateInputData(learningSize);
         DoubleMatrix outputMatrix = ExampleDataManager.convertToOutputFormat(inputMatrix.data);
@@ -40,11 +47,10 @@ public class FloorExampleLauncher {
 
         DoubleMatrix testOutputPredictionMatrix = neuralNetwork.apply(testInputMatrix);
 
-        double successRate = ExampleDataManager.computeSuccessRate(testOutputMatrix, testOutputPredictionMatrix);
-        System.out.println("Success Rate = " + successRate + " %");
+        return ExampleDataManager.computeSuccessRate(testOutputMatrix, testOutputPredictionMatrix);
     }
 
-    public NeuralNetwork prepare() {
+    private NeuralNetwork prepare() {
         NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                 .useInitializer(InitializerType.XAVIER)
                 .input(1)
@@ -52,12 +58,11 @@ public class FloorExampleLauncher {
                 .addLayer(10, ActivationFunctionType.TANH)
                 .build();
 
-        NeuralNetwork neuralNetwork = NeuralNetworkBuilder.init()
+        return NeuralNetworkBuilder.init()
                 .withNeuralNetworkModel(neuralNetworkModel)
                 .withCostType(CostType.LOGISTIC_REGRESSION)
+                .withNeuralNetworkStatsConsumer(statsUpdateAction)
                 .build();
-
-        return neuralNetwork;
     }
 
 }

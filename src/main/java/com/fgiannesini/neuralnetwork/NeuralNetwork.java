@@ -10,44 +10,38 @@ import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.normalizer.INormalizer;
 import org.jblas.DoubleMatrix;
 
-import java.util.Observable;
+import java.util.function.Consumer;
 
 public class NeuralNetwork {
 
     private final LearningAlgorithm learningAlgorithm;
     private final INormalizer normalizer;
     private final CostType costType;
+    private final Consumer<NeuralNetworkStats> statsUpdateAction;
     private NeuralNetworkModel neuralNetworkModel;
-    private int learningIterationCount;
-    private Observable statObservable;
+    private final int learningIterationCount;
 
-    NeuralNetwork(LearningAlgorithm learningAlgorithm, INormalizer normalizer, CostType costType) {
+    NeuralNetwork(LearningAlgorithm learningAlgorithm, INormalizer normalizer, CostType costType, Consumer<NeuralNetworkStats> statsUpdateAction) {
         this.learningAlgorithm = learningAlgorithm;
         this.normalizer = normalizer;
         this.costType = costType;
+        this.statsUpdateAction = statsUpdateAction;
         this.learningIterationCount = 200;
-        statObservable = new Observable() {
-            @Override
-            public void notifyObservers(Object arg) {
-                this.setChanged();
-                super.notifyObservers(arg);
-            }
-        };
     }
 
     void learn(double[] input, double[] expected, double[] testInput, double[] testExpected) {
         DoubleMatrix inputMatrix = DataFormatConverter.fromTabToDoubleMatrix(input);
         DoubleMatrix outputMatrix = DataFormatConverter.fromTabToDoubleMatrix(expected);
-        DoubleMatrix testInputMatrix = DataFormatConverter.fromTabToDoubleMatrix(input);
-        DoubleMatrix testExpectedMatrix = DataFormatConverter.fromTabToDoubleMatrix(expected);
+        DoubleMatrix testInputMatrix = DataFormatConverter.fromTabToDoubleMatrix(testInput);
+        DoubleMatrix testExpectedMatrix = DataFormatConverter.fromTabToDoubleMatrix(testExpected);
         learn(inputMatrix, outputMatrix, testInputMatrix, testExpectedMatrix);
     }
 
     void learn(double[][] input, double[][] expected, double[][] testInput, double[][] testExpected) {
         DoubleMatrix inputMatrix = DataFormatConverter.fromDoubleTabToDoubleMatrix(input);
         DoubleMatrix outputMatrix = DataFormatConverter.fromDoubleTabToDoubleMatrix(expected);
-        DoubleMatrix testInputMatrix = DataFormatConverter.fromDoubleTabToDoubleMatrix(input);
-        DoubleMatrix testExpectedMatrix = DataFormatConverter.fromDoubleTabToDoubleMatrix(expected);
+        DoubleMatrix testInputMatrix = DataFormatConverter.fromDoubleTabToDoubleMatrix(testInput);
+        DoubleMatrix testExpectedMatrix = DataFormatConverter.fromDoubleTabToDoubleMatrix(testExpected);
         learn(inputMatrix, outputMatrix, testInputMatrix, testExpectedMatrix);
     }
 
@@ -65,7 +59,7 @@ public class NeuralNetwork {
             double learningCost = costComputer.compute(normalizedInput, normalizedOutput);
             double testCost = costComputer.compute(normalizedTestInput, normalizedTestOutput);
             NeuralNetworkStats stats = new NeuralNetworkStats(learningCost, testCost, i);
-            statObservable.notifyObservers(stats);
+            statsUpdateAction.accept(stats);
         }
     }
 
@@ -85,9 +79,5 @@ public class NeuralNetwork {
                 .withModel(neuralNetworkModel)
                 .buildFinalOutputComputer()
                 .compute(normalizedInput);
-    }
-
-    public Observable getStatsObservable() {
-        return statObservable;
     }
 }

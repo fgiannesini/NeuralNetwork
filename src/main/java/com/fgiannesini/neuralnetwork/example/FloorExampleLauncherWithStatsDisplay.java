@@ -1,6 +1,5 @@
 package com.fgiannesini.neuralnetwork.example;
 
-import com.fgiannesini.neuralnetwork.NeuralNetwork;
 import com.fgiannesini.neuralnetwork.NeuralNetworkStats;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -16,7 +15,7 @@ import javafx.stage.Stage;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class LauncherWithStatsDisplay extends Application {
+public class FloorExampleLauncherWithStatsDisplay extends Application {
 
     public static void main(String[] args) {
         launch();
@@ -31,12 +30,9 @@ public class LauncherWithStatsDisplay extends Application {
             @Override
             protected NeuralNetworkStats call() {
 
-                FloorExampleLauncher floorExampleLauncher = new FloorExampleLauncher();
-                NeuralNetwork neuralNetwork = floorExampleLauncher.prepare();
-                neuralNetwork.getStatsObservable().addObserver((observable, arg) -> {
-                    updateValue((NeuralNetworkStats) arg);
-                });
-                floorExampleLauncher.launch(neuralNetwork);
+                FloorExampleLauncher floorExampleLauncher = new FloorExampleLauncher(this::updateValue);
+                double successRate = floorExampleLauncher.launch();
+                System.out.println("Success Rate: " + successRate + "%");
                 return null;
             }
         };
@@ -67,10 +63,10 @@ public class LauncherWithStatsDisplay extends Application {
         xAxis.setCategories(xSerie);
 //        xAxis.setAutoRanging(false);
 
-        XYChart.Series xySeries1 = new XYChart.Series(learningCostList);
+        XYChart.Series xySeries1 = new XYChart.Series<>(learningCostList);
         xySeries1.setName("Learning Cost Series");
 
-        XYChart.Series xySeries2 = new XYChart.Series(testCostList);
+        XYChart.Series xySeries2 = new XYChart.Series<>(testCostList);
         xySeries2.setName("Test Cost Series");
 
         lineChart.getData().addAll(xySeries1, xySeries2);
