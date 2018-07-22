@@ -1,5 +1,6 @@
 package com.fgiannesini.neuralnetwork;
 
+import com.fgiannesini.neuralnetwork.batch.BatchIterator;
 import com.fgiannesini.neuralnetwork.computer.OutputComputerBuilder;
 import com.fgiannesini.neuralnetwork.converter.DataFormatConverter;
 import com.fgiannesini.neuralnetwork.cost.CostComputer;
@@ -20,13 +21,15 @@ public class NeuralNetwork {
     private final Consumer<NeuralNetworkStats> statsUpdateAction;
     private NeuralNetworkModel neuralNetworkModel;
     private final int learningIterationCount;
+    private int batchSize;
 
     NeuralNetwork(LearningAlgorithm learningAlgorithm, INormalizer normalizer, CostType costType, Consumer<NeuralNetworkStats> statsUpdateAction) {
         this.learningAlgorithm = learningAlgorithm;
         this.normalizer = normalizer;
         this.costType = costType;
         this.statsUpdateAction = statsUpdateAction;
-        this.learningIterationCount = 200;
+        batchSize = 1000;
+        this.learningIterationCount = 1;
     }
 
     void learn(double[] input, double[] expected, double[] testInput, double[] testExpected) {
@@ -50,16 +53,22 @@ public class NeuralNetwork {
         DoubleMatrix normalizedOutput = normalizer.normalize(outpout);
         DoubleMatrix normalizedTestInput = normalizer.normalize(testInput);
         DoubleMatrix normalizedTestOutput = normalizer.normalize(testOutpout);
-        for (int i = 0; i < learningIterationCount; i++) {
-            neuralNetworkModel = learningAlgorithm.learn(normalizedInput, normalizedOutput);
-            CostComputer costComputer = CostComputerBuilder.init()
-                    .withNeuralNetworkModel(neuralNetworkModel)
-                    .withType(costType)
-                    .build();
-            double learningCost = costComputer.compute(normalizedInput, normalizedOutput);
-            double testCost = costComputer.compute(normalizedTestInput, normalizedTestOutput);
-            NeuralNetworkStats stats = new NeuralNetworkStats(learningCost, testCost, i);
-            statsUpdateAction.accept(stats);
+
+        for (BatchIterator batchIterator = BatchIterator.init(normalizedInput, normalizedOutput, batchSize); batchIterator.hasNext(); batchIterator.next()) {
+            DoubleMatrix subInput = batchIterator.getSubInput();
+            DoubleMatrix subOutput = batchIterator.getSubOutput();
+            for (int iterationNumber = 1; iterationNumber <= learningIterationCount; iterationNumber++) {
+                neuralNetworkModel = learningAlgorithm.learn(subInput, subOutput);
+                CostComputer costComputer = CostComputerBuilder.init()
+                        .withNeuralNetworkModel(neuralNetworkModel)
+                        .withType(costType)
+                        .build();
+                double learningCost = costComputer.compute(subInput, subOutput);
+                double testCost = costComputer.compute(normalizedTestInput, normalizedTestOutput);
+
+                NeuralNetworkStats stats = new NeuralNetworkStats(learningCost, testCost, batchIterator.getBatchNumber(), iterationNumber);
+                statsUpdateAction.accept(stats);
+            }
         }
     }
 

@@ -45,15 +45,15 @@ public class FloorExampleLauncherWithStatsDisplay extends Application {
             if (newNeuralNetworkStats == null) {
                 return;
             }
-            String iterationCount = String.valueOf(newNeuralNetworkStats.getIterationCount());
-            xSerie.add(iterationCount);
-            learningCostList.add(new XYChart.Data<>(iterationCount, newNeuralNetworkStats.getLearningCost()));
-            testCostList.add(new XYChart.Data<>(iterationCount, newNeuralNetworkStats.getTestCost()));
+            String batchIterationNumber = String.valueOf(newNeuralNetworkStats.getBatchNumber()) + "_" + String.valueOf(newNeuralNetworkStats.getIterationNumber());
+            xSerie.add(batchIterationNumber);
+            learningCostList.add(new XYChart.Data<>(batchIterationNumber, newNeuralNetworkStats.getLearningCost()));
+            testCostList.add(new XYChart.Data<>(batchIterationNumber, newNeuralNetworkStats.getTestCost()));
 
         });
 
         CategoryAxis xAxis = new CategoryAxis();
-        xAxis.setLabel("Iteration Count");
+        xAxis.setLabel("Batch_Iteration Number");
         final NumberAxis yAxis = new NumberAxis();
 
         LineChart<String, Number> lineChart = new LineChart<>(xAxis, yAxis);

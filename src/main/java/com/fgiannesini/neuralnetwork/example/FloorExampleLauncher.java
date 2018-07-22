@@ -22,7 +22,8 @@ public class FloorExampleLauncher {
 
     public static void main(String[] args) {
         Consumer<NeuralNetworkStats> statsUpdateAction = neuralNetworkStats -> {
-            System.out.println("Iteration number " + neuralNetworkStats.getIterationCount());
+            System.out.println("Batch number " + neuralNetworkStats.getBatchNumber());
+            System.out.println("Iteration number " + neuralNetworkStats.getIterationNumber());
             System.out.println("LearningCost = " + neuralNetworkStats.getLearningCost());
             System.out.println("TestCost = " + neuralNetworkStats.getTestCost());
             System.out.println();
@@ -35,7 +36,7 @@ public class FloorExampleLauncher {
     public double launch() {
         NeuralNetwork neuralNetwork = prepare();
 
-        int learningSize = 1000;
+        int learningSize = 100_000;
         DoubleMatrix inputMatrix = ExampleDataManager.generateInputData(learningSize);
         DoubleMatrix outputMatrix = ExampleDataManager.convertToOutputFormat(inputMatrix.data);
 
@@ -55,7 +56,7 @@ public class FloorExampleLauncher {
                 .useInitializer(InitializerType.XAVIER)
                 .input(1)
                 .addLayer(10, ActivationFunctionType.RELU)
-                .addLayer(10, ActivationFunctionType.TANH)
+                .addLayer(10, ActivationFunctionType.SIGMOID)
                 .build();
 
         return NeuralNetworkBuilder.init()
