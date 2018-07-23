@@ -20,6 +20,7 @@ public class NeuralNetworkBuilder {
     private Double learningRate;
     private CostType costType;
     private Consumer<NeuralNetworkStats> statsUpdateAction;
+    private HyperParameters hyperParameters;
 
     private NeuralNetworkBuilder() {
         normalizer = NormalizerType.NONE.get();
@@ -73,6 +74,11 @@ public class NeuralNetworkBuilder {
         return this;
     }
 
+    public NeuralNetworkBuilder withHyperParameters(HyperParameters hyperParameters) {
+        this.hyperParameters = hyperParameters;
+        return this;
+    }
+
     public NeuralNetwork build() {
         checkInputs();
         LearningAlgorithmBuilder learningAlgorithmBuilder = LearningAlgorithmBuilder.init()
@@ -89,12 +95,15 @@ public class NeuralNetworkBuilder {
             learningAlgorithmBuilder.withLearningRate(learningRate);
         }
         LearningAlgorithm learningAlgorithm = learningAlgorithmBuilder.build();
-        return new NeuralNetwork(learningAlgorithm, normalizer, costType, statsUpdateAction);
+        return new NeuralNetwork(learningAlgorithm, normalizer, costType, statsUpdateAction, hyperParameters);
     }
 
     private void checkInputs() {
         if (neuralNetworkModel == null) {
             throw new IllegalArgumentException("A neuralNetworkModel type should be set");
+        }
+        if (hyperParameters == null) {
+            throw new IllegalArgumentException("HyperParameters should be set");
         }
     }
 }

@@ -18,6 +18,22 @@ class NeuralNetworkBuilderTest {
                     () -> NeuralNetworkBuilder.init().build()
             );
         }
+
+        @Test
+        void launch_exception_if_no_HyperParameters() {
+            Assertions.assertThrows(
+                    IllegalArgumentException.class,
+                    () -> {
+                        NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
+                                .input(1)
+                                .addLayer(1)
+                                .build();
+                        return NeuralNetworkBuilder.init()
+                                .withNeuralNetworkModel(neuralNetworkModel)
+                                .build();
+                    }
+            );
+        }
     }
 
     @Nested
@@ -31,6 +47,7 @@ class NeuralNetworkBuilderTest {
                     .build();
             NeuralNetwork neuralNetwork = NeuralNetworkBuilder.init()
                     .withNeuralNetworkModel(neuralNetworkModel)
+                    .withHyperParameters(new HyperParameters())
                     .build();
             Assertions.assertTrue(neuralNetwork instanceof NeuralNetwork);
         }

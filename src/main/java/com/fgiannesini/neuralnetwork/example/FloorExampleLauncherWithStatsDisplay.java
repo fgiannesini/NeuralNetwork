@@ -1,5 +1,6 @@
 package com.fgiannesini.neuralnetwork.example;
 
+import com.fgiannesini.neuralnetwork.HyperParameters;
 import com.fgiannesini.neuralnetwork.NeuralNetworkStats;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -25,12 +26,12 @@ public class FloorExampleLauncherWithStatsDisplay extends Application {
     public void start(Stage stage) {
 
         stage.setTitle("Cost evolution");
-
+ 
         Task<NeuralNetworkStats> task = new Task<NeuralNetworkStats>() {
             @Override
             protected NeuralNetworkStats call() {
-
-                FloorExampleLauncher floorExampleLauncher = new FloorExampleLauncher(this::updateValue);
+                HyperParameters parameters = new HyperParameters();
+                FloorExampleLauncher floorExampleLauncher = new FloorExampleLauncher(this::updateValue, parameters);
                 double successRate = floorExampleLauncher.launch();
                 System.out.println("Success Rate: " + successRate + "%");
                 return null;
