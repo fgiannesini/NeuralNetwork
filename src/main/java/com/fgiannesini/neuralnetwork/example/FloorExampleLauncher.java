@@ -18,7 +18,7 @@ public class FloorExampleLauncher {
     private final Consumer<NeuralNetworkStats> statsUpdateAction;
     private final HyperParameters hyperParameters;
 
-    FloorExampleLauncher(Consumer<NeuralNetworkStats> statsUpdateAction, HyperParameters hyperParameters) {
+    public FloorExampleLauncher(Consumer<NeuralNetworkStats> statsUpdateAction, HyperParameters hyperParameters) {
         this.statsUpdateAction = statsUpdateAction;
         this.hyperParameters = hyperParameters;
     }
@@ -37,7 +37,7 @@ public class FloorExampleLauncher {
         System.out.println("Success Rate: " + successRate + "%");
     }
 
-    double launch() {
+    public double launch() {
         NeuralNetwork neuralNetwork = prepare();
 
         DoubleMatrix inputMatrix = ExampleDataManager.generateInputData(hyperParameters.getInputCount());

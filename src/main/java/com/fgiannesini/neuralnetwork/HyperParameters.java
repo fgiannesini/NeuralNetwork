@@ -1,6 +1,8 @@
 package com.fgiannesini.neuralnetwork;
 
-public class HyperParameters {
+import java.util.Arrays;
+
+public class HyperParameters implements Cloneable {
 
     private int iterationCount;
     private int batchSize;
@@ -32,7 +34,7 @@ public class HyperParameters {
         return this;
     }
 
-    public HyperParameters tInputCount(int testInputCount) {
+    public HyperParameters testInputCount(int testInputCount) {
         this.testInputCount = testInputCount;
         return this;
     }
@@ -60,5 +62,25 @@ public class HyperParameters {
 
     public int[] getHiddenLayerSize() {
         return hiddenLayerSize;
+    }
+
+    @Override
+    public HyperParameters clone() {
+        try {
+            return (HyperParameters) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "HyperParameters{" +
+                "iterationCount=" + iterationCount +
+                ", batchSize=" + batchSize +
+                ", inputCount=" + inputCount +
+                ", testInputCount=" + testInputCount +
+                ", hiddenLayerSize=" + Arrays.toString(hiddenLayerSize) +
+                '}';
     }
 }
