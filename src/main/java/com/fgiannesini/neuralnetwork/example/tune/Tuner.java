@@ -16,7 +16,7 @@ public class Tuner {
 
     public static void main(String[] args) {
         int statePopulation = 10;
-        int meanCount = 10;
+        int meanCount = 3;
         int maxIteration = 10;
 
         List<TuneState> tuneStates = initTuneStates(statePopulation);
@@ -106,14 +106,18 @@ public class Tuner {
         Consumer<NeuralNetworkStats> neuralNetworkStatsConsumer = (unused) -> {
         };
 
-        for (TuneState tuneState : tuneStates) {
-            FloorExampleLauncher floorExampleLauncher = new FloorExampleLauncher(neuralNetworkStatsConsumer, tuneState.getHyperParameters());
-            double successRate = 0;
-            for (int i = 0; i < meanCount; i++) {
-                successRate += floorExampleLauncher.launch();
-            }
-            tuneState.setMark(successRate / (double) meanCount);
-        }
+        tuneStates.parallelStream()
+                .forEach(tuneState -> {
+                            System.out.println("Mark computation for tuneState with parameters " + tuneState.getHyperParameters());
+                            FloorExampleLauncher floorExampleLauncher = new FloorExampleLauncher(neuralNetworkStatsConsumer, tuneState.getHyperParameters());
+                            double successRate = 0;
+                            for (int i = 0; i < meanCount; i++) {
+                                successRate += floorExampleLauncher.launch();
+                            }
+                            tuneState.setMark(successRate / (double) meanCount);
+                            System.out.println("Mark for tuneState with parameters " + tuneState.getHyperParameters() + " " + tuneState.getMark());
+                        }
+                );
     }
 
     private static List<TuneState> initTuneStates(int statePopulation) {
@@ -132,11 +136,12 @@ public class Tuner {
     }
 
     private static int[] generateHiddenLayerSize(Random random) {
-        return random.ints(10, 1, 100).toArray();
+        int streamSize = random.nextInt(4) + 1;
+        return random.ints(streamSize, 1, 50).toArray();
     }
 
     private static int generateIterationCount(Random random) {
-        return random.nextInt(99) * 10 + 10;
+        return 150;
     }
 
     private static int generateBatchSize(Random random) {
