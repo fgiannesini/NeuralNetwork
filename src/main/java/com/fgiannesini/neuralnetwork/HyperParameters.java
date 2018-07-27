@@ -4,14 +4,14 @@ import java.util.Arrays;
 
 public class HyperParameters implements Cloneable {
 
-    private int iterationCount;
+    private int epochCount;
     private int batchSize;
     private int inputCount;
     private int testInputCount;
     private int hiddenLayerSize[];
 
     public HyperParameters() {
-        this.iterationCount = 1;
+        this.epochCount = 1;
         this.batchSize = 1000;
         this.inputCount = 100_000;
         this.testInputCount = 100;
@@ -19,8 +19,8 @@ public class HyperParameters implements Cloneable {
         this.hiddenLayerSize = new int[]{10};
     }
 
-    public HyperParameters iterationCount(int iterationCount) {
-        this.iterationCount = iterationCount;
+    public HyperParameters epochCount(int epochCount) {
+        this.epochCount = epochCount;
         return this;
     }
 
@@ -44,8 +44,8 @@ public class HyperParameters implements Cloneable {
         return this;
     }
 
-    public int getIterationCount() {
-        return iterationCount;
+    public int getEpochCount() {
+        return epochCount;
     }
 
     public int getBatchSize() {
@@ -76,7 +76,7 @@ public class HyperParameters implements Cloneable {
     @Override
     public String toString() {
         return "HyperParameters{" +
-                "iterationCount=" + iterationCount +
+                "epochCount=" + epochCount +
                 ", batchSize=" + batchSize +
                 ", inputCount=" + inputCount +
                 ", testInputCount=" + testInputCount +

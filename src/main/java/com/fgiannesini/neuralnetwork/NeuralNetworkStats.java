@@ -3,14 +3,14 @@ package com.fgiannesini.neuralnetwork;
 public class NeuralNetworkStats {
     private final double learningCost;
     private final double testCost;
-    private final int iterationNumber;
+    private final int epochNumber;
     private int batchNumber;
 
-    NeuralNetworkStats(double learningCost, double testCost, int batchNumber, int iterationNumber) {
+    NeuralNetworkStats(double learningCost, double testCost, int batchNumber, int epochNumber) {
         this.learningCost = learningCost;
         this.testCost = testCost;
         this.batchNumber = batchNumber;
-        this.iterationNumber = iterationNumber;
+        this.epochNumber = epochNumber;
     }
 
     public double getLearningCost() {
@@ -21,8 +21,8 @@ public class NeuralNetworkStats {
         return testCost;
     }
 
-    public int getIterationNumber() {
-        return iterationNumber;
+    public int getEpochNumber() {
+        return epochNumber;
     }
 
     public int getBatchNumber() {

@@ -26,7 +26,7 @@ public class FloorExampleLauncher {
     public static void main(String[] args) {
         Consumer<NeuralNetworkStats> statsUpdateAction = neuralNetworkStats -> {
             System.out.println("Batch number " + neuralNetworkStats.getBatchNumber());
-            System.out.println("Iteration number " + neuralNetworkStats.getIterationNumber());
+            System.out.println("Epoch number " + neuralNetworkStats.getEpochNumber());
             System.out.println("LearningCost = " + neuralNetworkStats.getLearningCost());
             System.out.println("TestCost = " + neuralNetworkStats.getTestCost());
             System.out.println();

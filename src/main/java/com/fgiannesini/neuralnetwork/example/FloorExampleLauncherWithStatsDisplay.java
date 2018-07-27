@@ -46,7 +46,7 @@ public class FloorExampleLauncherWithStatsDisplay extends Application {
             if (newNeuralNetworkStats == null) {
                 return;
             }
-            String batchIterationNumber = String.valueOf(newNeuralNetworkStats.getBatchNumber()) + "_" + String.valueOf(newNeuralNetworkStats.getIterationNumber());
+            String batchIterationNumber = String.valueOf(newNeuralNetworkStats.getEpochNumber()) + "_" + String.valueOf(newNeuralNetworkStats.getBatchNumber());
             xSerie.add(batchIterationNumber);
             learningCostList.add(new XYChart.Data<>(batchIterationNumber, newNeuralNetworkStats.getLearningCost()));
             testCostList.add(new XYChart.Data<>(batchIterationNumber, newNeuralNetworkStats.getTestCost()));
@@ -54,7 +54,7 @@ public class FloorExampleLauncherWithStatsDisplay extends Application {
         });
 
         CategoryAxis xAxis = new CategoryAxis();
-        xAxis.setLabel("Batch_Iteration Number");
+        xAxis.setLabel("Epoch_Batch");
         final NumberAxis yAxis = new NumberAxis();
 
         LineChart<String, Number> lineChart = new LineChart<>(xAxis, yAxis);

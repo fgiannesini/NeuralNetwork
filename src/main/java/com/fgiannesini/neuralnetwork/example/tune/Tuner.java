@@ -48,7 +48,7 @@ public class Tuner {
             int parameterToMerge = random.nextInt(4);
             switch (parameterToMerge) {
                 case 0:
-                    firstParameter.iterationCount(secondParameter.getIterationCount());
+                    firstParameter.epochCount(secondParameter.getEpochCount());
                     mergedTuneStates.add(new TuneState(firstParameter));
                     break;
                 case 1:
@@ -80,7 +80,7 @@ public class Tuner {
             int parameterToMerge = random.nextInt(4);
             switch (parameterToMerge) {
                 case 0:
-                    parameter.iterationCount(generateBatchSize(random));
+                    parameter.epochCount(generateBatchSize(random));
                     mutatedTuneStates.add(new TuneState(parameter));
                     break;
                 case 1:
@@ -129,7 +129,7 @@ public class Tuner {
                             .hiddenLayerSize(generateHiddenLayerSize(random))
                             .inputCount(generateInputSize(random))
                             .testInputCount(100)
-                            .iterationCount(generateIterationCount(random));
+                            .epochCount(generateEpochCount(random));
                     return new TuneState(hyperParameters);
                 })
                 .collect(Collectors.toList());
@@ -140,7 +140,7 @@ public class Tuner {
         return random.ints(streamSize, 1, 50).toArray();
     }
 
-    private static int generateIterationCount(Random random) {
+    private static int generateEpochCount(Random random) {
         return 150;
     }
 

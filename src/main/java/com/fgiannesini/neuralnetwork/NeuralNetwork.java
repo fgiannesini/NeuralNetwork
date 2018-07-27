@@ -20,7 +20,7 @@ public class NeuralNetwork {
     private final CostType costType;
     private final Consumer<NeuralNetworkStats> statsUpdateAction;
     private NeuralNetworkModel neuralNetworkModel;
-    private final int learningIterationCount;
+    private final int epochCount;
     private int batchSize;
 
     NeuralNetwork(LearningAlgorithm learningAlgorithm, INormalizer normalizer, CostType costType, Consumer<NeuralNetworkStats> statsUpdateAction, HyperParameters hyperParameters) {
@@ -29,7 +29,7 @@ public class NeuralNetwork {
         this.costType = costType;
         this.statsUpdateAction = statsUpdateAction;
         batchSize = hyperParameters.getBatchSize();
-        this.learningIterationCount = hyperParameters.getIterationCount();
+        this.epochCount = hyperParameters.getEpochCount();
     }
 
     void learn(double[] input, double[] expected, double[] testInput, double[] testExpected) {
@@ -54,10 +54,11 @@ public class NeuralNetwork {
         DoubleMatrix normalizedTestInput = normalizer.normalize(testInput);
         DoubleMatrix normalizedTestOutput = normalizer.normalize(testOutpout);
 
-        for (BatchIterator batchIterator = BatchIterator.init(normalizedInput, normalizedOutput, batchSize); batchIterator.hasNext(); batchIterator.next()) {
-            DoubleMatrix subInput = batchIterator.getSubInput();
-            DoubleMatrix subOutput = batchIterator.getSubOutput();
-            for (int iterationNumber = 1; iterationNumber <= learningIterationCount; iterationNumber++) {
+        for (int epochNumber = 1; epochNumber <= epochCount; epochNumber++) {
+            for (BatchIterator batchIterator = BatchIterator.init(normalizedInput, normalizedOutput, batchSize); batchIterator.hasNext(); batchIterator.next()) {
+                DoubleMatrix subInput = batchIterator.getSubInput();
+                DoubleMatrix subOutput = batchIterator.getSubOutput();
+
                 neuralNetworkModel = learningAlgorithm.learn(subInput, subOutput);
                 CostComputer costComputer = CostComputerBuilder.init()
                         .withNeuralNetworkModel(neuralNetworkModel)
@@ -66,7 +67,7 @@ public class NeuralNetwork {
                 double learningCost = costComputer.compute(subInput, subOutput);
                 double testCost = costComputer.compute(normalizedTestInput, normalizedTestOutput);
 
-                NeuralNetworkStats stats = new NeuralNetworkStats(learningCost, testCost, batchIterator.getBatchNumber(), iterationNumber);
+                NeuralNetworkStats stats = new NeuralNetworkStats(learningCost, testCost, batchIterator.getBatchNumber(), epochNumber);
                 statsUpdateAction.accept(stats);
             }
         }
