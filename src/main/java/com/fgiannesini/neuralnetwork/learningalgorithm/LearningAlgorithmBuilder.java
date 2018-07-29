@@ -1,6 +1,8 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm;
 
 import com.fgiannesini.neuralnetwork.cost.CostType;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescent;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivation;
 import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout.DropOutUtils;
 import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout.GradientDescentWithDerivationAndDropOutRegularization;
 import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout.GradientDescentWithDropOutRegularization;
@@ -68,13 +70,14 @@ public class LearningAlgorithmBuilder {
         LearningAlgorithm learningAlgorithm;
         switch (learningAlgorithmType) {
             case GRADIENT_DESCENT:
+                GradientDescent gradientDescent = new GradientDescent(neuralNetworkModel, learningRate);
                 if (dropOutRegularizationCoeffs != null) {
                     Supplier<List<DoubleMatrix>> dropOutMatricesSupplier = () -> DropOutUtils.init().getDropOutMatrix(dropOutRegularizationCoeffs, neuralNetworkModel.getLayers());
-                    learningAlgorithm = new GradientDescentWithDropOutRegularization(neuralNetworkModel, learningRate, dropOutMatricesSupplier);
+                    learningAlgorithm = new GradientDescentWithDropOutRegularization(gradientDescent, learningRate, neuralNetworkModel, dropOutMatricesSupplier);
                 } else if (l2RegularizationCoeff != null) {
                     learningAlgorithm = new GradientDescentWithL2Regularization(neuralNetworkModel, learningRate, l2RegularizationCoeff);
                 } else {
-                    learningAlgorithm = new GradientDescent(neuralNetworkModel, learningRate);
+                    learningAlgorithm = gradientDescent;
                 }
                 break;
             case GRADIENT_DESCENT_DERIVATION:

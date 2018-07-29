@@ -1,5 +1,7 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm;
 
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescent;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivation;
 import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout.GradientDescentWithDerivationAndDropOutRegularization;
 import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout.GradientDescentWithDropOutRegularization;
 import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.l2.GradientDescentWithDerivationAndL2Regularization;

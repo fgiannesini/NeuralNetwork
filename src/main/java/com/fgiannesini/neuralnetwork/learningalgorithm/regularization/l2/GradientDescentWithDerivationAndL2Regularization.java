@@ -3,7 +3,7 @@ package com.fgiannesini.neuralnetwork.learningalgorithm.regularization.l2;
 import com.fgiannesini.neuralnetwork.cost.CostComputer;
 import com.fgiannesini.neuralnetwork.cost.CostComputerBuilder;
 import com.fgiannesini.neuralnetwork.cost.CostType;
-import com.fgiannesini.neuralnetwork.learningalgorithm.GradientDescentWithDerivation;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivation;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 
 public class GradientDescentWithDerivationAndL2Regularization extends GradientDescentWithDerivation {

@@ -1,4 +1,4 @@
-package com.fgiannesini.neuralnetwork.learningalgorithm;
+package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionApplier;
 import com.fgiannesini.neuralnetwork.model.Layer;

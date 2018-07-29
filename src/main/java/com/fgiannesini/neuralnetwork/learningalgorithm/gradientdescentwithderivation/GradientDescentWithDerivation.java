@@ -1,8 +1,9 @@
-package com.fgiannesini.neuralnetwork.learningalgorithm;
+package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation;
 
 import com.fgiannesini.neuralnetwork.cost.CostComputer;
 import com.fgiannesini.neuralnetwork.cost.CostComputerBuilder;
 import com.fgiannesini.neuralnetwork.cost.CostType;
+import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithm;
 import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;

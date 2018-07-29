@@ -2,48 +2,78 @@ package com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout;
 
 import com.fgiannesini.neuralnetwork.computer.OutputComputerBuilder;
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IIntermediateOutputComputer;
-import com.fgiannesini.neuralnetwork.learningalgorithm.GradientDescent;
-import com.fgiannesini.neuralnetwork.learningalgorithm.GradientLayerProvider;
+import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithm;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.*;
+import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class GradientDescentWithDropOutRegularization extends GradientDescent {
+public class GradientDescentWithDropOutRegularization implements LearningAlgorithm, InternalGradientDescent {
 
     private List<DoubleMatrix> dropOutMatrices;
+    private InternalGradientDescent gradientDescent;
+    private double learningRate;
+    private NeuralNetworkModel neuralNetworkModel;
     private final Supplier<List<DoubleMatrix>> dropOutMatricesSupplier;
 
-    public GradientDescentWithDropOutRegularization(NeuralNetworkModel neuralNetworkModel, double learningRate, Supplier<List<DoubleMatrix>> dropOutMatricesSupplier) {
-        super(neuralNetworkModel, learningRate);
+    public GradientDescentWithDropOutRegularization(InternalGradientDescent gradientDescent, double learningRate, NeuralNetworkModel neuralNetworkModel, Supplier<List<DoubleMatrix>> dropOutMatricesSupplier) {
+        this.gradientDescent = gradientDescent;
+        this.learningRate = learningRate;
+        this.neuralNetworkModel = neuralNetworkModel.clone();
         this.dropOutMatricesSupplier = dropOutMatricesSupplier;
-    }
-
-    @Override
-    protected IIntermediateOutputComputer buildOutputComputer(NeuralNetworkModel neuralNetworkModel) {
-        return OutputComputerBuilder.init()
-                .withModel(neuralNetworkModel)
-                .withDropOutParameters(dropOutMatrices)
-                .buildIntermediateOutputComputer();
     }
 
     @Override
     public NeuralNetworkModel learn(DoubleMatrix inputMatrix, DoubleMatrix y) {
         dropOutMatrices = dropOutMatricesSupplier.get();
         DoubleMatrix dropOutOutput = y.mulColumnVector(dropOutMatrices.get(dropOutMatrices.size() - 1));
-        return super.learn(inputMatrix, dropOutOutput);
+        GradientLayerProvider gradientLayerProvider = getForwardComputationLauncher().apply(new ForwardComputationContainer(inputMatrix, neuralNetworkModel));
+        List<GradientDescentCorrection> gradientDescentCorrections = getBackwardComputationLauncher().apply(new BackwardComputationContainer(gradientLayerProvider, dropOutOutput, getFirstErrorComputationLauncher(), getErrorComputationLauncher()));
+        return getGradientDescentCorrectionsLauncher().apply(new GradientDescentCorrectionsContainer(neuralNetworkModel, gradientDescentCorrections, y.getColumns(), learningRate));
     }
 
     @Override
-    protected DoubleMatrix computeError(GradientLayerProvider provider, DoubleMatrix previousError) {
-        DoubleMatrix dropOutMatrix = dropOutMatrices.get(provider.getCurrentLayerIndex());
-        return super.computeError(provider, previousError).muliColumnVector(dropOutMatrix);
+    public Function<ErrorComputationContainer, ErrorComputationContainer> getErrorComputationLauncher() {
+        return gradientDescent.getErrorComputationLauncher().andThen(container -> {
+            DoubleMatrix dropOutMatrix = dropOutMatrices.get(container.getProvider().getCurrentLayerIndex());
+            DoubleMatrix error = container.getPreviousError().muliColumnVector(dropOutMatrix);
+            return new ErrorComputationContainer(container.getProvider(), error);
+        });
     }
 
     @Override
-    protected DoubleMatrix computeFirstError(GradientLayerProvider provider, DoubleMatrix y) {
-        DoubleMatrix dropOutMatrix = dropOutMatrices.get(provider.getCurrentLayerIndex());
-        return super.computeFirstError(provider, y).muliColumnVector(dropOutMatrix);
+    public Function<ErrorComputationContainer, ErrorComputationContainer> getFirstErrorComputationLauncher() {
+        return gradientDescent.getFirstErrorComputationLauncher().andThen(container -> {
+            DoubleMatrix dropOutMatrix = dropOutMatrices.get(container.getProvider().getCurrentLayerIndex());
+            DoubleMatrix error = container.getPreviousError().muliColumnVector(dropOutMatrix);
+            return new ErrorComputationContainer(container.getProvider(), error);
+        });
+    }
+
+    @Override
+    public Function<GradientDescentCorrectionsContainer, NeuralNetworkModel> getGradientDescentCorrectionsLauncher() {
+        return gradientDescent.getGradientDescentCorrectionsLauncher();
+    }
+
+    @Override
+    public Function<BackwardComputationContainer, List<GradientDescentCorrection>> getBackwardComputationLauncher() {
+        return gradientDescent.getBackwardComputationLauncher();
+    }
+
+    @Override
+    public Function<ForwardComputationContainer, GradientLayerProvider> getForwardComputationLauncher() {
+        return container -> {
+            List<Layer> layers = container.getNeuralNetworkModel().getLayers();
+            IIntermediateOutputComputer intermediateOutputComputer = OutputComputerBuilder.init()
+                    .withModel(container.getNeuralNetworkModel())
+                    .withDropOutParameters(dropOutMatrices)
+                    .buildIntermediateOutputComputer();
+            List<DoubleMatrix> intermediateResults = intermediateOutputComputer.compute(container.getInputMatrix());
+            return new GradientLayerProvider(layers, intermediateResults);
+        };
     }
 }
