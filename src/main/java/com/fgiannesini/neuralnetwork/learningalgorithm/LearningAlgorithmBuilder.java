@@ -73,7 +73,7 @@ public class LearningAlgorithmBuilder {
                 GradientDescent gradientDescent = new GradientDescent(neuralNetworkModel, learningRate);
                 if (dropOutRegularizationCoeffs != null) {
                     Supplier<List<DoubleMatrix>> dropOutMatricesSupplier = () -> DropOutUtils.init().getDropOutMatrix(dropOutRegularizationCoeffs, neuralNetworkModel.getLayers());
-                    learningAlgorithm = new GradientDescentWithDropOutRegularization(gradientDescent, learningRate, neuralNetworkModel, dropOutMatricesSupplier);
+                    learningAlgorithm = new GradientDescentWithDropOutRegularization(learningRate, neuralNetworkModel, dropOutMatricesSupplier);
                 } else if (l2RegularizationCoeff != null) {
                     learningAlgorithm = new GradientDescentWithL2Regularization(neuralNetworkModel, learningRate, l2RegularizationCoeff);
                 } else {

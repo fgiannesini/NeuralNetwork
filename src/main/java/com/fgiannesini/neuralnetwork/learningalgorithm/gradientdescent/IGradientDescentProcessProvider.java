@@ -5,7 +5,7 @@ import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import java.util.List;
 import java.util.function.Function;
 
-public interface InternalGradientDescent {
+public interface IGradientDescentProcessProvider {
 
     Function<GradientDescentCorrectionsContainer, NeuralNetworkModel> getGradientDescentCorrectionsLauncher();
 
