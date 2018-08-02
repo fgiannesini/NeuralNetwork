@@ -4,7 +4,6 @@ import com.fgiannesini.neuralnetwork.computer.OutputComputerBuilder;
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IIntermediateOutputComputer;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.*;
 import com.fgiannesini.neuralnetwork.model.Layer;
-import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
 
 import java.util.List;
@@ -40,7 +39,7 @@ public class GradientDescentWithDropOutRegularizationProcessProvider implements 
     }
 
     @Override
-    public Function<GradientDescentCorrectionsContainer, NeuralNetworkModel> getGradientDescentCorrectionsLauncher() {
+    public Function<GradientDescentCorrectionsContainer, GradientDescentCorrectionsContainer> getGradientDescentCorrectionsLauncher() {
         return gradientDescentProcessProvider.getGradientDescentCorrectionsLauncher();
     }
 

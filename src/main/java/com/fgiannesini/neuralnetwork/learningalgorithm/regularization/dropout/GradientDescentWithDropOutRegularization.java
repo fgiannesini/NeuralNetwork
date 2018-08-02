@@ -10,7 +10,6 @@ import java.util.function.Supplier;
 
 public class GradientDescentWithDropOutRegularization implements LearningAlgorithm {
 
-    private List<DoubleMatrix> dropOutMatrices;
     private double learningRate;
     private NeuralNetworkModel neuralNetworkModel;
     private final Supplier<List<DoubleMatrix>> dropOutMatricesSupplier;
@@ -25,12 +24,18 @@ public class GradientDescentWithDropOutRegularization implements LearningAlgorit
 
     @Override
     public NeuralNetworkModel learn(DoubleMatrix inputMatrix, DoubleMatrix y) {
-        dropOutMatrices = dropOutMatricesSupplier.get();
+        List<DoubleMatrix> dropOutMatrices = dropOutMatricesSupplier.get();
         DoubleMatrix dropOutOutput = y.mulColumnVector(dropOutMatrices.get(dropOutMatrices.size() - 1));
-        GradientLayerProvider gradientLayerProvider = gradientDescentProvider.getForwardComputationLauncher().apply(new ForwardComputationContainer(inputMatrix, neuralNetworkModel));
+
+        GradientLayerProvider gradientLayerProvider = gradientDescentProvider.getForwardComputationLauncher()
+                .apply(new ForwardComputationContainer(inputMatrix, neuralNetworkModel));
+
         List<GradientDescentCorrection> gradientDescentCorrections = gradientDescentProvider.getBackwardComputationLauncher()
                 .apply(new BackwardComputationContainer(gradientLayerProvider, dropOutOutput, gradientDescentProvider.getFirstErrorComputationLauncher(), gradientDescentProvider.getErrorComputationLauncher()));
-        return gradientDescentProvider.getGradientDescentCorrectionsLauncher().apply(new GradientDescentCorrectionsContainer(neuralNetworkModel, gradientDescentCorrections, y.getColumns(), learningRate));
+
+        return gradientDescentProvider.getGradientDescentCorrectionsLauncher()
+                .apply(new GradientDescentCorrectionsContainer(neuralNetworkModel, gradientDescentCorrections, y.getColumns(), learningRate))
+                .getCorrectedNeuralNetworkModel();
     }
 
 }

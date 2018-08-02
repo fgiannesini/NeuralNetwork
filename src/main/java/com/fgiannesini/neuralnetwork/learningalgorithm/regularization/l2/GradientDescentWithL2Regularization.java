@@ -1,34 +1,34 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.regularization.l2;
 
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescent;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescentCorrection;
-import com.fgiannesini.neuralnetwork.model.Layer;
+import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithm;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.*;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
+import org.jblas.DoubleMatrix;
 
 import java.util.List;
 
-public class GradientDescentWithL2Regularization extends GradientDescent {
+public class GradientDescentWithL2Regularization implements LearningAlgorithm {
     private final double learningRate;
-    private final double regularizationCoeff;
+    private final IGradientDescentProcessProvider gradientDescentProcessProvider;
     private final NeuralNetworkModel originalNeuralNetworkModel;
 
     public GradientDescentWithL2Regularization(NeuralNetworkModel originalNeuralNetworkModel, double learningRate, double regularizationCoeff) {
-        super(originalNeuralNetworkModel, learningRate);
-        this.originalNeuralNetworkModel = originalNeuralNetworkModel;
+        this.originalNeuralNetworkModel = originalNeuralNetworkModel.clone();
         this.learningRate = learningRate;
-        this.regularizationCoeff = regularizationCoeff;
+        this.gradientDescentProcessProvider = new GradientDescentWithL2RegularizationProcessProvider(regularizationCoeff, this.originalNeuralNetworkModel);
     }
 
     @Override
-    protected NeuralNetworkModel applyGradientDescentCorrections(List<GradientDescentCorrection> gradientDescentCorrections, int inputCount) {
-        NeuralNetworkModel correctedNeuralNetworkModel = super.applyGradientDescentCorrections(gradientDescentCorrections, inputCount);
-        List<Layer> layers = correctedNeuralNetworkModel.getLayers();
-        List<Layer> originalLayers = originalNeuralNetworkModel.getLayers();
-        for (int layerIndex = 0; layerIndex < layers.size(); layerIndex++) {
-            Layer layer = layers.get(layerIndex);
-            Layer originalLayer = originalLayers.get(layerIndex);
-            layer.getWeightMatrix().subi(originalLayer.getWeightMatrix().mul(learningRate * regularizationCoeff / inputCount));
-        }
-        return correctedNeuralNetworkModel;
+    public NeuralNetworkModel learn(DoubleMatrix inputMatrix, DoubleMatrix y) {
+        GradientLayerProvider gradientLayerProvider = gradientDescentProcessProvider.getForwardComputationLauncher()
+                .apply(new ForwardComputationContainer(inputMatrix, originalNeuralNetworkModel));
+
+        List<GradientDescentCorrection> gradientDescentCorrections = gradientDescentProcessProvider.getBackwardComputationLauncher()
+                .apply(new BackwardComputationContainer(gradientLayerProvider, y, gradientDescentProcessProvider.getFirstErrorComputationLauncher(), gradientDescentProcessProvider.getErrorComputationLauncher()));
+
+        return gradientDescentProcessProvider.getGradientDescentCorrectionsLauncher()
+                .apply(new GradientDescentCorrectionsContainer(originalNeuralNetworkModel, gradientDescentCorrections, y.getColumns(), learningRate))
+                .getCorrectedNeuralNetworkModel();
+
     }
 }
