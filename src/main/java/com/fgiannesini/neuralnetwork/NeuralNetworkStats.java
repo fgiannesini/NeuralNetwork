@@ -4,7 +4,7 @@ public class NeuralNetworkStats {
     private final double learningCost;
     private final double testCost;
     private final int epochNumber;
-    private int batchNumber;
+    private final int batchNumber;
 
     NeuralNetworkStats(double learningCost, double testCost, int batchNumber, int epochNumber) {
         this.learningCost = learningCost;

@@ -5,9 +5,9 @@ import org.jblas.ranges.IntervalRange;
 
 public class BatchIterator {
 
-    private int batchSize;
-    private DoubleMatrix input;
-    private DoubleMatrix output;
+    private final int batchSize;
+    private final DoubleMatrix input;
+    private final DoubleMatrix output;
     private int lowerIndex;
     private int upperIndex;
     private int batchNumber;

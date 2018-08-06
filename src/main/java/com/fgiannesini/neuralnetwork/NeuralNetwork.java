@@ -21,7 +21,7 @@ public class NeuralNetwork {
     private final Consumer<NeuralNetworkStats> statsUpdateAction;
     private NeuralNetworkModel neuralNetworkModel;
     private final int epochCount;
-    private int batchSize;
+    private final int batchSize;
 
     NeuralNetwork(LearningAlgorithm learningAlgorithm, INormalizer normalizer, CostType costType, Consumer<NeuralNetworkStats> statsUpdateAction, HyperParameters hyperParameters) {
         this.learningAlgorithm = learningAlgorithm;

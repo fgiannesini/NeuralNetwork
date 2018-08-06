@@ -5,7 +5,7 @@ import com.fgiannesini.neuralnetwork.HyperParameters;
 public class TuneState {
 
     private double mark;
-    private HyperParameters hyperParameters;
+    private final HyperParameters hyperParameters;
 
     public TuneState(HyperParameters hyperParameters) {
         this.hyperParameters = hyperParameters;
