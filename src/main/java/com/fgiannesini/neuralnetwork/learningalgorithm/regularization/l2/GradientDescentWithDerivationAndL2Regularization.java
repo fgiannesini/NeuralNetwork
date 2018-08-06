@@ -1,28 +1,29 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.regularization.l2;
 
-import com.fgiannesini.neuralnetwork.cost.CostComputer;
-import com.fgiannesini.neuralnetwork.cost.CostComputerBuilder;
 import com.fgiannesini.neuralnetwork.cost.CostType;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivation;
+import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithm;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivationContainer;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.IGradientDescentWithDerivationProcessProvider;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
+import org.jblas.DoubleMatrix;
 
-public class GradientDescentWithDerivationAndL2Regularization extends GradientDescentWithDerivation {
+public class GradientDescentWithDerivationAndL2Regularization implements LearningAlgorithm {
 
+    private final NeuralNetworkModel neuralNetworkModel;
     private final CostType costType;
-    private final double regularizationCoeff;
+    private final double learningRate;
+    private final IGradientDescentWithDerivationProcessProvider gradientDescentWithDerivationProcessProvider;
 
     public GradientDescentWithDerivationAndL2Regularization(NeuralNetworkModel neuralNetworkModel, CostType costType, double learningRate, double regularizationCoeff) {
-        super(neuralNetworkModel, costType, learningRate);
+        this.neuralNetworkModel = neuralNetworkModel;
         this.costType = costType;
-        this.regularizationCoeff = regularizationCoeff;
+        this.learningRate = learningRate;
+        gradientDescentWithDerivationProcessProvider = new GradientDescentWithDerivationAndL2RegularizationProcessProvider(regularizationCoeff);
     }
 
+
     @Override
-    protected CostComputer buildCostComputer(NeuralNetworkModel modifiedNeuralNetworkModel) {
-        return CostComputerBuilder.init()
-                .withNeuralNetworkModel(modifiedNeuralNetworkModel)
-                .withType(costType)
-                .withL2Regularization(regularizationCoeff)
-                .build();
+    public NeuralNetworkModel learn(DoubleMatrix inputMatrix, DoubleMatrix y) {
+        return gradientDescentWithDerivationProcessProvider.getGradientWithDerivationLauncher().apply(new GradientDescentWithDerivationContainer(inputMatrix, y, neuralNetworkModel, learningRate, costType,gradientDescentWithDerivationProcessProvider.getCostComputerBuildingLauncher())).getNeuralNetworkModel();
     }
 }

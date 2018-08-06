@@ -5,10 +5,10 @@ import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import java.util.List;
 
 public class GradientDescentCorrectionsContainer {
-    private NeuralNetworkModel correctedNeuralNetworkModel;
-    private List<GradientDescentCorrection> gradientDescentCorrections;
-    private int inputCount;
-    private double learningRate;
+    private final NeuralNetworkModel correctedNeuralNetworkModel;
+    private final List<GradientDescentCorrection> gradientDescentCorrections;
+    private final int inputCount;
+    private final double learningRate;
 
     public GradientDescentCorrectionsContainer(NeuralNetworkModel correctedNeuralNetworkModel, List<GradientDescentCorrection> gradientDescentCorrections, int inputCount, double learningRate) {
         this.correctedNeuralNetworkModel = correctedNeuralNetworkModel;

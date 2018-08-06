@@ -10,8 +10,8 @@ import java.util.function.Supplier;
 
 public class GradientDescentWithDropOutRegularization implements LearningAlgorithm {
 
-    private double learningRate;
-    private NeuralNetworkModel neuralNetworkModel;
+    private final double learningRate;
+    private final NeuralNetworkModel neuralNetworkModel;
     private final Supplier<List<DoubleMatrix>> dropOutMatricesSupplier;
     private final IGradientDescentProcessProvider gradientDescentProvider;
 
