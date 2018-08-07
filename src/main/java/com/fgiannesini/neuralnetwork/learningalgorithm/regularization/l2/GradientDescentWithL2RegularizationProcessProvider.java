@@ -54,4 +54,9 @@ public class GradientDescentWithL2RegularizationProcessProvider implements IGrad
     public Function<ForwardComputationContainer, GradientLayerProvider> getForwardComputationLauncher() {
         return gradientDescentProcessProvider.getForwardComputationLauncher();
     }
+
+    @Override
+    public Function<DataContainer, DataContainer> getDataProcessLauncher() {
+        return Function.identity();
+    }
 }

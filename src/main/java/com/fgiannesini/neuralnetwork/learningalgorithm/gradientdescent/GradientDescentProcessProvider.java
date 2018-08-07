@@ -104,4 +104,9 @@ public class GradientDescentProcessProvider implements IGradientDescentProcessPr
             return new GradientLayerProvider(layers, intermediateResults);
         };
     }
+
+    @Override
+    public Function<DataContainer, DataContainer> getDataProcessLauncher() {
+        return Function.identity();
+    }
 }

@@ -13,17 +13,18 @@ import java.util.function.Supplier;
 public class GradientDescentWithDropOutRegularizationProcessProvider implements IGradientDescentProcessProvider {
 
     private final IGradientDescentProcessProvider gradientDescentProcessProvider;
-    private final Supplier<List<DoubleMatrix>> dropOutMatrices;
+    private final Supplier<List<DoubleMatrix>> dropOutMatricesSupplier;
+    private List<DoubleMatrix> dropOutMatrices;
 
-    public GradientDescentWithDropOutRegularizationProcessProvider(Supplier<List<DoubleMatrix>> dropOutMatrices) {
-        this.dropOutMatrices = dropOutMatrices;
+    public GradientDescentWithDropOutRegularizationProcessProvider(Supplier<List<DoubleMatrix>> dropOutMatricesSupplier) {
+        this.dropOutMatricesSupplier = dropOutMatricesSupplier;
         gradientDescentProcessProvider = new GradientDescentProcessProvider();
     }
 
     @Override
     public Function<ErrorComputationContainer, ErrorComputationContainer> getErrorComputationLauncher() {
         return gradientDescentProcessProvider.getErrorComputationLauncher().andThen(container -> {
-            DoubleMatrix dropOutMatrix = dropOutMatrices.get().get(container.getProvider().getCurrentLayerIndex());
+            DoubleMatrix dropOutMatrix = dropOutMatrices.get(container.getProvider().getCurrentLayerIndex());
             DoubleMatrix error = container.getPreviousError().muliColumnVector(dropOutMatrix);
             return new ErrorComputationContainer(container.getProvider(), error);
         });
@@ -32,7 +33,7 @@ public class GradientDescentWithDropOutRegularizationProcessProvider implements 
     @Override
     public Function<ErrorComputationContainer, ErrorComputationContainer> getFirstErrorComputationLauncher() {
         return gradientDescentProcessProvider.getFirstErrorComputationLauncher().andThen(container -> {
-            DoubleMatrix dropOutMatrix = dropOutMatrices.get().get(container.getProvider().getCurrentLayerIndex());
+            DoubleMatrix dropOutMatrix = dropOutMatrices.get(container.getProvider().getCurrentLayerIndex());
             DoubleMatrix error = container.getPreviousError().muliColumnVector(dropOutMatrix);
             return new ErrorComputationContainer(container.getProvider(), error);
         });
@@ -54,10 +55,19 @@ public class GradientDescentWithDropOutRegularizationProcessProvider implements 
             List<Layer> layers = container.getNeuralNetworkModel().getLayers();
             IIntermediateOutputComputer intermediateOutputComputer = OutputComputerBuilder.init()
                     .withModel(container.getNeuralNetworkModel())
-                    .withDropOutParameters(dropOutMatrices.get())
+                    .withDropOutParameters(dropOutMatrices)
                     .buildIntermediateOutputComputer();
             List<DoubleMatrix> intermediateResults = intermediateOutputComputer.compute(container.getInputMatrix());
             return new GradientLayerProvider(layers, intermediateResults);
+        };
+    }
+
+    @Override
+    public Function<DataContainer, DataContainer> getDataProcessLauncher() {
+        return container-> {
+            dropOutMatrices = dropOutMatricesSupplier.get();
+            DoubleMatrix dropOutOutput = container.getOutput().mulColumnVector(dropOutMatrices.get(dropOutMatrices.size() - 1));
+            return new DataContainer(container.getInput(), dropOutOutput);
         };
     }
 }

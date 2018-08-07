@@ -14,4 +14,6 @@ public interface IGradientDescentProcessProvider {
     Function<ErrorComputationContainer, ErrorComputationContainer> getFirstErrorComputationLauncher();
 
     Function<ForwardComputationContainer, GradientLayerProvider> getForwardComputationLauncher();
+
+    Function<DataContainer, DataContainer> getDataProcessLauncher();
 }
