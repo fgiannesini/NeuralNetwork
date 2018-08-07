@@ -2,6 +2,7 @@ package com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout;
 
 import com.fgiannesini.neuralnetwork.cost.CostType;
 import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithm;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.DataContainer;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivationContainer;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.IGradientDescentWithDerivationProcessProvider;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
@@ -14,22 +15,20 @@ public class GradientDescentWithDerivationAndDropOutRegularization implements Le
 
     private final NeuralNetworkModel neuralNetworkModel;
     private final CostType costType;
-    private final Supplier<List<DoubleMatrix>> dropOutMatricesSupplier;
     private final double learningRate;
+    private IGradientDescentWithDerivationProcessProvider gradientDescentWithDerivationProcessProvider;
 
     public GradientDescentWithDerivationAndDropOutRegularization(NeuralNetworkModel neuralNetworkModel, CostType costType, double learningRate, Supplier<List<DoubleMatrix>> dropOutMatricesSupplier) {
         this.neuralNetworkModel = neuralNetworkModel;
         this.costType = costType;
-        this.dropOutMatricesSupplier = dropOutMatricesSupplier;
         this.learningRate = learningRate;
+        gradientDescentWithDerivationProcessProvider = new GradientDescentWithDerivationandDropOutRegularizationProcessProvider(dropOutMatricesSupplier);
     }
 
     @Override
     public NeuralNetworkModel learn(DoubleMatrix inputMatrix, DoubleMatrix y) {
-        List<DoubleMatrix> dropOutMatrices = dropOutMatricesSupplier.get();
-        IGradientDescentWithDerivationProcessProvider gradientDescentWithDerivationProcessProvider = new GradientDescentWithDerivationandDropOutRegularizationProcessProvider(dropOutMatrices);
-        DoubleMatrix dropOutOutput = y.mulColumnVector(dropOutMatrices.get(dropOutMatrices.size() - 1));
-        return gradientDescentWithDerivationProcessProvider.getGradientWithDerivationLauncher().apply(new GradientDescentWithDerivationContainer(inputMatrix, dropOutOutput, neuralNetworkModel
+        DataContainer dataContainer = gradientDescentWithDerivationProcessProvider.getDataProcessLauncher().apply(new DataContainer(inputMatrix,y));
+        return gradientDescentWithDerivationProcessProvider.getGradientWithDerivationLauncher().apply(new GradientDescentWithDerivationContainer(dataContainer.getInput(), dataContainer.getOutput(), neuralNetworkModel
                 , learningRate, costType, gradientDescentWithDerivationProcessProvider.getCostComputerBuildingLauncher())).getNeuralNetworkModel();
     }
 }

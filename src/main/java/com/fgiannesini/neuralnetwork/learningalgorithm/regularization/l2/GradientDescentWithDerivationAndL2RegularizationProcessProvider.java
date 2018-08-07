@@ -2,6 +2,7 @@ package com.fgiannesini.neuralnetwork.learningalgorithm.regularization.l2;
 
 import com.fgiannesini.neuralnetwork.cost.CostComputer;
 import com.fgiannesini.neuralnetwork.cost.CostComputerBuilder;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.DataContainer;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.*;
 
 import java.util.function.Function;
@@ -14,6 +15,11 @@ public class GradientDescentWithDerivationAndL2RegularizationProcessProvider imp
     public GradientDescentWithDerivationAndL2RegularizationProcessProvider(double regularizationCoeff) {
         this.regularizationCoeff = regularizationCoeff;
         gradientDescentProcessProvider = new GradientDescentWithDerivationProcessProvider();
+    }
+
+    @Override
+    public Function<DataContainer, DataContainer> getDataProcessLauncher() {
+        return Function.identity();
     }
 
     @Override

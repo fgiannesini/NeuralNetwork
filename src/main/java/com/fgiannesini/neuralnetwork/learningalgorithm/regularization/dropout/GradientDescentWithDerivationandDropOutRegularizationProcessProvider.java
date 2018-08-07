@@ -2,6 +2,7 @@ package com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout;
 
 import com.fgiannesini.neuralnetwork.cost.CostComputer;
 import com.fgiannesini.neuralnetwork.cost.CostComputerBuilder;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.DataContainer;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivationContainer;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivationCostComputerContainer;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivationProcessProvider;
@@ -10,15 +11,26 @@ import org.jblas.DoubleMatrix;
 
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class GradientDescentWithDerivationandDropOutRegularizationProcessProvider implements IGradientDescentWithDerivationProcessProvider {
 
     private final IGradientDescentWithDerivationProcessProvider gradientDescentWithDerivationProcessProvider;
-    private final List<DoubleMatrix> dropOutMatrices;
+    private List<DoubleMatrix> dropOutMatrices;
+    private final Supplier<List<DoubleMatrix>> dropOutMatricesSupplier;
 
-    public GradientDescentWithDerivationandDropOutRegularizationProcessProvider(List<DoubleMatrix> dropOutMatrices) {
-        this.dropOutMatrices = dropOutMatrices;
+    public GradientDescentWithDerivationandDropOutRegularizationProcessProvider(Supplier<List<DoubleMatrix>> dropOutMatricesSupplier) {
+        this.dropOutMatricesSupplier = dropOutMatricesSupplier;
         gradientDescentWithDerivationProcessProvider = new GradientDescentWithDerivationProcessProvider();
+    }
+
+    @Override
+    public Function<DataContainer, DataContainer> getDataProcessLauncher() {
+        return container -> {
+            dropOutMatrices = dropOutMatricesSupplier.get();
+            DoubleMatrix dropOutOutput = container.getOutput().mulColumnVector(dropOutMatrices.get(dropOutMatrices.size() - 1));
+            return new DataContainer(container.getInput(), dropOutOutput);
+        };
     }
 
     @Override

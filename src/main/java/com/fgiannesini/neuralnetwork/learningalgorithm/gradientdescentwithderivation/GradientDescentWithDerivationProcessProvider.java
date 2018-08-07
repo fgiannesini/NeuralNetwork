@@ -2,6 +2,7 @@ package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderiv
 
 import com.fgiannesini.neuralnetwork.cost.CostComputer;
 import com.fgiannesini.neuralnetwork.cost.CostComputerBuilder;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.DataContainer;
 import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
@@ -12,6 +13,11 @@ import java.util.function.Function;
 public class GradientDescentWithDerivationProcessProvider implements IGradientDescentWithDerivationProcessProvider {
 
     private final double step = 0.0001;
+
+    @Override
+    public Function<DataContainer, DataContainer> getDataProcessLauncher() {
+        return Function.identity();
+    }
 
     @Override
     public Function<GradientDescentWithDerivationContainer, GradientDescentWithDerivationContainer> getGradientWithDerivationLauncher() {
