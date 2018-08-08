@@ -7,6 +7,8 @@ import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithm;
 import com.fgiannesini.neuralnetwork.learningalgorithm.NeuralNetworkAssertions;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescent;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescentProcessProvider;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivation;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivationProcessProvider;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
 import org.junit.jupiter.api.Test;
@@ -36,7 +38,8 @@ class GradientDescentWithL2RegularizationTest {
         LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, 0.01, processProvider);
         NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
-        LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivationAndL2Regularization(neuralNetworkModel, CostType.LINEAR_REGRESSION, 0.01, 0.5);
+        GradientDescentWithDerivationAndL2RegularizationProcessProvider withDerivationProcessProvider = new GradientDescentWithDerivationAndL2RegularizationProcessProvider(0.5, new GradientDescentWithDerivationProcessProvider());
+        LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LINEAR_REGRESSION, 0.01, withDerivationProcessProvider);
         NeuralNetworkModel gradientWithDerivativeNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);
         NeuralNetworkAssertions.checkSameNeuralNetworks(gradientNeuralNetworkModel, gradientWithDerivativeNeuralNetworkModel);
     }
@@ -63,7 +66,8 @@ class GradientDescentWithL2RegularizationTest {
         LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, 0.01, processProvider);
         NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
-        LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivationAndL2Regularization(neuralNetworkModel, CostType.LINEAR_REGRESSION, 0.01, 0.5);
+        GradientDescentWithDerivationAndL2RegularizationProcessProvider withDerivationProcessProvider = new GradientDescentWithDerivationAndL2RegularizationProcessProvider(0.5, new GradientDescentWithDerivationProcessProvider());
+        LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LINEAR_REGRESSION, 0.01, withDerivationProcessProvider);
         NeuralNetworkModel gradientWithDerivativeNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);
         NeuralNetworkAssertions.checkSameNeuralNetworks(gradientNeuralNetworkModel, gradientWithDerivativeNeuralNetworkModel);
     }

@@ -5,7 +5,6 @@ import com.fgiannesini.neuralnetwork.cost.CostComputerBuilder;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.DataContainer;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivationContainer;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivationCostComputerContainer;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivationProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.IGradientDescentWithDerivationProcessProvider;
 import org.jblas.DoubleMatrix;
 
@@ -19,9 +18,9 @@ public class GradientDescentWithDerivationAndDropOutRegularizationProcessProvide
     private List<DoubleMatrix> dropOutMatrices;
     private final Supplier<List<DoubleMatrix>> dropOutMatricesSupplier;
 
-    public GradientDescentWithDerivationAndDropOutRegularizationProcessProvider(Supplier<List<DoubleMatrix>> dropOutMatricesSupplier) {
+    public GradientDescentWithDerivationAndDropOutRegularizationProcessProvider(Supplier<List<DoubleMatrix>> dropOutMatricesSupplier, IGradientDescentWithDerivationProcessProvider gradientDescentWithDerivationProcessProvider) {
         this.dropOutMatricesSupplier = dropOutMatricesSupplier;
-        gradientDescentWithDerivationProcessProvider = new GradientDescentWithDerivationProcessProvider();
+        this.gradientDescentWithDerivationProcessProvider = gradientDescentWithDerivationProcessProvider;
     }
 
     @Override

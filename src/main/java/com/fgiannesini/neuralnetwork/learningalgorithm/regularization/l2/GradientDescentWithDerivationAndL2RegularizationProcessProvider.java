@@ -12,9 +12,9 @@ public class GradientDescentWithDerivationAndL2RegularizationProcessProvider imp
     private final double regularizationCoeff;
     private final IGradientDescentWithDerivationProcessProvider gradientDescentProcessProvider;
 
-    public GradientDescentWithDerivationAndL2RegularizationProcessProvider(double regularizationCoeff) {
+    public GradientDescentWithDerivationAndL2RegularizationProcessProvider(double regularizationCoeff, IGradientDescentWithDerivationProcessProvider gradientDescentProcessProvider) {
         this.regularizationCoeff = regularizationCoeff;
-        gradientDescentProcessProvider = new GradientDescentWithDerivationProcessProvider();
+        this.gradientDescentProcessProvider = gradientDescentProcessProvider;
     }
 
     @Override
