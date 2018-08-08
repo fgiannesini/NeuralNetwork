@@ -16,9 +16,9 @@ public class GradientDescentWithDropOutRegularizationProcessProvider implements 
     private final Supplier<List<DoubleMatrix>> dropOutMatricesSupplier;
     private List<DoubleMatrix> dropOutMatrices;
 
-    public GradientDescentWithDropOutRegularizationProcessProvider(Supplier<List<DoubleMatrix>> dropOutMatricesSupplier) {
+    public GradientDescentWithDropOutRegularizationProcessProvider(Supplier<List<DoubleMatrix>> dropOutMatricesSupplier, IGradientDescentProcessProvider processProvider) {
         this.dropOutMatricesSupplier = dropOutMatricesSupplier;
-        gradientDescentProcessProvider = new GradientDescentProcessProvider();
+        gradientDescentProcessProvider = processProvider;
     }
 
     @Override

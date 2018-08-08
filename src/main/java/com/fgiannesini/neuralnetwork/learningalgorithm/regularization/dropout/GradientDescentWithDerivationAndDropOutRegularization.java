@@ -22,7 +22,7 @@ public class GradientDescentWithDerivationAndDropOutRegularization implements Le
         this.neuralNetworkModel = neuralNetworkModel;
         this.costType = costType;
         this.learningRate = learningRate;
-        gradientDescentWithDerivationProcessProvider = new GradientDescentWithDerivationandDropOutRegularizationProcessProvider(dropOutMatricesSupplier);
+        gradientDescentWithDerivationProcessProvider = new GradientDescentWithDerivationAndDropOutRegularizationProcessProvider(dropOutMatricesSupplier);
     }
 
     @Override

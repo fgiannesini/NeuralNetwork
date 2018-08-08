@@ -2,12 +2,14 @@ package com.fgiannesini.neuralnetwork.learningalgorithm;
 
 import com.fgiannesini.neuralnetwork.cost.CostType;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescent;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescentProcessProvider;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.IGradientDescentProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivation;
 import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout.DropOutUtils;
 import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout.GradientDescentWithDerivationAndDropOutRegularization;
-import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout.GradientDescentWithDropOutRegularization;
+import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout.GradientDescentWithDropOutRegularizationProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.l2.GradientDescentWithDerivationAndL2Regularization;
-import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.l2.GradientDescentWithL2Regularization;
+import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.l2.GradientDescentWithL2RegularizationProcessProvider;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
 
@@ -70,15 +72,15 @@ public class LearningAlgorithmBuilder {
         LearningAlgorithm learningAlgorithm;
         switch (learningAlgorithmType) {
             case GRADIENT_DESCENT:
-                GradientDescent gradientDescent = new GradientDescent(neuralNetworkModel, learningRate);
+                IGradientDescentProcessProvider processProvider = new GradientDescentProcessProvider();
+
                 if (dropOutRegularizationCoeffs != null) {
                     Supplier<List<DoubleMatrix>> dropOutMatricesSupplier = () -> DropOutUtils.init().getDropOutMatrix(dropOutRegularizationCoeffs, neuralNetworkModel.getLayers());
-                    learningAlgorithm = new GradientDescentWithDropOutRegularization(learningRate, neuralNetworkModel, dropOutMatricesSupplier);
+                    processProvider = new GradientDescentWithDropOutRegularizationProcessProvider(dropOutMatricesSupplier, processProvider);
                 } else if (l2RegularizationCoeff != null) {
-                    learningAlgorithm = new GradientDescentWithL2Regularization(neuralNetworkModel, learningRate, l2RegularizationCoeff);
-                } else {
-                    learningAlgorithm = gradientDescent;
+                    processProvider = new GradientDescentWithL2RegularizationProcessProvider(l2RegularizationCoeff, neuralNetworkModel, processProvider);
                 }
+                learningAlgorithm = new GradientDescent(neuralNetworkModel, learningRate, processProvider);
                 break;
             case GRADIENT_DESCENT_DERIVATION:
                 if (dropOutRegularizationCoeffs != null) {

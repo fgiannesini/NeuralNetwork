@@ -9,10 +9,10 @@ import java.util.List;
 public class GradientDescent implements LearningAlgorithm {
     private final NeuralNetworkModel correctedNeuralNetworkModel;
     private final double learningRate;
-    private final IGradientDescentProcessProvider gradientDescentProvider;
+    private final IGradientDescentProcessProvider gradientDescentProcessProvider;
 
-    public GradientDescent( NeuralNetworkModel originalNeuralNetworkModel, double learningRate) {
-        this.gradientDescentProvider = new GradientDescentProcessProvider();
+    public GradientDescent(NeuralNetworkModel originalNeuralNetworkModel, double learningRate, IGradientDescentProcessProvider gradientDescentProcessProvider) {
+        this.gradientDescentProcessProvider = gradientDescentProcessProvider;
         this.correctedNeuralNetworkModel = originalNeuralNetworkModel.clone();
         this.learningRate = learningRate;
     }
@@ -20,17 +20,20 @@ public class GradientDescent implements LearningAlgorithm {
     @Override
     public NeuralNetworkModel learn(DoubleMatrix inputMatrix, DoubleMatrix y) {
         DataContainer dataContainer = new DataContainer(inputMatrix, y);
-        dataContainer = gradientDescentProvider.getDataProcessLauncher().apply(dataContainer);
+        dataContainer = gradientDescentProcessProvider.getDataProcessLauncher().apply(dataContainer);
 
-        GradientLayerProvider provider = gradientDescentProvider.getForwardComputationLauncher()
+        GradientLayerProvider provider = gradientDescentProcessProvider.getForwardComputationLauncher()
                 .apply(new ForwardComputationContainer(dataContainer.getInput(), correctedNeuralNetworkModel));
 
-        List<GradientDescentCorrection> gradientDescentCorrections = gradientDescentProvider.getBackwardComputationLauncher()
-                .apply(new BackwardComputationContainer(provider, dataContainer.getOutput(), gradientDescentProvider.getFirstErrorComputationLauncher(), gradientDescentProvider.getErrorComputationLauncher()));
+        List<GradientDescentCorrection> gradientDescentCorrections = gradientDescentProcessProvider.getBackwardComputationLauncher()
+                .apply(new BackwardComputationContainer(provider, dataContainer.getOutput(), gradientDescentProcessProvider.getFirstErrorComputationLauncher(), gradientDescentProcessProvider.getErrorComputationLauncher()));
 
-        return gradientDescentProvider.getGradientDescentCorrectionsLauncher()
+        return gradientDescentProcessProvider.getGradientDescentCorrectionsLauncher()
                 .apply(new GradientDescentCorrectionsContainer(correctedNeuralNetworkModel, gradientDescentCorrections, dataContainer.getOutput().getColumns(), learningRate))
                 .getCorrectedNeuralNetworkModel();
     }
 
+    public IGradientDescentProcessProvider getGradientDescentProcessProvider() {
+        return gradientDescentProcessProvider;
+    }
 }

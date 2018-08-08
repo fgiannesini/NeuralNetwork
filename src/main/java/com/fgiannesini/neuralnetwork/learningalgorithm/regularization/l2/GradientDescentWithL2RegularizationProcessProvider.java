@@ -13,10 +13,10 @@ public class GradientDescentWithL2RegularizationProcessProvider implements IGrad
     private final double regularizationCoeff;
     private final NeuralNetworkModel originalNeuralNetworkModel;
 
-    public GradientDescentWithL2RegularizationProcessProvider(double regularizationCoeff, NeuralNetworkModel originalNeuralNetworkModel) {
+    public GradientDescentWithL2RegularizationProcessProvider(double regularizationCoeff, NeuralNetworkModel originalNeuralNetworkModel, IGradientDescentProcessProvider gradientDescentProcessProvider) {
         this.regularizationCoeff = regularizationCoeff;
         this.originalNeuralNetworkModel = originalNeuralNetworkModel.clone();
-        this.gradientDescentProcessProvider = new GradientDescentProcessProvider();
+        this.gradientDescentProcessProvider = gradientDescentProcessProvider;
     }
 
     @Override

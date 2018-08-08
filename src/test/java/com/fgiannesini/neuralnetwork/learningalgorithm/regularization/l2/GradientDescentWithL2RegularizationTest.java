@@ -5,6 +5,8 @@ import com.fgiannesini.neuralnetwork.cost.CostType;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithm;
 import com.fgiannesini.neuralnetwork.learningalgorithm.NeuralNetworkAssertions;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescent;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescentProcessProvider;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
 import org.junit.jupiter.api.Test;
@@ -30,7 +32,8 @@ class GradientDescentWithL2RegularizationTest {
                 {20, 20}
         };
 
-        LearningAlgorithm gradientDescent = new GradientDescentWithL2Regularization(neuralNetworkModel, 0.01, 0.5);
+        GradientDescentWithL2RegularizationProcessProvider processProvider = new GradientDescentWithL2RegularizationProcessProvider(0.5, neuralNetworkModel, new GradientDescentProcessProvider());
+        LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, 0.01, processProvider);
         NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
         LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivationAndL2Regularization(neuralNetworkModel, CostType.LINEAR_REGRESSION, 0.01, 0.5);
@@ -56,7 +59,8 @@ class GradientDescentWithL2RegularizationTest {
                 {20, 20}
         };
 
-        LearningAlgorithm gradientDescent = new GradientDescentWithL2Regularization(neuralNetworkModel, 0.01, 0.5);
+        GradientDescentWithL2RegularizationProcessProvider processProvider = new GradientDescentWithL2RegularizationProcessProvider(0.5, neuralNetworkModel, new GradientDescentProcessProvider());
+        LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, 0.01, processProvider);
         NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
         LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivationAndL2Regularization(neuralNetworkModel, CostType.LINEAR_REGRESSION, 0.01, 0.5);

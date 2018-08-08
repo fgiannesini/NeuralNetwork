@@ -5,6 +5,9 @@ import com.fgiannesini.neuralnetwork.cost.CostType;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithm;
 import com.fgiannesini.neuralnetwork.learningalgorithm.NeuralNetworkAssertions;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescent;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescentProcessProvider;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.IGradientDescentProcessProvider;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
 import org.jblas.DoubleMatrix;
@@ -33,7 +36,8 @@ class GradientDescentWithDropOutRegularizationTest {
         );
 
         double learningRate = 0.01;
-        LearningAlgorithm gradientDescent = new GradientDescentWithDropOutRegularization(learningRate, neuralNetworkModel, dropOutMatrices);
+        IGradientDescentProcessProvider processProvider = new GradientDescentWithDropOutRegularizationProcessProvider(dropOutMatrices, new GradientDescentProcessProvider());
+        LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, learningRate, processProvider);
         NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
         LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivationAndDropOutRegularization(neuralNetworkModel, CostType.LINEAR_REGRESSION, 0.01, dropOutMatrices);
@@ -61,7 +65,8 @@ class GradientDescentWithDropOutRegularizationTest {
         );
 
         double learningRate = 0.01;
-        LearningAlgorithm gradientDescent = new GradientDescentWithDropOutRegularization(learningRate, neuralNetworkModel, dropOutMatrices);
+        IGradientDescentProcessProvider processProvider = new GradientDescentWithDropOutRegularizationProcessProvider(dropOutMatrices, new GradientDescentProcessProvider());
+        LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, learningRate, processProvider);
         NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
         LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivationAndDropOutRegularization(neuralNetworkModel, CostType.LINEAR_REGRESSION, 0.01, dropOutMatrices);
@@ -89,7 +94,8 @@ class GradientDescentWithDropOutRegularizationTest {
         );
 
         double learningRate = 0.01;
-        LearningAlgorithm gradientDescent = new GradientDescentWithDropOutRegularization(learningRate, neuralNetworkModel, dropOutMatrices);
+        IGradientDescentProcessProvider processProvider = new GradientDescentWithDropOutRegularizationProcessProvider(dropOutMatrices, new GradientDescentProcessProvider());
+        LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, learningRate, processProvider);
         NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
         LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivationAndDropOutRegularization(neuralNetworkModel, CostType.LINEAR_REGRESSION, 0.01, dropOutMatrices);
@@ -123,7 +129,8 @@ class GradientDescentWithDropOutRegularizationTest {
         );
 
         double learningRate = 0.01;
-        LearningAlgorithm gradientDescent = new GradientDescentWithDropOutRegularization(learningRate, neuralNetworkModel, dropOutMatrices);
+        IGradientDescentProcessProvider processProvider = new GradientDescentWithDropOutRegularizationProcessProvider(dropOutMatrices, new GradientDescentProcessProvider());
+        LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, learningRate, processProvider);
         NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
         LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivationAndDropOutRegularization(neuralNetworkModel, CostType.LINEAR_REGRESSION, 0.01, dropOutMatrices);
@@ -154,7 +161,8 @@ class GradientDescentWithDropOutRegularizationTest {
         Supplier<List<DoubleMatrix>> dropOutMatrices = () -> dropOutMatrix;
 
         double learningRate = 0.01;
-        LearningAlgorithm gradientDescent = new GradientDescentWithDropOutRegularization(learningRate, neuralNetworkModel, dropOutMatrices);
+        IGradientDescentProcessProvider processProvider = new GradientDescentWithDropOutRegularizationProcessProvider(dropOutMatrices, new GradientDescentProcessProvider());
+        LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, learningRate, processProvider);
         NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
         LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivationAndDropOutRegularization(neuralNetworkModel, CostType.LINEAR_REGRESSION, learningRate, dropOutMatrices);

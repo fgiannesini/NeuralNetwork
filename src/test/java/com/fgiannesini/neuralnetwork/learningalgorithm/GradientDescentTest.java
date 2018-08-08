@@ -4,6 +4,7 @@ import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import com.fgiannesini.neuralnetwork.cost.CostType;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescent;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescentProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivation;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
@@ -26,7 +27,7 @@ class GradientDescentTest {
             double[] input = new double[]{1, 2};
             double[] output = new double[]{4, 4};
 
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, 0.01);
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, 0.01, new GradientDescentProcessProvider());
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
             NeuralNetworkAssertions.checkSameNeuralNetworks(neuralNetworkModel, gradientNeuralNetworkModel);
@@ -48,7 +49,7 @@ class GradientDescentTest {
             double[] input = new double[]{1, 2};
             double[] output = new double[]{13, 13};
 
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, 0.01);
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, 0.01, new GradientDescentProcessProvider());
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
             NeuralNetworkAssertions.checkSameNeuralNetworks(neuralNetworkModel, gradientNeuralNetworkModel);
@@ -77,7 +78,7 @@ class GradientDescentTest {
                     {25, 25}
             };
 
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, 0.01);
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, 0.01, new GradientDescentProcessProvider());
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
             NeuralNetworkAssertions.checkSameNeuralNetworks(neuralNetworkModel, gradientNeuralNetworkModel);
@@ -108,7 +109,7 @@ class GradientDescentTest {
             };
             double[] expectedBiasMatrix = {0.99, 1.01};
 
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, 0.01);
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, 0.01, new GradientDescentProcessProvider());
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 0, expectedWeightMatrix, expectedBiasMatrix);
 
@@ -142,7 +143,7 @@ class GradientDescentTest {
             };
             double[] expectedSecondBiasMatrix = {0.97, 1.02};
 
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, 0.01);
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, 0.01, new GradientDescentProcessProvider());
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 0, expectedFirstWeightMatrix, expectedFirstBiasMatrix);
@@ -184,7 +185,7 @@ class GradientDescentTest {
                     {0.84, 0.84}
             };
             double[] expectedSecondBiasMatrix = {0.985, 0.985};
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, 0.01);
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, 0.01, new GradientDescentProcessProvider());
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 0, expectedFirstWeightMatrix, expectedFirstBiasMatrix);
@@ -240,7 +241,7 @@ class GradientDescentTest {
             };
             double[] expectedSecondBiasMatrix = {0.530751, 0.619049};
 
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, 0.5);
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, 0.5, new GradientDescentProcessProvider());
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 0, expectedFirstWeightMatrix, expectedFirstBiasMatrix);

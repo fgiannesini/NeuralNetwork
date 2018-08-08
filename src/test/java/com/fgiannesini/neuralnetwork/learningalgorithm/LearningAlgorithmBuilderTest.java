@@ -3,9 +3,9 @@ package com.fgiannesini.neuralnetwork.learningalgorithm;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescent;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivation;
 import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout.GradientDescentWithDerivationAndDropOutRegularization;
-import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout.GradientDescentWithDropOutRegularization;
+import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout.GradientDescentWithDropOutRegularizationProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.l2.GradientDescentWithDerivationAndL2Regularization;
-import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.l2.GradientDescentWithL2Regularization;
+import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.l2.GradientDescentWithL2RegularizationProcessProvider;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
 import org.junit.jupiter.api.Assertions;
@@ -89,7 +89,8 @@ class LearningAlgorithmBuilderTest {
                     .withL2Regularization(0.5)
                     .build();
 
-            Assertions.assertTrue(learningAlgorithm instanceof GradientDescentWithL2Regularization);
+            Assertions.assertTrue(learningAlgorithm instanceof GradientDescent);
+            Assertions.assertTrue(((GradientDescent)learningAlgorithm).getGradientDescentProcessProvider() instanceof GradientDescentWithL2RegularizationProcessProvider);
         }
 
         @Test
@@ -100,7 +101,8 @@ class LearningAlgorithmBuilderTest {
                     .withDropOutRegularitation(0.1, 0.2)
                     .build();
 
-            Assertions.assertTrue(learningAlgorithm instanceof GradientDescentWithDropOutRegularization);
+            Assertions.assertTrue(learningAlgorithm instanceof GradientDescent);
+            Assertions.assertTrue(((GradientDescent)learningAlgorithm).getGradientDescentProcessProvider() instanceof GradientDescentWithDropOutRegularizationProcessProvider);
         }
 
         @Test

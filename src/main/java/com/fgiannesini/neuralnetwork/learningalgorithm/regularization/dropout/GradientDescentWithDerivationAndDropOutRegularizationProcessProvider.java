@@ -13,13 +13,13 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class GradientDescentWithDerivationandDropOutRegularizationProcessProvider implements IGradientDescentWithDerivationProcessProvider {
+public class GradientDescentWithDerivationAndDropOutRegularizationProcessProvider implements IGradientDescentWithDerivationProcessProvider {
 
     private final IGradientDescentWithDerivationProcessProvider gradientDescentWithDerivationProcessProvider;
     private List<DoubleMatrix> dropOutMatrices;
     private final Supplier<List<DoubleMatrix>> dropOutMatricesSupplier;
 
-    public GradientDescentWithDerivationandDropOutRegularizationProcessProvider(Supplier<List<DoubleMatrix>> dropOutMatricesSupplier) {
+    public GradientDescentWithDerivationAndDropOutRegularizationProcessProvider(Supplier<List<DoubleMatrix>> dropOutMatricesSupplier) {
         this.dropOutMatricesSupplier = dropOutMatricesSupplier;
         gradientDescentWithDerivationProcessProvider = new GradientDescentWithDerivationProcessProvider();
     }
