@@ -6,8 +6,6 @@ import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.DataConta
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
 
-import java.util.function.Function;
-
 public class GradientDescentWithDerivation implements LearningAlgorithm {
 
     private final NeuralNetworkModel originalNeuralNetworkModel;

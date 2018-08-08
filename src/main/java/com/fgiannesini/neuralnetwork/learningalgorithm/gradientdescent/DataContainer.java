@@ -4,8 +4,8 @@ import org.jblas.DoubleMatrix;
 
 public class DataContainer {
 
-    private DoubleMatrix input;
-    private DoubleMatrix output;
+    private final DoubleMatrix input;
+    private final DoubleMatrix output;
 
     public DataContainer(DoubleMatrix input, DoubleMatrix output) {
         this.input = input;
