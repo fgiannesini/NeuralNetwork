@@ -35,6 +35,7 @@ public class LearningAlgorithmBuilder {
         learningAlgorithmType = LearningAlgorithmType.GRADIENT_DESCENT;
         learningRate = 0.01;
         costType = CostType.LINEAR_REGRESSION;
+        momentumCoeff = 0.9;
     }
 
     public static LearningAlgorithmBuilder init() {
