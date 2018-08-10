@@ -7,7 +7,7 @@ import org.jblas.DoubleMatrix;
 import java.util.List;
 
 public class GradientDescent implements LearningAlgorithm {
-    private final NeuralNetworkModel correctedNeuralNetworkModel;
+    private NeuralNetworkModel correctedNeuralNetworkModel;
     private final double learningRate;
     private final IGradientDescentProcessProvider gradientDescentProcessProvider;
 
@@ -28,9 +28,10 @@ public class GradientDescent implements LearningAlgorithm {
         List<GradientDescentCorrection> gradientDescentCorrections = gradientDescentProcessProvider.getBackwardComputationLauncher()
                 .apply(new BackwardComputationContainer(provider, dataContainer.getOutput(), gradientDescentProcessProvider.getFirstErrorComputationLauncher(), gradientDescentProcessProvider.getErrorComputationLauncher()));
 
-        return gradientDescentProcessProvider.getGradientDescentCorrectionsLauncher()
-                .apply(new GradientDescentCorrectionsContainer(correctedNeuralNetworkModel, gradientDescentCorrections, dataContainer.getOutput().getColumns(), learningRate))
+        correctedNeuralNetworkModel = gradientDescentProcessProvider.getGradientDescentCorrectionsLauncher()
+                .apply(new GradientDescentCorrectionsContainer(this.correctedNeuralNetworkModel, gradientDescentCorrections, dataContainer.getOutput().getColumns(), learningRate))
                 .getCorrectedNeuralNetworkModel();
+        return correctedNeuralNetworkModel;
     }
 
     public IGradientDescentProcessProvider getGradientDescentProcessProvider() {

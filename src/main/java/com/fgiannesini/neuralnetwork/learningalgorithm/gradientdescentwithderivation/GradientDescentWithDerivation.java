@@ -8,7 +8,7 @@ import org.jblas.DoubleMatrix;
 
 public class GradientDescentWithDerivation implements LearningAlgorithm {
 
-    private final NeuralNetworkModel originalNeuralNetworkModel;
+    private NeuralNetworkModel originalNeuralNetworkModel;
     private final CostType costType;
     private final double learningRate;
     private final IGradientDescentWithDerivationProcessProvider gradientDescentProcessProvider;
@@ -24,7 +24,8 @@ public class GradientDescentWithDerivation implements LearningAlgorithm {
     public NeuralNetworkModel learn(DoubleMatrix inputMatrix, DoubleMatrix y) {
         DataContainer dataContainer = gradientDescentProcessProvider.getDataProcessLauncher().apply(new DataContainer(inputMatrix, y));
         GradientDescentWithDerivationContainer gradientDescentWithDerivationContainer = new GradientDescentWithDerivationContainer(dataContainer.getInput(), dataContainer.getOutput(), originalNeuralNetworkModel, learningRate, costType, gradientDescentProcessProvider.getCostComputerBuildingLauncher());
-        return gradientDescentProcessProvider.getGradientWithDerivationLauncher().apply(gradientDescentWithDerivationContainer).getNeuralNetworkModel();
+        originalNeuralNetworkModel = gradientDescentProcessProvider.getGradientWithDerivationLauncher().apply(gradientDescentWithDerivationContainer).getNeuralNetworkModel();
+        return originalNeuralNetworkModel;
     }
 
     public IGradientDescentWithDerivationProcessProvider getGradientDescentProcessProvider() {
