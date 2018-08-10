@@ -7,6 +7,7 @@ import com.fgiannesini.neuralnetwork.NeuralNetworkStats;
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import com.fgiannesini.neuralnetwork.cost.CostType;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
+import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithmType;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
 import org.jblas.DoubleMatrix;
@@ -67,6 +68,7 @@ public class FloorExampleLauncher {
 
         return NeuralNetworkBuilder.init()
                 .withNeuralNetworkModel(neuralNetworkModel)
+                .withLearningAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT)
                 .withCostType(CostType.LOGISTIC_REGRESSION)
                 .withNeuralNetworkStatsConsumer(statsUpdateAction)
                 .withHyperParameters(hyperParameters)
