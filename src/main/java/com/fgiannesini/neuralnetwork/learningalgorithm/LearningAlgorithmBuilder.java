@@ -6,6 +6,7 @@ import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientD
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescentWithMomentumProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.IGradientDescentProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivation;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivationAndMomentumProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivationProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.IGradientDescentWithDerivationProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout.DropOutUtils;
@@ -92,19 +93,28 @@ public class LearningAlgorithmBuilder {
                 break;
             case GRADIENT_DESCENT_DERIVATION:
                 IGradientDescentWithDerivationProcessProvider withDerivationProcessProvider = new GradientDescentWithDerivationProcessProvider();
-                if (dropOutRegularizationCoeffs != null) {
-                    Supplier<List<DoubleMatrix>> dropOutMatricesSupplier = () -> DropOutUtils.init().getDropOutMatrix(dropOutRegularizationCoeffs, neuralNetworkModel.getLayers());
-                    withDerivationProcessProvider = new GradientDescentWithDerivationAndDropOutRegularizationProcessProvider(dropOutMatricesSupplier, withDerivationProcessProvider);
-                } else if (l2RegularizationCoeff != null) {
-                    withDerivationProcessProvider = new GradientDescentWithDerivationAndL2RegularizationProcessProvider(l2RegularizationCoeff, withDerivationProcessProvider);
-                }
+                withDerivationProcessProvider = applyGradientDescentWithDerivationRegularization(withDerivationProcessProvider);
                 learningAlgorithm = new GradientDescentWithDerivation(neuralNetworkModel, costType, learningRate, withDerivationProcessProvider);
-
+                break;
+            case GRADIENT_DESCENT_DERIVATION_MOMENTUM:
+                GradientDescentWithDerivationAndMomentumProcessProvider withDerivationAndMomentumProcessProvider = new GradientDescentWithDerivationAndMomentumProcessProvider(momentumCoeff);
+                withDerivationProcessProvider = applyGradientDescentWithDerivationRegularization(withDerivationAndMomentumProcessProvider);
+                learningAlgorithm = new GradientDescentWithDerivation(neuralNetworkModel, costType, learningRate, withDerivationProcessProvider);
                 break;
             default:
                 throw new IllegalArgumentException(learningAlgorithmType + " instantiation is not implemented");
         }
         return learningAlgorithm;
+    }
+
+    private IGradientDescentWithDerivationProcessProvider applyGradientDescentWithDerivationRegularization(IGradientDescentWithDerivationProcessProvider withDerivationProcessProvider) {
+        if (dropOutRegularizationCoeffs != null) {
+            Supplier<List<DoubleMatrix>> dropOutMatricesSupplier = () -> DropOutUtils.init().getDropOutMatrix(dropOutRegularizationCoeffs, neuralNetworkModel.getLayers());
+            withDerivationProcessProvider = new GradientDescentWithDerivationAndDropOutRegularizationProcessProvider(dropOutMatricesSupplier, withDerivationProcessProvider);
+        } else if (l2RegularizationCoeff != null) {
+            withDerivationProcessProvider = new GradientDescentWithDerivationAndL2RegularizationProcessProvider(l2RegularizationCoeff, withDerivationProcessProvider);
+        }
+        return withDerivationProcessProvider;
     }
 
     private IGradientDescentProcessProvider applyGradientDescentRegularization(IGradientDescentProcessProvider processProvider) {

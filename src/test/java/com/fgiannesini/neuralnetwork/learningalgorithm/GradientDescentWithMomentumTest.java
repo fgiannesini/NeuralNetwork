@@ -1,9 +1,12 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
+import com.fgiannesini.neuralnetwork.cost.CostType;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescent;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescentWithMomentumProcessProvider;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivation;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivationAndMomentumProcessProvider;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
 import org.junit.jupiter.api.Nested;
@@ -53,10 +56,9 @@ class GradientDescentWithMomentumTest {
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 0, expectedFirstWeightMatrix, expectedFirstBiasMatrix);
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 1, expectedSecondWeightMatrix, expectedSecondBiasMatrix);
 
-            /*LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LINEAR_REGRESSION, 0.01, new GradientDescentWithDerivationProcessProvider());
+            LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LINEAR_REGRESSION, 0.01, new GradientDescentWithDerivationAndMomentumProcessProvider(momentumCoeff));
             NeuralNetworkModel gradientWithDerivativeNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);
             NeuralNetworkAssertions.checkSameNeuralNetworks(gradientNeuralNetworkModel, gradientWithDerivativeNeuralNetworkModel);
-            */
         }
 
         @Test
@@ -101,10 +103,11 @@ class GradientDescentWithMomentumTest {
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 0, expectedFirstWeightMatrix, expectedFirstBiasMatrix);
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 1, expectedSecondWeightMatrix, expectedSecondBiasMatrix);
 
-            /*LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LINEAR_REGRESSION, 0.01, new GradientDescentWithDerivationProcessProvider());
+            LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LINEAR_REGRESSION, 0.01, new GradientDescentWithDerivationAndMomentumProcessProvider(momentumCoeff));
+            gradientDescentWithDerivation.learn(input, output);
             NeuralNetworkModel gradientWithDerivativeNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);
+
             NeuralNetworkAssertions.checkSameNeuralNetworks(gradientNeuralNetworkModel, gradientWithDerivativeNeuralNetworkModel);
-            */
         }
     }
 
