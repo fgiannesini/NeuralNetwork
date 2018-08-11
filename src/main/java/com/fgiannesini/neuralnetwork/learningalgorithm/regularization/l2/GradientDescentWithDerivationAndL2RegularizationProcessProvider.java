@@ -3,8 +3,13 @@ package com.fgiannesini.neuralnetwork.learningalgorithm.regularization.l2;
 import com.fgiannesini.neuralnetwork.cost.CostComputer;
 import com.fgiannesini.neuralnetwork.cost.CostComputerBuilder;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.DataContainer;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.*;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescentCorrection;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivationContainer;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivationCorrectionsContainer;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivationCostComputerContainer;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.IGradientDescentWithDerivationProcessProvider;
 
+import java.util.List;
 import java.util.function.Function;
 
 public class GradientDescentWithDerivationAndL2RegularizationProcessProvider implements IGradientDescentWithDerivationProcessProvider {
@@ -23,7 +28,7 @@ public class GradientDescentWithDerivationAndL2RegularizationProcessProvider imp
     }
 
     @Override
-    public Function<GradientDescentWithDerivationContainer, GradientDescentWithDerivationContainer> getGradientWithDerivationLauncher() {
+    public Function<GradientDescentWithDerivationContainer, List<GradientDescentCorrection>> getGradientWithDerivationLauncher() {
         return gradientDescentProcessProvider.getGradientWithDerivationLauncher();
     }
 
@@ -34,5 +39,10 @@ public class GradientDescentWithDerivationAndL2RegularizationProcessProvider imp
                 .withType(container.getCostType())
                 .withL2Regularization(regularizationCoeff)
                 .build();
+    }
+
+    @Override
+    public Function<GradientDescentWithDerivationCorrectionsContainer, GradientDescentWithDerivationCorrectionsContainer> getGradientDescentCorrectionsLauncher() {
+        return gradientDescentProcessProvider.getGradientDescentCorrectionsLauncher();
     }
 }

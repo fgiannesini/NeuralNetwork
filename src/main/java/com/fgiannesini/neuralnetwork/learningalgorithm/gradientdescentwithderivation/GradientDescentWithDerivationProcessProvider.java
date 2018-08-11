@@ -3,10 +3,12 @@ package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderiv
 import com.fgiannesini.neuralnetwork.cost.CostComputer;
 import com.fgiannesini.neuralnetwork.cost.CostComputerBuilder;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.DataContainer;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescentCorrection;
 import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -20,18 +22,18 @@ public class GradientDescentWithDerivationProcessProvider implements IGradientDe
     }
 
     @Override
-    public Function<GradientDescentWithDerivationContainer, GradientDescentWithDerivationContainer> getGradientWithDerivationLauncher() {
+    public Function<GradientDescentWithDerivationContainer, List<GradientDescentCorrection>> getGradientWithDerivationLauncher() {
         return container -> {
-            NeuralNetworkModel resultNeuralNetworkModel = container.getNeuralNetworkModel().clone();
             DoubleMatrix output = container.getY();
             DoubleMatrix input = container.getInput();
             List<Layer> layers = container.getNeuralNetworkModel().getLayers();
+            List<GradientDescentCorrection> corrections = new ArrayList<>();
             for (int layerIndex = 0; layerIndex < layers.size(); layerIndex++) {
                 Layer layer = layers.get(layerIndex);
 
-                DoubleMatrix originalWeightMatrix = layer.getWeightMatrix();
+                DoubleMatrix correctedWeightMatrix = DoubleMatrix.zeros(layer.getWeightMatrix().getRows(), layer.getWeightMatrix().getColumns());
 
-                for (int elementIndex = 0; elementIndex < originalWeightMatrix.length; elementIndex++) {
+                for (int elementIndex = 0; elementIndex < correctedWeightMatrix.length; elementIndex++) {
                     NeuralNetworkModel modifiedNeuralNetworkModel = container.getNeuralNetworkModel().clone();
                     CostComputer costComputer = container.getCostComputerProcessLauncher().apply(new GradientDescentWithDerivationCostComputerContainer(modifiedNeuralNetworkModel, container.getCostType()));
 
@@ -46,12 +48,11 @@ public class GradientDescentWithDerivationProcessProvider implements IGradientDe
                     modifiedWeightMatrix.put(elementIndex, modifiedWeightMatrix.get(elementIndex) + step);
 
                     double dW = (superiorStepCost - inferiorStepCost) / (2 * step);
-                    double w = resultNeuralNetworkModel.getLayers().get(layerIndex).getWeightMatrix().get(elementIndex);
-                    resultNeuralNetworkModel.getLayers().get(layerIndex).getWeightMatrix().put(elementIndex, w - container.getLearningRate() * dW);
+                    correctedWeightMatrix.put(elementIndex, dW);
                 }
 
-                DoubleMatrix originalBiasMatrix = layer.getBiasMatrix();
-                for (int elementIndex = 0; elementIndex < originalBiasMatrix.length; elementIndex++) {
+                DoubleMatrix correctedBiasMatrix = DoubleMatrix.zeros(layer.getBiasMatrix().getRows(), layer.getBiasMatrix().getColumns());
+                for (int elementIndex = 0; elementIndex < correctedBiasMatrix.length; elementIndex++) {
                     NeuralNetworkModel modifiedNeuralNetworkModel = container.getNeuralNetworkModel().clone();
                     CostComputer costComputer = container.getCostComputerProcessLauncher().apply(new GradientDescentWithDerivationCostComputerContainer(modifiedNeuralNetworkModel, container.getCostType()));
                     DoubleMatrix modifiedBiasMatrix = modifiedNeuralNetworkModel.getLayers().get(layerIndex).getBiasMatrix();
@@ -65,13 +66,14 @@ public class GradientDescentWithDerivationProcessProvider implements IGradientDe
                     modifiedBiasMatrix.put(elementIndex, modifiedBiasMatrix.get(elementIndex) + step);
 
                     double dB = (superiorStepCost - inferiorStepCost) / (2 * step);
-                    double b = resultNeuralNetworkModel.getLayers().get(layerIndex).getBiasMatrix().get(elementIndex);
-                    resultNeuralNetworkModel.getLayers().get(layerIndex).getBiasMatrix().put(elementIndex, b - container.getLearningRate() * dB);
+                    correctedBiasMatrix.put(elementIndex, dB);
                 }
 
+                GradientDescentCorrection gradientDescentCorrection = new GradientDescentCorrection(correctedWeightMatrix, correctedBiasMatrix);
+                corrections.add(gradientDescentCorrection);
             }
 
-            return new GradientDescentWithDerivationContainer(input, output, resultNeuralNetworkModel, container.getLearningRate(), container.getCostType(), container.getCostComputerProcessLauncher());
+            return corrections;
         };
     }
 
@@ -81,5 +83,20 @@ public class GradientDescentWithDerivationProcessProvider implements IGradientDe
                 .withNeuralNetworkModel(container.getNeuralNetworkModel())
                 .withType(container.getCostType())
                 .build();
+    }
+
+    @Override
+    public Function<GradientDescentWithDerivationCorrectionsContainer, GradientDescentWithDerivationCorrectionsContainer> getGradientDescentCorrectionsLauncher() {
+        return container -> {
+            NeuralNetworkModel correctedNeuralNetworkModel = container.getCorrectedNeuralNetworkModel();
+            List<Layer> layers = correctedNeuralNetworkModel.getLayers();
+            for (int layerIndex = 0; layerIndex < layers.size(); layerIndex++) {
+                GradientDescentCorrection gradientDescentCorrection = container.getGradientDescentCorrections().get(layerIndex);
+                Layer layer = layers.get(layerIndex);
+                layer.getWeightMatrix().subi(gradientDescentCorrection.getWeightCorrectionResults().mul(container.getLearningRate()));
+                layer.getBiasMatrix().subi(gradientDescentCorrection.getBiasCorrectionResults().mul(container.getLearningRate()));
+            }
+            return new GradientDescentWithDerivationCorrectionsContainer(correctedNeuralNetworkModel, container.getGradientDescentCorrections(), container.getInputCount(), container.getLearningRate());
+        };
     }
 }

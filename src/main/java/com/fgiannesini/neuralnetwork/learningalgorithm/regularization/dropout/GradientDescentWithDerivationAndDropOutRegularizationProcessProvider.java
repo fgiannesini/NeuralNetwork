@@ -3,7 +3,9 @@ package com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout;
 import com.fgiannesini.neuralnetwork.cost.CostComputer;
 import com.fgiannesini.neuralnetwork.cost.CostComputerBuilder;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.DataContainer;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescentCorrection;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivationContainer;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivationCorrectionsContainer;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivationCostComputerContainer;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.IGradientDescentWithDerivationProcessProvider;
 import org.jblas.DoubleMatrix;
@@ -33,7 +35,7 @@ public class GradientDescentWithDerivationAndDropOutRegularizationProcessProvide
     }
 
     @Override
-    public Function<GradientDescentWithDerivationContainer, GradientDescentWithDerivationContainer> getGradientWithDerivationLauncher() {
+    public Function<GradientDescentWithDerivationContainer, List<GradientDescentCorrection>> getGradientWithDerivationLauncher() {
         return gradientDescentWithDerivationProcessProvider.getGradientWithDerivationLauncher();
     }
 
@@ -44,5 +46,10 @@ public class GradientDescentWithDerivationAndDropOutRegularizationProcessProvide
                 .withDropOutRegularization(dropOutMatrices)
                 .withType(container.getCostType())
                 .build();
+    }
+
+    @Override
+    public Function<GradientDescentWithDerivationCorrectionsContainer, GradientDescentWithDerivationCorrectionsContainer> getGradientDescentCorrectionsLauncher() {
+        return gradientDescentWithDerivationProcessProvider.getGradientDescentCorrectionsLauncher();
     }
 }
