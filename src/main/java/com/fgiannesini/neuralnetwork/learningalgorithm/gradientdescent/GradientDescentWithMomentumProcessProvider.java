@@ -36,11 +36,11 @@ public class GradientDescentWithMomentumProcessProvider implements IGradientDesc
 
                 //Vdw = m*Vdw + (1 - m)*dW
                 momentumLayer.setWeightMatrix(momentumLayer.getWeightMatrix().muli(momentumCoeff).addi(gradientDescentCorrection.getWeightCorrectionResults().mul(1d - momentumCoeff)));
-                layer.getWeightMatrix().subi(momentumLayer.getWeightMatrix().muli(container.getLearningRate()));
+                layer.getWeightMatrix().subi(momentumLayer.getWeightMatrix().mul(container.getLearningRate()));
 
                 //Vdb = m*Vdb + (1 - m)*dB
                 momentumLayer.setBiasMatrix(momentumLayer.getBiasMatrix().muli(momentumCoeff).addi(gradientDescentCorrection.getBiasCorrectionResults().mul(1d - momentumCoeff)));
-                layer.getBiasMatrix().subi(momentumLayer.getBiasMatrix().muli(container.getLearningRate()));
+                layer.getBiasMatrix().subi(momentumLayer.getBiasMatrix().mul(container.getLearningRate()));
             }
             return new GradientDescentCorrectionsContainer(correctedNeuralNetworkModel, container.getGradientDescentCorrections(), container.getInputCount(), container.getLearningRate());
         };

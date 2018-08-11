@@ -79,17 +79,18 @@ class GradientDescentWithMomentumTest {
             };
 
             double[][] expectedFirstWeightMatrix = {
-                    {0.9764825, 0.9764825, 0.9764825},
-                    {0.9715206, 0.9715206, 0.9715206}
+                    {0.9648995, 0.9648995, 0.9648995},
+                    {0.9572646, 0.9572646, 0.9572646}
             };
-            double[] expectedFirstBiasMatrix = {0.9950381, 0.9950381, 0.9950381};
+            double[] expectedFirstBiasMatrix = {0.9923651, 0.9923651, 0.9923651};
 
             double[][] expectedSecondWeightMatrix = {
-                    {0.971492, 0.971492},
-                    {0.971492, 0.971492},
-                    {0.971492, 0.971492}
+                    {0.957236, 0.957236},
+                    {0.957236, 0.957236},
+                    {0.957236, 0.957236}
+
             };
-            double[] expectedSecondBiasMatrix = {0.9975033, 0.9975033};
+            double[] expectedSecondBiasMatrix = {0.9961668, 0.9961668};
             double momentumCoeff = 0.9;
 
             LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, 0.01, new GradientDescentWithMomentumProcessProvider(momentumCoeff));
