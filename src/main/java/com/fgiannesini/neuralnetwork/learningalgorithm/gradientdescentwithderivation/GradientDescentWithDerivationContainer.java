@@ -12,15 +12,13 @@ public class GradientDescentWithDerivationContainer {
     private final DoubleMatrix input;
     private final DoubleMatrix y;
     private final NeuralNetworkModel neuralNetworkModel;
-    private final double learningRate;
     private final CostType costType;
     private final Function<GradientDescentWithDerivationCostComputerContainer, CostComputer> costComputerProcessLauncher;
 
-    public GradientDescentWithDerivationContainer(DoubleMatrix input, DoubleMatrix y, NeuralNetworkModel neuralNetworkModel, double learningRate, CostType costType, Function<GradientDescentWithDerivationCostComputerContainer,CostComputer> costComputerProcessLauncher) {
+    public GradientDescentWithDerivationContainer(DoubleMatrix input, DoubleMatrix y, NeuralNetworkModel neuralNetworkModel, CostType costType, Function<GradientDescentWithDerivationCostComputerContainer, CostComputer> costComputerProcessLauncher) {
         this.input = input;
         this.y = y;
         this.neuralNetworkModel = neuralNetworkModel;
-        this.learningRate = learningRate;
         this.costType = costType;
         this.costComputerProcessLauncher = costComputerProcessLauncher;
     }
@@ -35,10 +33,6 @@ public class GradientDescentWithDerivationContainer {
 
     public NeuralNetworkModel getNeuralNetworkModel() {
         return neuralNetworkModel;
-    }
-
-    public double getLearningRate() {
-        return learningRate;
     }
 
     public CostType getCostType() {
