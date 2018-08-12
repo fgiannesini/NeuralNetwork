@@ -32,7 +32,7 @@ public class LearningAlgorithmBuilder {
         learningRate = 0.01;
         costType = CostType.LINEAR_REGRESSION;
         momentumCoeff = 0.9;
-        rmsStopCoeff = 0.9;
+        rmsStopCoeff = 0.999;
     }
 
     public static LearningAlgorithmBuilder init() {

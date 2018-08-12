@@ -37,18 +37,18 @@ class GradientDescentWithRmsStopTest {
             };
 
             double[][] expectedFirstWeightMatrix = {
-                    {0.968377223398316, 0.968377223398316, 0.968377223398316},
-                    {0.968377223398316, 0.968377223398316, 0.968377223398316}
+                    {0.68377, 0.68377, 0.68377},
+                    {0.68377, 0.68377, 0.68377}
             };
-            double[] expectedFirstBiasMatrix = {0.968377223398316, 0.968377223398316, 0.968377223398316};
+            double[] expectedFirstBiasMatrix = {0.68377, 0.68377, 0.68377};
 
             double[][] expectedSecondWeightMatrix = {
-                    {0.968377223398316, 0.968377223398316},
-                    {0.968377223398316, 0.968377223398316},
-                    {0.968377223398316, 0.968377223398316}
+                    {0.68377, 0.68377},
+                    {0.68377, 0.68377},
+                    {0.68377, 0.68377}
             };
-            double[] expectedSecondBiasMatrix = {0.968377223398316, 0.968377223398316};
-            double rmsStopCoeff = 0.9;
+            double[] expectedSecondBiasMatrix = {0.68377, 0.68377};
+            double rmsStopCoeff = 0.999;
 
             LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, 0.01, new GradientDescentWithRmsStopProcessProvider(rmsStopCoeff));
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
@@ -82,18 +82,18 @@ class GradientDescentWithRmsStopTest {
             };
 
             double[][] expectedFirstWeightMatrix = {
-                    {0.952101955250017, 0.952101955250017, 0.952101955250017},
-                    {0.953522281983686, 0.953522281983686, 0.953522281983686}
+                    {0.95779, 0.95779, 0.95779},
+                    {0.96999, 0.96999, 0.96999}
             };
-            double[] expectedFirstBiasMatrix = {0.96109069132197, 0.96109069132197, 0.96109069132197};
+            double[] expectedFirstBiasMatrix = {0.98974, 0.98974, 0.98974};
 
             double[][] expectedSecondWeightMatrix = {
-                    {0.953522281983686, 0.953522281983686},
-                    {0.953522281983686, 0.953522281983686},
-                    {0.953522281983686, 0.953522281983686}
+                    {0.96999, 0.96999},
+                    {0.96999, 0.96999},
+                    {0.96999, 0.96999}
             };
-            double[] expectedSecondBiasMatrix = {0.960866834916704, 0.960866834916704};
-            double rmsStopCoeff = 0.9;
+            double[] expectedSecondBiasMatrix = {0.99508, 0.99508};
+            double rmsStopCoeff = 0.999;
 
             LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, 0.01, new GradientDescentWithRmsStopProcessProvider(rmsStopCoeff));
             gradientDescent.learn(input, output);

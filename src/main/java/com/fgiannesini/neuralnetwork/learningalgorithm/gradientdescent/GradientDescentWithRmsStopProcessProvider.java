@@ -16,9 +16,11 @@ public class GradientDescentWithRmsStopProcessProvider implements IGradientDesce
     private final List<Layer> rmsStopLayers;
     private final IGradientDescentProcessProvider processProvider;
     private final Double rmsStopCoeff;
+    private final Double epsilon;
 
     public GradientDescentWithRmsStopProcessProvider(Double rmsStopCoeff) {
         this.rmsStopCoeff = rmsStopCoeff;
+        this.epsilon = Math.pow(10, -8);
         processProvider = new GradientDescentProcessProvider();
         rmsStopLayers = new ArrayList<>();
     }
@@ -38,14 +40,14 @@ public class GradientDescentWithRmsStopProcessProvider implements IGradientDesce
 
                 //Sdw = c * Sdw + (1 - c)*dW²
                 rmsStopLayer.setWeightMatrix(rmsStopLayer.getWeightMatrix().muli(rmsStopCoeff).addi(MatrixFunctions.pow(gradientDescentCorrection.getWeightCorrectionResults(), 2d).muli(1d - rmsStopCoeff)));
-                //W = W - a * dW/sqrt(Sdw)
-                DoubleMatrix weightCorrection = gradientDescentCorrection.getWeightCorrectionResults().div(MatrixFunctions.sqrt(rmsStopLayer.getWeightMatrix())).muli(container.getLearningRate());
+                //W = W - a * dW/(sqrt(Sdw) + e)
+                DoubleMatrix weightCorrection = gradientDescentCorrection.getWeightCorrectionResults().div(MatrixFunctions.sqrt(rmsStopLayer.getWeightMatrix()).addi(epsilon)).muli(container.getLearningRate());
                 layer.getWeightMatrix().subi(weightCorrection);
 
                 //Sdb = c *Sdb + (1 - c)*dB²
                 rmsStopLayer.setBiasMatrix(rmsStopLayer.getBiasMatrix().muli(rmsStopCoeff).addi(MatrixFunctions.pow(gradientDescentCorrection.getBiasCorrectionResults(), 2d).muli(1d - rmsStopCoeff)));
-                //B = B - a * dB/sqrt(Sdb)
-                DoubleMatrix biasCorrection = gradientDescentCorrection.getBiasCorrectionResults().div(MatrixFunctions.sqrt(rmsStopLayer.getBiasMatrix())).muli(container.getLearningRate());
+                //B = B - a * dB/(sqrt(Sdb) + e)
+                DoubleMatrix biasCorrection = gradientDescentCorrection.getBiasCorrectionResults().div(MatrixFunctions.sqrt(rmsStopLayer.getBiasMatrix()).addi(epsilon)).muli(container.getLearningRate());
                 layer.getBiasMatrix().subi(biasCorrection);
             }
             return new GradientDescentCorrectionsContainer(correctedNeuralNetworkModel, container.getGradientDescentCorrections(), container.getInputCount(), container.getLearningRate());
