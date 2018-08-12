@@ -1,10 +1,7 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm;
 
 import com.fgiannesini.neuralnetwork.cost.CostType;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescent;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescentProcessProvider;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescentWithMomentumProcessProvider;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.IGradientDescentProcessProvider;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.*;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivation;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivationAndMomentumProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivationProcessProvider;
@@ -31,12 +28,14 @@ public class LearningAlgorithmBuilder {
     private Double l2RegularizationCoeff;
     private double[] dropOutRegularizationCoeffs;
     private Double momentumCoeff;
+    private Double rmsStopCoeff;
 
     private LearningAlgorithmBuilder() {
         learningAlgorithmType = LearningAlgorithmType.GRADIENT_DESCENT;
         learningRate = 0.01;
         costType = CostType.LINEAR_REGRESSION;
         momentumCoeff = 0.9;
+        rmsStopCoeff = 0.9;
     }
 
     public static LearningAlgorithmBuilder init() {
@@ -78,6 +77,11 @@ public class LearningAlgorithmBuilder {
         return this;
     }
 
+    public LearningAlgorithmBuilder withRmsStopCoeff(Double rmsStopCoeff) {
+        this.rmsStopCoeff = rmsStopCoeff;
+        return this;
+    }
+
     public LearningAlgorithm build() {
         checkInputs();
         LearningAlgorithm learningAlgorithm;
@@ -89,6 +93,11 @@ public class LearningAlgorithmBuilder {
             case GRADIENT_DESCENT_MOMENTUM:
                 GradientDescentWithMomentumProcessProvider withMomentumProcessProvider = new GradientDescentWithMomentumProcessProvider(momentumCoeff);
                 processProvider = applyGradientDescentRegularization(withMomentumProcessProvider);
+                learningAlgorithm = new GradientDescent(neuralNetworkModel, learningRate, processProvider);
+                break;
+            case GRADIENT_DESCENT_RMS_STOP:
+                processProvider = new GradientDescentWithRmsStopProcessProvider(rmsStopCoeff);
+                processProvider = applyGradientDescentRegularization(processProvider);
                 learningAlgorithm = new GradientDescent(neuralNetworkModel, learningRate, processProvider);
                 break;
             case GRADIENT_DESCENT_DERIVATION:
