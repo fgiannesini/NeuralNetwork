@@ -2,10 +2,7 @@ package com.fgiannesini.neuralnetwork.learningalgorithm;
 
 import com.fgiannesini.neuralnetwork.cost.CostType;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.*;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivation;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivationAndMomentumProcessProvider;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivationProcessProvider;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.IGradientDescentWithDerivationProcessProvider;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.*;
 import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout.DropOutUtils;
 import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout.GradientDescentWithDerivationAndDropOutRegularizationProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout.GradientDescentWithDropOutRegularizationProcessProvider;
@@ -108,6 +105,11 @@ public class LearningAlgorithmBuilder {
             case GRADIENT_DESCENT_DERIVATION_MOMENTUM:
                 GradientDescentWithDerivationAndMomentumProcessProvider withDerivationAndMomentumProcessProvider = new GradientDescentWithDerivationAndMomentumProcessProvider(momentumCoeff);
                 withDerivationProcessProvider = applyGradientDescentWithDerivationRegularization(withDerivationAndMomentumProcessProvider);
+                learningAlgorithm = new GradientDescentWithDerivation(neuralNetworkModel, costType, learningRate, withDerivationProcessProvider);
+                break;
+            case GRADIENT_DESCENT_DERIVATION_RMS_STOP:
+                GradientDescentWithDerivationAndRmsStopProcessProvider withDerivationAndRmsStopProcessProvider = new GradientDescentWithDerivationAndRmsStopProcessProvider(rmsStopCoeff);
+                withDerivationProcessProvider = applyGradientDescentWithDerivationRegularization(withDerivationAndRmsStopProcessProvider);
                 learningAlgorithm = new GradientDescentWithDerivation(neuralNetworkModel, costType, learningRate, withDerivationProcessProvider);
                 break;
             default:
