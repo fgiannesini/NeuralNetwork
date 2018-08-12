@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 class GradientDescentTest {
 
     @Nested
-    public class learningIsOptimal {
+    class learningIsOptimal {
         @Test
         void learn_on_vector_with_one_hidden_layer_learning_is_optimal() {
             NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
@@ -92,7 +92,7 @@ class GradientDescentTest {
     }
 
     @Nested
-    public class VariationOnInputAndLayerSize {
+    class VariationOnInputAndLayerSize {
         @Test
         void learn_on_vector_with_one_hidden_layer() {
             NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
@@ -199,7 +199,7 @@ class GradientDescentTest {
     }
 
     @Nested
-    public class DataExpectation {
+    class DataExpectation {
 
         @Test
         void learn_on_vector_with_two_hidden_layers_and_sigmoid_activation_function() {

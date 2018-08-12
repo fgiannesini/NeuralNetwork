@@ -9,8 +9,8 @@ public class SigmoidFunctionApplier implements ActivationFunctionApplier {
     public DoubleMatrix apply(DoubleMatrix input) {
         //1/(1+exp(-z))
         DoubleMatrix output = input.mul(-1);
-        output = MatrixFunctions.expi(output);
-        output = output.addi(1);
+        MatrixFunctions.expi(output);
+        output.addi(1);
         return MatrixFunctions.powi(output, -1);
     }
 

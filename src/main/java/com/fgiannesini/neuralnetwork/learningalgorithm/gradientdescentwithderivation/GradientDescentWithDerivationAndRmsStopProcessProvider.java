@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class GradientDescentWithDerivationAndRmsStopProcessProvider implements IGradientDescentWithDerivationProcessProvider {
     private final GradientDescentWithDerivationProcessProvider processProvider;
     private final List<Layer> rmsStopLayers;
-    private Double rmsStopCoeff;
+    private final Double rmsStopCoeff;
 
     public GradientDescentWithDerivationAndRmsStopProcessProvider(Double rmsStopCoeff) {
         this.rmsStopCoeff = rmsStopCoeff;
