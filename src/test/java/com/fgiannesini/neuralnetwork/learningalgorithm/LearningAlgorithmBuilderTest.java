@@ -1,10 +1,7 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm;
 
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.*;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivation;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivationAndMomentumProcessProvider;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivationAndRmsStopProcessProvider;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivationProcessProvider;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.*;
 import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout.GradientDescentWithDerivationAndDropOutRegularizationProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout.GradientDescentWithDropOutRegularizationProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.l2.GradientDescentWithDerivationAndL2RegularizationProcessProvider;
@@ -272,21 +269,21 @@ class LearningAlgorithmBuilderTest {
     class GradientDescentWithDerivationAndRmsStopInstanceCreation {
 
         @Test
-        void test_GradientDescentWithDerivationAndRmsStop_instance_creation() {
+        void test_GradientDescentWithDerivationAndAdamOptimisation_instance_creation() {
             LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
                     .withModel(buildNeuralNetworkModel())
-                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_DERIVATION_RMS_STOP)
+                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_DERIVATION_ADAM_OPTIMISATION)
                     .build();
 
             Assertions.assertTrue(learningAlgorithm instanceof GradientDescentWithDerivation);
-            Assertions.assertTrue(((GradientDescentWithDerivation) learningAlgorithm).getGradientDescentProcessProvider() instanceof GradientDescentWithDerivationAndRmsStopProcessProvider);
+            Assertions.assertTrue(((GradientDescentWithDerivation) learningAlgorithm).getGradientDescentProcessProvider() instanceof GradientDescentWithDerivationAndAdamOptimisationProcessProvider);
         }
 
         @Test
-        void test_GradientDescentWithDerivationAndRmsStopAndL2Regularization_instance_creation() {
+        void test_GradientDescentWithDerivationAndAdamOptimisationAndL2Regularization_instance_creation() {
             LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
                     .withModel(buildNeuralNetworkModel())
-                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_DERIVATION_RMS_STOP)
+                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_DERIVATION_ADAM_OPTIMISATION)
                     .withL2Regularization(0.5)
                     .build();
 
@@ -295,10 +292,10 @@ class LearningAlgorithmBuilderTest {
         }
 
         @Test
-        void test_GradientDescentWithDerivationAndRmsStopAndDropOutRegularization_instance_creation() {
+        void test_GradientDescentWithDerivationAndAdamOptimisationAndDropOutRegularization_instance_creation() {
             LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
                     .withModel(buildNeuralNetworkModel())
-                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_DERIVATION_RMS_STOP)
+                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_DERIVATION_ADAM_OPTIMISATION)
                     .withDropOutRegularitation(0.1, 0.2)
                     .build();
 
@@ -347,4 +344,42 @@ class LearningAlgorithmBuilderTest {
         }
     }
 
+    @Nested
+    class GradientDescentWithDerivationAndAdamOptimisationInstanceCreation {
+
+        @Test
+        void test_GradientDescentWithDerivationAndRmsStop_instance_creation() {
+            LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
+                    .withModel(buildNeuralNetworkModel())
+                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_DERIVATION_RMS_STOP)
+                    .build();
+
+            Assertions.assertTrue(learningAlgorithm instanceof GradientDescentWithDerivation);
+            Assertions.assertTrue(((GradientDescentWithDerivation) learningAlgorithm).getGradientDescentProcessProvider() instanceof GradientDescentWithDerivationAndRmsStopProcessProvider);
+        }
+
+        @Test
+        void test_GradientDescentWithDerivationAndRmsStopAndL2Regularization_instance_creation() {
+            LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
+                    .withModel(buildNeuralNetworkModel())
+                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_DERIVATION_RMS_STOP)
+                    .withL2Regularization(0.5)
+                    .build();
+
+            Assertions.assertTrue(learningAlgorithm instanceof GradientDescentWithDerivation);
+            Assertions.assertTrue(((GradientDescentWithDerivation) learningAlgorithm).getGradientDescentProcessProvider() instanceof GradientDescentWithDerivationAndL2RegularizationProcessProvider);
+        }
+
+        @Test
+        void test_GradientDescentWithDerivationAndRmsStopAndDropOutRegularization_instance_creation() {
+            LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
+                    .withModel(buildNeuralNetworkModel())
+                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_DERIVATION_RMS_STOP)
+                    .withDropOutRegularitation(0.1, 0.2)
+                    .build();
+
+            Assertions.assertTrue(learningAlgorithm instanceof GradientDescentWithDerivation);
+            Assertions.assertTrue(((GradientDescentWithDerivation) learningAlgorithm).getGradientDescentProcessProvider() instanceof GradientDescentWithDerivationAndDropOutRegularizationProcessProvider);
+        }
+    }
 }

@@ -118,6 +118,11 @@ public class LearningAlgorithmBuilder {
                 withDerivationProcessProvider = applyGradientDescentWithDerivationRegularization(withDerivationAndRmsStopProcessProvider);
                 learningAlgorithm = new GradientDescentWithDerivation(neuralNetworkModel, costType, learningRate, withDerivationProcessProvider);
                 break;
+            case GRADIENT_DESCENT_DERIVATION_ADAM_OPTIMISATION:
+                GradientDescentWithDerivationAndAdamOptimisationProcessProvider withDerivationAndAdamOptimisationProcessProvider = new GradientDescentWithDerivationAndAdamOptimisationProcessProvider(momentumCoeff, rmsStopCoeff);
+                withDerivationProcessProvider = applyGradientDescentWithDerivationRegularization(withDerivationAndAdamOptimisationProcessProvider);
+                learningAlgorithm = new GradientDescentWithDerivation(neuralNetworkModel, costType, learningRate, withDerivationProcessProvider);
+                break;
             default:
                 throw new IllegalArgumentException(learningAlgorithmType + " instantiation is not implemented");
         }
