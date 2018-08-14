@@ -97,6 +97,12 @@ public class LearningAlgorithmBuilder {
                 processProvider = applyGradientDescentRegularization(processProvider);
                 learningAlgorithm = new GradientDescent(neuralNetworkModel, learningRate, processProvider);
                 break;
+            case GRADIENT_DESCENT_ADAM_OPTIMISATION:
+                processProvider = new GradientDescentWithAdamOptimisationProcessProvider(momentumCoeff, rmsStopCoeff);
+                processProvider = applyGradientDescentRegularization(processProvider);
+                learningAlgorithm = new GradientDescent(neuralNetworkModel, learningRate, processProvider);
+                break;
+
             case GRADIENT_DESCENT_DERIVATION:
                 IGradientDescentWithDerivationProcessProvider withDerivationProcessProvider = new GradientDescentWithDerivationProcessProvider();
                 withDerivationProcessProvider = applyGradientDescentWithDerivationRegularization(withDerivationProcessProvider);
