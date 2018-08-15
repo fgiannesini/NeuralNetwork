@@ -51,13 +51,13 @@ class GradientDescentWithAdamOptimisationTest {
             double rmsStopCoeff = 0.999;
             double momentumCoeff = 0.9;
 
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, 0.01, new GradientDescentWithAdamOptimisationProcessProvider(momentumCoeff, rmsStopCoeff));
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentWithAdamOptimisationProcessProvider(momentumCoeff, rmsStopCoeff));
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 0, expectedFirstWeightMatrix, expectedFirstBiasMatrix);
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 1, expectedSecondWeightMatrix, expectedSecondBiasMatrix);
 
-            LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LINEAR_REGRESSION, 0.01, new GradientDescentWithDerivationAndAdamOptimisationProcessProvider(momentumCoeff, rmsStopCoeff));
+            LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LINEAR_REGRESSION, new GradientDescentWithDerivationAndAdamOptimisationProcessProvider(momentumCoeff, rmsStopCoeff));
             NeuralNetworkModel gradientWithDerivativeNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);
             NeuralNetworkAssertions.checkSameNeuralNetworks(gradientNeuralNetworkModel, gradientWithDerivativeNeuralNetworkModel);
         }
@@ -96,14 +96,14 @@ class GradientDescentWithAdamOptimisationTest {
             double rmsStopCoeff = 0.999;
             double momentumCoeff = 0.9;
 
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, 0.01, new GradientDescentWithAdamOptimisationProcessProvider(momentumCoeff, rmsStopCoeff));
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentWithAdamOptimisationProcessProvider(momentumCoeff, rmsStopCoeff));
             gradientDescent.learn(input, output);
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 0, expectedFirstWeightMatrix, expectedFirstBiasMatrix);
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 1, expectedSecondWeightMatrix, expectedSecondBiasMatrix);
 
-            LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LINEAR_REGRESSION, 0.01, new GradientDescentWithDerivationAndAdamOptimisationProcessProvider(momentumCoeff, rmsStopCoeff));
+            LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LINEAR_REGRESSION, new GradientDescentWithDerivationAndAdamOptimisationProcessProvider(momentumCoeff, rmsStopCoeff));
             gradientDescentWithDerivation.learn(input, output);
             NeuralNetworkModel gradientWithDerivativeNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);
 

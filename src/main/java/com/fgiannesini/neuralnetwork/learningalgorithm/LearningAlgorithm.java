@@ -19,4 +19,6 @@ public interface LearningAlgorithm {
     }
 
     NeuralNetworkModel learn(DoubleMatrix inputMatrix, DoubleMatrix y);
+
+    void updateLearningRate(double learningRate);
 }

@@ -20,7 +20,6 @@ public class LearningAlgorithmBuilder {
     private NeuralNetworkModel neuralNetworkModel;
 
     private LearningAlgorithmType learningAlgorithmType;
-    private double learningRate;
     private CostType costType;
     private Double l2RegularizationCoeff;
     private double[] dropOutRegularizationCoeffs;
@@ -29,7 +28,6 @@ public class LearningAlgorithmBuilder {
 
     private LearningAlgorithmBuilder() {
         learningAlgorithmType = LearningAlgorithmType.GRADIENT_DESCENT;
-        learningRate = 0.01;
         costType = CostType.LINEAR_REGRESSION;
         momentumCoeff = 0.9;
         rmsStopCoeff = 0.999;
@@ -46,11 +44,6 @@ public class LearningAlgorithmBuilder {
 
     public LearningAlgorithmBuilder withAlgorithmType(LearningAlgorithmType learningAlgorithmType) {
         this.learningAlgorithmType = learningAlgorithmType;
-        return this;
-    }
-
-    public LearningAlgorithmBuilder withLearningRate(double learningRate) {
-        this.learningRate = learningRate;
         return this;
     }
 
@@ -85,43 +78,43 @@ public class LearningAlgorithmBuilder {
         switch (learningAlgorithmType) {
             case GRADIENT_DESCENT:
                 IGradientDescentProcessProvider processProvider = applyGradientDescentRegularization(new GradientDescentProcessProvider());
-                learningAlgorithm = new GradientDescent(neuralNetworkModel, learningRate, processProvider);
+                learningAlgorithm = new GradientDescent(neuralNetworkModel, processProvider);
                 break;
             case GRADIENT_DESCENT_MOMENTUM:
                 GradientDescentWithMomentumProcessProvider withMomentumProcessProvider = new GradientDescentWithMomentumProcessProvider(momentumCoeff);
                 processProvider = applyGradientDescentRegularization(withMomentumProcessProvider);
-                learningAlgorithm = new GradientDescent(neuralNetworkModel, learningRate, processProvider);
+                learningAlgorithm = new GradientDescent(neuralNetworkModel, processProvider);
                 break;
             case GRADIENT_DESCENT_RMS_STOP:
                 processProvider = new GradientDescentWithRmsStopProcessProvider(rmsStopCoeff);
                 processProvider = applyGradientDescentRegularization(processProvider);
-                learningAlgorithm = new GradientDescent(neuralNetworkModel, learningRate, processProvider);
+                learningAlgorithm = new GradientDescent(neuralNetworkModel, processProvider);
                 break;
             case GRADIENT_DESCENT_ADAM_OPTIMISATION:
                 processProvider = new GradientDescentWithAdamOptimisationProcessProvider(momentumCoeff, rmsStopCoeff);
                 processProvider = applyGradientDescentRegularization(processProvider);
-                learningAlgorithm = new GradientDescent(neuralNetworkModel, learningRate, processProvider);
+                learningAlgorithm = new GradientDescent(neuralNetworkModel, processProvider);
                 break;
 
             case GRADIENT_DESCENT_DERIVATION:
                 IGradientDescentWithDerivationProcessProvider withDerivationProcessProvider = new GradientDescentWithDerivationProcessProvider();
                 withDerivationProcessProvider = applyGradientDescentWithDerivationRegularization(withDerivationProcessProvider);
-                learningAlgorithm = new GradientDescentWithDerivation(neuralNetworkModel, costType, learningRate, withDerivationProcessProvider);
+                learningAlgorithm = new GradientDescentWithDerivation(neuralNetworkModel, costType, withDerivationProcessProvider);
                 break;
             case GRADIENT_DESCENT_DERIVATION_MOMENTUM:
                 GradientDescentWithDerivationAndMomentumProcessProvider withDerivationAndMomentumProcessProvider = new GradientDescentWithDerivationAndMomentumProcessProvider(momentumCoeff);
                 withDerivationProcessProvider = applyGradientDescentWithDerivationRegularization(withDerivationAndMomentumProcessProvider);
-                learningAlgorithm = new GradientDescentWithDerivation(neuralNetworkModel, costType, learningRate, withDerivationProcessProvider);
+                learningAlgorithm = new GradientDescentWithDerivation(neuralNetworkModel, costType, withDerivationProcessProvider);
                 break;
             case GRADIENT_DESCENT_DERIVATION_RMS_STOP:
                 GradientDescentWithDerivationAndRmsStopProcessProvider withDerivationAndRmsStopProcessProvider = new GradientDescentWithDerivationAndRmsStopProcessProvider(rmsStopCoeff);
                 withDerivationProcessProvider = applyGradientDescentWithDerivationRegularization(withDerivationAndRmsStopProcessProvider);
-                learningAlgorithm = new GradientDescentWithDerivation(neuralNetworkModel, costType, learningRate, withDerivationProcessProvider);
+                learningAlgorithm = new GradientDescentWithDerivation(neuralNetworkModel, costType, withDerivationProcessProvider);
                 break;
             case GRADIENT_DESCENT_DERIVATION_ADAM_OPTIMISATION:
                 GradientDescentWithDerivationAndAdamOptimisationProcessProvider withDerivationAndAdamOptimisationProcessProvider = new GradientDescentWithDerivationAndAdamOptimisationProcessProvider(momentumCoeff, rmsStopCoeff);
                 withDerivationProcessProvider = applyGradientDescentWithDerivationRegularization(withDerivationAndAdamOptimisationProcessProvider);
-                learningAlgorithm = new GradientDescentWithDerivation(neuralNetworkModel, costType, learningRate, withDerivationProcessProvider);
+                learningAlgorithm = new GradientDescentWithDerivation(neuralNetworkModel, costType, withDerivationProcessProvider);
                 break;
             default:
                 throw new IllegalArgumentException(learningAlgorithmType + " instantiation is not implemented");

@@ -50,13 +50,13 @@ class GradientDescentWithRmsStopTest {
             double[] expectedSecondBiasMatrix = {0.68377, 0.68377};
             double rmsStopCoeff = 0.999;
 
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, 0.01, new GradientDescentWithRmsStopProcessProvider(rmsStopCoeff));
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentWithRmsStopProcessProvider(rmsStopCoeff));
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 0, expectedFirstWeightMatrix, expectedFirstBiasMatrix);
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 1, expectedSecondWeightMatrix, expectedSecondBiasMatrix);
 
-            LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LINEAR_REGRESSION, 0.01, new GradientDescentWithDerivationAndRmsStopProcessProvider(rmsStopCoeff));
+            LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LINEAR_REGRESSION, new GradientDescentWithDerivationAndRmsStopProcessProvider(rmsStopCoeff));
             NeuralNetworkModel gradientWithDerivativeNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);
             NeuralNetworkAssertions.checkSameNeuralNetworks(gradientNeuralNetworkModel, gradientWithDerivativeNeuralNetworkModel);
 
@@ -95,14 +95,14 @@ class GradientDescentWithRmsStopTest {
             double[] expectedSecondBiasMatrix = {0.99508, 0.99508};
             double rmsStopCoeff = 0.999;
 
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, 0.01, new GradientDescentWithRmsStopProcessProvider(rmsStopCoeff));
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentWithRmsStopProcessProvider(rmsStopCoeff));
             gradientDescent.learn(input, output);
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 0, expectedFirstWeightMatrix, expectedFirstBiasMatrix);
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 1, expectedSecondWeightMatrix, expectedSecondBiasMatrix);
 
-            LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LINEAR_REGRESSION, 0.01, new GradientDescentWithDerivationAndRmsStopProcessProvider(rmsStopCoeff));
+            LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LINEAR_REGRESSION, new GradientDescentWithDerivationAndRmsStopProcessProvider(rmsStopCoeff));
             gradientDescentWithDerivation.learn(input, output);
             NeuralNetworkModel gradientWithDerivativeNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);
 

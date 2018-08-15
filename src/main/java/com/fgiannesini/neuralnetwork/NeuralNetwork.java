@@ -7,6 +7,7 @@ import com.fgiannesini.neuralnetwork.cost.CostComputer;
 import com.fgiannesini.neuralnetwork.cost.CostComputerBuilder;
 import com.fgiannesini.neuralnetwork.cost.CostType;
 import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithm;
+import com.fgiannesini.neuralnetwork.learningrate.ILearningRateUpdater;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.normalizer.INormalizer;
 import org.jblas.DoubleMatrix;
@@ -21,15 +22,17 @@ public class NeuralNetwork {
     private final Consumer<NeuralNetworkStats> statsUpdateAction;
     private NeuralNetworkModel neuralNetworkModel;
     private final int epochCount;
+    private final ILearningRateUpdater learningRateUpdater;
     private final int batchSize;
 
-    NeuralNetwork(LearningAlgorithm learningAlgorithm, INormalizer normalizer, CostType costType, Consumer<NeuralNetworkStats> statsUpdateAction, HyperParameters hyperParameters) {
+    NeuralNetwork(LearningAlgorithm learningAlgorithm, INormalizer normalizer, CostType costType, Consumer<NeuralNetworkStats> statsUpdateAction, HyperParameters hyperParameters, ILearningRateUpdater learningRateUpdater) {
         this.learningAlgorithm = learningAlgorithm;
         this.normalizer = normalizer;
         this.costType = costType;
         this.statsUpdateAction = statsUpdateAction;
         batchSize = hyperParameters.getBatchSize();
         this.epochCount = hyperParameters.getEpochCount();
+        this.learningRateUpdater = learningRateUpdater;
     }
 
     void learn(double[] input, double[] expected, double[] testInput, double[] testExpected) {
@@ -54,7 +57,8 @@ public class NeuralNetwork {
         DoubleMatrix normalizedTestInput = normalizer.normalize(testInput);
         DoubleMatrix normalizedTestOutput = normalizer.normalize(testOutpout);
 
-        for (int epochNumber = 1; epochNumber <= epochCount; epochNumber++) {
+        for (int epochNumber = 0; epochNumber < epochCount; epochNumber++) {
+            learningAlgorithm.updateLearningRate(learningRateUpdater.get(epochNumber));
             for (BatchIterator batchIterator = BatchIterator.init(normalizedInput, normalizedOutput, batchSize); batchIterator.hasNext(); batchIterator.next()) {
                 DoubleMatrix subInput = batchIterator.getSubInput();
                 DoubleMatrix subOutput = batchIterator.getSubOutput();

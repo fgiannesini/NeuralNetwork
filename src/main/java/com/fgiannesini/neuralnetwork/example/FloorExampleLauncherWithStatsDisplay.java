@@ -30,7 +30,7 @@ public class FloorExampleLauncherWithStatsDisplay extends Application {
         Task<NeuralNetworkStats> task = new Task<NeuralNetworkStats>() {
             @Override
             protected NeuralNetworkStats call() {
-                HyperParameters parameters = new HyperParameters();
+                HyperParameters parameters = new HyperParameters().batchSize(10_000).epochCount(3);
                 FloorExampleLauncher floorExampleLauncher = new FloorExampleLauncher(this::updateValue, parameters);
                 double successRate = floorExampleLauncher.launch();
                 System.out.println("Success Rate: " + successRate + "%");

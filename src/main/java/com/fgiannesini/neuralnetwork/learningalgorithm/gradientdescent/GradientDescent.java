@@ -8,13 +8,13 @@ import java.util.List;
 
 public class GradientDescent implements LearningAlgorithm {
     private NeuralNetworkModel correctedNeuralNetworkModel;
-    private final double learningRate;
+    private double learningRate;
     private final IGradientDescentProcessProvider gradientDescentProcessProvider;
 
-    public GradientDescent(NeuralNetworkModel originalNeuralNetworkModel, double learningRate, IGradientDescentProcessProvider gradientDescentProcessProvider) {
+    public GradientDescent(NeuralNetworkModel originalNeuralNetworkModel, IGradientDescentProcessProvider gradientDescentProcessProvider) {
         this.gradientDescentProcessProvider = gradientDescentProcessProvider;
         this.correctedNeuralNetworkModel = originalNeuralNetworkModel.clone();
-        this.learningRate = learningRate;
+        this.learningRate = 0.01;
     }
 
     @Override
@@ -32,6 +32,11 @@ public class GradientDescent implements LearningAlgorithm {
                 .apply(new GradientDescentCorrectionsContainer(this.correctedNeuralNetworkModel, gradientDescentCorrections, dataContainer.getOutput().getColumns(), learningRate))
                 .getCorrectedNeuralNetworkModel();
         return correctedNeuralNetworkModel;
+    }
+
+    @Override
+    public void updateLearningRate(double learningRate) {
+        this.learningRate = learningRate;
     }
 
     public IGradientDescentProcessProvider getGradientDescentProcessProvider() {

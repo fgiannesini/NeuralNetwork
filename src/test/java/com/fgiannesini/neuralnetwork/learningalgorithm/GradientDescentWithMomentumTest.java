@@ -50,13 +50,13 @@ class GradientDescentWithMomentumTest {
             double[] expectedSecondBiasMatrix = {0.9985, 0.9985};
             double momentumCoeff = 0.9;
 
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, 0.01, new GradientDescentWithMomentumProcessProvider(momentumCoeff));
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentWithMomentumProcessProvider(momentumCoeff));
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 0, expectedFirstWeightMatrix, expectedFirstBiasMatrix);
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 1, expectedSecondWeightMatrix, expectedSecondBiasMatrix);
 
-            LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LINEAR_REGRESSION, 0.01, new GradientDescentWithDerivationAndMomentumProcessProvider(momentumCoeff));
+            LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LINEAR_REGRESSION, new GradientDescentWithDerivationAndMomentumProcessProvider(momentumCoeff));
             NeuralNetworkModel gradientWithDerivativeNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);
             NeuralNetworkAssertions.checkSameNeuralNetworks(gradientNeuralNetworkModel, gradientWithDerivativeNeuralNetworkModel);
         }
@@ -95,7 +95,7 @@ class GradientDescentWithMomentumTest {
             double[] expectedSecondBiasMatrix = {0.9961668, 0.9961668};
             double momentumCoeff = 0.9;
 
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, 0.01, new GradientDescentWithMomentumProcessProvider(momentumCoeff));
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentWithMomentumProcessProvider(momentumCoeff));
             gradientDescent.learn(input, output);
 
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
@@ -103,7 +103,7 @@ class GradientDescentWithMomentumTest {
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 0, expectedFirstWeightMatrix, expectedFirstBiasMatrix);
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 1, expectedSecondWeightMatrix, expectedSecondBiasMatrix);
 
-            LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LINEAR_REGRESSION, 0.01, new GradientDescentWithDerivationAndMomentumProcessProvider(momentumCoeff));
+            LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LINEAR_REGRESSION, new GradientDescentWithDerivationAndMomentumProcessProvider(momentumCoeff));
             gradientDescentWithDerivation.learn(input, output);
             NeuralNetworkModel gradientWithDerivativeNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);
 
