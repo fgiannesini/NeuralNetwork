@@ -79,7 +79,7 @@ class LearningAlgorithmBuilderTest {
                     .build();
 
             Assertions.assertTrue(learningAlgorithm instanceof GradientDescent);
-            Assertions.assertTrue(((GradientDescent) learningAlgorithm).getGradientDescentProcessProvider() instanceof GradientDescentProcessProvider);
+            Assertions.assertTrue(((GradientDescent) learningAlgorithm).getGradientDescentProcessProvider() instanceof GradientDescentOnLinearRegressionProcessProvider);
         }
 
         @Test

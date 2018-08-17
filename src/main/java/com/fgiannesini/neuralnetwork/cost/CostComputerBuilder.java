@@ -53,6 +53,9 @@ public class CostComputerBuilder {
             case LINEAR_REGRESSION:
                 costComputer = new LinearRegressionCostComputer(outputComputer);
                 break;
+            case SOFT_MAX_REGRESSION:
+                costComputer = new SoftMaxRegressionCostComputer(outputComputer);
+                break;
             default:
                 throw new IllegalArgumentException(costType + " instantiation is not implemented");
         }

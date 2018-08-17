@@ -77,7 +77,7 @@ public class LearningAlgorithmBuilder {
         LearningAlgorithm learningAlgorithm;
         switch (learningAlgorithmType) {
             case GRADIENT_DESCENT:
-                IGradientDescentProcessProvider processProvider = applyGradientDescentRegularization(new GradientDescentProcessProvider());
+                IGradientDescentProcessProvider processProvider = applyGradientDescentRegularization(new GradientDescentOnLinearRegressionProcessProvider());
                 learningAlgorithm = new GradientDescent(neuralNetworkModel, processProvider);
                 break;
             case GRADIENT_DESCENT_MOMENTUM:

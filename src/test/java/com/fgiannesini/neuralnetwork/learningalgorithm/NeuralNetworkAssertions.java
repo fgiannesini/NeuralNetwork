@@ -21,7 +21,7 @@ public class NeuralNetworkAssertions {
         List<Layer> firstLayers = firstNeuralNetworkModel.getLayers();
         List<Layer> secondLayers = secondNeuralNetworkModel.getLayers();
         List<Executable> executables = new ArrayList<>();
-        for (int i = 1; i < secondLayers.size(); i++) {
+        for (int i = 0; i < secondLayers.size(); i++) {
             Layer firstLayer = firstLayers.get(i);
             Layer secondLayer = secondLayers.get(i);
             executables.addAll(getMatrixAssertions(firstLayer.getWeightMatrix(), secondLayer.getWeightMatrix(), "Weight matrix"));

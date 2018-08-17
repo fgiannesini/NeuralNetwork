@@ -31,6 +31,12 @@ public enum ActivationFunctionType {
         public ActivationFunctionApplier getActivationFunction() {
             return new LeakyReluFunctionApplier();
         }
+    },
+    SOFT_MAX {
+        @Override
+        public ActivationFunctionApplier getActivationFunction() {
+            return new SoftMaxFunctionApplier();
+        }
     };
 
     public abstract ActivationFunctionApplier getActivationFunction();

@@ -55,6 +55,16 @@ class CostComputerBuilderTest {
         Assertions.assertTrue(costComputer instanceof LogisticRegressionCostComputer);
     }
 
+    @Test
+    void check_SoftMax_Regression_Cost_Computer() {
+        CostComputer costComputer = CostComputerBuilder.init()
+                .withNeuralNetworkModel(buildNeuralNetworkModel())
+                .withType(CostType.SOFT_MAX_REGRESSION)
+                .build();
+
+        Assertions.assertTrue(costComputer instanceof SoftMaxRegressionCostComputer);
+    }
+
     private NeuralNetworkModel buildNeuralNetworkModel() {
         return NeuralNetworkModelBuilder.init()
                 .input(1)

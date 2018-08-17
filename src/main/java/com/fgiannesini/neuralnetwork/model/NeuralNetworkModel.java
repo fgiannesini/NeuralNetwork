@@ -47,4 +47,9 @@ public class NeuralNetworkModel implements Cloneable {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public String toString() {
+        return layers.stream().map(l -> l.getWeightMatrix().toString() + "\n" + l.getBiasMatrix()).collect(Collectors.joining("\n"));
+    }
 }

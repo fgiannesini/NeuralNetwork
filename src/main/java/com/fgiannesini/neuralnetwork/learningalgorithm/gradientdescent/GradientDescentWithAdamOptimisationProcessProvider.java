@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class GradientDescentWithAdamOptimisationProcessProvider implements IGradientDescentProcessProvider {
     private final Double momentumCoeff;
     private final Double rmsStopCoeff;
-    private final GradientDescentProcessProvider processProvider;
+    private final GradientDescentOnLinearRegressionProcessProvider processProvider;
     private final List<Layer> momentumLayers;
     private final List<Layer> rmsStopLayers;
     private final Double epsilon;
@@ -23,7 +23,7 @@ public class GradientDescentWithAdamOptimisationProcessProvider implements IGrad
     public GradientDescentWithAdamOptimisationProcessProvider(Double momentumCoeff, Double rmsStopCoeff) {
         this.momentumCoeff = momentumCoeff;
         this.rmsStopCoeff = rmsStopCoeff;
-        this.processProvider = new GradientDescentProcessProvider();
+        this.processProvider = new GradientDescentOnLinearRegressionProcessProvider();
         momentumLayers = new ArrayList<>();
         rmsStopLayers = new ArrayList<>();
         this.epsilon = Math.pow(10, -8);

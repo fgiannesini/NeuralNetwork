@@ -64,13 +64,13 @@ public class FloorExampleLauncher {
         for (int hiddenLayerIndex : hiddenLayerSize) {
             neuralNetworkModelBuilder.addLayer(hiddenLayerIndex, ActivationFunctionType.RELU);
         }
-        neuralNetworkModelBuilder.addLayer(10, ActivationFunctionType.SIGMOID);
+        neuralNetworkModelBuilder.addLayer(10, ActivationFunctionType.SOFT_MAX);
         NeuralNetworkModel neuralNetworkModel = neuralNetworkModelBuilder.build();
 
         return NeuralNetworkBuilder.init()
                 .withNeuralNetworkModel(neuralNetworkModel)
                 .withLearningAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT)
-                .withCostType(CostType.LOGISTIC_REGRESSION)
+                .withCostType(CostType.SOFT_MAX_REGRESSION)
                 .withNeuralNetworkStatsConsumer(statsUpdateAction)
                 .withHyperParameters(hyperParameters)
                 .withLearningRateUpdater(LearningRateUpdaterType.CONSTANT.get(0.01))
