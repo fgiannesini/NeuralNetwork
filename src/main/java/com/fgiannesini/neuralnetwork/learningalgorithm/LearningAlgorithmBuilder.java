@@ -29,8 +29,6 @@ public class LearningAlgorithmBuilder {
     private LearningAlgorithmBuilder() {
         learningAlgorithmType = LearningAlgorithmType.GRADIENT_DESCENT;
         costType = CostType.LINEAR_REGRESSION;
-        momentumCoeff = 0.9;
-        rmsStopCoeff = 0.999;
     }
 
     public static LearningAlgorithmBuilder init() {
@@ -77,49 +75,57 @@ public class LearningAlgorithmBuilder {
         LearningAlgorithm learningAlgorithm;
         switch (learningAlgorithmType) {
             case GRADIENT_DESCENT:
-                IGradientDescentProcessProvider processProvider = applyGradientDescentRegularization(new GradientDescentOnLinearRegressionProcessProvider());
-                learningAlgorithm = new GradientDescent(neuralNetworkModel, processProvider);
-                break;
-            case GRADIENT_DESCENT_MOMENTUM:
-                GradientDescentWithMomentumProcessProvider withMomentumProcessProvider = new GradientDescentWithMomentumProcessProvider(momentumCoeff);
-                processProvider = applyGradientDescentRegularization(withMomentumProcessProvider);
-                learningAlgorithm = new GradientDescent(neuralNetworkModel, processProvider);
-                break;
-            case GRADIENT_DESCENT_RMS_STOP:
-                processProvider = new GradientDescentWithRmsStopProcessProvider(rmsStopCoeff);
-                processProvider = applyGradientDescentRegularization(processProvider);
-                learningAlgorithm = new GradientDescent(neuralNetworkModel, processProvider);
-                break;
-            case GRADIENT_DESCENT_ADAM_OPTIMISATION:
-                processProvider = new GradientDescentWithAdamOptimisationProcessProvider(momentumCoeff, rmsStopCoeff);
+                IGradientDescentProcessProvider processProvider;
+                switch (costType) {
+                    case LINEAR_REGRESSION:
+                        processProvider = new GradientDescentOnLinearRegressionProcessProvider();
+                        break;
+                    case LOGISTIC_REGRESSION:
+                        processProvider = new GradientDescentOnLogisticRegressionProcessProvider();
+                        break;
+                    case SOFT_MAX_REGRESSION:
+                        processProvider = new GradientDescentOnSoftMaxRegressionProcessProvider();
+                        break;
+                    default:
+                        throw new IllegalArgumentException("a cost type should be set");
+                }
+                processProvider = applyGradientDescentOptimisation(processProvider);
                 processProvider = applyGradientDescentRegularization(processProvider);
                 learningAlgorithm = new GradientDescent(neuralNetworkModel, processProvider);
                 break;
 
             case GRADIENT_DESCENT_DERIVATION:
-                IGradientDescentWithDerivationProcessProvider withDerivationProcessProvider = new GradientDescentWithDerivationProcessProvider();
-                withDerivationProcessProvider = applyGradientDescentWithDerivationRegularization(withDerivationProcessProvider);
-                learningAlgorithm = new GradientDescentWithDerivation(neuralNetworkModel, costType, withDerivationProcessProvider);
-                break;
-            case GRADIENT_DESCENT_DERIVATION_MOMENTUM:
-                GradientDescentWithDerivationAndMomentumProcessProvider withDerivationAndMomentumProcessProvider = new GradientDescentWithDerivationAndMomentumProcessProvider(momentumCoeff);
-                withDerivationProcessProvider = applyGradientDescentWithDerivationRegularization(withDerivationAndMomentumProcessProvider);
-                learningAlgorithm = new GradientDescentWithDerivation(neuralNetworkModel, costType, withDerivationProcessProvider);
-                break;
-            case GRADIENT_DESCENT_DERIVATION_RMS_STOP:
-                GradientDescentWithDerivationAndRmsStopProcessProvider withDerivationAndRmsStopProcessProvider = new GradientDescentWithDerivationAndRmsStopProcessProvider(rmsStopCoeff);
-                withDerivationProcessProvider = applyGradientDescentWithDerivationRegularization(withDerivationAndRmsStopProcessProvider);
-                learningAlgorithm = new GradientDescentWithDerivation(neuralNetworkModel, costType, withDerivationProcessProvider);
-                break;
-            case GRADIENT_DESCENT_DERIVATION_ADAM_OPTIMISATION:
-                GradientDescentWithDerivationAndAdamOptimisationProcessProvider withDerivationAndAdamOptimisationProcessProvider = new GradientDescentWithDerivationAndAdamOptimisationProcessProvider(momentumCoeff, rmsStopCoeff);
-                withDerivationProcessProvider = applyGradientDescentWithDerivationRegularization(withDerivationAndAdamOptimisationProcessProvider);
-                learningAlgorithm = new GradientDescentWithDerivation(neuralNetworkModel, costType, withDerivationProcessProvider);
+                IGradientDescentWithDerivationProcessProvider linearRegressionDerivationProcessProvider = new GradientDescentWithDerivationProcessProvider();
+                linearRegressionDerivationProcessProvider = applyGradientDescentWithDerivationOptimisation(linearRegressionDerivationProcessProvider);
+                linearRegressionDerivationProcessProvider = applyGradientDescentWithDerivationRegularization(linearRegressionDerivationProcessProvider);
+                learningAlgorithm = new GradientDescentWithDerivation(neuralNetworkModel, costType, linearRegressionDerivationProcessProvider);
                 break;
             default:
                 throw new IllegalArgumentException(learningAlgorithmType + " instantiation is not implemented");
         }
         return learningAlgorithm;
+    }
+
+    private IGradientDescentWithDerivationProcessProvider applyGradientDescentWithDerivationOptimisation(IGradientDescentWithDerivationProcessProvider processProvider) {
+        if (momentumCoeff != null && rmsStopCoeff != null) {
+            processProvider = new GradientDescentWithDerivationAndAdamOptimisationProcessProvider(processProvider, momentumCoeff, rmsStopCoeff);
+        } else if (momentumCoeff != null) {
+            processProvider = new GradientDescentWithDerivationAndMomentumProcessProvider(processProvider, momentumCoeff);
+        } else if (rmsStopCoeff != null) {
+            processProvider = new GradientDescentWithDerivationAndRmsStopProcessProvider(processProvider, rmsStopCoeff);
+        }
+        return processProvider;
+    }
+
+    private IGradientDescentProcessProvider applyGradientDescentOptimisation(IGradientDescentProcessProvider processProvider) {
+        if (momentumCoeff != null && rmsStopCoeff != null) {
+            processProvider = new GradientDescentWithAdamOptimisationProcessProvider(processProvider, momentumCoeff, rmsStopCoeff);
+        } else if (momentumCoeff != null) {
+            processProvider = new GradientDescentWithMomentumProcessProvider(processProvider, momentumCoeff);
+        } else if (rmsStopCoeff != null) {
+            processProvider = new GradientDescentWithRmsStopProcessProvider(processProvider, rmsStopCoeff);
+        }
+        return processProvider;
     }
 
     private IGradientDescentWithDerivationProcessProvider applyGradientDescentWithDerivationRegularization(IGradientDescentWithDerivationProcessProvider withDerivationProcessProvider) {

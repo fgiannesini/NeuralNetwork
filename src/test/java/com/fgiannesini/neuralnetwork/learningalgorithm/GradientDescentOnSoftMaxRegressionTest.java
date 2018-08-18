@@ -31,11 +31,9 @@ class GradientDescentOnSoftMaxRegressionTest {
             LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentOnSoftMaxRegressionProcessProvider());
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
-            System.out.println(gradientNeuralNetworkModel);
-
             LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.SOFT_MAX_REGRESSION, new GradientDescentWithDerivationProcessProvider());
             NeuralNetworkModel gradientWithDerivativeNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);
-            System.out.println(gradientWithDerivativeNeuralNetworkModel);
+
             NeuralNetworkAssertions.checkSameNeuralNetworks(gradientNeuralNetworkModel, gradientWithDerivativeNeuralNetworkModel);
         }
 

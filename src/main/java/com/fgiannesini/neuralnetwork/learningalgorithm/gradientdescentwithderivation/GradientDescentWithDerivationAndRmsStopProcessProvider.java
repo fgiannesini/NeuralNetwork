@@ -16,15 +16,15 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class GradientDescentWithDerivationAndRmsStopProcessProvider implements IGradientDescentWithDerivationProcessProvider {
-    private final GradientDescentWithDerivationProcessProvider processProvider;
+    private final IGradientDescentWithDerivationProcessProvider processProvider;
     private final List<Layer> rmsStopLayers;
     private final Double rmsStopCoeff;
     private final Double epsilon;
 
-    public GradientDescentWithDerivationAndRmsStopProcessProvider(Double rmsStopCoeff) {
+    public GradientDescentWithDerivationAndRmsStopProcessProvider(IGradientDescentWithDerivationProcessProvider processProvider, Double rmsStopCoeff) {
         this.rmsStopCoeff = rmsStopCoeff;
         this.epsilon = Math.pow(10, -8);
-        this.processProvider = new GradientDescentWithDerivationProcessProvider();
+        this.processProvider = processProvider;
         rmsStopLayers = new ArrayList<>();
     }
 

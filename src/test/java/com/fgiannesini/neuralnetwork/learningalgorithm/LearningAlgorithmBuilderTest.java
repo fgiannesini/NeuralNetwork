@@ -1,5 +1,6 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm;
 
+import com.fgiannesini.neuralnetwork.cost.CostType;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.*;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.*;
 import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout.GradientDescentWithDerivationAndDropOutRegularizationProcessProvider;
@@ -148,13 +149,14 @@ class LearningAlgorithmBuilderTest {
     }
 
     @Nested
-    class GradientDescentWithMomentumInstanceCreation {
+    class GradientDescentWithOptimisationInstanceCreation {
 
         @Test
         void test_GradientDescentWithMomentum_instance_creation() {
             LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
                     .withModel(buildNeuralNetworkModel())
-                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_MOMENTUM)
+                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT)
+                    .withMomentumCoeff(0.9)
                     .build();
 
             Assertions.assertTrue(learningAlgorithm instanceof GradientDescent);
@@ -162,38 +164,11 @@ class LearningAlgorithmBuilderTest {
         }
 
         @Test
-        void test_GradientDescentWithMomentumAndL2Regularization_instance_creation() {
+        void test_GradientDescentWithDerivationAndWithMomentum_instance_creation() {
             LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
                     .withModel(buildNeuralNetworkModel())
-                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_MOMENTUM)
-                    .withL2Regularization(0.5)
-                    .build();
-
-            Assertions.assertTrue(learningAlgorithm instanceof GradientDescent);
-            Assertions.assertTrue(((GradientDescent) learningAlgorithm).getGradientDescentProcessProvider() instanceof GradientDescentWithL2RegularizationProcessProvider);
-        }
-
-        @Test
-        void test_GradientDescentWithMomentumAndDropOutRegularization_instance_creation() {
-            LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
-                    .withModel(buildNeuralNetworkModel())
-                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_MOMENTUM)
-                    .withDropOutRegularitation(0.1, 0.2)
-                    .build();
-
-            Assertions.assertTrue(learningAlgorithm instanceof GradientDescent);
-            Assertions.assertTrue(((GradientDescent) learningAlgorithm).getGradientDescentProcessProvider() instanceof GradientDescentWithDropOutRegularizationProcessProvider);
-        }
-    }
-
-    @Nested
-    class GradientDescentWithDerivationAndMomentumInstanceCreation {
-
-        @Test
-        void test_GradientDescentWithMomentum_instance_creation() {
-            LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
-                    .withModel(buildNeuralNetworkModel())
-                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_DERIVATION_MOMENTUM)
+                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_DERIVATION)
+                    .withMomentumCoeff(0.9)
                     .build();
 
             Assertions.assertTrue(learningAlgorithm instanceof GradientDescentWithDerivation);
@@ -201,38 +176,11 @@ class LearningAlgorithmBuilderTest {
         }
 
         @Test
-        void test_GradientDescentWithMomentumAndL2Regularization_instance_creation() {
-            LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
-                    .withModel(buildNeuralNetworkModel())
-                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_DERIVATION_MOMENTUM)
-                    .withL2Regularization(0.5)
-                    .build();
-
-            Assertions.assertTrue(learningAlgorithm instanceof GradientDescentWithDerivation);
-            Assertions.assertTrue(((GradientDescentWithDerivation) learningAlgorithm).getGradientDescentProcessProvider() instanceof GradientDescentWithDerivationAndL2RegularizationProcessProvider);
-        }
-
-        @Test
-        void test_GradientDescentWithMomentumAndDropOutRegularization_instance_creation() {
-            LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
-                    .withModel(buildNeuralNetworkModel())
-                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_DERIVATION_MOMENTUM)
-                    .withDropOutRegularitation(0.1, 0.2)
-                    .build();
-
-            Assertions.assertTrue(learningAlgorithm instanceof GradientDescentWithDerivation);
-            Assertions.assertTrue(((GradientDescentWithDerivation) learningAlgorithm).getGradientDescentProcessProvider() instanceof GradientDescentWithDerivationAndDropOutRegularizationProcessProvider);
-        }
-    }
-
-    @Nested
-    class GradientDescentWithRmsStopInstanceCreation {
-
-        @Test
         void test_GradientDescentWithRmsStop_instance_creation() {
             LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
                     .withModel(buildNeuralNetworkModel())
-                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_RMS_STOP)
+                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT)
+                    .withRmsStopCoeff(0.999)
                     .build();
 
             Assertions.assertTrue(learningAlgorithm instanceof GradientDescent);
@@ -240,118 +188,11 @@ class LearningAlgorithmBuilderTest {
         }
 
         @Test
-        void test_GradientDescentWithRmsStopAndL2Regularization_instance_creation() {
-            LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
-                    .withModel(buildNeuralNetworkModel())
-                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_RMS_STOP)
-                    .withL2Regularization(0.5)
-                    .build();
-
-            Assertions.assertTrue(learningAlgorithm instanceof GradientDescent);
-            Assertions.assertTrue(((GradientDescent) learningAlgorithm).getGradientDescentProcessProvider() instanceof GradientDescentWithL2RegularizationProcessProvider);
-        }
-
-        @Test
-        void test_GradientDescentWithRmsStopAndDropOutRegularization_instance_creation() {
-            LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
-                    .withModel(buildNeuralNetworkModel())
-                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_RMS_STOP)
-                    .withDropOutRegularitation(0.1, 0.2)
-                    .build();
-
-            Assertions.assertTrue(learningAlgorithm instanceof GradientDescent);
-            Assertions.assertTrue(((GradientDescent) learningAlgorithm).getGradientDescentProcessProvider() instanceof GradientDescentWithDropOutRegularizationProcessProvider);
-        }
-    }
-
-
-    @Nested
-    class GradientDescentWithDerivationAndRmsStopInstanceCreation {
-
-        @Test
-        void test_GradientDescentWithDerivationAndAdamOptimisation_instance_creation() {
-            LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
-                    .withModel(buildNeuralNetworkModel())
-                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_DERIVATION_ADAM_OPTIMISATION)
-                    .build();
-
-            Assertions.assertTrue(learningAlgorithm instanceof GradientDescentWithDerivation);
-            Assertions.assertTrue(((GradientDescentWithDerivation) learningAlgorithm).getGradientDescentProcessProvider() instanceof GradientDescentWithDerivationAndAdamOptimisationProcessProvider);
-        }
-
-        @Test
-        void test_GradientDescentWithDerivationAndAdamOptimisationAndL2Regularization_instance_creation() {
-            LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
-                    .withModel(buildNeuralNetworkModel())
-                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_DERIVATION_ADAM_OPTIMISATION)
-                    .withL2Regularization(0.5)
-                    .build();
-
-            Assertions.assertTrue(learningAlgorithm instanceof GradientDescentWithDerivation);
-            Assertions.assertTrue(((GradientDescentWithDerivation) learningAlgorithm).getGradientDescentProcessProvider() instanceof GradientDescentWithDerivationAndL2RegularizationProcessProvider);
-        }
-
-        @Test
-        void test_GradientDescentWithDerivationAndAdamOptimisationAndDropOutRegularization_instance_creation() {
-            LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
-                    .withModel(buildNeuralNetworkModel())
-                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_DERIVATION_ADAM_OPTIMISATION)
-                    .withDropOutRegularitation(0.1, 0.2)
-                    .build();
-
-            Assertions.assertTrue(learningAlgorithm instanceof GradientDescentWithDerivation);
-            Assertions.assertTrue(((GradientDescentWithDerivation) learningAlgorithm).getGradientDescentProcessProvider() instanceof GradientDescentWithDerivationAndDropOutRegularizationProcessProvider);
-        }
-    }
-
-
-    @Nested
-    class GradientDescentWithAdamOptimisationInstanceCreation {
-
-        @Test
-        void test_GradientDescentWithAdamOptimisation_instance_creation() {
-            LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
-                    .withModel(buildNeuralNetworkModel())
-                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_ADAM_OPTIMISATION)
-                    .build();
-
-            Assertions.assertTrue(learningAlgorithm instanceof GradientDescent);
-            Assertions.assertTrue(((GradientDescent) learningAlgorithm).getGradientDescentProcessProvider() instanceof GradientDescentWithAdamOptimisationProcessProvider);
-        }
-
-        @Test
-        void test_GradientDescentWithAdamOptimisationAndL2Regularization_instance_creation() {
-            LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
-                    .withModel(buildNeuralNetworkModel())
-                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_ADAM_OPTIMISATION)
-                    .withL2Regularization(0.5)
-                    .build();
-
-            Assertions.assertTrue(learningAlgorithm instanceof GradientDescent);
-            Assertions.assertTrue(((GradientDescent) learningAlgorithm).getGradientDescentProcessProvider() instanceof GradientDescentWithL2RegularizationProcessProvider);
-        }
-
-        @Test
-        void test_GradientDescentWithAdamOptimisationAndDropOutRegularization_instance_creation() {
-            LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
-                    .withModel(buildNeuralNetworkModel())
-                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_ADAM_OPTIMISATION)
-                    .withDropOutRegularitation(0.1, 0.2)
-                    .build();
-
-            Assertions.assertTrue(learningAlgorithm instanceof GradientDescent);
-            Assertions.assertTrue(((GradientDescent) learningAlgorithm).getGradientDescentProcessProvider() instanceof GradientDescentWithDropOutRegularizationProcessProvider);
-        }
-    }
-
-    @Nested
-    class GradientDescentWithDerivationAndAdamOptimisationInstanceCreation {
-
-        @Test
         void test_GradientDescentWithDerivationAndRmsStop_instance_creation() {
             LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
                     .withModel(buildNeuralNetworkModel())
-                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_DERIVATION_RMS_STOP)
+                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_DERIVATION)
+                    .withRmsStopCoeff(0.999)
                     .build();
 
             Assertions.assertTrue(learningAlgorithm instanceof GradientDescentWithDerivation);
@@ -359,27 +200,85 @@ class LearningAlgorithmBuilderTest {
         }
 
         @Test
-        void test_GradientDescentWithDerivationAndRmsStopAndL2Regularization_instance_creation() {
+        void test_GradientDescentWithDerivationAndAdamOptimisation_instance_creation() {
             LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
                     .withModel(buildNeuralNetworkModel())
-                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_DERIVATION_RMS_STOP)
-                    .withL2Regularization(0.5)
+                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_DERIVATION)
+                    .withMomentumCoeff(0.9)
+                    .withRmsStopCoeff(0.999)
                     .build();
 
             Assertions.assertTrue(learningAlgorithm instanceof GradientDescentWithDerivation);
-            Assertions.assertTrue(((GradientDescentWithDerivation) learningAlgorithm).getGradientDescentProcessProvider() instanceof GradientDescentWithDerivationAndL2RegularizationProcessProvider);
+            Assertions.assertTrue(((GradientDescentWithDerivation) learningAlgorithm).getGradientDescentProcessProvider() instanceof GradientDescentWithDerivationAndAdamOptimisationProcessProvider);
         }
 
         @Test
-        void test_GradientDescentWithDerivationAndRmsStopAndDropOutRegularization_instance_creation() {
+        void test_GradientDescentWithAdamOptimisation_instance_creation() {
             LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
                     .withModel(buildNeuralNetworkModel())
-                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_DERIVATION_RMS_STOP)
-                    .withDropOutRegularitation(0.1, 0.2)
+                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT)
+                    .withMomentumCoeff(0.9)
+                    .withRmsStopCoeff(0.999)
+                    .build();
+
+            Assertions.assertTrue(learningAlgorithm instanceof GradientDescent);
+            Assertions.assertTrue(((GradientDescent) learningAlgorithm).getGradientDescentProcessProvider() instanceof GradientDescentWithAdamOptimisationProcessProvider);
+        }
+    }
+
+    @Nested
+    class GradientDescentSoftMaxInstanceCreation {
+
+        @Test
+        void test_GradientDescentWithDerivation_instance_creation() {
+            LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
+                    .withModel(buildNeuralNetworkModel())
+                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_DERIVATION)
+                    .withCostType(CostType.SOFT_MAX_REGRESSION)
                     .build();
 
             Assertions.assertTrue(learningAlgorithm instanceof GradientDescentWithDerivation);
-            Assertions.assertTrue(((GradientDescentWithDerivation) learningAlgorithm).getGradientDescentProcessProvider() instanceof GradientDescentWithDerivationAndDropOutRegularizationProcessProvider);
+            Assertions.assertTrue(((GradientDescentWithDerivation) learningAlgorithm).getGradientDescentProcessProvider() instanceof GradientDescentWithDerivationProcessProvider);
+        }
+
+        @Test
+        void test_GradientDescent_instance_creation() {
+            LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
+                    .withModel(buildNeuralNetworkModel())
+                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT)
+                    .withCostType(CostType.SOFT_MAX_REGRESSION)
+                    .build();
+
+            Assertions.assertTrue(learningAlgorithm instanceof GradientDescent);
+            Assertions.assertTrue(((GradientDescent) learningAlgorithm).getGradientDescentProcessProvider() instanceof GradientDescentOnSoftMaxRegressionProcessProvider);
+        }
+    }
+
+    @Nested
+    class GradientDescentLogisticInstanceCreation {
+
+        @Test
+        void test_GradientDescentWithDerivation_instance_creation() {
+            LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
+                    .withModel(buildNeuralNetworkModel())
+                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT_DERIVATION)
+                    .withCostType(CostType.LOGISTIC_REGRESSION)
+                    .build();
+
+            Assertions.assertTrue(learningAlgorithm instanceof GradientDescentWithDerivation);
+            Assertions.assertTrue(((GradientDescentWithDerivation) learningAlgorithm).getGradientDescentProcessProvider() instanceof GradientDescentWithDerivationProcessProvider);
+        }
+
+        @Test
+        void test_GradientDescent_instance_creation() {
+            LearningAlgorithm learningAlgorithm = LearningAlgorithmBuilder.init()
+                    .withModel(buildNeuralNetworkModel())
+                    .withAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT)
+                    .withCostType(CostType.LOGISTIC_REGRESSION)
+                    .build();
+
+            Assertions.assertTrue(learningAlgorithm instanceof GradientDescent);
+            Assertions.assertTrue(((GradientDescent) learningAlgorithm).getGradientDescentProcessProvider() instanceof GradientDescentOnLogisticRegressionProcessProvider);
         }
     }
 }

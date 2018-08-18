@@ -73,7 +73,7 @@ public class FloorExampleLauncher {
                 .withCostType(CostType.SOFT_MAX_REGRESSION)
                 .withNeuralNetworkStatsConsumer(statsUpdateAction)
                 .withHyperParameters(hyperParameters)
-                .withLearningRateUpdater(LearningRateUpdaterType.CONSTANT.get(0.01))
+                .withLearningRateUpdater(LearningRateUpdaterType.DECAY.get(0.01))
                 .build();
     }
 

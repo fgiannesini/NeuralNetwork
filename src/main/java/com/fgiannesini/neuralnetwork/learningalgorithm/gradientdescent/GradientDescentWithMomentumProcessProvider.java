@@ -15,9 +15,9 @@ public class GradientDescentWithMomentumProcessProvider implements IGradientDesc
     private final IGradientDescentProcessProvider processProvider;
     private final List<Layer> momentumLayers;
 
-    public GradientDescentWithMomentumProcessProvider(Double momentumCoeff) {
+    public GradientDescentWithMomentumProcessProvider(IGradientDescentProcessProvider processProvider, Double momentumCoeff) {
         this.momentumCoeff = momentumCoeff;
-        this.processProvider = new GradientDescentOnLinearRegressionProcessProvider();
+        this.processProvider = processProvider;
         momentumLayers = new ArrayList<>();
     }
 

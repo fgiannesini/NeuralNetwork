@@ -16,17 +16,17 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class GradientDescentWithDerivationAndAdamOptimisationProcessProvider implements IGradientDescentWithDerivationProcessProvider {
-    private final GradientDescentWithDerivationProcessProvider processProvider;
+    private final IGradientDescentWithDerivationProcessProvider processProvider;
     private final Double momentumCoeff;
     private final Double rmsStopCoeff;
     private final List<Layer> momentumLayers;
     private final List<Layer> rmsStopLayers;
     private final Double epsilon;
 
-    public GradientDescentWithDerivationAndAdamOptimisationProcessProvider(Double momentumCoeff, Double rmsStopCoeff) {
+    public GradientDescentWithDerivationAndAdamOptimisationProcessProvider(IGradientDescentWithDerivationProcessProvider processProvider, Double momentumCoeff, Double rmsStopCoeff) {
         this.momentumCoeff = momentumCoeff;
         this.rmsStopCoeff = rmsStopCoeff;
-        this.processProvider = new GradientDescentWithDerivationProcessProvider();
+        this.processProvider = processProvider;
         momentumLayers = new ArrayList<>();
         rmsStopLayers = new ArrayList<>();
         this.epsilon = Math.pow(10, -8);

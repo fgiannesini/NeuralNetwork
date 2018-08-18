@@ -18,10 +18,10 @@ public class GradientDescentWithRmsStopProcessProvider implements IGradientDesce
     private final Double rmsStopCoeff;
     private final Double epsilon;
 
-    public GradientDescentWithRmsStopProcessProvider(Double rmsStopCoeff) {
+    public GradientDescentWithRmsStopProcessProvider(IGradientDescentProcessProvider processProvider, Double rmsStopCoeff) {
         this.rmsStopCoeff = rmsStopCoeff;
         this.epsilon = Math.pow(10, -8);
-        processProvider = new GradientDescentOnLinearRegressionProcessProvider();
+        this.processProvider = processProvider;
         rmsStopLayers = new ArrayList<>();
     }
 

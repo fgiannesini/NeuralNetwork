@@ -15,15 +15,15 @@ import java.util.stream.Collectors;
 public class GradientDescentWithAdamOptimisationProcessProvider implements IGradientDescentProcessProvider {
     private final Double momentumCoeff;
     private final Double rmsStopCoeff;
-    private final GradientDescentOnLinearRegressionProcessProvider processProvider;
+    private final IGradientDescentProcessProvider processProvider;
     private final List<Layer> momentumLayers;
     private final List<Layer> rmsStopLayers;
     private final Double epsilon;
 
-    public GradientDescentWithAdamOptimisationProcessProvider(Double momentumCoeff, Double rmsStopCoeff) {
+    public GradientDescentWithAdamOptimisationProcessProvider(IGradientDescentProcessProvider processProvider, Double momentumCoeff, Double rmsStopCoeff) {
         this.momentumCoeff = momentumCoeff;
         this.rmsStopCoeff = rmsStopCoeff;
-        this.processProvider = new GradientDescentOnLinearRegressionProcessProvider();
+        this.processProvider = processProvider;
         momentumLayers = new ArrayList<>();
         rmsStopLayers = new ArrayList<>();
         this.epsilon = Math.pow(10, -8);
