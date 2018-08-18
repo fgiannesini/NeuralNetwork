@@ -29,10 +29,10 @@ class SoftMaxFunctionApplierTest {
     @Test
     void derivate() {
         Assertions.assertAll(
-                checkSoftMaxDerivate(new double[]{0}, new double[]{0}),
-                checkSoftMaxDerivate(new double[]{-2}, new double[]{2}),
-                checkSoftMaxDerivate(new double[]{-6}, new double[]{-2}),
-                checkSoftMaxDerivate(new double[]{0, -2, -6, -12, -20}, new double[]{1, 2, 3, 4, 5})
+                checkSoftMaxDerivate(new double[]{1}, new double[]{0}),
+                checkSoftMaxDerivate(new double[]{1}, new double[]{2}),
+                checkSoftMaxDerivate(new double[]{1}, new double[]{-2}),
+                checkSoftMaxDerivate(new double[]{1, 1, 1, 1, 1}, new double[]{1, 2, 3, 4, 5})
         );
     }
 

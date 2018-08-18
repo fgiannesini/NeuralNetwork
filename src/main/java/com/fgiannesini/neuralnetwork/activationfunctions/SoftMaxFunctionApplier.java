@@ -7,7 +7,7 @@ public class SoftMaxFunctionApplier implements ActivationFunctionApplier {
 
     @Override
     public DoubleMatrix apply(DoubleMatrix input) {
-        //exp(z)/sum(exp(-z))
+        //exp(z)/sum(exp(z))
         DoubleMatrix output = MatrixFunctions.exp(input);
         DoubleMatrix sum = output.columnSums();
         return output.diviRowVector(sum);
@@ -15,7 +15,6 @@ public class SoftMaxFunctionApplier implements ActivationFunctionApplier {
 
     @Override
     public DoubleMatrix derivate(DoubleMatrix input) {
-        //(1-a)*a
-        return input.neg().addi(1).muli(input);
+        return DoubleMatrix.ones(input.getRows(), input.getColumns());
     }
 }
