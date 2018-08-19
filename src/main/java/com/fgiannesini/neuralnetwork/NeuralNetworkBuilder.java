@@ -4,8 +4,6 @@ import com.fgiannesini.neuralnetwork.cost.CostType;
 import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithm;
 import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithmBuilder;
 import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithmType;
-import com.fgiannesini.neuralnetwork.learningrate.ILearningRateUpdater;
-import com.fgiannesini.neuralnetwork.learningrate.LearningRateUpdaterType;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.normalizer.INormalizer;
 import com.fgiannesini.neuralnetwork.normalizer.NormalizerType;
@@ -19,7 +17,6 @@ public class NeuralNetworkBuilder {
     private LearningAlgorithmType learningAlgorithmType;
     private double[] dropOutCoeffs;
     private Double l2RegularizationCoeff;
-    private ILearningRateUpdater learningRateUpdater;
     private CostType costType;
     private Consumer<NeuralNetworkStats> statsUpdateAction;
     private HyperParameters hyperParameters;
@@ -28,7 +25,6 @@ public class NeuralNetworkBuilder {
         normalizer = NormalizerType.NONE.get();
         learningAlgorithmType = LearningAlgorithmType.GRADIENT_DESCENT;
         costType = CostType.LINEAR_REGRESSION;
-        learningRateUpdater = LearningRateUpdaterType.CONSTANT.get(0.01);
         statsUpdateAction = neuralNetworkStats -> {
         };
     }
@@ -62,11 +58,6 @@ public class NeuralNetworkBuilder {
         return this;
     }
 
-    public NeuralNetworkBuilder withLearningRateUpdater(ILearningRateUpdater learningRateUpdater) {
-        this.learningRateUpdater = learningRateUpdater;
-        return this;
-    }
-
     public NeuralNetworkBuilder withCostType(CostType costType) {
         this.costType = costType;
         return this;
@@ -87,16 +78,14 @@ public class NeuralNetworkBuilder {
         LearningAlgorithmBuilder learningAlgorithmBuilder = LearningAlgorithmBuilder.init()
                 .withModel(neuralNetworkModel)
                 .withAlgorithmType(learningAlgorithmType)
-                .withCostType(costType);
-        if (dropOutCoeffs != null) {
-            learningAlgorithmBuilder.withDropOutRegularitation(dropOutCoeffs);
-        }
-        if (l2RegularizationCoeff != null) {
-            learningAlgorithmBuilder.withL2Regularization(l2RegularizationCoeff);
-        }
+                .withCostType(costType)
+                .withDropOutRegularitation(dropOutCoeffs)
+                .withL2Regularization(l2RegularizationCoeff)
+                .withMomentumCoeff(hyperParameters.getMomentumCoeff())
+                .withRmsStopCoeff(hyperParameters.getRmsStopCoeff());
 
         LearningAlgorithm learningAlgorithm = learningAlgorithmBuilder.build();
-        return new NeuralNetwork(learningAlgorithm, normalizer, costType, statsUpdateAction, hyperParameters, learningRateUpdater);
+        return new NeuralNetwork(learningAlgorithm, normalizer, costType, statsUpdateAction, hyperParameters);
     }
 
     private void checkInputs() {

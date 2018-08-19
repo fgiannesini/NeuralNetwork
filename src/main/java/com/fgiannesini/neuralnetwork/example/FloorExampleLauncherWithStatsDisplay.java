@@ -2,6 +2,7 @@ package com.fgiannesini.neuralnetwork.example;
 
 import com.fgiannesini.neuralnetwork.HyperParameters;
 import com.fgiannesini.neuralnetwork.NeuralNetworkStats;
+import com.fgiannesini.neuralnetwork.learningrate.LearningRateUpdaterType;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,7 +31,13 @@ public class FloorExampleLauncherWithStatsDisplay extends Application {
         Task<NeuralNetworkStats> task = new Task<NeuralNetworkStats>() {
             @Override
             protected NeuralNetworkStats call() {
-                HyperParameters parameters = new HyperParameters().batchSize(10_000).epochCount(3);
+                HyperParameters parameters = new HyperParameters()
+                        .batchSize(10_000)
+                        .epochCount(100)
+                        .rmsStopCoeff(0.999)
+                        .momentumCoeff(0.9)
+                        .hiddenLayerSize(new int[]{20})
+                        .learningRateUpdater(LearningRateUpdaterType.CONSTANT.get(0.01));
                 FloorExampleLauncher floorExampleLauncher = new FloorExampleLauncher(this::updateValue, parameters);
                 double successRate = floorExampleLauncher.launch();
                 System.out.println("Success Rate: " + successRate + "%");

@@ -25,14 +25,14 @@ public class NeuralNetwork {
     private final ILearningRateUpdater learningRateUpdater;
     private final int batchSize;
 
-    NeuralNetwork(LearningAlgorithm learningAlgorithm, INormalizer normalizer, CostType costType, Consumer<NeuralNetworkStats> statsUpdateAction, HyperParameters hyperParameters, ILearningRateUpdater learningRateUpdater) {
+    NeuralNetwork(LearningAlgorithm learningAlgorithm, INormalizer normalizer, CostType costType, Consumer<NeuralNetworkStats> statsUpdateAction, HyperParameters hyperParameters) {
         this.learningAlgorithm = learningAlgorithm;
         this.normalizer = normalizer;
         this.costType = costType;
         this.statsUpdateAction = statsUpdateAction;
         batchSize = hyperParameters.getBatchSize();
         this.epochCount = hyperParameters.getEpochCount();
-        this.learningRateUpdater = learningRateUpdater;
+        this.learningRateUpdater = hyperParameters.getLearningRateUpdater();
     }
 
     void learn(double[] input, double[] expected, double[] testInput, double[] testExpected) {

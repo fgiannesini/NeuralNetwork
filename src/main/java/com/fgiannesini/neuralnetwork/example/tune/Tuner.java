@@ -3,6 +3,8 @@ package com.fgiannesini.neuralnetwork.example.tune;
 import com.fgiannesini.neuralnetwork.HyperParameters;
 import com.fgiannesini.neuralnetwork.NeuralNetworkStats;
 import com.fgiannesini.neuralnetwork.example.FloorExampleLauncher;
+import com.fgiannesini.neuralnetwork.learningrate.ILearningRateUpdater;
+import com.fgiannesini.neuralnetwork.learningrate.LearningRateUpdaterType;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -45,7 +47,7 @@ public class Tuner {
         for (int i = 0; i < population / 2; i++) {
             HyperParameters firstParameter = tuneStates.get(random.nextInt(population)).getHyperParameters().clone();
             HyperParameters secondParameter = tuneStates.get(random.nextInt(population)).getHyperParameters();
-            int parameterToMerge = random.nextInt(4);
+            int parameterToMerge = random.nextInt(6);
             switch (parameterToMerge) {
                 case 0:
                     firstParameter.epochCount(secondParameter.getEpochCount());
@@ -60,7 +62,15 @@ public class Tuner {
                     mergedTuneStates.add(new TuneState(firstParameter));
                     break;
                 case 3:
-                    firstParameter.inputCount(secondParameter.getInputCount());
+                    firstParameter.learningRateUpdater(secondParameter.getLearningRateUpdater());
+                    mergedTuneStates.add(new TuneState(firstParameter));
+                    break;
+                case 4:
+                    firstParameter.momentumCoeff(secondParameter.getMomentumCoeff());
+                    mergedTuneStates.add(new TuneState(firstParameter));
+                    break;
+                case 5:
+                    firstParameter.rmsStopCoeff(secondParameter.getRmsStopCoeff());
                     mergedTuneStates.add(new TuneState(firstParameter));
                     break;
                 default:
@@ -77,10 +87,10 @@ public class Tuner {
         List<TuneState> mutatedTuneStates = new ArrayList<>();
         for (int i = 0; i < population / 2; i++) {
             HyperParameters parameter = tuneStates.get(random.nextInt(population)).getHyperParameters().clone();
-            int parameterToMerge = random.nextInt(4);
+            int parameterToMerge = random.nextInt(6);
             switch (parameterToMerge) {
                 case 0:
-                    parameter.epochCount(generateBatchSize(random));
+                    parameter.epochCount(generateEpochCount(random));
                     mutatedTuneStates.add(new TuneState(parameter));
                     break;
                 case 1:
@@ -92,7 +102,15 @@ public class Tuner {
                     mutatedTuneStates.add(new TuneState(parameter));
                     break;
                 case 3:
-                    parameter.inputCount(generateInputSize(random));
+                    parameter.learningRateUpdater(generateLearningRateUpdater(random));
+                    mutatedTuneStates.add(new TuneState(parameter));
+                    break;
+                case 4:
+                    parameter.momentumCoeff(generateMomentumCoeff(random));
+                    mutatedTuneStates.add(new TuneState(parameter));
+                    break;
+                case 5:
+                    parameter.rmsStopCoeff(generateRmsStopCoeff(random));
                     mutatedTuneStates.add(new TuneState(parameter));
                     break;
                 default:
@@ -108,7 +126,6 @@ public class Tuner {
 
         tuneStates.parallelStream()
                 .forEach(tuneState -> {
-                            System.out.println("Mark computation for tuneState with parameters " + tuneState.getHyperParameters());
                             FloorExampleLauncher floorExampleLauncher = new FloorExampleLauncher(neuralNetworkStatsConsumer, tuneState.getHyperParameters());
                             double successRate = 0;
                             for (int i = 0; i < meanCount; i++) {
@@ -120,6 +137,30 @@ public class Tuner {
                 );
     }
 
+    private static Double generateRmsStopCoeff(Random random) {
+        if (random.nextBoolean()) {
+            return random.nextInt(100) * 0.001 + 0.9;
+        }
+        return null;
+    }
+
+    private static Double generateMomentumCoeff(Random random) {
+        if (random.nextBoolean()) {
+            return random.nextInt(5) * 0.1 + 0.5;
+        }
+        return null;
+    }
+
+    private static ILearningRateUpdater generateLearningRateUpdater(Random random) {
+        LearningRateUpdaterType[] learningRateUpdaterTypes = LearningRateUpdaterType.values();
+        int updaterIndex = random.nextInt(learningRateUpdaterTypes.length);
+        LearningRateUpdaterType learningRateUpdaterType = learningRateUpdaterTypes[updaterIndex];
+        int exp = random.nextInt(3) + 1;
+        int value = random.nextInt(9) + 1;
+        double initialLearningRate = value * Math.pow(10, -exp);
+        return learningRateUpdaterType.get(initialLearningRate);
+    }
+
     private static List<TuneState> initTuneStates(int statePopulation) {
         Random random = new Random();
         return IntStream.range(0, statePopulation)
@@ -127,9 +168,11 @@ public class Tuner {
                     HyperParameters hyperParameters = new HyperParameters()
                             .batchSize(generateBatchSize(random))
                             .hiddenLayerSize(generateHiddenLayerSize(random))
-                            .inputCount(generateInputSize(random))
-                            .testInputCount(100)
-                            .epochCount(generateEpochCount(random));
+                            .learningRateUpdater(generateLearningRateUpdater(random))
+                            .epochCount(generateEpochCount(random))
+                            .momentumCoeff(generateMomentumCoeff(random))
+                            .rmsStopCoeff(generateRmsStopCoeff(random));
+
                     return new TuneState(hyperParameters);
                 })
                 .collect(Collectors.toList());
@@ -137,18 +180,15 @@ public class Tuner {
 
     private static int[] generateHiddenLayerSize(Random random) {
         int streamSize = random.nextInt(4) + 1;
-        return random.ints(streamSize, 1, 50).toArray();
+        return random.ints(streamSize, 5, 20).toArray();
     }
 
     private static int generateEpochCount(Random random) {
-        return 150;
+        return 5;
     }
 
     private static int generateBatchSize(Random random) {
-        return random.nextInt(999) * 10 + 10;
+        return (random.nextInt(5) + 1) * 10_000;
     }
 
-    private static int generateInputSize(Random random) {
-        return random.nextInt(9_999) * 10 + 10;
-    }
 }

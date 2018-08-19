@@ -1,22 +1,19 @@
 package com.fgiannesini.neuralnetwork;
 
+import com.fgiannesini.neuralnetwork.learningrate.ILearningRateUpdater;
+
 import java.util.Arrays;
 
 public class HyperParameters implements Cloneable {
 
     private int epochCount;
     private int batchSize;
-    private int inputCount;
-    private int testInputCount;
     private int hiddenLayerSize[];
+    private ILearningRateUpdater learningRateUpdater;
+    private Double momentumCoeff;
+    private Double rmsStopCoeff;
 
     public HyperParameters() {
-        this.epochCount = 1;
-        this.batchSize = 1000;
-        this.inputCount = 100_000;
-        this.testInputCount = 100;
-
-        this.hiddenLayerSize = new int[]{10};
     }
 
     public HyperParameters epochCount(int epochCount) {
@@ -29,18 +26,23 @@ public class HyperParameters implements Cloneable {
         return this;
     }
 
-    public HyperParameters inputCount(int inputCount) {
-        this.inputCount = inputCount;
-        return this;
-    }
-
-    public HyperParameters testInputCount(int testInputCount) {
-        this.testInputCount = testInputCount;
-        return this;
-    }
-
     public HyperParameters hiddenLayerSize(int[] hiddenLayerSize) {
         this.hiddenLayerSize = hiddenLayerSize;
+        return this;
+    }
+
+    public HyperParameters learningRateUpdater(ILearningRateUpdater learningRateUpdater) {
+        this.learningRateUpdater = learningRateUpdater;
+        return this;
+    }
+
+    public HyperParameters momentumCoeff(Double momentumCoeff) {
+        this.momentumCoeff = momentumCoeff;
+        return this;
+    }
+
+    public HyperParameters rmsStopCoeff(Double rmsStopCoeff) {
+        this.rmsStopCoeff = rmsStopCoeff;
         return this;
     }
 
@@ -52,16 +54,20 @@ public class HyperParameters implements Cloneable {
         return batchSize;
     }
 
-    public int getInputCount() {
-        return inputCount;
-    }
-
-    public int getTestInputCount() {
-        return testInputCount;
-    }
-
     public int[] getHiddenLayerSize() {
         return hiddenLayerSize;
+    }
+
+    public ILearningRateUpdater getLearningRateUpdater() {
+        return learningRateUpdater;
+    }
+
+    public Double getMomentumCoeff() {
+        return momentumCoeff;
+    }
+
+    public Double getRmsStopCoeff() {
+        return rmsStopCoeff;
     }
 
     @Override
@@ -78,9 +84,10 @@ public class HyperParameters implements Cloneable {
         return "HyperParameters{" +
                 "epochCount=" + epochCount +
                 ", batchSize=" + batchSize +
-                ", inputCount=" + inputCount +
-                ", testInputCount=" + testInputCount +
                 ", hiddenLayerSize=" + Arrays.toString(hiddenLayerSize) +
+                ", learningRateUpdater=" + learningRateUpdater.getClass().getSimpleName() + " " + learningRateUpdater.get(0) +
+                ", momentumCoeff=" + momentumCoeff +
+                ", rmsStopCoeff=" + rmsStopCoeff +
                 '}';
     }
 }

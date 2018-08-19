@@ -19,6 +19,8 @@ public class FloorExampleLauncher {
 
     private final Consumer<NeuralNetworkStats> statsUpdateAction;
     private final HyperParameters hyperParameters;
+    private static int INPUT_COUNT = 100_000;
+    private static int TEST_INPUT_COUNT = 100;
 
     public FloorExampleLauncher(Consumer<NeuralNetworkStats> statsUpdateAction, HyperParameters hyperParameters) {
         this.statsUpdateAction = statsUpdateAction;
@@ -33,7 +35,13 @@ public class FloorExampleLauncher {
             System.out.println("TestCost = " + neuralNetworkStats.getTestCost());
             System.out.println();
         };
-        HyperParameters parameters = new HyperParameters();
+        HyperParameters parameters = new HyperParameters()
+                .learningRateUpdater(LearningRateUpdaterType.CONSTANT.get(0.01))
+                .batchSize(10_000)
+                .epochCount(5)
+                .hiddenLayerSize(new int[]{10})
+                .momentumCoeff(0.9)
+                .rmsStopCoeff(0.999);
         FloorExampleLauncher floorExampleLauncher = new FloorExampleLauncher(statsUpdateAction, parameters);
         double successRate = floorExampleLauncher.launch();
         System.out.println("Success Rate: " + successRate + "%");
@@ -42,10 +50,10 @@ public class FloorExampleLauncher {
     public double launch() {
         NeuralNetwork neuralNetwork = prepare();
 
-        DoubleMatrix inputMatrix = ExampleDataManager.generateInputData(hyperParameters.getInputCount());
+        DoubleMatrix inputMatrix = ExampleDataManager.generateInputData(INPUT_COUNT);
         DoubleMatrix outputMatrix = ExampleDataManager.convertToOutputFormat(inputMatrix.data);
 
-        DoubleMatrix testInputMatrix = ExampleDataManager.generateInputData(hyperParameters.getTestInputCount());
+        DoubleMatrix testInputMatrix = ExampleDataManager.generateInputData(TEST_INPUT_COUNT);
         DoubleMatrix testOutputMatrix = ExampleDataManager.convertToOutputFormat(testInputMatrix.data);
 
         neuralNetwork.learn(inputMatrix, outputMatrix, testInputMatrix, testOutputMatrix);
@@ -73,7 +81,6 @@ public class FloorExampleLauncher {
                 .withCostType(CostType.SOFT_MAX_REGRESSION)
                 .withNeuralNetworkStatsConsumer(statsUpdateAction)
                 .withHyperParameters(hyperParameters)
-                .withLearningRateUpdater(LearningRateUpdaterType.DECAY.get(0.01))
                 .build();
     }
 
