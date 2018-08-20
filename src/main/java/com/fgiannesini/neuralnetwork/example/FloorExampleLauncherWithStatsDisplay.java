@@ -32,8 +32,8 @@ public class FloorExampleLauncherWithStatsDisplay extends Application {
             @Override
             protected NeuralNetworkStats call() {
                 HyperParameters parameters = new HyperParameters()
-                        .batchSize(10_000)
-                        .epochCount(100)
+                        .batchSize(1_000)
+                        .epochCount(20)
                         .rmsStopCoeff(0.999)
                         .momentumCoeff(0.9)
                         .hiddenLayerSize(new int[]{20})

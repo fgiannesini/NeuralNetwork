@@ -8,7 +8,8 @@ public class SoftMaxFunctionApplier implements ActivationFunctionApplier {
     @Override
     public DoubleMatrix apply(DoubleMatrix input) {
         //exp(z)/sum(exp(z))
-        DoubleMatrix output = MatrixFunctions.exp(input);
+        double max = input.max();
+        DoubleMatrix output = MatrixFunctions.exp(input.sub(max));
         DoubleMatrix sum = output.columnSums();
         return output.diviRowVector(sum);
     }

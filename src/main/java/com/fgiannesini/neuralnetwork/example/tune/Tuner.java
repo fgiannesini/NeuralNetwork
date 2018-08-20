@@ -18,7 +18,7 @@ public class Tuner {
 
     public static void main(String[] args) {
         int statePopulation = 10;
-        int meanCount = 3;
+        int meanCount = 1;
         int maxIteration = 10;
 
         List<TuneState> tuneStates = initTuneStates(statePopulation);
@@ -45,7 +45,7 @@ public class Tuner {
 
         List<TuneState> mergedTuneStates = new ArrayList<>();
         for (int i = 0; i < population / 2; i++) {
-            HyperParameters firstParameter = tuneStates.get(random.nextInt(population)).getHyperParameters().clone();
+            HyperParameters firstParameter = tuneStates.get(0).getHyperParameters().clone();
             HyperParameters secondParameter = tuneStates.get(random.nextInt(population)).getHyperParameters();
             int parameterToMerge = random.nextInt(6);
             switch (parameterToMerge) {
@@ -86,7 +86,7 @@ public class Tuner {
 
         List<TuneState> mutatedTuneStates = new ArrayList<>();
         for (int i = 0; i < population / 2; i++) {
-            HyperParameters parameter = tuneStates.get(random.nextInt(population)).getHyperParameters().clone();
+            HyperParameters parameter = tuneStates.get(0).getHyperParameters().clone();
             int parameterToMerge = random.nextInt(6);
             switch (parameterToMerge) {
                 case 0:
@@ -184,11 +184,11 @@ public class Tuner {
     }
 
     private static int generateEpochCount(Random random) {
-        return 5;
+        return 20;
     }
 
     private static int generateBatchSize(Random random) {
-        return (random.nextInt(5) + 1) * 10_000;
+        return (random.nextInt(25) + 1) * 2_000;
     }
 
 }
