@@ -36,7 +36,8 @@ public class Tuner {
             tuneStates.sort(Comparator.comparing(TuneState::getMark).reversed());
             tuneStates = tuneStates.subList(0, statePopulation);
         }
-        System.out.println(tuneStates.get(0).getHyperParameters());
+        TuneState bestState = tuneStates.get(0);
+        System.out.println(bestState.getHyperParameters() + " " + bestState.getMark() + "%");
     }
 
     private static List<TuneState> merge(List<TuneState> tuneStates) {
@@ -45,7 +46,7 @@ public class Tuner {
 
         List<TuneState> mergedTuneStates = new ArrayList<>();
         for (int i = 0; i < population / 2; i++) {
-            HyperParameters firstParameter = tuneStates.get(0).getHyperParameters().clone();
+            HyperParameters firstParameter = tuneStates.get(random.nextInt(3)).getHyperParameters().clone();
             HyperParameters secondParameter = tuneStates.get(random.nextInt(population)).getHyperParameters();
             int parameterToMerge = random.nextInt(6);
             switch (parameterToMerge) {
@@ -86,7 +87,7 @@ public class Tuner {
 
         List<TuneState> mutatedTuneStates = new ArrayList<>();
         for (int i = 0; i < population / 2; i++) {
-            HyperParameters parameter = tuneStates.get(0).getHyperParameters().clone();
+            HyperParameters parameter = tuneStates.get(random.nextInt(3)).getHyperParameters().clone();
             int parameterToMerge = random.nextInt(6);
             switch (parameterToMerge) {
                 case 0:
@@ -132,7 +133,7 @@ public class Tuner {
                                 successRate += floorExampleLauncher.launch();
                             }
                             tuneState.setMark(successRate / (double) meanCount);
-                            System.out.println("Mark for tuneState with parameters " + tuneState.getHyperParameters() + " " + tuneState.getMark());
+                    System.out.println("Mark for tuneState with parameters " + tuneState.getHyperParameters() + " " + tuneState.getMark() + "%");
                         }
                 );
     }
@@ -184,7 +185,7 @@ public class Tuner {
     }
 
     private static int generateEpochCount(Random random) {
-        return 20;
+        return random.nextInt(45) + 5;
     }
 
     private static int generateBatchSize(Random random) {
