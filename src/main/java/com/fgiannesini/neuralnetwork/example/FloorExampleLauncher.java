@@ -39,7 +39,7 @@ public class FloorExampleLauncher {
                 .learningRateUpdater(LearningRateUpdaterType.CONSTANT.get(0.01))
                 .batchSize(1_000)
                 .epochCount(20)
-                .hiddenLayerSize(new int[]{10})
+                .hiddenLayerSize(new int[]{20})
                 .momentumCoeff(0.9)
                 .rmsStopCoeff(0.999);
         FloorExampleLauncher floorExampleLauncher = new FloorExampleLauncher(statsUpdateAction, parameters);

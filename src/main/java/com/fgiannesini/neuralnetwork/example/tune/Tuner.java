@@ -35,9 +35,10 @@ public class Tuner {
             tuneStates.addAll(merged);
             tuneStates.sort(Comparator.comparing(TuneState::getMark).reversed());
             tuneStates = tuneStates.subList(0, statePopulation);
+
+            TuneState bestState = tuneStates.get(0);
+            System.out.println("Best of iteration " + bestState.getMark() + " with " + bestState.getSuccessRate() + "% in " + bestState.getExecutionTime() + " s " + bestState.getHyperParameters());
         }
-        TuneState bestState = tuneStates.get(0);
-        System.out.println(bestState.getHyperParameters() + " " + bestState.getMark() + "%");
     }
 
     private static List<TuneState> merge(List<TuneState> tuneStates) {
@@ -128,12 +129,17 @@ public class Tuner {
         tuneStates.parallelStream()
                 .forEach(tuneState -> {
                             FloorExampleLauncher floorExampleLauncher = new FloorExampleLauncher(neuralNetworkStatsConsumer, tuneState.getHyperParameters());
+                    long start = System.nanoTime();
                             double successRate = 0;
                             for (int i = 0; i < meanCount; i++) {
                                 successRate += floorExampleLauncher.launch();
                             }
-                            tuneState.setMark(successRate / (double) meanCount);
-                    System.out.println("Mark for tuneState with parameters " + tuneState.getHyperParameters() + " " + tuneState.getMark() + "%");
+                    double executionTime = (System.nanoTime() - start) / 1_000_000_000d;
+                    tuneState.setExecutionTime(executionTime / (double) meanCount);
+                    tuneState.setSuccessRate(successRate / (double) meanCount);
+
+                    tuneState.setMark(tuneState.getSuccessRate() + 10 / tuneState.getExecutionTime());
+                    System.out.println("Computed " + tuneState.getMark() + " with " + tuneState.getSuccessRate() + "% in " + tuneState.getExecutionTime() + " s " + tuneState.getHyperParameters());
                         }
                 );
     }
@@ -180,7 +186,7 @@ public class Tuner {
     }
 
     private static int[] generateHiddenLayerSize(Random random) {
-        int streamSize = random.nextInt(4) + 1;
+        int streamSize = random.nextInt(2) + 1;
         return random.ints(streamSize, 5, 20).toArray();
     }
 
