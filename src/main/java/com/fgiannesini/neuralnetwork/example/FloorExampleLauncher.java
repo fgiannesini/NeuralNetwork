@@ -20,7 +20,7 @@ public class FloorExampleLauncher {
     private final Consumer<NeuralNetworkStats> statsUpdateAction;
     private final HyperParameters hyperParameters;
     private static int INPUT_COUNT = 100_000;
-    private static int TEST_INPUT_COUNT = 100;
+    private static int TEST_INPUT_COUNT = 1_000;
 
     public FloorExampleLauncher(Consumer<NeuralNetworkStats> statsUpdateAction, HyperParameters hyperParameters) {
         this.statsUpdateAction = statsUpdateAction;
@@ -37,8 +37,8 @@ public class FloorExampleLauncher {
         };
         HyperParameters parameters = new HyperParameters()
                 .learningRateUpdater(LearningRateUpdaterType.CONSTANT.get(0.01))
-                .batchSize(10_000)
-                .epochCount(5)
+                .batchSize(1_000)
+                .epochCount(20)
                 .hiddenLayerSize(new int[]{10})
                 .momentumCoeff(0.9)
                 .rmsStopCoeff(0.999);

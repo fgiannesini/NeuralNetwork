@@ -6,9 +6,11 @@ import org.jblas.DoubleMatrix;
 public class SoftMaxRegressionCostComputer implements CostComputer {
 
     private final IFinalOutputComputer outputComputer;
+    private final double epsilon;
 
     public SoftMaxRegressionCostComputer(IFinalOutputComputer outputComputer) {
         this.outputComputer = outputComputer;
+        this.epsilon = Math.pow(10, -18);
     }
 
     @Override
@@ -21,7 +23,7 @@ public class SoftMaxRegressionCostComputer implements CostComputer {
             double outputValue = output.get(index);
             double computedOutputValue = computedOutput.get(index);
             if (outputValue != 0) {
-                result += outputValue * Math.log(computedOutputValue);
+                result += outputValue * Math.log(computedOutputValue + epsilon);
             }
         }
         return -result / inputCount;

@@ -19,7 +19,8 @@ class SoftMaxFunctionApplierTest {
     void apply() {
         Assertions.assertAll(
                 checkSoftMaxApply(new DoubleMatrix(2, 2, 0.2689, 0.7310, 0.1192, 0.8807), new DoubleMatrix(2, 2, -1, 0, 2, 4)),
-                checkSoftMaxApply(new DoubleMatrix(1, 1, 1), new DoubleMatrix(1, 1, 1000))
+                checkSoftMaxApply(new DoubleMatrix(1, 1, 1), new DoubleMatrix(1, 1, 1000)),
+                checkSoftMaxApply(new DoubleMatrix(2, 2, 0.7310, 0.2689, 0.7310, 0.2689), new DoubleMatrix(2, 2, -1000, -1001, -1002, -1003))
         );
     }
 
