@@ -5,18 +5,12 @@ import org.jblas.MatrixFunctions;
 
 public class SoftMaxFunctionApplier implements ActivationFunctionApplier {
 
-    private double epsilon;
-
-    public SoftMaxFunctionApplier() {
-        epsilon = Math.pow(10, -18);
-    }
-
     @Override
     public DoubleMatrix apply(DoubleMatrix input) {
         //exp(z)/sum(exp(z))
-        double max = input.max();
-        DoubleMatrix output = MatrixFunctions.exp(input.sub(max));
-        DoubleMatrix sum = output.columnSums().addi(epsilon);
+        DoubleMatrix max = input.columnMaxs();
+        DoubleMatrix output = MatrixFunctions.exp(input.subRowVector(max));
+        DoubleMatrix sum = output.columnSums();
         return output.diviRowVector(sum);
     }
 
