@@ -53,13 +53,11 @@ public class NeuralNetwork {
 
     public void learn(DoubleMatrix input, DoubleMatrix outpout, DoubleMatrix testInput, DoubleMatrix testOutpout) {
         DoubleMatrix normalizedInput = normalizer.normalize(input);
-        DoubleMatrix normalizedOutput = normalizer.normalize(outpout);
         DoubleMatrix normalizedTestInput = normalizer.normalize(testInput);
-        DoubleMatrix normalizedTestOutput = normalizer.normalize(testOutpout);
 
         for (int epochNumber = 0; epochNumber < epochCount; epochNumber++) {
             learningAlgorithm.updateLearningRate(learningRateUpdater.get(epochNumber));
-            for (BatchIterator batchIterator = BatchIterator.init(normalizedInput, normalizedOutput, batchSize); batchIterator.hasNext(); batchIterator.next()) {
+            for (BatchIterator batchIterator = BatchIterator.init(normalizedInput, outpout, batchSize); batchIterator.hasNext(); batchIterator.next()) {
                 DoubleMatrix subInput = batchIterator.getSubInput();
                 DoubleMatrix subOutput = batchIterator.getSubOutput();
 
@@ -69,7 +67,7 @@ public class NeuralNetwork {
                         .withType(costType)
                         .build();
                 double learningCost = costComputer.compute(subInput, subOutput);
-                double testCost = costComputer.compute(normalizedTestInput, normalizedTestOutput);
+                double testCost = costComputer.compute(normalizedTestInput, testOutpout);
 
                 NeuralNetworkStats stats = new NeuralNetworkStats(learningCost, testCost, batchIterator.getBatchNumber(), epochNumber);
                 statsUpdateAction.accept(stats);

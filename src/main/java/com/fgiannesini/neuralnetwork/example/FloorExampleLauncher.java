@@ -11,6 +11,7 @@ import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithmType;
 import com.fgiannesini.neuralnetwork.learningrate.LearningRateUpdaterType;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
+import com.fgiannesini.neuralnetwork.normalizer.NormalizerType;
 import org.jblas.DoubleMatrix;
 
 import java.util.function.Consumer;
@@ -81,6 +82,7 @@ public class FloorExampleLauncher {
                 .withCostType(CostType.SOFT_MAX_REGRESSION)
                 .withNeuralNetworkStatsConsumer(statsUpdateAction)
                 .withHyperParameters(hyperParameters)
+                .withNormalizer(NormalizerType.MEAN_AND_DEVIATION.get())
                 .build();
     }
 
