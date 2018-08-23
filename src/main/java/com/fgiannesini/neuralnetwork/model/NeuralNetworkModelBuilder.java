@@ -1,6 +1,7 @@
 package com.fgiannesini.neuralnetwork.model;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
+import com.fgiannesini.neuralnetwork.initializer.Initializer;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 
 import java.util.ArrayList;
@@ -46,20 +47,42 @@ public class NeuralNetworkModelBuilder {
         return this;
     }
 
-    public NeuralNetworkModel build() {
+    public NeuralNetworkModel<WeightBiasLayer> buildWeightBiasModel() {
         checkInputs();
-        return buildNeuralNetworkModel();
+        return buildWeightBiasNeuralNetworkModel();
     }
 
-    private NeuralNetworkModel buildNeuralNetworkModel() {
+    private NeuralNetworkModel<WeightBiasLayer> buildWeightBiasNeuralNetworkModel() {
         int outputSize = layerNodeCounts.get(layerNodeCounts.size() - 1);
-        NeuralNetworkModel neuralNetworkModel = new NeuralNetworkModel(inputSize, outputSize, initializerType.getInitializer());
-
-        neuralNetworkModel.addLayer(inputSize, layerNodeCounts.get(0), layerActivationFunctions.get(0));
+        NeuralNetworkModel<WeightBiasLayer> neuralNetworkModel = new NeuralNetworkModel<>(inputSize, outputSize);
+        Initializer initializer = initializerType.getInitializer();
+        WeightBiasLayer firstWeightBiasLayer = new WeightBiasLayer(inputSize, layerNodeCounts.get(0), initializer, layerActivationFunctions.get(0));
+        neuralNetworkModel.addLayer(firstWeightBiasLayer);
         IntStream.range(1, layerNodeCounts.size()).forEach(i -> {
             Integer inputLayerSize = layerNodeCounts.get(i - 1);
             Integer outputLayerSize = layerNodeCounts.get(i);
-            neuralNetworkModel.addLayer(inputLayerSize, outputLayerSize, layerActivationFunctions.get(i));
+            WeightBiasLayer weightBiasLayer = new WeightBiasLayer(inputLayerSize, outputLayerSize, initializer, layerActivationFunctions.get(i));
+            neuralNetworkModel.addLayer(weightBiasLayer);
+        });
+        return neuralNetworkModel;
+    }
+
+    public NeuralNetworkModel<BatchNormLayer> buildBatchNormModel() {
+        checkInputs();
+        return buildBatchNormNeuralNetworkModel();
+    }
+
+    private NeuralNetworkModel<BatchNormLayer> buildBatchNormNeuralNetworkModel() {
+        int outputSize = layerNodeCounts.get(layerNodeCounts.size() - 1);
+        NeuralNetworkModel<BatchNormLayer> neuralNetworkModel = new NeuralNetworkModel<>(inputSize, outputSize);
+        Initializer initializer = initializerType.getInitializer();
+        BatchNormLayer firstBatchNormLayer = new BatchNormLayer(inputSize, layerNodeCounts.get(0), initializer, layerActivationFunctions.get(0));
+        neuralNetworkModel.addLayer(firstBatchNormLayer);
+        IntStream.range(1, layerNodeCounts.size()).forEach(i -> {
+            Integer inputLayerSize = layerNodeCounts.get(i - 1);
+            Integer outputLayerSize = layerNodeCounts.get(i);
+            BatchNormLayer batchNormLayer = new BatchNormLayer(inputLayerSize, outputLayerSize, initializer, layerActivationFunctions.get(i));
+            neuralNetworkModel.addLayer(batchNormLayer);
         });
         return neuralNetworkModel;
     }

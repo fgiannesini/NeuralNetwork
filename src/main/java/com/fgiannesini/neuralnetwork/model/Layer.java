@@ -6,20 +6,17 @@ import org.jblas.DoubleMatrix;
 
 import java.util.Objects;
 
-public class Layer implements Cloneable {
-
+public abstract class Layer implements Cloneable {
     private final int inputLayerSize;
     private final int outputLayerSize;
     private final ActivationFunctionType activationFunctionType;
     private DoubleMatrix weightMatrix;
-    private DoubleMatrix biasMatrix;
 
-    public Layer(int inputLayerSize, int outputLayerSize, Initializer initializer, ActivationFunctionType activationFunctionType) {
+    Layer(int inputLayerSize, int outputLayerSize, ActivationFunctionType activationFunctionType, Initializer initializer) {
         this.inputLayerSize = inputLayerSize;
-        this.outputLayerSize = outputLayerSize;
         this.activationFunctionType = activationFunctionType;
         weightMatrix = initializer.initDoubleMatrix(outputLayerSize, inputLayerSize);
-        biasMatrix = initializer.initDoubleMatrix(outputLayerSize, 1);
+        this.outputLayerSize = outputLayerSize;
     }
 
     public int getInputLayerSize() {
@@ -38,23 +35,31 @@ public class Layer implements Cloneable {
         this.weightMatrix = weightMatrix;
     }
 
-    public DoubleMatrix getBiasMatrix() {
-        return biasMatrix;
-    }
-
-    public void setBiasMatrix(DoubleMatrix biasMatrix) {
-        this.biasMatrix = biasMatrix;
-    }
-
     public ActivationFunctionType getActivationFunctionType() {
         return activationFunctionType;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Layer layer = (Layer) o;
+        return inputLayerSize == layer.inputLayerSize &&
+                outputLayerSize == layer.outputLayerSize &&
+                activationFunctionType == layer.activationFunctionType &&
+                Objects.equals(weightMatrix, layer.weightMatrix);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(inputLayerSize, outputLayerSize, activationFunctionType, weightMatrix);
     }
 
     @Override
     public Layer clone() {
         try {
             Layer clone = (Layer) super.clone();
-            clone.biasMatrix = biasMatrix.dup();
             clone.weightMatrix = weightMatrix.dup();
             return clone;
         } catch (CloneNotSupportedException e) {
@@ -63,19 +68,9 @@ public class Layer implements Cloneable {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Layer)) return false;
-        Layer layer = (Layer) o;
-        return inputLayerSize == layer.inputLayerSize &&
-                outputLayerSize == layer.outputLayerSize &&
-                activationFunctionType == layer.activationFunctionType &&
-                Objects.equals(weightMatrix, layer.weightMatrix) &&
-                Objects.equals(biasMatrix, layer.biasMatrix);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(inputLayerSize, outputLayerSize, activationFunctionType, weightMatrix, biasMatrix);
+    public String toString() {
+        return "Layer{" +
+                "weightMatrix=" + weightMatrix +
+                '}';
     }
 }

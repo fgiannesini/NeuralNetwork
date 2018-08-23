@@ -1,31 +1,26 @@
 package com.fgiannesini.neuralnetwork.model;
 
-import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
-import com.fgiannesini.neuralnetwork.initializer.Initializer;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class NeuralNetworkModel implements Cloneable {
+public class NeuralNetworkModel<L extends Layer> implements Cloneable {
 
     private final int inputSize;
     private final int outputSize;
-    private final Initializer initializer;
-    private List<Layer> layers;
+    private List<L> layers;
 
-    public NeuralNetworkModel(int inputSize, int outputSize, Initializer initializer) {
+    public NeuralNetworkModel(int inputSize, int outputSize) {
         this.inputSize = inputSize;
         this.outputSize = outputSize;
-        this.initializer = initializer;
         this.layers = new ArrayList<>();
     }
 
-    public void addLayer(int inputLayerSize, int outputLayerSize, ActivationFunctionType activationFunctionType) {
-        layers.add(new Layer(inputLayerSize, outputLayerSize, initializer, activationFunctionType));
+    public void addLayer(L layer) {
+        layers.add(layer);
     }
 
-    public List<Layer> getLayers() {
+    public List<L> getLayers() {
         return layers;
     }
 
@@ -50,6 +45,6 @@ public class NeuralNetworkModel implements Cloneable {
 
     @Override
     public String toString() {
-        return layers.stream().map(l -> l.getWeightMatrix().toString() + "\n" + l.getBiasMatrix()).collect(Collectors.joining("\n"));
+        return layers.stream().map(Object::toString).collect(Collectors.joining("\n"));
     }
 }

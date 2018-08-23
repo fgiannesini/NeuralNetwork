@@ -17,7 +17,7 @@ class LinearRegressionCostComputerTest {
                 .useInitializer(InitializerType.ONES)
                 .input(2)
                 .addLayer(2, ActivationFunctionType.NONE)
-                .build();
+                .buildWeightBiasModel();
         IFinalOutputComputer outputComputer = OutputComputerBuilder.init()
                 .withModel(neuralNetworkModel)
                 .buildFinalOutputComputer();
@@ -35,7 +35,7 @@ class LinearRegressionCostComputerTest {
                 .useInitializer(InitializerType.ONES)
                 .input(2)
                 .addLayer(2, ActivationFunctionType.NONE)
-                .build();
+                .buildWeightBiasModel();
         IFinalOutputComputer outputComputer = OutputComputerBuilder.init()
                 .withModel(neuralNetworkModel)
                 .buildFinalOutputComputer();

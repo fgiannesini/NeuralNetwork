@@ -1,7 +1,7 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm;
 
-import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
+import com.fgiannesini.neuralnetwork.model.WeightBiasLayer;
 import org.jblas.DoubleMatrix;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.function.Executable;
@@ -12,18 +12,18 @@ import java.util.List;
 
 public class NeuralNetworkAssertions {
 
-    public static void checkSameNeuralNetworks(NeuralNetworkModel firstNeuralNetworkModel, NeuralNetworkModel secondNeuralNetworkModel) {
+    public static void checkSameNeuralNetworks(NeuralNetworkModel<WeightBiasLayer> firstNeuralNetworkModel, NeuralNetworkModel<WeightBiasLayer> secondNeuralNetworkModel) {
         Assertions.assertAll(
                 () -> Assertions.assertEquals(firstNeuralNetworkModel.getOutputSize(), secondNeuralNetworkModel.getOutputSize()),
                 () -> Assertions.assertEquals(firstNeuralNetworkModel.getInputSize(), secondNeuralNetworkModel.getInputSize())
         );
 
-        List<Layer> firstLayers = firstNeuralNetworkModel.getLayers();
-        List<Layer> secondLayers = secondNeuralNetworkModel.getLayers();
+        List<WeightBiasLayer> firstLayers = firstNeuralNetworkModel.getLayers();
+        List<WeightBiasLayer> secondLayers = secondNeuralNetworkModel.getLayers();
         List<Executable> executables = new ArrayList<>();
         for (int i = 0; i < secondLayers.size(); i++) {
-            Layer firstLayer = firstLayers.get(i);
-            Layer secondLayer = secondLayers.get(i);
+            WeightBiasLayer firstLayer = firstLayers.get(i);
+            WeightBiasLayer secondLayer = secondLayers.get(i);
             executables.addAll(getMatrixAssertions(firstLayer.getWeightMatrix(), secondLayer.getWeightMatrix(), "Weight matrix"));
             executables.addAll(getMatrixAssertions(firstLayer.getBiasMatrix(), secondLayer.getBiasMatrix(), "Bias matrix"));
         }
@@ -38,10 +38,10 @@ public class NeuralNetworkAssertions {
         );
     }
 
-    public static void checkNeuralNetworksLayer(NeuralNetworkModel neuralNetworkModel, int layerIndex, double[][] expectedWeights, double[] expectedBias) {
+    public static void checkNeuralNetworksLayer(NeuralNetworkModel<WeightBiasLayer> neuralNetworkModel, int layerIndex, double[][] expectedWeights, double[] expectedBias) {
         DoubleMatrix expectedWeightsMatrix = new DoubleMatrix(expectedWeights).transpose();
         DoubleMatrix expectedBiasMatrix = new DoubleMatrix(expectedBias);
-        Layer layer = neuralNetworkModel.getLayers().get(layerIndex);
+        WeightBiasLayer layer = neuralNetworkModel.getLayers().get(layerIndex);
         List<Executable> matrixAssertions = new ArrayList<>();
         matrixAssertions.addAll(getMatrixAssertions(layer.getWeightMatrix(), expectedWeightsMatrix, "WeightMatrix"));
         matrixAssertions.addAll(getMatrixAssertions(layer.getBiasMatrix(), expectedBiasMatrix, "Bias Matrix"));

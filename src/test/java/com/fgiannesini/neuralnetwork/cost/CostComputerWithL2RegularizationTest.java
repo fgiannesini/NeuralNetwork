@@ -15,7 +15,7 @@ class CostComputerWithL2RegularizationTest {
                 .useInitializer(InitializerType.ONES)
                 .addLayer(4)
                 .addLayer(2)
-                .build();
+                .buildWeightBiasModel();
 
         double[][] input = {{1, 2, 3}, {1, 2, 3}, {1, 2, 3}};
         double[][] output = {{1, 2, 3}, {1, 2, 3}, {1, 2, 3}};

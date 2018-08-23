@@ -2,8 +2,8 @@ package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
-import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
+import com.fgiannesini.neuralnetwork.model.WeightBiasLayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class GradientDescentWithMomentumProcessProvider implements IGradientDescentProcessProvider {
     private final Double momentumCoeff;
     private final IGradientDescentProcessProvider processProvider;
-    private final List<Layer> momentumLayers;
+    private final List<WeightBiasLayer> momentumLayers;
 
     public GradientDescentWithMomentumProcessProvider(IGradientDescentProcessProvider processProvider, Double momentumCoeff) {
         this.momentumCoeff = momentumCoeff;
@@ -25,14 +25,14 @@ public class GradientDescentWithMomentumProcessProvider implements IGradientDesc
     public Function<GradientDescentCorrectionsContainer, GradientDescentCorrectionsContainer> getGradientDescentCorrectionsLauncher() {
         return container -> {
             NeuralNetworkModel correctedNeuralNetworkModel = container.getCorrectedNeuralNetworkModel();
-            List<Layer> layers = correctedNeuralNetworkModel.getLayers();
+            List<WeightBiasLayer> layers = correctedNeuralNetworkModel.getLayers();
             if (momentumLayers.isEmpty()) {
                 momentumLayers.addAll(initMomentumLayers(layers));
             }
             for (int layerIndex = 0; layerIndex < layers.size(); layerIndex++) {
                 GradientDescentCorrection gradientDescentCorrection = container.getGradientDescentCorrections().get(layerIndex);
-                Layer layer = layers.get(layerIndex);
-                Layer momentumLayer = momentumLayers.get(layerIndex);
+                WeightBiasLayer layer = layers.get(layerIndex);
+                WeightBiasLayer momentumLayer = momentumLayers.get(layerIndex);
 
                 //Vdw = m*Vdw + (1 - m)*dW
                 momentumLayer.setWeightMatrix(momentumLayer.getWeightMatrix().muli(momentumCoeff).addi(gradientDescentCorrection.getWeightCorrectionResults().mul(1d - momentumCoeff)));
@@ -46,9 +46,9 @@ public class GradientDescentWithMomentumProcessProvider implements IGradientDesc
         };
     }
 
-    private List<Layer> initMomentumLayers(List<Layer> layers) {
+    private List<WeightBiasLayer> initMomentumLayers(List<WeightBiasLayer> layers) {
         return layers.stream()
-                .map(layer -> new Layer(layer.getInputLayerSize(), layer.getOutputLayerSize(), InitializerType.ZEROS.getInitializer(), ActivationFunctionType.NONE))
+                .map(layer -> new WeightBiasLayer(layer.getInputLayerSize(), layer.getOutputLayerSize(), InitializerType.ZEROS.getInitializer(), ActivationFunctionType.NONE))
                 .collect(Collectors.toList());
     }
 

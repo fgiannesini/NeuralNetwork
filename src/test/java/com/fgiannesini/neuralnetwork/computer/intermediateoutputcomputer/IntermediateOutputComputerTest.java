@@ -20,7 +20,7 @@ class IntermediateOutputComputerTest {
                 .addLayer(4, ActivationFunctionType.NONE)
                 .addLayer(2, ActivationFunctionType.NONE)
                 .useInitializer(InitializerType.ONES)
-                .build();
+                .buildWeightBiasModel();
 
         double[] inputData = new double[3];
         Arrays.fill(inputData, 1);
@@ -45,7 +45,7 @@ class IntermediateOutputComputerTest {
                 .addLayer(2, ActivationFunctionType.NONE)
                 .addLayer(2, ActivationFunctionType.NONE)
                 .useInitializer(InitializerType.ONES)
-                .build();
+                .buildWeightBiasModel();
 
         double[] inputData = new double[3];
         Arrays.fill(inputData, 1);
@@ -70,7 +70,7 @@ class IntermediateOutputComputerTest {
                 .addLayer(2, ActivationFunctionType.NONE)
                 .addLayer(2, ActivationFunctionType.NONE)
                 .useInitializer(InitializerType.ONES)
-                .build();
+                .buildWeightBiasModel();
 
         double[][] inputData = {
                 {1, 1, 1},

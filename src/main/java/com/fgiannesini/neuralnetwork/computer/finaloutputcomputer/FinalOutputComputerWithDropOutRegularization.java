@@ -1,15 +1,15 @@
 package com.fgiannesini.neuralnetwork.computer.finaloutputcomputer;
 
 import com.fgiannesini.neuralnetwork.computer.LayerComputerHelper;
-import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
+import com.fgiannesini.neuralnetwork.model.WeightBiasLayer;
 import org.jblas.DoubleMatrix;
 
 import java.util.List;
 
 public class FinalOutputComputerWithDropOutRegularization implements IFinalOutputComputer {
 
-    private final NeuralNetworkModel model;
+    private final NeuralNetworkModel<WeightBiasLayer> model;
     private final List<DoubleMatrix> dropOutMatrixList;
 
     public FinalOutputComputerWithDropOutRegularization(NeuralNetworkModel model, List<DoubleMatrix> dropOutMatrixList) {
@@ -20,7 +20,7 @@ public class FinalOutputComputerWithDropOutRegularization implements IFinalOutpu
     public DoubleMatrix compute(DoubleMatrix inputMatrix) {
         DoubleMatrix currentMatrix = inputMatrix.dup().muliColumnVector(dropOutMatrixList.get(0));
         for (int layerIndex = 0, dropOutIndex = 1; layerIndex < model.getLayers().size(); layerIndex++, dropOutIndex++) {
-            Layer layer = model.getLayers().get(layerIndex);
+            WeightBiasLayer layer = model.getLayers().get(layerIndex);
             currentMatrix = LayerComputerHelper.computeZFromInput(currentMatrix, layer);
             currentMatrix.muliColumnVector(dropOutMatrixList.get(dropOutIndex));
             currentMatrix = LayerComputerHelper.computeAFromZ(currentMatrix, layer);

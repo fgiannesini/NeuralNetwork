@@ -9,6 +9,7 @@ import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderiva
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivationProcessProvider;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
+import com.fgiannesini.neuralnetwork.model.WeightBiasLayer;
 import org.jblas.DoubleMatrix;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,7 @@ class GradientDescentOnLinearRegressionTest {
                     .useInitializer(InitializerType.ONES)
                     .input(2)
                     .addLayer(2, ActivationFunctionType.NONE)
-                    .build();
+                    .buildWeightBiasModel();
 
             double[] input = new double[]{1, 2};
             double[] output = new double[]{4, 4};
@@ -45,7 +46,7 @@ class GradientDescentOnLinearRegressionTest {
                     .input(2)
                     .addLayer(3, ActivationFunctionType.NONE)
                     .addLayer(2, ActivationFunctionType.NONE)
-                    .build();
+                    .buildWeightBiasModel();
 
             double[] input = new double[]{1, 2};
             double[] output = new double[]{13, 13};
@@ -67,7 +68,7 @@ class GradientDescentOnLinearRegressionTest {
                     .input(2)
                     .addLayer(3, ActivationFunctionType.NONE)
                     .addLayer(2, ActivationFunctionType.NONE)
-                    .build();
+                    .buildWeightBiasModel();
 
             double[][] input = new double[][]{
                     {1, 2},
@@ -99,7 +100,7 @@ class GradientDescentOnLinearRegressionTest {
                     .useInitializer(InitializerType.ONES)
                     .input(2)
                     .addLayer(2, ActivationFunctionType.NONE)
-                    .build();
+                    .buildWeightBiasModel();
 
             double[] input = new double[]{1, 2};
             double[] output = new double[]{3, 5};
@@ -126,7 +127,7 @@ class GradientDescentOnLinearRegressionTest {
                     .input(2)
                     .addLayer(3, ActivationFunctionType.NONE)
                     .addLayer(2, ActivationFunctionType.NONE)
-                    .build();
+                    .buildWeightBiasModel();
 
             double[] input = new double[]{1, 2};
             double[] output = new double[]{10, 15};
@@ -162,7 +163,7 @@ class GradientDescentOnLinearRegressionTest {
                     .input(2)
                     .addLayer(3, ActivationFunctionType.NONE)
                     .addLayer(2, ActivationFunctionType.NONE)
-                    .build();
+                    .buildWeightBiasModel();
 
             double[][] input = new double[][]{
                     {1, 2},
@@ -203,12 +204,12 @@ class GradientDescentOnLinearRegressionTest {
 
         @Test
         void learn_on_vector_with_two_hidden_layers_and_sigmoid_activation_function() {
-            NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
+            NeuralNetworkModel<WeightBiasLayer> neuralNetworkModel = NeuralNetworkModelBuilder.init()
                     .useInitializer(InitializerType.ZEROS)
                     .input(2)
                     .addLayer(2, ActivationFunctionType.SIGMOID)
                     .addLayer(2, ActivationFunctionType.SIGMOID)
-                    .build();
+                    .buildWeightBiasModel();
 
             double[][] firstWeightMatrix = new double[][]{
                     {0.15, 0.2},

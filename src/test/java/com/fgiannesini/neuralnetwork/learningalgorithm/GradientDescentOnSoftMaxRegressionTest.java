@@ -22,7 +22,7 @@ class GradientDescentOnSoftMaxRegressionTest {
                     .useInitializer(InitializerType.ONES)
                     .input(2)
                     .addLayer(2, ActivationFunctionType.SOFT_MAX)
-                    .build();
+                    .buildWeightBiasModel();
 
             double[] input = new double[]{1, 2};
             double[] output = new double[]{1, 0};
@@ -44,7 +44,7 @@ class GradientDescentOnSoftMaxRegressionTest {
                     .input(2)
                     .addLayer(3, ActivationFunctionType.NONE)
                     .addLayer(2, ActivationFunctionType.SOFT_MAX)
-                    .build();
+                    .buildWeightBiasModel();
 
             double[] input = new double[]{1, 2};
             double[] output = new double[]{1, 0};
@@ -64,7 +64,7 @@ class GradientDescentOnSoftMaxRegressionTest {
                     .input(2)
                     .addLayer(3, ActivationFunctionType.RELU)
                     .addLayer(2, ActivationFunctionType.SOFT_MAX)
-                    .build();
+                    .buildWeightBiasModel();
 
             double[][] input = new double[][]{
                     {1, 2},

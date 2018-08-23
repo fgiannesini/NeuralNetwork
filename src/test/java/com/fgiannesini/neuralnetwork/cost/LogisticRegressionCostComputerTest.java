@@ -18,7 +18,7 @@ class LogisticRegressionCostComputerTest {
                 .input(3)
                 .addLayer(4, ActivationFunctionType.NONE)
                 .addLayer(2, ActivationFunctionType.SIGMOID)
-                .build();
+                .buildWeightBiasModel();
         IFinalOutputComputer outputComputer = OutputComputerBuilder.init()
                 .withModel(neuralNetworkModel)
                 .buildFinalOutputComputer();
@@ -34,7 +34,7 @@ class LogisticRegressionCostComputerTest {
                 .input(3)
                 .addLayer(4, ActivationFunctionType.NONE)
                 .addLayer(2, ActivationFunctionType.SIGMOID)
-                .build();
+                .buildWeightBiasModel();
         IFinalOutputComputer outputComputer = OutputComputerBuilder.init()
                 .withModel(neuralNetworkModel)
                 .buildFinalOutputComputer();

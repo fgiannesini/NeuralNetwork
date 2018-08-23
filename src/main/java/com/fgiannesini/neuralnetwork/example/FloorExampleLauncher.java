@@ -74,7 +74,7 @@ public class FloorExampleLauncher {
             neuralNetworkModelBuilder.addLayer(hiddenLayerIndex, ActivationFunctionType.RELU);
         }
         neuralNetworkModelBuilder.addLayer(10, ActivationFunctionType.SOFT_MAX);
-        NeuralNetworkModel neuralNetworkModel = neuralNetworkModelBuilder.build();
+        NeuralNetworkModel neuralNetworkModel = neuralNetworkModelBuilder.buildWeightBiasModel();
 
         return NeuralNetworkBuilder.init()
                 .withNeuralNetworkModel(neuralNetworkModel)

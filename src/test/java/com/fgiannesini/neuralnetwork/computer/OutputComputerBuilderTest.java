@@ -27,7 +27,7 @@ class OutputComputerBuilderTest {
         NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                 .input(1)
                 .addLayer(1)
-                .build();
+                .buildWeightBiasModel();
 
         IFinalOutputComputer finalOutputComputer = OutputComputerBuilder.init()
                 .withModel(neuralNetworkModel)
@@ -41,7 +41,7 @@ class OutputComputerBuilderTest {
         NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                 .input(1)
                 .addLayer(1)
-                .build();
+                .buildWeightBiasModel();
 
         IFinalOutputComputer finalOutputComputer = OutputComputerBuilder.init()
                 .withModel(neuralNetworkModel)
@@ -56,7 +56,7 @@ class OutputComputerBuilderTest {
         NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                 .input(1)
                 .addLayer(1)
-                .build();
+                .buildWeightBiasModel();
 
         IIntermediateOutputComputer outputComputer = OutputComputerBuilder.init()
                 .withModel(neuralNetworkModel)
@@ -70,7 +70,7 @@ class OutputComputerBuilderTest {
         NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                 .input(1)
                 .addLayer(1)
-                .build();
+                .buildWeightBiasModel();
 
         IIntermediateOutputComputer outputComputer = OutputComputerBuilder.init()
                 .withModel(neuralNetworkModel)

@@ -27,7 +27,7 @@ class NeuralNetworkBuilderTest {
                         NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                                 .input(1)
                                 .addLayer(1)
-                                .build();
+                                .buildWeightBiasModel();
                         return NeuralNetworkBuilder.init()
                                 .withNeuralNetworkModel(neuralNetworkModel)
                                 .build();
@@ -44,7 +44,7 @@ class NeuralNetworkBuilderTest {
             NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                     .input(1)
                     .addLayer(1)
-                    .build();
+                    .buildWeightBiasModel();
             NeuralNetwork neuralNetwork = NeuralNetworkBuilder.init()
                     .withNeuralNetworkModel(neuralNetworkModel)
                     .withHyperParameters(new HyperParameters())

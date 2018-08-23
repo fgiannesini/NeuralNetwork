@@ -17,7 +17,7 @@ class DropOutUtilsTest {
                 .input(3)
                 .addLayer(2000)
                 .addLayer(1000)
-                .build();
+                .buildWeightBiasModel();
         double[] dropOutParameters = {1, 0.4, 0.8};
         List<DoubleMatrix> dropOutMatrixList = DropOutUtils.init()
                 .getDropOutMatrix(dropOutParameters, neuralNetworkModel.getLayers());

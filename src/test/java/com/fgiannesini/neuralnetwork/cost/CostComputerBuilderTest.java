@@ -69,7 +69,7 @@ class CostComputerBuilderTest {
         return NeuralNetworkModelBuilder.init()
                 .input(1)
                 .addLayer(1)
-                .build();
+                .buildWeightBiasModel();
     }
 
 }

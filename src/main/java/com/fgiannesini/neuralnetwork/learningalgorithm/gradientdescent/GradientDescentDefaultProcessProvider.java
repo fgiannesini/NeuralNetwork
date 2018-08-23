@@ -2,8 +2,8 @@ package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent;
 
 import com.fgiannesini.neuralnetwork.computer.OutputComputerBuilder;
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IIntermediateOutputComputer;
-import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
+import com.fgiannesini.neuralnetwork.model.WeightBiasLayer;
 import org.jblas.DoubleMatrix;
 
 import java.util.ArrayList;
@@ -17,10 +17,10 @@ public class GradientDescentDefaultProcessProvider implements IGradientDescentPr
     public Function<GradientDescentCorrectionsContainer, GradientDescentCorrectionsContainer> getGradientDescentCorrectionsLauncher() {
         return container -> {
             NeuralNetworkModel correctedNeuralNetworkModel = container.getCorrectedNeuralNetworkModel();
-            List<Layer> layers = correctedNeuralNetworkModel.getLayers();
+            List<WeightBiasLayer> layers = correctedNeuralNetworkModel.getLayers();
             for (int layerIndex = 0; layerIndex < layers.size(); layerIndex++) {
                 GradientDescentCorrection gradientDescentCorrection = container.getGradientDescentCorrections().get(layerIndex);
-                Layer layer = layers.get(layerIndex);
+                WeightBiasLayer layer = layers.get(layerIndex);
                 layer.getWeightMatrix().subi(gradientDescentCorrection.getWeightCorrectionResults().mul(container.getLearningRate()));
                 layer.getBiasMatrix().subi(gradientDescentCorrection.getBiasCorrectionResults().mul(container.getLearningRate()));
             }
@@ -92,7 +92,7 @@ public class GradientDescentDefaultProcessProvider implements IGradientDescentPr
     @Override
     public Function<ForwardComputationContainer, GradientLayerProvider> getForwardComputationLauncher() {
         return container -> {
-            List<Layer> layers = container.getNeuralNetworkModel().getLayers();
+            List<WeightBiasLayer> layers = container.getNeuralNetworkModel().getLayers();
             IIntermediateOutputComputer intermediateOutputComputer = OutputComputerBuilder.init()
                     .withModel(container.getNeuralNetworkModel())
                     .buildIntermediateOutputComputer();

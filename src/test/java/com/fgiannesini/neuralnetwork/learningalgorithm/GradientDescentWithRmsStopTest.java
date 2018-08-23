@@ -26,7 +26,7 @@ class GradientDescentWithRmsStopTest {
                     .input(2)
                     .addLayer(3, ActivationFunctionType.NONE)
                     .addLayer(2, ActivationFunctionType.NONE)
-                    .build();
+                    .buildWeightBiasModel();
 
             double[][] input = new double[][]{
                     {1, 2},
@@ -71,7 +71,7 @@ class GradientDescentWithRmsStopTest {
                     .input(2)
                     .addLayer(3, ActivationFunctionType.NONE)
                     .addLayer(2, ActivationFunctionType.NONE)
-                    .build();
+                    .buildWeightBiasModel();
 
             double[][] input = new double[][]{
                     {1, 2},

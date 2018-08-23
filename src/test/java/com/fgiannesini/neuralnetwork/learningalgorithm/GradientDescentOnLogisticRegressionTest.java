@@ -22,7 +22,7 @@ class GradientDescentOnLogisticRegressionTest {
                     .useInitializer(InitializerType.ONES)
                     .input(2)
                     .addLayer(2, ActivationFunctionType.SIGMOID)
-                    .build();
+                    .buildWeightBiasModel();
 
             double[] input = new double[]{3, 4};
             double[] output = new double[]{1, 0};
@@ -43,7 +43,7 @@ class GradientDescentOnLogisticRegressionTest {
                     .input(2)
                     .addLayer(3, ActivationFunctionType.SIGMOID)
                     .addLayer(2, ActivationFunctionType.SIGMOID)
-                    .build();
+                    .buildWeightBiasModel();
 
             double[] input = new double[]{3, 4};
             double[] output = new double[]{1, 0};
@@ -63,7 +63,7 @@ class GradientDescentOnLogisticRegressionTest {
                     .input(2)
                     .addLayer(3, ActivationFunctionType.SIGMOID)
                     .addLayer(2, ActivationFunctionType.SIGMOID)
-                    .build();
+                    .buildWeightBiasModel();
 
             double[][] input = new double[][]{
                     {1, 2},

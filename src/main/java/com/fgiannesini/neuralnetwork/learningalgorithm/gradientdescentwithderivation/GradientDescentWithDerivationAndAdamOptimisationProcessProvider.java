@@ -5,8 +5,8 @@ import com.fgiannesini.neuralnetwork.cost.CostComputer;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.DataContainer;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescentCorrection;
-import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
+import com.fgiannesini.neuralnetwork.model.WeightBiasLayer;
 import org.jblas.DoubleMatrix;
 import org.jblas.MatrixFunctions;
 
@@ -19,8 +19,8 @@ public class GradientDescentWithDerivationAndAdamOptimisationProcessProvider imp
     private final IGradientDescentWithDerivationProcessProvider processProvider;
     private final Double momentumCoeff;
     private final Double rmsStopCoeff;
-    private final List<Layer> momentumLayers;
-    private final List<Layer> rmsStopLayers;
+    private final List<WeightBiasLayer> momentumLayers;
+    private final List<WeightBiasLayer> rmsStopLayers;
     private final Double epsilon;
 
     public GradientDescentWithDerivationAndAdamOptimisationProcessProvider(IGradientDescentWithDerivationProcessProvider processProvider, Double momentumCoeff, Double rmsStopCoeff) {
@@ -36,7 +36,7 @@ public class GradientDescentWithDerivationAndAdamOptimisationProcessProvider imp
     public Function<GradientDescentWithDerivationCorrectionsContainer, GradientDescentWithDerivationCorrectionsContainer> getGradientDescentCorrectionsLauncher() {
         return container -> {
             NeuralNetworkModel correctedNeuralNetworkModel = container.getCorrectedNeuralNetworkModel();
-            List<Layer> layers = correctedNeuralNetworkModel.getLayers();
+            List<WeightBiasLayer> layers = correctedNeuralNetworkModel.getLayers();
             if (momentumLayers.isEmpty()) {
                 momentumLayers.addAll(initLayers(layers));
             }
@@ -45,9 +45,9 @@ public class GradientDescentWithDerivationAndAdamOptimisationProcessProvider imp
             }
             for (int layerIndex = 0; layerIndex < layers.size(); layerIndex++) {
                 GradientDescentCorrection gradientDescentCorrection = container.getGradientDescentCorrections().get(layerIndex);
-                Layer layer = layers.get(layerIndex);
-                Layer momentumLayer = momentumLayers.get(layerIndex);
-                Layer rmsStopLayer = rmsStopLayers.get(layerIndex);
+                WeightBiasLayer layer = layers.get(layerIndex);
+                WeightBiasLayer momentumLayer = momentumLayers.get(layerIndex);
+                WeightBiasLayer rmsStopLayer = rmsStopLayers.get(layerIndex);
 
                 //Vdw = m*Vdw + (1 - m)*dW
                 momentumLayer.setWeightMatrix(momentumLayer.getWeightMatrix().muli(momentumCoeff).addi(gradientDescentCorrection.getWeightCorrectionResults().mul(1d - momentumCoeff)));
@@ -69,9 +69,9 @@ public class GradientDescentWithDerivationAndAdamOptimisationProcessProvider imp
         };
     }
 
-    private List<Layer> initLayers(List<Layer> layers) {
+    private List<WeightBiasLayer> initLayers(List<WeightBiasLayer> layers) {
         return layers.stream()
-                .map(layer -> new Layer(layer.getInputLayerSize(), layer.getOutputLayerSize(), InitializerType.ZEROS.getInitializer(), ActivationFunctionType.NONE))
+                .map(layer -> new WeightBiasLayer(layer.getInputLayerSize(), layer.getOutputLayerSize(), InitializerType.ZEROS.getInitializer(), ActivationFunctionType.NONE))
                 .collect(Collectors.toList());
     }
 

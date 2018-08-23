@@ -1,8 +1,8 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.regularization.l2;
 
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.*;
-import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
+import com.fgiannesini.neuralnetwork.model.WeightBiasLayer;
 
 import java.util.List;
 import java.util.function.Function;
@@ -24,11 +24,11 @@ public class GradientDescentWithL2RegularizationProcessProvider implements IGrad
         return gradientDescentProcessProvider.getGradientDescentCorrectionsLauncher()
                 .andThen(gradientDescentCorrectionsContainer -> {
                     NeuralNetworkModel neuralNetworkModel = gradientDescentCorrectionsContainer.getCorrectedNeuralNetworkModel();
-                    List<Layer> layers = neuralNetworkModel.getLayers();
-                    List<Layer> originalLayers = originalNeuralNetworkModel.getLayers();
+                    List<WeightBiasLayer> layers = neuralNetworkModel.getLayers();
+                    List<WeightBiasLayer> originalLayers = originalNeuralNetworkModel.getLayers();
                     for (int layerIndex = 0; layerIndex < layers.size(); layerIndex++) {
-                        Layer layer = layers.get(layerIndex);
-                        Layer originalLayer = originalLayers.get(layerIndex);
+                        WeightBiasLayer layer = layers.get(layerIndex);
+                        WeightBiasLayer originalLayer = originalLayers.get(layerIndex);
                         layer.getWeightMatrix().subi(originalLayer.getWeightMatrix().mul(gradientDescentCorrectionsContainer.getLearningRate() * regularizationCoeff / gradientDescentCorrectionsContainer.getInputCount()));
                     }
                     return new GradientDescentCorrectionsContainer(neuralNetworkModel, gradientDescentCorrectionsContainer.getGradientDescentCorrections(), gradientDescentCorrectionsContainer.getInputCount(), gradientDescentCorrectionsContainer.getLearningRate());

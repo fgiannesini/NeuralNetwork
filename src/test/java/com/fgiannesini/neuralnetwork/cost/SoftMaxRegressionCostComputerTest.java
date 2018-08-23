@@ -18,7 +18,7 @@ class SoftMaxRegressionCostComputerTest {
                 .input(3)
                 .addLayer(4, ActivationFunctionType.NONE)
                 .addLayer(2, ActivationFunctionType.SOFT_MAX)
-                .build();
+                .buildWeightBiasModel();
         IFinalOutputComputer outputComputer = OutputComputerBuilder.init()
                 .withModel(neuralNetworkModel)
                 .buildFinalOutputComputer();
@@ -34,7 +34,7 @@ class SoftMaxRegressionCostComputerTest {
                 .input(3)
                 .addLayer(4, ActivationFunctionType.NONE)
                 .addLayer(2, ActivationFunctionType.SOFT_MAX)
-                .build();
+                .buildWeightBiasModel();
         IFinalOutputComputer outputComputer = OutputComputerBuilder.init()
                 .withModel(neuralNetworkModel)
                 .buildFinalOutputComputer();
