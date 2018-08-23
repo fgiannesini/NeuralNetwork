@@ -4,6 +4,8 @@ import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import com.fgiannesini.neuralnetwork.initializer.Initializer;
 import org.jblas.DoubleMatrix;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 public class BatchNormLayer extends Layer implements Cloneable {
@@ -31,6 +33,11 @@ public class BatchNormLayer extends Layer implements Cloneable {
         clone.gammaMatrix = gammaMatrix.dup();
         clone.betaMatrix = betaMatrix.dup();
         return clone;
+    }
+
+    @Override
+    public List<DoubleMatrix> getParametersMatrix() {
+        return Arrays.asList(getWeightMatrix(), getGammaMatrix(), getBetaMatrix());
     }
 
     @Override

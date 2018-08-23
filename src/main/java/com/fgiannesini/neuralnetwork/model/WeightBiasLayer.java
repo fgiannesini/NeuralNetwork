@@ -4,6 +4,8 @@ import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import com.fgiannesini.neuralnetwork.initializer.Initializer;
 import org.jblas.DoubleMatrix;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 public class WeightBiasLayer extends Layer implements Cloneable {
@@ -28,6 +30,11 @@ public class WeightBiasLayer extends Layer implements Cloneable {
         WeightBiasLayer clone = (WeightBiasLayer) super.clone();
         clone.biasMatrix = biasMatrix.dup();
         return clone;
+    }
+
+    @Override
+    public List<DoubleMatrix> getParametersMatrix() {
+        return Arrays.asList(getWeightMatrix(), getBiasMatrix());
     }
 
     @Override

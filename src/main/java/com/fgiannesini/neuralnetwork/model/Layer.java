@@ -4,6 +4,7 @@ import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import com.fgiannesini.neuralnetwork.initializer.Initializer;
 import org.jblas.DoubleMatrix;
 
+import java.util.List;
 import java.util.Objects;
 
 public abstract class Layer implements Cloneable {
@@ -39,6 +40,7 @@ public abstract class Layer implements Cloneable {
         return activationFunctionType;
     }
 
+    public abstract List<DoubleMatrix> getParametersMatrix();
 
     @Override
     public boolean equals(Object o) {

@@ -1,5 +1,6 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm;
 
+import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.WeightBiasLayer;
 import org.jblas.DoubleMatrix;
@@ -12,39 +13,41 @@ import java.util.List;
 
 public class NeuralNetworkAssertions {
 
-    public static void checkSameNeuralNetworks(NeuralNetworkModel<WeightBiasLayer> firstNeuralNetworkModel, NeuralNetworkModel<WeightBiasLayer> secondNeuralNetworkModel) {
+    public static void checkSameNeuralNetworks(NeuralNetworkModel<? extends Layer> firstNeuralNetworkModel, NeuralNetworkModel<WeightBiasLayer> secondNeuralNetworkModel) {
         Assertions.assertAll(
                 () -> Assertions.assertEquals(firstNeuralNetworkModel.getOutputSize(), secondNeuralNetworkModel.getOutputSize()),
                 () -> Assertions.assertEquals(firstNeuralNetworkModel.getInputSize(), secondNeuralNetworkModel.getInputSize())
         );
 
-        List<WeightBiasLayer> firstLayers = firstNeuralNetworkModel.getLayers();
-        List<WeightBiasLayer> secondLayers = secondNeuralNetworkModel.getLayers();
+        List<? extends Layer> firstLayers = firstNeuralNetworkModel.getLayers();
+        List<? extends Layer> secondLayers = secondNeuralNetworkModel.getLayers();
         List<Executable> executables = new ArrayList<>();
         for (int i = 0; i < secondLayers.size(); i++) {
-            WeightBiasLayer firstLayer = firstLayers.get(i);
-            WeightBiasLayer secondLayer = secondLayers.get(i);
-            executables.addAll(getMatrixAssertions(firstLayer.getWeightMatrix(), secondLayer.getWeightMatrix(), "Weight matrix"));
-            executables.addAll(getMatrixAssertions(firstLayer.getBiasMatrix(), secondLayer.getBiasMatrix(), "Bias matrix"));
+            List<DoubleMatrix> firstParameterMatrix = firstLayers.get(i).getParametersMatrix();
+            List<DoubleMatrix> secondParameterMatrix = secondLayers.get(i).getParametersMatrix();
+            Assertions.assertEquals(firstParameterMatrix.size(), secondParameterMatrix.size());
+            for (int j = 0; j < secondParameterMatrix.size(); j++) {
+                executables.addAll(getMatrixAssertions(firstParameterMatrix.get(j), secondParameterMatrix.get(j)));
+            }
         }
         Assertions.assertAll(executables);
     }
 
-    private static List<Executable> getMatrixAssertions(DoubleMatrix currentMatrix, DoubleMatrix expectedMatrix, String assertedMatrix) {
+    private static List<Executable> getMatrixAssertions(DoubleMatrix currentMatrix, DoubleMatrix expectedMatrix) {
         return Arrays.asList(
                 () -> Assertions.assertEquals(expectedMatrix.getColumns(), currentMatrix.getColumns()),
                 () -> Assertions.assertEquals(expectedMatrix.getRows(), currentMatrix.getRows()),
-                () -> Assertions.assertArrayEquals(expectedMatrix.data, currentMatrix.data, 0.00001, assertedMatrix + " are differents")
+                () -> Assertions.assertArrayEquals(expectedMatrix.data, currentMatrix.data, 0.00001)
         );
     }
 
-    public static void checkNeuralNetworksLayer(NeuralNetworkModel<WeightBiasLayer> neuralNetworkModel, int layerIndex, double[][] expectedWeights, double[] expectedBias) {
-        DoubleMatrix expectedWeightsMatrix = new DoubleMatrix(expectedWeights).transpose();
-        DoubleMatrix expectedBiasMatrix = new DoubleMatrix(expectedBias);
-        WeightBiasLayer layer = neuralNetworkModel.getLayers().get(layerIndex);
+    public static void checkNeuralNetworksLayer(NeuralNetworkModel<? extends Layer> neuralNetworkModel, int layerIndex, List<DoubleMatrix> expectedParametersMatrix) {
+        Layer layer = neuralNetworkModel.getLayers().get(layerIndex);
         List<Executable> matrixAssertions = new ArrayList<>();
-        matrixAssertions.addAll(getMatrixAssertions(layer.getWeightMatrix(), expectedWeightsMatrix, "WeightMatrix"));
-        matrixAssertions.addAll(getMatrixAssertions(layer.getBiasMatrix(), expectedBiasMatrix, "Bias Matrix"));
+        List<DoubleMatrix> parametersMatrix = layer.getParametersMatrix();
+        for (int i = 0; i < parametersMatrix.size(); i++) {
+            matrixAssertions.addAll(getMatrixAssertions(parametersMatrix.get(i), expectedParametersMatrix.get(i)));
+        }
         Assertions.assertAll(matrixAssertions);
     }
 
