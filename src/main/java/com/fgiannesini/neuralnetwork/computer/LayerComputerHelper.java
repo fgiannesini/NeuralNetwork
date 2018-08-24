@@ -9,11 +9,7 @@ import org.jblas.MatrixFunctions;
 
 public class LayerComputerHelper {
 
-    private static double epsilon;
-
-    public LayerComputerHelper() {
-        epsilon = Math.pow(10, -8);
-    }
+    private static double epsilon = Math.pow(10, -8);
 
     public static DoubleMatrix computeAFromZ(DoubleMatrix z, Layer layer) {
         ActivationFunctionApplier activationFunctionApplier = layer.getActivationFunctionType().getActivationFunction();
@@ -40,12 +36,12 @@ public class LayerComputerHelper {
         DoubleMatrix z = layer.getWeightMatrix().mmul(input);
 
         //mean
-        DoubleMatrix means = input.rowMeans();
+        DoubleMatrix means = z.rowMeans();
 
         //sigma
-        DoubleMatrix standardDeviation = MatrixFunctions.sqrt(MatrixFunctions.pow(input.subColumnVector(means), 2).rowMeans().addi(epsilon));
+        DoubleMatrix standardDeviation = MatrixFunctions.sqrt(MatrixFunctions.pow(z.subColumnVector(means), 2).rowMeans().addi(epsilon));
 
         //Z2 = (Z1 - mean) / sigma * gamma + beta
-        return z.subColumnVector(means).diviColumnVector(standardDeviation).muliColumnVector(layer.getGammaMatrix()).addi(layer.getBetaMatrix());
+        return z.subColumnVector(means).diviColumnVector(standardDeviation).muliColumnVector(layer.getGammaMatrix()).addiColumnVector(layer.getBetaMatrix());
     }
 }
