@@ -54,7 +54,7 @@ public class NeuralNetworkModelBuilder {
 
     private NeuralNetworkModel<WeightBiasLayer> buildWeightBiasNeuralNetworkModel() {
         int outputSize = layerNodeCounts.get(layerNodeCounts.size() - 1);
-        NeuralNetworkModel<WeightBiasLayer> neuralNetworkModel = new NeuralNetworkModel<>(inputSize, outputSize);
+        NeuralNetworkModel<WeightBiasLayer> neuralNetworkModel = new NeuralNetworkModel<>(inputSize, outputSize, LayerType.WEIGHT_BIAS);
         Initializer initializer = initializerType.getInitializer();
         WeightBiasLayer firstWeightBiasLayer = new WeightBiasLayer(inputSize, layerNodeCounts.get(0), initializer, layerActivationFunctions.get(0));
         neuralNetworkModel.addLayer(firstWeightBiasLayer);
@@ -74,7 +74,7 @@ public class NeuralNetworkModelBuilder {
 
     private NeuralNetworkModel<BatchNormLayer> buildBatchNormNeuralNetworkModel() {
         int outputSize = layerNodeCounts.get(layerNodeCounts.size() - 1);
-        NeuralNetworkModel<BatchNormLayer> neuralNetworkModel = new NeuralNetworkModel<>(inputSize, outputSize);
+        NeuralNetworkModel<BatchNormLayer> neuralNetworkModel = new NeuralNetworkModel<>(inputSize, outputSize, LayerType.BATCH_NORM);
         Initializer initializer = initializerType.getInitializer();
         BatchNormLayer firstBatchNormLayer = new BatchNormLayer(inputSize, layerNodeCounts.get(0), initializer, layerActivationFunctions.get(0));
         neuralNetworkModel.addLayer(firstBatchNormLayer);
@@ -95,4 +95,5 @@ public class NeuralNetworkModelBuilder {
             throw new IllegalArgumentException("At least one hidden layer should be set");
         }
     }
+
 }

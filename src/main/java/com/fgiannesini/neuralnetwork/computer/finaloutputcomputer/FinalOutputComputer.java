@@ -1,23 +1,28 @@
 package com.fgiannesini.neuralnetwork.computer.finaloutputcomputer;
 
-import com.fgiannesini.neuralnetwork.computer.LayerComputerHelper;
+import com.fgiannesini.neuralnetwork.computer.ILayerComputer;
+import com.fgiannesini.neuralnetwork.computer.LayerComputerBuilder;
+import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
-import com.fgiannesini.neuralnetwork.model.WeightBiasLayer;
 import org.jblas.DoubleMatrix;
 
 public class FinalOutputComputer implements IFinalOutputComputer {
 
-    private final NeuralNetworkModel<WeightBiasLayer> model;
+    private final NeuralNetworkModel<? extends Layer> model;
+    private final ILayerComputer layerComputer;
 
-    public FinalOutputComputer(NeuralNetworkModel model) {
+    public FinalOutputComputer(NeuralNetworkModel<? extends Layer> model) {
         this.model = model;
+        layerComputer = LayerComputerBuilder.init()
+                .withLayerType(model.getLayerType())
+                .build();
     }
 
     @Override
     public DoubleMatrix compute(DoubleMatrix inputMatrix) {
         DoubleMatrix currentMatrix = inputMatrix.dup();
-        for (WeightBiasLayer layer : model.getLayers()) {
-            currentMatrix = LayerComputerHelper.computeAFromInput(currentMatrix, layer);
+        for (Layer layer : model.getLayers()) {
+            currentMatrix = layerComputer.computeAFromInput(currentMatrix, layer);
         }
         return currentMatrix;
     }

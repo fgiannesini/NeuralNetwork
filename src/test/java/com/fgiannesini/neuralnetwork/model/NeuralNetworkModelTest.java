@@ -11,7 +11,7 @@ class NeuralNetworkModelTest {
     @Test
     void clone_WeightBiasNeuralNetworkModel() {
         Initializer initializer = InitializerType.ZEROS.getInitializer();
-        NeuralNetworkModel<WeightBiasLayer> neuralNetworkModel = new NeuralNetworkModel<>(3, 2);
+        NeuralNetworkModel<WeightBiasLayer> neuralNetworkModel = new NeuralNetworkModel<>(3, 2, LayerType.WEIGHT_BIAS);
         WeightBiasLayer weightBiasLayer = new WeightBiasLayer(3, 2, initializer, ActivationFunctionType.NONE);
         neuralNetworkModel.addLayer(weightBiasLayer);
 
@@ -23,7 +23,7 @@ class NeuralNetworkModelTest {
     @Test
     void clone_BatchNormNeuralNetworkModel() {
         Initializer initializer = InitializerType.ZEROS.getInitializer();
-        NeuralNetworkModel<BatchNormLayer> neuralNetworkModel = new NeuralNetworkModel<>(3, 2);
+        NeuralNetworkModel<BatchNormLayer> neuralNetworkModel = new NeuralNetworkModel<>(3, 2, LayerType.WEIGHT_BIAS);
         BatchNormLayer batchNormLayer = new BatchNormLayer(3, 2, initializer, ActivationFunctionType.NONE);
         neuralNetworkModel.addLayer(batchNormLayer);
 
