@@ -1,7 +1,9 @@
-package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent;
+package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider;
 
 import com.fgiannesini.neuralnetwork.computer.OutputComputerBuilder;
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IIntermediateOutputComputer;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientLayerProvider;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container.*;
 import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.WeightBiasLayer;

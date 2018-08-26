@@ -1,13 +1,16 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm;
 
 import com.fgiannesini.neuralnetwork.cost.CostType;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.*;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.*;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescent;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.*;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivation;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.processprovider.*;
 import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout.DropOutUtils;
 import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout.GradientDescentWithDerivationAndDropOutRegularizationProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout.GradientDescentWithDropOutRegularizationProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.l2.GradientDescentWithDerivationAndL2RegularizationProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.l2.GradientDescentWithL2RegularizationProcessProvider;
+import com.fgiannesini.neuralnetwork.model.LayerType;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
 
@@ -75,16 +78,19 @@ public class LearningAlgorithmBuilder {
         LearningAlgorithm learningAlgorithm;
         switch (learningAlgorithmType) {
             case GRADIENT_DESCENT:
-                IGradientDescentProcessProvider processProvider;
+                IGradientDescentProcessProvider processProvider = new GradientDescentDefaultProcessProvider();
+                if (neuralNetworkModel.getLayerType().equals(LayerType.BATCH_NORM)) {
+                    processProvider = new GradientDescentBatchNormProcessProvider(processProvider);
+                }
                 switch (costType) {
                     case LINEAR_REGRESSION:
-                        processProvider = new GradientDescentOnLinearRegressionProcessProvider();
+                        processProvider = new GradientDescentOnLinearRegressionProcessProvider(processProvider);
                         break;
                     case LOGISTIC_REGRESSION:
-                        processProvider = new GradientDescentOnLogisticRegressionProcessProvider();
+                        processProvider = new GradientDescentOnLogisticRegressionProcessProvider(processProvider);
                         break;
                     case SOFT_MAX_REGRESSION:
-                        processProvider = new GradientDescentOnSoftMaxRegressionProcessProvider();
+                        processProvider = new GradientDescentOnSoftMaxRegressionProcessProvider(processProvider);
                         break;
                     default:
                         throw new IllegalArgumentException("a cost type should be set");

@@ -5,11 +5,12 @@ import com.fgiannesini.neuralnetwork.converter.DataFormatConverter;
 import com.fgiannesini.neuralnetwork.cost.CostType;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescent;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescentOnLinearRegressionProcessProvider;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescentWithRmsStopProcessProvider;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.GradientDescentDefaultProcessProvider;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.GradientDescentOnLinearRegressionProcessProvider;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.GradientDescentWithRmsStopProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivation;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivationAndRmsStopProcessProvider;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivationProcessProvider;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.processprovider.GradientDescentWithDerivationAndRmsStopProcessProvider;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.processprovider.GradientDescentWithDerivationProcessProvider;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
 import org.junit.jupiter.api.Nested;
@@ -55,7 +56,7 @@ class GradientDescentWithRmsStopTest {
             double[] expectedSecondBiasMatrix = {0.68377, 0.68377};
             double rmsStopCoeff = 0.999;
 
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentWithRmsStopProcessProvider(new GradientDescentOnLinearRegressionProcessProvider(), rmsStopCoeff));
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentWithRmsStopProcessProvider(new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentDefaultProcessProvider()), rmsStopCoeff));
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 0, Arrays.asList(DataFormatConverter.fromDoubleTabToDoubleMatrix(expectedFirstWeightMatrix), DataFormatConverter.fromTabToDoubleMatrix(expectedFirstBiasMatrix)));
@@ -100,7 +101,7 @@ class GradientDescentWithRmsStopTest {
             double[] expectedSecondBiasMatrix = {0.99508, 0.99508};
             double rmsStopCoeff = 0.999;
 
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentWithRmsStopProcessProvider(new GradientDescentOnLinearRegressionProcessProvider(), rmsStopCoeff));
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentWithRmsStopProcessProvider(new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentDefaultProcessProvider()), rmsStopCoeff));
             gradientDescent.learn(input, output);
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 

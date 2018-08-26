@@ -1,4 +1,4 @@
-package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent;
+package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container;
 
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;

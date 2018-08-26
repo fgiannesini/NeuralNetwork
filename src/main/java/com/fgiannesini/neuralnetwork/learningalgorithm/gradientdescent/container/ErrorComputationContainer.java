@@ -1,5 +1,6 @@
-package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent;
+package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container;
 
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientLayerProvider;
 import org.jblas.DoubleMatrix;
 
 public class ErrorComputationContainer {

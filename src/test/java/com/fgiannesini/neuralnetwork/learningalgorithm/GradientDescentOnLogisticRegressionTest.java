@@ -4,9 +4,10 @@ import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import com.fgiannesini.neuralnetwork.cost.CostType;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescent;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescentOnLogisticRegressionProcessProvider;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.GradientDescentDefaultProcessProvider;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.GradientDescentOnLogisticRegressionProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivation;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivationProcessProvider;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.processprovider.GradientDescentWithDerivationProcessProvider;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
 import org.junit.jupiter.api.Nested;
@@ -27,8 +28,7 @@ class GradientDescentOnLogisticRegressionTest {
             double[] input = new double[]{3, 4};
             double[] output = new double[]{1, 0};
 
-
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentOnLogisticRegressionProcessProvider());
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentOnLogisticRegressionProcessProvider(new GradientDescentDefaultProcessProvider()));
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
             LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LOGISTIC_REGRESSION, new GradientDescentWithDerivationProcessProvider());
@@ -48,7 +48,7 @@ class GradientDescentOnLogisticRegressionTest {
             double[] input = new double[]{3, 4};
             double[] output = new double[]{1, 0};
 
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentOnLogisticRegressionProcessProvider());
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentOnLogisticRegressionProcessProvider(new GradientDescentDefaultProcessProvider()));
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
             LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LOGISTIC_REGRESSION, new GradientDescentWithDerivationProcessProvider());
@@ -75,7 +75,7 @@ class GradientDescentOnLogisticRegressionTest {
                     {0, 1}
             };
 
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentOnLogisticRegressionProcessProvider());
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentOnLogisticRegressionProcessProvider(new GradientDescentDefaultProcessProvider()));
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
             LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LOGISTIC_REGRESSION, new GradientDescentWithDerivationProcessProvider());
             NeuralNetworkModel gradientWithDerivativeNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);

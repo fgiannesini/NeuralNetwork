@@ -1,4 +1,4 @@
-package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation;
+package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.container;
 
 import com.fgiannesini.neuralnetwork.cost.CostType;
 import com.fgiannesini.neuralnetwork.model.Layer;
