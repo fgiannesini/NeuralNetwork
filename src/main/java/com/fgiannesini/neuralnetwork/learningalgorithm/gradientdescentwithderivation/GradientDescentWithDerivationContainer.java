@@ -2,6 +2,7 @@ package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderiv
 
 import com.fgiannesini.neuralnetwork.cost.CostComputer;
 import com.fgiannesini.neuralnetwork.cost.CostType;
+import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
 
@@ -11,11 +12,11 @@ public class GradientDescentWithDerivationContainer {
 
     private final DoubleMatrix input;
     private final DoubleMatrix y;
-    private final NeuralNetworkModel neuralNetworkModel;
+    private final NeuralNetworkModel<Layer> neuralNetworkModel;
     private final CostType costType;
     private final Function<GradientDescentWithDerivationCostComputerContainer, CostComputer> costComputerProcessLauncher;
 
-    public GradientDescentWithDerivationContainer(DoubleMatrix input, DoubleMatrix y, NeuralNetworkModel neuralNetworkModel, CostType costType, Function<GradientDescentWithDerivationCostComputerContainer, CostComputer> costComputerProcessLauncher) {
+    public GradientDescentWithDerivationContainer(DoubleMatrix input, DoubleMatrix y, NeuralNetworkModel<Layer> neuralNetworkModel, CostType costType, Function<GradientDescentWithDerivationCostComputerContainer, CostComputer> costComputerProcessLauncher) {
         this.input = input;
         this.y = y;
         this.neuralNetworkModel = neuralNetworkModel;
@@ -31,7 +32,7 @@ public class GradientDescentWithDerivationContainer {
         return y;
     }
 
-    public NeuralNetworkModel getNeuralNetworkModel() {
+    public NeuralNetworkModel<Layer> getNeuralNetworkModel() {
         return neuralNetworkModel;
     }
 

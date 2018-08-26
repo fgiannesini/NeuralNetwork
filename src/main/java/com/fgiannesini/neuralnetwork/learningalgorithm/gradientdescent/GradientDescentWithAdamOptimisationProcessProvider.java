@@ -1,9 +1,7 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent;
 
-import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
-import com.fgiannesini.neuralnetwork.initializer.InitializerType;
+import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
-import com.fgiannesini.neuralnetwork.model.WeightBiasLayer;
 import org.jblas.DoubleMatrix;
 import org.jblas.MatrixFunctions;
 
@@ -16,8 +14,8 @@ public class GradientDescentWithAdamOptimisationProcessProvider implements IGrad
     private final Double momentumCoeff;
     private final Double rmsStopCoeff;
     private final IGradientDescentProcessProvider processProvider;
-    private final List<WeightBiasLayer> momentumLayers;
-    private final List<WeightBiasLayer> rmsStopLayers;
+    private final List<List<DoubleMatrix>> momentumLayers;
+    private final List<List<DoubleMatrix>> rmsStopLayers;
     private final Double epsilon;
 
     public GradientDescentWithAdamOptimisationProcessProvider(IGradientDescentProcessProvider processProvider, Double momentumCoeff, Double rmsStopCoeff) {
@@ -32,8 +30,8 @@ public class GradientDescentWithAdamOptimisationProcessProvider implements IGrad
     @Override
     public Function<GradientDescentCorrectionsContainer, GradientDescentCorrectionsContainer> getGradientDescentCorrectionsLauncher() {
         return container -> {
-            NeuralNetworkModel correctedNeuralNetworkModel = container.getCorrectedNeuralNetworkModel();
-            List<WeightBiasLayer> layers = correctedNeuralNetworkModel.getLayers();
+            NeuralNetworkModel<Layer> correctedNeuralNetworkModel = container.getCorrectedNeuralNetworkModel();
+            List<Layer> layers = correctedNeuralNetworkModel.getLayers();
             if (momentumLayers.isEmpty()) {
                 momentumLayers.addAll(initLayers(layers));
             }
@@ -42,33 +40,32 @@ public class GradientDescentWithAdamOptimisationProcessProvider implements IGrad
             }
             for (int layerIndex = 0; layerIndex < layers.size(); layerIndex++) {
                 GradientDescentCorrection gradientDescentCorrection = container.getGradientDescentCorrections().get(layerIndex);
-                WeightBiasLayer layer = layers.get(layerIndex);
-                WeightBiasLayer momentumLayer = momentumLayers.get(layerIndex);
-                WeightBiasLayer rmsStopLayer = rmsStopLayers.get(layerIndex);
+                List<DoubleMatrix> layerMatrices = layers.get(layerIndex).getParametersMatrix();
+                List<DoubleMatrix> momentumMatrices = momentumLayers.get(layerIndex);
+                List<DoubleMatrix> rmsStopMatrices = rmsStopLayers.get(layerIndex);
 
-                //Vdw = m*Vdw + (1 - m)*dW
-                momentumLayer.setWeightMatrix(momentumLayer.getWeightMatrix().muli(momentumCoeff).addi(gradientDescentCorrection.getWeightCorrectionResults().mul(1d - momentumCoeff)));
-                //Sdw = c * Sdw + (1 - c)*dW²
-                rmsStopLayer.setWeightMatrix(rmsStopLayer.getWeightMatrix().muli(rmsStopCoeff).addi(MatrixFunctions.pow(gradientDescentCorrection.getWeightCorrectionResults(), 2d).muli(1d - rmsStopCoeff)));
-                //W = W - a * Vdw/(1-m)/(sqrt(Sdw/(1-c)) + e)
-                DoubleMatrix weightCorrection = momentumLayer.getWeightMatrix().div(1d - momentumCoeff).divi(MatrixFunctions.sqrt(rmsStopLayer.getWeightMatrix().div(1d - rmsStopCoeff)).addi(epsilon)).muli(container.getLearningRate());
-                layer.getWeightMatrix().subi(weightCorrection);
+                for (int matrixIndex = 0; matrixIndex < layerMatrices.size(); matrixIndex++) {
+                    DoubleMatrix matrixCorrections = gradientDescentCorrection.getCorrectionResults().get(matrixIndex);
 
-                //Vdb = m*Vdb + (1 - m)*dB
-                momentumLayer.setBiasMatrix(momentumLayer.getBiasMatrix().muli(momentumCoeff).addi(gradientDescentCorrection.getBiasCorrectionResults().mul(1d - momentumCoeff)));
-                //Sdb = c *Sdb + (1 - c)*dB²
-                rmsStopLayer.setBiasMatrix(rmsStopLayer.getBiasMatrix().muli(rmsStopCoeff).addi(MatrixFunctions.pow(gradientDescentCorrection.getBiasCorrectionResults(), 2d).muli(1d - rmsStopCoeff)));
-                //B = B - a * Vdb/(1-m)/(sqrt(Sdb/(1-c)) + e)
-                DoubleMatrix biasCorrection = momentumLayer.getBiasMatrix().div(1d - momentumCoeff).divi(MatrixFunctions.sqrt(rmsStopLayer.getBiasMatrix().div(1d - rmsStopCoeff)).addi(epsilon)).muli(container.getLearningRate());
-                layer.getBiasMatrix().subi(biasCorrection);
+                    //Vdw = m*Vdw + (1 - m)*dW
+                    momentumMatrices.set(matrixIndex, momentumMatrices.get(matrixIndex).muli(momentumCoeff).addi(matrixCorrections.mul(1d - momentumCoeff)));
+                    //Sdw = c * Sdw + (1 - c)*dW²
+                    rmsStopMatrices.set(matrixIndex, rmsStopMatrices.get(matrixIndex).muli(rmsStopCoeff).addi(MatrixFunctions.pow(matrixCorrections, 2d).muli(1d - rmsStopCoeff)));
+                    //W = W - a * Vdw/(1-m)/(sqrt(Sdw/(1-c)) + e)
+                    DoubleMatrix parameterCorrection = momentumMatrices.get(matrixIndex).div(1d - momentumCoeff).divi(MatrixFunctions.sqrt(rmsStopMatrices.get(matrixIndex).div(1d - rmsStopCoeff)).addi(epsilon)).muli(container.getLearningRate());
+                    layerMatrices.get(matrixIndex).subi(parameterCorrection);
+                }
             }
             return new GradientDescentCorrectionsContainer(correctedNeuralNetworkModel, container.getGradientDescentCorrections(), container.getInputCount(), container.getLearningRate());
         };
     }
 
-    private List<WeightBiasLayer> initLayers(List<WeightBiasLayer> layers) {
+    private List<List<DoubleMatrix>> initLayers(List<Layer> layers) {
         return layers.stream()
-                .map(layer -> new WeightBiasLayer(layer.getInputLayerSize(), layer.getOutputLayerSize(), InitializerType.ZEROS.getInitializer(), ActivationFunctionType.NONE))
+                .map(layer -> layer.getParametersMatrix()
+                        .stream()
+                        .map(p -> DoubleMatrix.zeros(p.getRows(), p.getColumns()))
+                        .collect(Collectors.toList()))
                 .collect(Collectors.toList());
     }
 

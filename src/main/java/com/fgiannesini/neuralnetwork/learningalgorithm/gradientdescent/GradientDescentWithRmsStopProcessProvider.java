@@ -1,9 +1,7 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent;
 
-import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
-import com.fgiannesini.neuralnetwork.initializer.InitializerType;
+import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
-import com.fgiannesini.neuralnetwork.model.WeightBiasLayer;
 import org.jblas.DoubleMatrix;
 import org.jblas.MatrixFunctions;
 
@@ -13,7 +11,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class GradientDescentWithRmsStopProcessProvider implements IGradientDescentProcessProvider {
-    private final List<WeightBiasLayer> rmsStopLayers;
+    private final List<List<DoubleMatrix>> rmsStopLayers;
     private final IGradientDescentProcessProvider processProvider;
     private final Double rmsStopCoeff;
     private final Double epsilon;
@@ -28,35 +26,35 @@ public class GradientDescentWithRmsStopProcessProvider implements IGradientDesce
     @Override
     public Function<GradientDescentCorrectionsContainer, GradientDescentCorrectionsContainer> getGradientDescentCorrectionsLauncher() {
         return container -> {
-            NeuralNetworkModel correctedNeuralNetworkModel = container.getCorrectedNeuralNetworkModel();
-            List<WeightBiasLayer> layers = correctedNeuralNetworkModel.getLayers();
+            NeuralNetworkModel<Layer> correctedNeuralNetworkModel = container.getCorrectedNeuralNetworkModel();
+            List<Layer> layers = correctedNeuralNetworkModel.getLayers();
             if (rmsStopLayers.isEmpty()) {
                 rmsStopLayers.addAll(initRmsStopLayers(layers));
             }
             for (int layerIndex = 0; layerIndex < layers.size(); layerIndex++) {
                 GradientDescentCorrection gradientDescentCorrection = container.getGradientDescentCorrections().get(layerIndex);
-                WeightBiasLayer layer = layers.get(layerIndex);
-                WeightBiasLayer rmsStopLayer = rmsStopLayers.get(layerIndex);
+                List<DoubleMatrix> parameterMatrices = layers.get(layerIndex).getParametersMatrix();
+                List<DoubleMatrix> rmsStopMatrices = rmsStopLayers.get(layerIndex);
 
-                //Sdw = c * Sdw + (1 - c)*dW²
-                rmsStopLayer.setWeightMatrix(rmsStopLayer.getWeightMatrix().muli(rmsStopCoeff).addi(MatrixFunctions.pow(gradientDescentCorrection.getWeightCorrectionResults(), 2d).muli(1d - rmsStopCoeff)));
-                //W = W - a * dW/(sqrt(Sdw) + e)
-                DoubleMatrix weightCorrection = gradientDescentCorrection.getWeightCorrectionResults().div(MatrixFunctions.sqrt(rmsStopLayer.getWeightMatrix()).addi(epsilon)).muli(container.getLearningRate());
-                layer.getWeightMatrix().subi(weightCorrection);
+                for (int parameterIndex = 0; parameterIndex < parameterMatrices.size(); parameterIndex++) {
+                    //Sdw = c * Sdw + (1 - c)*dW²
+                    rmsStopMatrices.set(parameterIndex, rmsStopMatrices.get(parameterIndex).muli(rmsStopCoeff).addi(MatrixFunctions.pow(gradientDescentCorrection.getCorrectionResults().get(parameterIndex), 2d).muli(1d - rmsStopCoeff)));
+                    //W = W - a * dW/(sqrt(Sdw) + e)
+                    DoubleMatrix weightCorrection = gradientDescentCorrection.getCorrectionResults().get(parameterIndex).div(MatrixFunctions.sqrt(rmsStopMatrices.get(parameterIndex)).addi(epsilon)).muli(container.getLearningRate());
+                    parameterMatrices.get(parameterIndex).subi(weightCorrection);
 
-                //Sdb = c *Sdb + (1 - c)*dB²
-                rmsStopLayer.setBiasMatrix(rmsStopLayer.getBiasMatrix().muli(rmsStopCoeff).addi(MatrixFunctions.pow(gradientDescentCorrection.getBiasCorrectionResults(), 2d).muli(1d - rmsStopCoeff)));
-                //B = B - a * dB/(sqrt(Sdb) + e)
-                DoubleMatrix biasCorrection = gradientDescentCorrection.getBiasCorrectionResults().div(MatrixFunctions.sqrt(rmsStopLayer.getBiasMatrix()).addi(epsilon)).muli(container.getLearningRate());
-                layer.getBiasMatrix().subi(biasCorrection);
+                }
             }
             return new GradientDescentCorrectionsContainer(correctedNeuralNetworkModel, container.getGradientDescentCorrections(), container.getInputCount(), container.getLearningRate());
         };
     }
 
-    private List<WeightBiasLayer> initRmsStopLayers(List<WeightBiasLayer> layers) {
+    private List<List<DoubleMatrix>> initRmsStopLayers(List<Layer> layers) {
         return layers.stream()
-                .map(layer -> new WeightBiasLayer(layer.getInputLayerSize(), layer.getOutputLayerSize(), InitializerType.ZEROS.getInitializer(), ActivationFunctionType.NONE))
+                .map(layer -> layer.getParametersMatrix()
+                        .stream()
+                        .map(p -> DoubleMatrix.zeros(p.getRows(), p.getColumns()))
+                        .collect(Collectors.toList()))
                 .collect(Collectors.toList());
     }
 

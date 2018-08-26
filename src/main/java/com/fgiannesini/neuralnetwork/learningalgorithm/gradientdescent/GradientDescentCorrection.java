@@ -2,20 +2,23 @@ package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent;
 
 import org.jblas.DoubleMatrix;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class GradientDescentCorrection {
-    private final DoubleMatrix weightCorrectionResults;
-    private final DoubleMatrix biasCorrectionResults;
 
-    public GradientDescentCorrection(DoubleMatrix weightCorrectionResults, DoubleMatrix biasCorrectionResults) {
-        this.weightCorrectionResults = weightCorrectionResults;
-        this.biasCorrectionResults = biasCorrectionResults;
+    private final List<DoubleMatrix> correctionResults;
+
+    public GradientDescentCorrection(DoubleMatrix... corrections) {
+        this.correctionResults = Arrays.stream(corrections).collect(Collectors.toList());
     }
 
-    public DoubleMatrix getWeightCorrectionResults() {
-        return weightCorrectionResults;
+    public void addCorrectionResult(DoubleMatrix correctionResult) {
+        correctionResults.add(correctionResult);
     }
 
-    public DoubleMatrix getBiasCorrectionResults() {
-        return biasCorrectionResults;
+    public List<DoubleMatrix> getCorrectionResults() {
+        return this.correctionResults;
     }
 }
