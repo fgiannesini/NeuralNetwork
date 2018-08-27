@@ -6,7 +6,6 @@ import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientL
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container.*;
 import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
-import com.fgiannesini.neuralnetwork.model.WeightBiasLayer;
 import org.jblas.DoubleMatrix;
 
 import java.util.ArrayList;
@@ -96,7 +95,7 @@ public class GradientDescentDefaultProcessProvider implements IGradientDescentPr
     @Override
     public Function<ForwardComputationContainer, GradientLayerProvider> getForwardComputationLauncher() {
         return container -> {
-            List<WeightBiasLayer> layers = container.getNeuralNetworkModel().getLayers();
+            List<Layer> layers = container.getNeuralNetworkModel().getLayers();
             IIntermediateOutputComputer intermediateOutputComputer = OutputComputerBuilder.init()
                     .withModel(container.getNeuralNetworkModel())
                     .buildIntermediateOutputComputer();

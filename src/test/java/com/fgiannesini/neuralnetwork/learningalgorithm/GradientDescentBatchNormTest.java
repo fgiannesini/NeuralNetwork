@@ -5,8 +5,10 @@ import com.fgiannesini.neuralnetwork.converter.DataFormatConverter;
 import com.fgiannesini.neuralnetwork.cost.CostType;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescent;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.GradientDescentBatchNormProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.GradientDescentDefaultProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.GradientDescentOnLinearRegressionProcessProvider;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.IGradientDescentProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivation;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.processprovider.GradientDescentWithDerivationProcessProvider;
 import com.fgiannesini.neuralnetwork.model.BatchNormLayer;
@@ -24,7 +26,7 @@ public class GradientDescentBatchNormTest {
     class VariationOnInputAndLayerSize {
         @Test
         void learn_on_vector_with_one_hidden_layer() {
-            NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
+            NeuralNetworkModel<BatchNormLayer> neuralNetworkModel = NeuralNetworkModelBuilder.init()
                     .useInitializer(InitializerType.ONES)
                     .input(2)
                     .addLayer(2, ActivationFunctionType.NONE)
@@ -39,18 +41,18 @@ public class GradientDescentBatchNormTest {
             };
             double[] expectedBiasMatrix = {0.99, 1.01};
 
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentDefaultProcessProvider()));
-            NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, getGradientDescentProvider());
+            NeuralNetworkModel<BatchNormLayer> gradientNeuralNetworkModel = gradientDescent.learn(input, output);
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 0, Arrays.asList(DataFormatConverter.fromDoubleTabToDoubleMatrix(expectedWeightMatrix), DataFormatConverter.fromTabToDoubleMatrix(expectedBiasMatrix)));
 
             LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LINEAR_REGRESSION, new GradientDescentWithDerivationProcessProvider());
-            NeuralNetworkModel gradientWithDerivativeNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);
+            NeuralNetworkModel<BatchNormLayer> gradientWithDerivativeNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);
             NeuralNetworkAssertions.checkSameNeuralNetworks(gradientNeuralNetworkModel, gradientWithDerivativeNeuralNetworkModel);
         }
 
         @Test
         void learn_on_vector_with_two_hidden_layers() {
-            NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
+            NeuralNetworkModel<BatchNormLayer> neuralNetworkModel = NeuralNetworkModelBuilder.init()
                     .useInitializer(InitializerType.ONES)
                     .input(2)
                     .addLayer(3, ActivationFunctionType.NONE)
@@ -73,20 +75,20 @@ public class GradientDescentBatchNormTest {
             };
             double[] expectedSecondBiasMatrix = {0.97, 1.02};
 
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentDefaultProcessProvider()));
-            NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, getGradientDescentProvider());
+            NeuralNetworkModel<BatchNormLayer> gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 0, Arrays.asList(DataFormatConverter.fromDoubleTabToDoubleMatrix(expectedFirstWeightMatrix), DataFormatConverter.fromTabToDoubleMatrix(expectedFirstBiasMatrix)));
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 1, Arrays.asList(DataFormatConverter.fromDoubleTabToDoubleMatrix(expectedSecondWeightMatrix), DataFormatConverter.fromTabToDoubleMatrix(expectedSecondBiasMatrix)));
 
             LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LINEAR_REGRESSION, new GradientDescentWithDerivationProcessProvider());
-            NeuralNetworkModel gradientWithDerivativeNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);
+            NeuralNetworkModel<BatchNormLayer> gradientWithDerivativeNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);
             NeuralNetworkAssertions.checkSameNeuralNetworks(gradientNeuralNetworkModel, gradientWithDerivativeNeuralNetworkModel);
         }
 
         @Test
         void learn_on_matrix_with_two_hidden_layers() {
-            NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
+            NeuralNetworkModel<BatchNormLayer> neuralNetworkModel = NeuralNetworkModelBuilder.init()
                     .useInitializer(InitializerType.ONES)
                     .input(2)
                     .addLayer(3, ActivationFunctionType.NONE)
@@ -115,14 +117,14 @@ public class GradientDescentBatchNormTest {
                     {0.84, 0.84}
             };
             double[] expectedSecondBiasMatrix = {0.985, 0.985};
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentDefaultProcessProvider()));
-            NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, getGradientDescentProvider());
+            NeuralNetworkModel<BatchNormLayer> gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 0, Arrays.asList(DataFormatConverter.fromDoubleTabToDoubleMatrix(expectedFirstWeightMatrix), DataFormatConverter.fromTabToDoubleMatrix(expectedFirstBiasMatrix)));
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 1, Arrays.asList(DataFormatConverter.fromDoubleTabToDoubleMatrix(expectedSecondWeightMatrix), DataFormatConverter.fromTabToDoubleMatrix(expectedSecondBiasMatrix)));
 
             LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LINEAR_REGRESSION, new GradientDescentWithDerivationProcessProvider());
-            NeuralNetworkModel gradientWithDerivativeNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);
+            NeuralNetworkModel<BatchNormLayer> gradientWithDerivativeNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);
             NeuralNetworkAssertions.checkSameNeuralNetworks(gradientNeuralNetworkModel, gradientWithDerivativeNeuralNetworkModel);
         }
     }
@@ -173,17 +175,21 @@ public class GradientDescentBatchNormTest {
             };
             double[] expectedSecondBiasMatrix = {0.530751, 0.619049};
 
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentDefaultProcessProvider()));
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, getGradientDescentProvider());
             gradientDescent.updateLearningRate(0.5);
-            NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
+            NeuralNetworkModel<BatchNormLayer> gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 0, Arrays.asList(DataFormatConverter.fromDoubleTabToDoubleMatrix(expectedFirstWeightMatrix), DataFormatConverter.fromTabToDoubleMatrix(expectedFirstBiasMatrix)));
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 1, Arrays.asList(DataFormatConverter.fromDoubleTabToDoubleMatrix(expectedSecondWeightMatrix), DataFormatConverter.fromTabToDoubleMatrix(expectedSecondBiasMatrix)));
 
             LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LINEAR_REGRESSION, new GradientDescentWithDerivationProcessProvider());
             gradientDescentWithDerivation.updateLearningRate(0.5);
-            NeuralNetworkModel gradientWithDerivativeNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);
+            NeuralNetworkModel<BatchNormLayer> gradientWithDerivativeNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);
             NeuralNetworkAssertions.checkSameNeuralNetworks(gradientNeuralNetworkModel, gradientWithDerivativeNeuralNetworkModel);
         }
+    }
+
+    private IGradientDescentProcessProvider getGradientDescentProvider() {
+        return new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentBatchNormProcessProvider(new GradientDescentDefaultProcessProvider()));
     }
 }

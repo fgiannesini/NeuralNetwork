@@ -5,7 +5,7 @@ import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IInterm
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientLayerProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container.*;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.IGradientDescentProcessProvider;
-import com.fgiannesini.neuralnetwork.model.WeightBiasLayer;
+import com.fgiannesini.neuralnetwork.model.Layer;
 import org.jblas.DoubleMatrix;
 
 import java.util.List;
@@ -54,7 +54,7 @@ public class GradientDescentWithDropOutRegularizationProcessProvider implements 
     @Override
     public Function<ForwardComputationContainer, GradientLayerProvider> getForwardComputationLauncher() {
         return container -> {
-            List<WeightBiasLayer> layers = container.getNeuralNetworkModel().getLayers();
+            List<Layer> layers = container.getNeuralNetworkModel().getLayers();
             IIntermediateOutputComputer intermediateOutputComputer = OutputComputerBuilder.init()
                     .withModel(container.getNeuralNetworkModel())
                     .withDropOutParameters(dropOutMatrices)

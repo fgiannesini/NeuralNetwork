@@ -2,7 +2,6 @@ package com.fgiannesini.neuralnetwork.learningalgorithm;
 
 import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
-import com.fgiannesini.neuralnetwork.model.WeightBiasLayer;
 import org.jblas.DoubleMatrix;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.function.Executable;
@@ -13,7 +12,7 @@ import java.util.List;
 
 public class NeuralNetworkAssertions {
 
-    public static void checkSameNeuralNetworks(NeuralNetworkModel<? extends Layer> firstNeuralNetworkModel, NeuralNetworkModel<WeightBiasLayer> secondNeuralNetworkModel) {
+    public static void checkSameNeuralNetworks(NeuralNetworkModel<? extends Layer> firstNeuralNetworkModel, NeuralNetworkModel<? extends Layer> secondNeuralNetworkModel) {
         Assertions.assertAll(
                 () -> Assertions.assertEquals(firstNeuralNetworkModel.getOutputSize(), secondNeuralNetworkModel.getOutputSize()),
                 () -> Assertions.assertEquals(firstNeuralNetworkModel.getInputSize(), secondNeuralNetworkModel.getInputSize())
