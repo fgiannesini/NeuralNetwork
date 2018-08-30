@@ -2,6 +2,7 @@ package com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer;
 
 import com.fgiannesini.neuralnetwork.computer.ILayerComputer;
 import com.fgiannesini.neuralnetwork.computer.LayerComputerBuilder;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientLayerProvider;
 import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
@@ -23,7 +24,7 @@ public class IntermediateOutputComputerWithDropOutRegularization implements IInt
         this.dropOutMatrixList = dropOutMatrixList;
     }
 
-    public List<DoubleMatrix> compute(DoubleMatrix inputMatrix) {
+    public GradientLayerProvider compute(DoubleMatrix inputMatrix) {
         List<DoubleMatrix> intermediateMatrix = new ArrayList<>();
         DoubleMatrix currentMatrix = inputMatrix.dup().muliColumnVector(dropOutMatrixList.get(0));
         intermediateMatrix.add(currentMatrix);

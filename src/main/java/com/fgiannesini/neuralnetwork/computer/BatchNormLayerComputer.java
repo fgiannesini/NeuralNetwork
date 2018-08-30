@@ -2,23 +2,25 @@ package com.fgiannesini.neuralnetwork.computer;
 
 import com.fgiannesini.neuralnetwork.model.BatchNormLayer;
 import org.jblas.DoubleMatrix;
-import org.jblas.MatrixFunctions;
+
+import java.util.function.Function;
 
 public class BatchNormLayerComputer implements ILayerComputer<BatchNormLayer> {
 
-    private static final double epsilon = Math.pow(10, -8);
+    private final Function<DoubleMatrix, MeanDeviation> meanDeviationProvider;
+
+    public BatchNormLayerComputer(Function<DoubleMatrix, MeanDeviation> meanDeviationProvider) {
+        this.meanDeviationProvider = meanDeviationProvider;
+    }
 
     public DoubleMatrix computeZFromInput(DoubleMatrix input, BatchNormLayer layer) {
         //Z1 = W.X
         DoubleMatrix z = layer.getWeightMatrix().mmul(input);
 
-        //mean
-        DoubleMatrix means = z.rowMeans();
-
-        //sigma
-        DoubleMatrix standardDeviation = MatrixFunctions.sqrt(MatrixFunctions.pow(z.subColumnVector(means), 2).rowMeans().addi(epsilon));
+        MeanDeviation meanDeviation = meanDeviationProvider.apply(z);
 
         //Z2 = (Z1 - mean) / sigma * gamma + beta
-        return z.subColumnVector(means).diviColumnVector(standardDeviation).muliColumnVector(layer.getGammaMatrix()).addiColumnVector(layer.getBetaMatrix());
+        return z.subColumnVector(meanDeviation.getMean()).diviColumnVector(meanDeviation.getDeviation()).muliColumnVector(layer.getGammaMatrix()).addiColumnVector(layer.getBetaMatrix());
     }
+
 }

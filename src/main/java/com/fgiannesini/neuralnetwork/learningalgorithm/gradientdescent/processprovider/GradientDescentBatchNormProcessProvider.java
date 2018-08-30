@@ -1,9 +1,12 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider;
 
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientBatchNormLayerProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientLayerProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container.*;
+import org.jblas.DoubleMatrix;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
@@ -43,24 +46,26 @@ public class GradientDescentBatchNormProcessProvider implements IGradientDescent
 //                gradientDescentCorrections.add(new GradientDescentCorrection(weightCorrection, biasCorrection));
 //            }
 //
-//            Collections.reverse(gradientDescentCorrections);
 
-            return gradientDescentCorrections;
-        };
-//            #unfold the variables stored in cache
-//            xhat,gamma,xmu,ivar,sqrtvar,var,eps = cache
-//
-//  #get the dimensions of the input/output
-//                    N,D = dout.shape
-//
+            int inputCount = container.getY().getColumns();
+
+            GradientBatchNormLayerProvider gradientLayerProvider = (GradientBatchNormLayerProvider) container.getProvider();
+            DoubleMatrix dz = container.getFirstErrorComputationLauncher()
+                    .apply(new ErrorComputationContainer(gradientLayerProvider, container.getY()))
+                    .getPreviousError();
+
 //  #step9
-//                    dbeta = np.sum(dout, axis=0)
+//            dbeta = np.sum(dout, axis=0)
+            DoubleMatrix dBeta = dz.columnSums();
 //            dgammax = dout #not necessary, but more understandable
-//
+            DoubleMatrix dGammaX = dz;
+
 //  #step8
-//                    dgamma = np.sum(dgammax*xhat, axis=0)
+//            dgamma = np.sum(dgammax*xhat, axis=0)
+            DoubleMatrix dGamma = dGammaX.mul(gradientLayerProvider.getCurrentResult());
 //            dxhat = dgammax * gamma
-//
+            DoubleMatrix dXhat = dGammaX.mul(gradientLayerProvider.getGammaMatrix());
+
 //  #step7
 //                    divar = np.sum(dxhat*xmu, axis=0)
 //            dxmu1 = dxhat * ivar
@@ -88,6 +93,11 @@ public class GradientDescentBatchNormProcessProvider implements IGradientDescent
 //                    dx = dx1 + dx2
 //
 //            return dx, dgamma, dbeta
+
+            Collections.reverse(gradientDescentCorrections);
+            return gradientDescentCorrections;
+        };
+
     }
 
     @Override
