@@ -2,8 +2,10 @@ package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processp
 
 import com.fgiannesini.neuralnetwork.computer.OutputComputerBuilder;
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IIntermediateOutputComputer;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientLayerProvider;
+import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IntermediateOutputResult;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container.*;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientLayerProvider;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientLayerProviderBuilder;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.WeightBiasLayer;
 import org.jblas.DoubleMatrix;
@@ -13,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-public class GradientDescentDefaultProcessProvider implements IGradientDescentProcessProvider<WeightBiasLayer> {
+public class GradientDescentWeightBiasProcessProvider implements IGradientDescentProcessProvider<WeightBiasLayer> {
 
     @Override
     public Function<GradientDescentCorrectionsContainer<WeightBiasLayer>, GradientDescentCorrectionsContainer<WeightBiasLayer>> getGradientDescentCorrectionsLauncher() {
@@ -95,12 +97,14 @@ public class GradientDescentDefaultProcessProvider implements IGradientDescentPr
     @Override
     public Function<ForwardComputationContainer<WeightBiasLayer>, GradientLayerProvider<WeightBiasLayer>> getForwardComputationLauncher() {
         return container -> {
-            List<WeightBiasLayer> layers = container.getNeuralNetworkModel().getLayers();
             IIntermediateOutputComputer intermediateOutputComputer = OutputComputerBuilder.init()
                     .withModel(container.getNeuralNetworkModel())
                     .buildIntermediateOutputComputer();
-            List<DoubleMatrix> intermediateResults = intermediateOutputComputer.compute(container.getInputMatrix());
-            return new GradientLayerProvider<>(layers, intermediateResults);
+            List<IntermediateOutputResult> intermediateResults = intermediateOutputComputer.compute(container.getInputMatrix());
+            return GradientLayerProviderBuilder.init()
+                    .withModel(container.getNeuralNetworkModel())
+                    .withIntermediateResults(intermediateResults)
+                    .build();
         };
     }
 

@@ -1,6 +1,7 @@
 package com.fgiannesini.neuralnetwork.computer;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionApplier;
+import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IntermediateOutputResult;
 import com.fgiannesini.neuralnetwork.model.Layer;
 import org.jblas.DoubleMatrix;
 
@@ -11,11 +12,13 @@ public interface ILayerComputer<L extends Layer> {
         return activationFunctionApplier.apply(z);
     }
 
-    default DoubleMatrix computeAFromInput(DoubleMatrix input, L layer) {
-        DoubleMatrix z = computeZFromInput(input, layer);
-        return computeAFromZ(z, layer);
+    default IntermediateOutputResult computeAFromInput(DoubleMatrix input, L layer) {
+        IntermediateOutputResult result = computeZFromInput(input, layer);
+        DoubleMatrix activatedResult = computeAFromZ(result.getResult(), layer);
+        result.setResult(activatedResult);
+        return result;
     }
 
-    DoubleMatrix computeZFromInput(DoubleMatrix input, L layer);
+    IntermediateOutputResult computeZFromInput(DoubleMatrix input, L layer);
 
 }

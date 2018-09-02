@@ -1,4 +1,4 @@
-package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent;
+package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionApplier;
 import com.fgiannesini.neuralnetwork.model.Layer;
@@ -6,13 +6,13 @@ import org.jblas.DoubleMatrix;
 
 import java.util.List;
 
-public class GradientLayerProvider<L extends Layer> {
+public abstract class GradientLayerProvider<L extends Layer> {
 
     private final List<DoubleMatrix> results;
     protected final List<L> layers;
     int currentLayerIndex;
 
-    public GradientLayerProvider(List<L> layers, List<DoubleMatrix> results) {
+    GradientLayerProvider(List<L> layers, List<DoubleMatrix> results) {
         currentLayerIndex = layers.size();
         this.results = results;
         this.layers = layers;

@@ -1,6 +1,6 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container;
 
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientLayerProvider;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientLayerProvider;
 import org.jblas.DoubleMatrix;
 
 import java.util.function.Function;

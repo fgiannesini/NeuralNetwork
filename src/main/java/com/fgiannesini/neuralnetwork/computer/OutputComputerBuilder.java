@@ -59,9 +59,12 @@ public class OutputComputerBuilder<L extends Layer> {
             ILayerComputer<L> layerComputer = LayerComputerBuilder.init()
                     .withLayerType(neuralNetworkModel.getLayerType())
                     .build();
-            intermediateOutputComputer = new IntermediateOutputComputerWithDropOutRegularization(dropOutMatrixList, layerComputer, neuralNetworkModel.getLayers());
+            intermediateOutputComputer = new IntermediateOutputComputerWithDropOutRegularization<>(dropOutMatrixList, layerComputer, neuralNetworkModel.getLayers());
         } else {
-            intermediateOutputComputer = new IntermediateOutputComputer(neuralNetworkModel);
+            ILayerComputer<L> layerComputer = LayerComputerBuilder.init()
+                    .withLayerType(neuralNetworkModel.getLayerType())
+                    .build();
+            intermediateOutputComputer = new IntermediateOutputComputer<>(neuralNetworkModel, layerComputer);
         }
 
         return intermediateOutputComputer;

@@ -1,6 +1,7 @@
 package com.fgiannesini.neuralnetwork.computer.finaloutputcomputer;
 
 import com.fgiannesini.neuralnetwork.computer.ILayerComputer;
+import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IntermediateOutputResult;
 import com.fgiannesini.neuralnetwork.model.Layer;
 import org.jblas.DoubleMatrix;
 
@@ -18,11 +19,12 @@ public class FinalOutputComputer<L extends Layer> implements IFinalOutputCompute
 
     @Override
     public DoubleMatrix compute(DoubleMatrix inputMatrix) {
-        DoubleMatrix currentMatrix = inputMatrix.dup();
+        DoubleMatrix firstCurrentMatrix = inputMatrix.dup();
+        IntermediateOutputResult intermediateOutputResult = new IntermediateOutputResult(firstCurrentMatrix);
         for (L layer : layers) {
-            currentMatrix = layerComputer.computeAFromInput(currentMatrix, layer);
+            intermediateOutputResult = layerComputer.computeAFromInput(intermediateOutputResult.getResult(), layer);
         }
-        return currentMatrix;
+        return intermediateOutputResult.getResult();
     }
 
 }

@@ -12,21 +12,21 @@ class WeightBiasLayerComputerTest {
     @Test
     void compute_on_one_weight_and_weight_bias() {
         WeightBiasLayer layer = new WeightBiasLayer(1, 1, InitializerType.ONES.getInitializer(), ActivationFunctionType.NONE);
-        DoubleMatrix output = new WeighBiasLayerComputer().computeAFromInput(DoubleMatrix.scalar(3f), layer);
+        DoubleMatrix output = new WeighBiasLayerComputer().computeAFromInput(DoubleMatrix.scalar(3f), layer).getResult();
         Assertions.assertArrayEquals(new double[]{4}, output.data);
     }
 
     @Test
     void compute_on_weight_array_and_weight_bias() {
         WeightBiasLayer layer = new WeightBiasLayer(5, 1, InitializerType.ONES.getInitializer(), ActivationFunctionType.NONE);
-        DoubleMatrix output = new WeighBiasLayerComputer().computeAFromInput(DoubleMatrix.ones(5).mul(3f), layer);
+        DoubleMatrix output = new WeighBiasLayerComputer().computeAFromInput(DoubleMatrix.ones(5).mul(3f), layer).getResult();
         Assertions.assertArrayEquals(new double[]{16}, output.data);
     }
 
     @Test
     void compute_on_weight_matrix_and_weight_bias() {
         WeightBiasLayer layer = new WeightBiasLayer(5, 2, InitializerType.ONES.getInitializer(), ActivationFunctionType.NONE);
-        DoubleMatrix output = new WeighBiasLayerComputer().computeAFromInput(DoubleMatrix.ones(5).mul(3f), layer);
+        DoubleMatrix output = new WeighBiasLayerComputer().computeAFromInput(DoubleMatrix.ones(5).mul(3f), layer).getResult();
         Assertions.assertArrayEquals(new double[]{16, 16}, output.data);
     }
 

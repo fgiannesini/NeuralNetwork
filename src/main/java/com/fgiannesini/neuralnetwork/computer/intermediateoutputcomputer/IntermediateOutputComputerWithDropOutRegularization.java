@@ -10,7 +10,7 @@ import java.util.List;
 public class IntermediateOutputComputerWithDropOutRegularization<L extends Layer> implements IIntermediateOutputComputer {
 
     private final List<DoubleMatrix> dropOutMatrixList;
-    private final ILayerComputer layerComputer;
+    private final ILayerComputer<L> layerComputer;
     private List<L> layers;
 
     public IntermediateOutputComputerWithDropOutRegularization(List<DoubleMatrix> dropOutMatrixList, ILayerComputer<L> layerComputer, List<L> layers) {
@@ -19,18 +19,23 @@ public class IntermediateOutputComputerWithDropOutRegularization<L extends Layer
         this.layers = layers;
     }
 
-    public List<DoubleMatrix> compute(DoubleMatrix inputMatrix) {
-        List<DoubleMatrix> intermediateMatrix = new ArrayList<>();
-        DoubleMatrix currentMatrix = inputMatrix.dup().muliColumnVector(dropOutMatrixList.get(0));
-        intermediateMatrix.add(currentMatrix);
+    public List<IntermediateOutputResult> compute(DoubleMatrix inputMatrix) {
+        List<IntermediateOutputResult> intermediateOutputResults = new ArrayList<>();
+
+        DoubleMatrix firstMatrix = inputMatrix.dup().muliColumnVector(dropOutMatrixList.get(0));
+        IntermediateOutputResult intermediateOutputResult = new IntermediateOutputResult(firstMatrix);
+        intermediateOutputResults.add(intermediateOutputResult);
+
         for (int layerIndex = 0, dropOutIndex = 1; layerIndex < layers.size(); layerIndex++, dropOutIndex++) {
             L layer = layers.get(layerIndex);
-            currentMatrix = layerComputer.computeZFromInput(currentMatrix, layer);
-            currentMatrix.muliColumnVector(dropOutMatrixList.get(dropOutIndex));
-            currentMatrix = layerComputer.computeAFromZ(currentMatrix, layer);
-            intermediateMatrix.add(currentMatrix);
+            intermediateOutputResult = layerComputer.computeZFromInput(intermediateOutputResult.getResult(), layer);
+            DoubleMatrix currentResult = intermediateOutputResult.getResult();
+            currentResult.muliColumnVector(dropOutMatrixList.get(dropOutIndex));
+            currentResult = layerComputer.computeAFromZ(currentResult, layer);
+            intermediateOutputResult.setResult(currentResult);
+            intermediateOutputResults.add(intermediateOutputResult);
         }
-        return intermediateMatrix;
+        return intermediateOutputResults;
     }
 
 }

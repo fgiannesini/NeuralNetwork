@@ -82,7 +82,7 @@ public class LearningAlgorithmBuilder {
                 if (neuralNetworkModel.getLayerType().equals(LayerType.BATCH_NORM)) {
                     processProvider = new GradientDescentBatchNormProcessProvider();
                 } else {
-                    processProvider = new GradientDescentDefaultProcessProvider();
+                    processProvider = new GradientDescentWeightBiasProcessProvider();
                 }
                 switch (costType) {
                     case LINEAR_REGRESSION:

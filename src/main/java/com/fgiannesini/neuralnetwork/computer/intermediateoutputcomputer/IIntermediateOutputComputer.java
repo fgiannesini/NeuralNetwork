@@ -10,15 +10,19 @@ public interface IIntermediateOutputComputer {
 
     default List<double[]> compute(double[] input) {
         DoubleMatrix inputMatrix = DataFormatConverter.fromTabToDoubleMatrix(input);
-        return compute(inputMatrix).stream().map(DataFormatConverter::fromDoubleMatrixToTab)
+        return compute(inputMatrix).stream()
+                .map(IntermediateOutputResult::getResult)
+                .map(DataFormatConverter::fromDoubleMatrixToTab)
                 .collect(Collectors.toList());
     }
 
     default List<double[][]> compute(double[][] input) {
         DoubleMatrix inputMatrix = DataFormatConverter.fromDoubleTabToDoubleMatrix(input);
-        return compute(inputMatrix).stream().map(DataFormatConverter::fromDoubleMatrixToDoubleTab)
+        return compute(inputMatrix).stream()
+                .map(IntermediateOutputResult::getResult)
+                .map(DataFormatConverter::fromDoubleMatrixToDoubleTab)
                 .collect(Collectors.toList());
     }
 
-    List<DoubleMatrix> compute(DoubleMatrix inputMatrix);
+    List<IntermediateOutputResult> compute(DoubleMatrix inputMatrix);
 }

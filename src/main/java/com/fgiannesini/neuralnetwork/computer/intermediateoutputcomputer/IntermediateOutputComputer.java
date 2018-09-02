@@ -1,7 +1,6 @@
 package com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer;
 
 import com.fgiannesini.neuralnetwork.computer.ILayerComputer;
-import com.fgiannesini.neuralnetwork.computer.LayerComputerBuilder;
 import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
@@ -9,27 +8,25 @@ import org.jblas.DoubleMatrix;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IntermediateOutputComputer implements IIntermediateOutputComputer {
+public class IntermediateOutputComputer<L extends Layer> implements IIntermediateOutputComputer {
 
-    private final NeuralNetworkModel<? extends Layer> model;
-    private final ILayerComputer layerComputer;
+    private final NeuralNetworkModel<L> model;
+    private final ILayerComputer<L> layerComputer;
 
-    public IntermediateOutputComputer(NeuralNetworkModel<? extends Layer> model) {
+    public IntermediateOutputComputer(NeuralNetworkModel<L> model, ILayerComputer<L> layerComputer) {
         this.model = model;
-        layerComputer = LayerComputerBuilder.init()
-                .withLayerType(model.getLayerType())
-                .build();
+        this.layerComputer = layerComputer;
     }
 
-    public List<DoubleMatrix> compute(DoubleMatrix inputMatrix) {
-        List<DoubleMatrix> intermediateMatrix = new ArrayList<>();
-        DoubleMatrix currentMatrix = inputMatrix.dup();
-        intermediateMatrix.add(currentMatrix);
-        for (Layer layer : model.getLayers()) {
-            currentMatrix = layerComputer.computeAFromInput(currentMatrix, layer);
-            intermediateMatrix.add(currentMatrix);
+    public List<IntermediateOutputResult> compute(DoubleMatrix inputMatrix) {
+        List<IntermediateOutputResult> intermediateOutputResults = new ArrayList<>();
+        IntermediateOutputResult intermediateOutputResult = new IntermediateOutputResult(inputMatrix.dup());
+        intermediateOutputResults.add(intermediateOutputResult);
+        for (L layer : model.getLayers()) {
+            intermediateOutputResult = layerComputer.computeAFromInput(intermediateOutputResult.getResult(), layer);
+            intermediateOutputResults.add(intermediateOutputResult);
         }
-        return intermediateMatrix;
+        return intermediateOutputResults;
     }
 
 }

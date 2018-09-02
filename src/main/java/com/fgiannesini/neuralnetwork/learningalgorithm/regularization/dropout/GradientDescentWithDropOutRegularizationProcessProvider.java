@@ -2,8 +2,10 @@ package com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout;
 
 import com.fgiannesini.neuralnetwork.computer.OutputComputerBuilder;
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IIntermediateOutputComputer;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientLayerProvider;
+import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IntermediateOutputResult;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container.*;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientLayerProvider;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientLayerProviderBuilder;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.IGradientDescentProcessProvider;
 import com.fgiannesini.neuralnetwork.model.Layer;
 import org.jblas.DoubleMatrix;
@@ -59,8 +61,12 @@ public class GradientDescentWithDropOutRegularizationProcessProvider<L extends L
                     .withModel(container.getNeuralNetworkModel())
                     .withDropOutParameters(dropOutMatrices)
                     .buildIntermediateOutputComputer();
-            List<DoubleMatrix> intermediateResults = intermediateOutputComputer.compute(container.getInputMatrix());
-            return new GradientLayerProvider<>(layers, intermediateResults);
+
+            List<IntermediateOutputResult> intermediateResults = intermediateOutputComputer.compute(container.getInputMatrix());
+            return GradientLayerProviderBuilder.init()
+                    .withModel(container.getNeuralNetworkModel())
+                    .withIntermediateResults(intermediateResults)
+                    .build();
         };
     }
 

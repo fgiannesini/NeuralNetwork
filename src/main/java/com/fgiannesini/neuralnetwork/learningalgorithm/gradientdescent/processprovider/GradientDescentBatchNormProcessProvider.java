@@ -2,9 +2,11 @@ package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processp
 
 import com.fgiannesini.neuralnetwork.computer.OutputComputerBuilder;
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IIntermediateOutputComputer;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientBatchNormLayerProvider;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientLayerProvider;
+import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IntermediateOutputResult;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container.*;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientBatchNormLayerProvider;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientLayerProvider;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientLayerProviderBuilder;
 import com.fgiannesini.neuralnetwork.model.BatchNormLayer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
@@ -138,29 +140,6 @@ public class GradientDescentBatchNormProcessProvider implements IGradientDescent
         };
     }
 
-    private class BatchNormBackwardReturn {
-
-        private final DoubleMatrix weightCorrection;
-        private final DoubleMatrix dGamma;
-        private final DoubleMatrix dBeta;
-        private final DoubleMatrix dx;
-
-        public BatchNormBackwardReturn(DoubleMatrix weightCorrection, DoubleMatrix dGamma, DoubleMatrix dBeta, DoubleMatrix dx) {
-            this.weightCorrection = weightCorrection;
-            this.dGamma = dGamma;
-            this.dBeta = dBeta;
-            this.dx = dx;
-        }
-
-        public GradientDescentCorrection getCorrections() {
-            return new GradientDescentCorrection(weightCorrection, dGamma, dBeta);
-        }
-
-        public DoubleMatrix getNextError() {
-            return dx;
-        }
-    }
-
     @Override
     public Function<ErrorComputationContainer, ErrorComputationContainer> getFirstErrorComputationLauncher() {
         return container -> {
@@ -172,12 +151,14 @@ public class GradientDescentBatchNormProcessProvider implements IGradientDescent
     public Function<ForwardComputationContainer<BatchNormLayer>, GradientLayerProvider<BatchNormLayer>> getForwardComputationLauncher() {
         return container -> {
             NeuralNetworkModel<BatchNormLayer> neuralNetworkModel = container.getNeuralNetworkModel();
-            List<BatchNormLayer> layers = neuralNetworkModel.getLayers();
             IIntermediateOutputComputer intermediateOutputComputer = OutputComputerBuilder.init()
                     .withModel(neuralNetworkModel)
                     .buildIntermediateOutputComputer();
-            List<DoubleMatrix> intermediateResults = intermediateOutputComputer.compute(container.getInputMatrix());
-            return new GradientBatchNormLayerProvider(layers, intermediateResults);
+            List<IntermediateOutputResult> intermediateResults = intermediateOutputComputer.compute(container.getInputMatrix());
+            return GradientLayerProviderBuilder.init()
+                    .withModel(neuralNetworkModel)
+                    .withIntermediateResults(intermediateResults)
+                    .build();
         };
     }
 

@@ -15,7 +15,7 @@ class BatchNormLayerComputerTest {
     @Test
     void compute_on_weight_matrix_and_batch_norm() {
         BatchNormLayer layer = new BatchNormLayer(5, 2, InitializerType.ONES.getInitializer(), ActivationFunctionType.NONE);
-        DoubleMatrix output = new BatchNormLayerComputer(new MeanDeviationProvider()).computeAFromInput(DoubleMatrix.ones(5).mul(3f), layer);
+        DoubleMatrix output = new BatchNormLayerComputer(new MeanDeviationProvider()).computeAFromInput(DoubleMatrix.ones(5).mul(3f), layer).getResult();
         Assertions.assertArrayEquals(new double[]{1, 1}, output.data);
     }
 
@@ -33,7 +33,7 @@ class BatchNormLayerComputerTest {
                 {1.0509, 1.0509},
                 {2.1984, 2.1984}
         };
-        DoubleMatrix output = new BatchNormLayerComputer(new MeanDeviationProvider()).computeAFromInput(DataFormatConverter.fromDoubleTabToDoubleMatrix(input), layer);
+        DoubleMatrix output = new BatchNormLayerComputer(new MeanDeviationProvider()).computeAFromInput(DataFormatConverter.fromDoubleTabToDoubleMatrix(input), layer).getResult();
         IntStream.range(0, expectedOutput.length).forEach(i -> Assertions.assertArrayEquals(expectedOutput[i], DataFormatConverter.fromDoubleMatrixToDoubleTab(output)[i],0.0001));
     }
 
