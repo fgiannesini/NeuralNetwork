@@ -8,6 +8,7 @@ import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container
 import com.fgiannesini.neuralnetwork.model.BatchNormLayer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
+import org.jblas.MatrixFunctions;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,7 +17,10 @@ import java.util.function.Function;
 
 public class GradientDescentBatchNormProcessProvider implements IGradientDescentProcessProvider<BatchNormLayer> {
 
+    private double epsilon;
+
     public GradientDescentBatchNormProcessProvider() {
+        epsilon = Math.pow(10, -8);
     }
 
     @Override
@@ -39,73 +43,23 @@ public class GradientDescentBatchNormProcessProvider implements IGradientDescent
     public Function<BackwardComputationContainer, List<GradientDescentCorrection>> getBackwardComputationLauncher() {
         return container -> {
             List<GradientDescentCorrection> gradientDescentCorrections = new ArrayList<>();
-//            int inputCount = container.getY().getColumns();
-//
-//            GradientLayerProvider gradientLayerProvider = container.getProvider();
-//            DoubleMatrix dz = container.getFirstErrorComputationLauncher()
-//                    .apply(new ErrorComputationContainer(gradientLayerProvider, container.getY()))
-//                    .getPreviousError();
-//            DoubleMatrix weightCorrection = computeWeightCorrection(gradientLayerProvider.getPreviousResult(), dz, inputCount);
-//            DoubleMatrix biasCorrection = computeBiasCorrection(dz, inputCount);
-//
-//            gradientDescentCorrections.add(new GradientDescentCorrection(weightCorrection, biasCorrection));
-//
-//            for (gradientLayerProvider.nextLayer(); gradientLayerProvider.hasNextLayer(); gradientLayerProvider.nextLayer()) {
-//                dz = container.getErrorComputationLauncher()
-//                        .apply(new ErrorComputationContainer(gradientLayerProvider, dz))
-//                        .getPreviousError();
-//                weightCorrection = computeWeightCorrection(gradientLayerProvider.getPreviousResult(), dz, inputCount);
-//                biasCorrection = computeBiasCorrection(dz, inputCount);
-//                gradientDescentCorrections.add(new GradientDescentCorrection(weightCorrection, biasCorrection));
-//            }
-//
-
             int inputCount = container.getY().getColumns();
 
             GradientBatchNormLayerProvider gradientLayerProvider = (GradientBatchNormLayerProvider) container.getProvider();
             DoubleMatrix dz = container.getFirstErrorComputationLauncher()
                     .apply(new ErrorComputationContainer(gradientLayerProvider, container.getY()))
                     .getPreviousError();
+            BatchNormBackwardReturn batchNormBackwardReturn = getBatchNormBackwardReturn(inputCount, gradientLayerProvider, dz);
 
-//  #step9
-//            dbeta = np.sum(dout, axis=0)
-            DoubleMatrix dBeta = dz.columnSums();
-//            dgammax = dout #not necessary, but more understandable
-            DoubleMatrix dGammaX = dz;
+            gradientDescentCorrections.add(batchNormBackwardReturn.getCorrections());
 
-//  #step8
-//            dgamma = np.sum(dgammax*xhat, axis=0)
-            DoubleMatrix dGamma = dGammaX.mul(gradientLayerProvider.getCurrentResult());
-//            dxhat = dgammax * gamma
-            DoubleMatrix dXhat = dGammaX.mul(gradientLayerProvider.getGammaMatrix());
-
-//  #step7
-//                    divar = np.sum(dxhat*xmu, axis=0)
-//            dxmu1 = dxhat * ivar
-//
-//  #step6
-//                    dsqrtvar = -1. /(sqrtvar**2) * divar
-//
-//  #step5
-//                    dvar = 0.5 * 1. /np.sqrt(var+eps) * dsqrtvar
-//
-//  #step4
-//                    dsq = 1. /N * np.ones((N,D)) * dvar
-//
-//  #step3
-//                    dxmu2 = 2 * xmu * dsq
-//
-//  #step2
-//                    dx1 = (dxmu1 + dxmu2)
-//            dmu = -1 * np.sum(dxmu1+dxmu2, axis=0)
-//
-//  #step1
-//                    dx2 = 1. /N * np.ones((N,D)) * dmu
-//
-//  #step0
-//                    dx = dx1 + dx2
-//
-//            return dx, dgamma, dbeta
+            for (gradientLayerProvider.nextLayer(); gradientLayerProvider.hasNextLayer(); gradientLayerProvider.nextLayer()) {
+                dz = container.getErrorComputationLauncher()
+                        .apply(new ErrorComputationContainer(gradientLayerProvider, batchNormBackwardReturn.getNextError()))
+                        .getPreviousError();
+                batchNormBackwardReturn = getBatchNormBackwardReturn(inputCount, gradientLayerProvider, dz);
+                gradientDescentCorrections.add(batchNormBackwardReturn.getCorrections());
+            }
 
             Collections.reverse(gradientDescentCorrections);
             return gradientDescentCorrections;
@@ -113,11 +67,98 @@ public class GradientDescentBatchNormProcessProvider implements IGradientDescent
 
     }
 
+    public BatchNormBackwardReturn getBatchNormBackwardReturn(int inputCount, GradientBatchNormLayerProvider gradientLayerProvider, DoubleMatrix dz) {
+        //  #step9
+//            dbeta = np.sum(dout, axis=0)
+        DoubleMatrix dBeta = dz.columnSums();
+//            dgammax = dout #not necessary, but more understandable
+        DoubleMatrix dGammaX = dz;
+
+//  #step8
+//            dgamma = np.sum(dgammax*xhat, axis=0)
+        DoubleMatrix dGamma = dGammaX.mul(gradientLayerProvider.getCurrentResult());
+//            dxhat = dgammax * gamma
+        DoubleMatrix dXhat = dGammaX.mul(gradientLayerProvider.getGammaMatrix());
+
+//  #step7
+//                    divar = np.sum(dxhat*xmu, axis=0)
+        DoubleMatrix diVar = dXhat.mul(gradientLayerProvider.getMean());
+//            dxmu1 = dxhat * ivar
+        DoubleMatrix dXmu1 = dXhat.div(gradientLayerProvider.getStandardDeviation());
+//
+//  #step6
+//                    dsqrtvar = -1. /(sqrtvar**2) * divar
+        DoubleMatrix dSqrtVar = diVar.mul(MatrixFunctions.pow(gradientLayerProvider.getStandardDeviation(), 2).muli(-1));
+//
+//  #step5
+//                    dvar = 0.5 * 1. /np.sqrt(var+eps) * dsqrtvar
+
+        DoubleMatrix dVar = dSqrtVar.div(MatrixFunctions.sqrt(gradientLayerProvider.getStandardDeviation().add(epsilon)));
+//
+//  #step4
+//                    dsq = 1. /N * np.ones((N,D)) * dvar
+        DoubleMatrix dsq = dVar.div(DoubleMatrix.ones(gradientLayerProvider.getInputSize(), gradientLayerProvider.getOutputSize()));
+//
+//  #step3
+//                    dxmu2 = 2 * xmu * dsq
+        DoubleMatrix dXmu2 = gradientLayerProvider.getMean().mul(dsq).mul(2);
+//
+//  #step2
+//                    dx1 = (dxmu1 + dxmu2)
+        DoubleMatrix dX1 = dXmu1.add(dXmu2);
+//            dmu = -1 * np.sum(dxmu1+dxmu2, axis=0)
+        DoubleMatrix dMu = dXmu1.add(dXmu2).columnSums().muli(-1);
+//
+//  #step1
+//                    dx2 = 1. /N * np.ones((N,D)) * dmu
+        DoubleMatrix dx2 = dMu.div(DoubleMatrix.ones(gradientLayerProvider.getInputSize(), gradientLayerProvider.getOutputSize()));
+//
+//  #step0
+//                    dx = dx1 + dx2
+        DoubleMatrix dx = dX1.add(dx2);
+        DoubleMatrix weightCorrection = computeWeightCorrection(gradientLayerProvider.getPreviousResult(), dx, inputCount);
+        return new BatchNormBackwardReturn(weightCorrection, dGamma, dBeta, dx);
+    }
+
+    private DoubleMatrix computeWeightCorrection(DoubleMatrix previousaLayerResult, DoubleMatrix dz, int inputCount) {
+        //dW1 = dZ1 * A0t ./m
+        return dz
+                .mmul(previousaLayerResult.transpose())
+                .divi(inputCount);
+    }
+
     @Override
     public Function<ErrorComputationContainer, ErrorComputationContainer> getErrorComputationLauncher() {
         return container -> {
-            throw new RuntimeException("Should use a regression type process provider");
+            //dZ1 = W2t * dZ2 .* g1'(A1)
+            DoubleMatrix error = container.getProvider().getPreviousWeightMatrix().transpose()
+                    .mmul(container.getPreviousError())
+                    .muli(container.getProvider().getCurrentActivationFunction().derivate(container.getProvider().getCurrentResult()));
+            return new ErrorComputationContainer(container.getProvider(), error);
         };
+    }
+
+    private class BatchNormBackwardReturn {
+
+        private final DoubleMatrix weightCorrection;
+        private final DoubleMatrix dGamma;
+        private final DoubleMatrix dBeta;
+        private final DoubleMatrix dx;
+
+        public BatchNormBackwardReturn(DoubleMatrix weightCorrection, DoubleMatrix dGamma, DoubleMatrix dBeta, DoubleMatrix dx) {
+            this.weightCorrection = weightCorrection;
+            this.dGamma = dGamma;
+            this.dBeta = dBeta;
+            this.dx = dx;
+        }
+
+        public GradientDescentCorrection getCorrections() {
+            return new GradientDescentCorrection(weightCorrection, dGamma, dBeta);
+        }
+
+        public DoubleMatrix getNextError() {
+            return dx;
+        }
     }
 
     @Override

@@ -36,4 +36,12 @@ public class GradientBatchNormLayerProvider extends GradientLayerProvider<BatchN
     public DoubleMatrix getMean() {
         return means.get(currentLayerIndex);
     }
+
+    public int getInputSize() {
+        return layers.get(currentLayerIndex).getInputLayerSize();
+    }
+
+    public int getOutputSize() {
+        return layers.get(currentLayerIndex).getOutputLayerSize();
+    }
 }
