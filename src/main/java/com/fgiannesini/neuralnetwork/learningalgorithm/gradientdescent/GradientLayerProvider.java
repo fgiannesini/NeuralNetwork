@@ -4,7 +4,6 @@ import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionAppli
 import com.fgiannesini.neuralnetwork.model.Layer;
 import org.jblas.DoubleMatrix;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GradientLayerProvider<L extends Layer> {
@@ -13,15 +12,12 @@ public class GradientLayerProvider<L extends Layer> {
     protected final List<L> layers;
     int currentLayerIndex;
 
-    public GradientLayerProvider(List<L> layers) {
+    public GradientLayerProvider(List<L> layers, List<DoubleMatrix> results) {
         currentLayerIndex = layers.size();
-        this.results = new ArrayList<>();
+        this.results = results;
         this.layers = layers;
     }
 
-    public void addResults(DoubleMatrix result) {
-        results.add(result);
-    }
     public void nextLayer() {
         currentLayerIndex--;
     }

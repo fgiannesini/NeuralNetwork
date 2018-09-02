@@ -11,8 +11,8 @@ public class GradientBatchNormLayerProvider extends GradientLayerProvider<BatchN
     private List<DoubleMatrix> means;
     private List<DoubleMatrix> standardDeviations;
 
-    public GradientBatchNormLayerProvider(List<BatchNormLayer> layers) {
-        super(layers);
+    public GradientBatchNormLayerProvider(List<BatchNormLayer> layers, List<DoubleMatrix> results) {
+        super(layers, results);
         means = new ArrayList<>();
         standardDeviations = new ArrayList<>();
     }

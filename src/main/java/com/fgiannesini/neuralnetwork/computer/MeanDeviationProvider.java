@@ -3,14 +3,13 @@ package com.fgiannesini.neuralnetwork.computer;
 import org.jblas.DoubleMatrix;
 import org.jblas.MatrixFunctions;
 
-class ComputationUtils {
-    private static final double epsilon = Math.pow(10, -8);
+public class MeanDeviationProvider {
 
-    static MeanDeviation get(DoubleMatrix input) {
+    public MeanDeviation get(DoubleMatrix input) {
         //mean
         DoubleMatrix means = input.rowMeans();
         //sigma
-        DoubleMatrix standardDeviation = MatrixFunctions.sqrt(MatrixFunctions.pow(input.subColumnVector(means), 2).rowMeans().addi(epsilon));
+        DoubleMatrix standardDeviation = MatrixFunctions.sqrt(MatrixFunctions.pow(input.subColumnVector(means), 2).rowMeans());
         return new MeanDeviation(means, standardDeviation);
     }
 }

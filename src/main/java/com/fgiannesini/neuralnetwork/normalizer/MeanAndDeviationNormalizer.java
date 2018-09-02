@@ -1,25 +1,21 @@
 package com.fgiannesini.neuralnetwork.normalizer;
 
+import com.fgiannesini.neuralnetwork.computer.MeanDeviation;
+import com.fgiannesini.neuralnetwork.computer.MeanDeviationProvider;
 import org.jblas.DoubleMatrix;
-import org.jblas.MatrixFunctions;
 
 public class MeanAndDeviationNormalizer implements INormalizer {
 
-    private DoubleMatrix means;
-    private DoubleMatrix standardDeviation;
+    private double epsilon = Math.pow(10, -8);
+    private MeanDeviation meanDeviation;
 
     @Override
     public DoubleMatrix normalize(DoubleMatrix input) {
-        if (means == null || standardDeviation == null) {
-            //mu
-            means = input.rowMeans();
-
-            //sigma
-            standardDeviation = MatrixFunctions.sqrt(MatrixFunctions.pow(input, 2).rowMeans());
-            standardDeviation = standardDeviation.not().addi(standardDeviation);
+        if (meanDeviation == null) {
+            meanDeviation = new MeanDeviationProvider().get(input);
         }
         //(x-mu)/sigma
-        return input.subColumnVector(means).diviColumnVector(standardDeviation);
+        return input.subColumnVector(meanDeviation.getMean()).diviColumnVector(meanDeviation.getDeviation().add(epsilon));
     }
 
 

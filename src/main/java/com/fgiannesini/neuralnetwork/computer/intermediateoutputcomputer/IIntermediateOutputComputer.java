@@ -1,20 +1,24 @@
 package com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer;
 
 import com.fgiannesini.neuralnetwork.converter.DataFormatConverter;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientLayerProvider;
 import org.jblas.DoubleMatrix;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public interface IIntermediateOutputComputer {
 
-    default GradientLayerProvider compute(double[] input) {
+    default List<double[]> compute(double[] input) {
         DoubleMatrix inputMatrix = DataFormatConverter.fromTabToDoubleMatrix(input);
-        return compute(inputMatrix);
+        return compute(inputMatrix).stream().map(DataFormatConverter::fromDoubleMatrixToTab)
+                .collect(Collectors.toList());
     }
 
-    default GradientLayerProvider compute(double[][] input) {
+    default List<double[][]> compute(double[][] input) {
         DoubleMatrix inputMatrix = DataFormatConverter.fromDoubleTabToDoubleMatrix(input);
-        return compute(inputMatrix);
+        return compute(inputMatrix).stream().map(DataFormatConverter::fromDoubleMatrixToDoubleTab)
+                .collect(Collectors.toList());
     }
 
-    GradientLayerProvider compute(DoubleMatrix inputMatrix);
+    List<DoubleMatrix> compute(DoubleMatrix inputMatrix);
 }

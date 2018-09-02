@@ -1,35 +1,30 @@
 package com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer;
 
 import com.fgiannesini.neuralnetwork.computer.ILayerComputer;
-import com.fgiannesini.neuralnetwork.computer.LayerComputerBuilder;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientLayerProvider;
 import com.fgiannesini.neuralnetwork.model.Layer;
-import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class IntermediateOutputComputerWithDropOutRegularization implements IIntermediateOutputComputer {
+public class IntermediateOutputComputerWithDropOutRegularization<L extends Layer> implements IIntermediateOutputComputer {
 
-    private final NeuralNetworkModel<? extends Layer> model;
     private final List<DoubleMatrix> dropOutMatrixList;
     private final ILayerComputer layerComputer;
+    private List<L> layers;
 
-    public IntermediateOutputComputerWithDropOutRegularization(NeuralNetworkModel<? extends Layer> model, List<DoubleMatrix> dropOutMatrixList) {
-        this.model = model;
-        layerComputer = LayerComputerBuilder.init()
-                .withLayerType(model.getLayerType())
-                .build();
+    public IntermediateOutputComputerWithDropOutRegularization(List<DoubleMatrix> dropOutMatrixList, ILayerComputer layerComputer, List<L> layers) {
         this.dropOutMatrixList = dropOutMatrixList;
+        this.layerComputer = layerComputer;
+        this.layers = layers;
     }
 
-    public GradientLayerProvider compute(DoubleMatrix inputMatrix) {
+    public List<DoubleMatrix> compute(DoubleMatrix inputMatrix) {
         List<DoubleMatrix> intermediateMatrix = new ArrayList<>();
         DoubleMatrix currentMatrix = inputMatrix.dup().muliColumnVector(dropOutMatrixList.get(0));
         intermediateMatrix.add(currentMatrix);
-        for (int layerIndex = 0, dropOutIndex = 1; layerIndex < model.getLayers().size(); layerIndex++, dropOutIndex++) {
-            Layer layer = model.getLayers().get(layerIndex);
+        for (int layerIndex = 0, dropOutIndex = 1; layerIndex < layers.size(); layerIndex++, dropOutIndex++) {
+            L layer = layers.get(layerIndex);
             currentMatrix = layerComputer.computeZFromInput(currentMatrix, layer);
             currentMatrix.muliColumnVector(dropOutMatrixList.get(dropOutIndex));
             currentMatrix = layerComputer.computeAFromZ(currentMatrix, layer);

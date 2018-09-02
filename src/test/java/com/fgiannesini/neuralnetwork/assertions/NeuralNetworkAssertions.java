@@ -1,4 +1,4 @@
-package com.fgiannesini.neuralnetwork.learningalgorithm;
+package com.fgiannesini.neuralnetwork.assertions;
 
 import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.function.Executable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class NeuralNetworkAssertions {
@@ -26,18 +25,10 @@ public class NeuralNetworkAssertions {
             List<DoubleMatrix> secondParameterMatrix = secondLayers.get(i).getParametersMatrix();
             Assertions.assertEquals(firstParameterMatrix.size(), secondParameterMatrix.size());
             for (int j = 0; j < secondParameterMatrix.size(); j++) {
-                executables.addAll(getMatrixAssertions(firstParameterMatrix.get(j), secondParameterMatrix.get(j)));
+                executables.addAll(DoubleMatrixAssertions.getMatrixAssertions(firstParameterMatrix.get(j), secondParameterMatrix.get(j)));
             }
         }
         Assertions.assertAll(executables);
-    }
-
-    private static List<Executable> getMatrixAssertions(DoubleMatrix currentMatrix, DoubleMatrix expectedMatrix) {
-        return Arrays.asList(
-                () -> Assertions.assertEquals(expectedMatrix.getColumns(), currentMatrix.getColumns()),
-                () -> Assertions.assertEquals(expectedMatrix.getRows(), currentMatrix.getRows()),
-                () -> Assertions.assertArrayEquals(expectedMatrix.data, currentMatrix.data, 0.00001)
-        );
     }
 
     public static void checkNeuralNetworksLayer(NeuralNetworkModel<? extends Layer> neuralNetworkModel, int layerIndex, List<DoubleMatrix> expectedParametersMatrix) {
@@ -45,7 +36,7 @@ public class NeuralNetworkAssertions {
         List<Executable> matrixAssertions = new ArrayList<>();
         List<DoubleMatrix> parametersMatrix = layer.getParametersMatrix();
         for (int i = 0; i < parametersMatrix.size(); i++) {
-            matrixAssertions.addAll(getMatrixAssertions(parametersMatrix.get(i), expectedParametersMatrix.get(i)));
+            matrixAssertions.addAll(DoubleMatrixAssertions.getMatrixAssertions(parametersMatrix.get(i), expectedParametersMatrix.get(i)));
         }
         Assertions.assertAll(matrixAssertions);
     }

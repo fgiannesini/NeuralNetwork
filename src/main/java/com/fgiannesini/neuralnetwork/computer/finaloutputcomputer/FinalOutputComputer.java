@@ -1,27 +1,25 @@
 package com.fgiannesini.neuralnetwork.computer.finaloutputcomputer;
 
 import com.fgiannesini.neuralnetwork.computer.ILayerComputer;
-import com.fgiannesini.neuralnetwork.computer.LayerComputerBuilder;
 import com.fgiannesini.neuralnetwork.model.Layer;
-import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
 
-public class FinalOutputComputer implements IFinalOutputComputer {
+import java.util.List;
 
-    private final NeuralNetworkModel<? extends Layer> model;
-    private final ILayerComputer layerComputer;
+public class FinalOutputComputer<L extends Layer> implements IFinalOutputComputer {
 
-    public FinalOutputComputer(NeuralNetworkModel<? extends Layer> model) {
-        this.model = model;
-        layerComputer = LayerComputerBuilder.init()
-                .withLayerType(model.getLayerType())
-                .build();
+    private final ILayerComputer<L> layerComputer;
+    private List<L> layers;
+
+    public FinalOutputComputer(List<L> layers, ILayerComputer<L> layerComputer) {
+        this.layers = layers;
+        this.layerComputer = layerComputer;
     }
 
     @Override
     public DoubleMatrix compute(DoubleMatrix inputMatrix) {
         DoubleMatrix currentMatrix = inputMatrix.dup();
-        for (Layer layer : model.getLayers()) {
+        for (L layer : layers) {
             currentMatrix = layerComputer.computeAFromInput(currentMatrix, layer);
         }
         return currentMatrix;

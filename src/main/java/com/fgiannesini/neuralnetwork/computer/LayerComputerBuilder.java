@@ -1,5 +1,6 @@
 package com.fgiannesini.neuralnetwork.computer;
 
+import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.LayerType;
 
 public class LayerComputerBuilder {
@@ -19,12 +20,12 @@ public class LayerComputerBuilder {
         return this;
     }
 
-    public ILayerComputer build() {
+    public <L extends Layer> ILayerComputer<L> build() {
         switch (layerType) {
             case BATCH_NORM:
-                return new BatchNormLayerComputer();
+                return (ILayerComputer<L>) new BatchNormLayerComputer(new MeanDeviationProvider());
             case WEIGHT_BIAS:
-                return new WeighBiasLayerComputer();
+                return (ILayerComputer<L>) new WeighBiasLayerComputer();
             default:
                 throw new IllegalArgumentException("Layer computer for type " + layerType.name() + " not implemented");
         }
