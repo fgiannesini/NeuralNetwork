@@ -22,7 +22,7 @@ public class OutputComputerBuilder<L extends Layer> {
     }
 
     public static OutputComputerBuilder init() {
-        return new OutputComputerBuilder();
+        return new OutputComputerBuilder<>();
     }
 
     public OutputComputerBuilder<L> withModel(NeuralNetworkModel<L> neuralNetworkModel) {

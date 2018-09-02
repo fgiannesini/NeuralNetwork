@@ -78,9 +78,11 @@ public class LearningAlgorithmBuilder {
         LearningAlgorithm learningAlgorithm;
         switch (learningAlgorithmType) {
             case GRADIENT_DESCENT:
-                IGradientDescentProcessProvider processProvider = new GradientDescentDefaultProcessProvider();
+                IGradientDescentProcessProvider processProvider;
                 if (neuralNetworkModel.getLayerType().equals(LayerType.BATCH_NORM)) {
-                    processProvider = new GradientDescentBatchNormProcessProvider(processProvider);
+                    processProvider = new GradientDescentBatchNormProcessProvider();
+                } else {
+                    processProvider = new GradientDescentDefaultProcessProvider();
                 }
                 switch (costType) {
                     case LINEAR_REGRESSION:

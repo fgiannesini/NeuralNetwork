@@ -2,13 +2,14 @@ package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processp
 
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientLayerProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container.*;
+import com.fgiannesini.neuralnetwork.model.Layer;
 
 import java.util.List;
 import java.util.function.Function;
 
-public interface IGradientDescentProcessProvider {
+public interface IGradientDescentProcessProvider<L extends Layer> {
 
-    Function<GradientDescentCorrectionsContainer, GradientDescentCorrectionsContainer> getGradientDescentCorrectionsLauncher();
+    Function<GradientDescentCorrectionsContainer<L>, GradientDescentCorrectionsContainer<L>> getGradientDescentCorrectionsLauncher();
 
     Function<BackwardComputationContainer, List<GradientDescentCorrection>> getBackwardComputationLauncher();
 
@@ -16,7 +17,7 @@ public interface IGradientDescentProcessProvider {
 
     Function<ErrorComputationContainer, ErrorComputationContainer> getFirstErrorComputationLauncher();
 
-    Function<ForwardComputationContainer, GradientLayerProvider> getForwardComputationLauncher();
+    Function<ForwardComputationContainer<L>, GradientLayerProvider<L>> getForwardComputationLauncher();
 
     Function<DataContainer, DataContainer> getDataProcessLauncher();
 }

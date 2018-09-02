@@ -13,7 +13,7 @@ public class IntermediateOutputComputerWithDropOutRegularization<L extends Layer
     private final ILayerComputer layerComputer;
     private List<L> layers;
 
-    public IntermediateOutputComputerWithDropOutRegularization(List<DoubleMatrix> dropOutMatrixList, ILayerComputer layerComputer, List<L> layers) {
+    public IntermediateOutputComputerWithDropOutRegularization(List<DoubleMatrix> dropOutMatrixList, ILayerComputer<L> layerComputer, List<L> layers) {
         this.dropOutMatrixList = dropOutMatrixList;
         this.layerComputer = layerComputer;
         this.layers = layers;

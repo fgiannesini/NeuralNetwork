@@ -12,13 +12,13 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class GradientDescentWithDropOutRegularizationProcessProvider implements IGradientDescentProcessProvider {
+public class GradientDescentWithDropOutRegularizationProcessProvider<L extends Layer> implements IGradientDescentProcessProvider<L> {
 
-    private final IGradientDescentProcessProvider gradientDescentProcessProvider;
+    private final IGradientDescentProcessProvider<L> gradientDescentProcessProvider;
     private final Supplier<List<DoubleMatrix>> dropOutMatricesSupplier;
     private List<DoubleMatrix> dropOutMatrices;
 
-    public GradientDescentWithDropOutRegularizationProcessProvider(Supplier<List<DoubleMatrix>> dropOutMatricesSupplier, IGradientDescentProcessProvider processProvider) {
+    public GradientDescentWithDropOutRegularizationProcessProvider(Supplier<List<DoubleMatrix>> dropOutMatricesSupplier, IGradientDescentProcessProvider<L> processProvider) {
         this.dropOutMatricesSupplier = dropOutMatricesSupplier;
         gradientDescentProcessProvider = processProvider;
     }
@@ -42,7 +42,7 @@ public class GradientDescentWithDropOutRegularizationProcessProvider implements 
     }
 
     @Override
-    public Function<GradientDescentCorrectionsContainer, GradientDescentCorrectionsContainer> getGradientDescentCorrectionsLauncher() {
+    public Function<GradientDescentCorrectionsContainer<L>, GradientDescentCorrectionsContainer<L>> getGradientDescentCorrectionsLauncher() {
         return gradientDescentProcessProvider.getGradientDescentCorrectionsLauncher();
     }
 
@@ -52,15 +52,15 @@ public class GradientDescentWithDropOutRegularizationProcessProvider implements 
     }
 
     @Override
-    public Function<ForwardComputationContainer, GradientLayerProvider> getForwardComputationLauncher() {
+    public Function<ForwardComputationContainer<L>, GradientLayerProvider<L>> getForwardComputationLauncher() {
         return container -> {
-            List<Layer> layers = container.getNeuralNetworkModel().getLayers();
+            List<L> layers = container.getNeuralNetworkModel().getLayers();
             IIntermediateOutputComputer intermediateOutputComputer = OutputComputerBuilder.init()
                     .withModel(container.getNeuralNetworkModel())
                     .withDropOutParameters(dropOutMatrices)
                     .buildIntermediateOutputComputer();
             List<DoubleMatrix> intermediateResults = intermediateOutputComputer.compute(container.getInputMatrix());
-            return new GradientLayerProvider(layers, intermediateResults);
+            return new GradientLayerProvider<>(layers, intermediateResults);
         };
     }
 

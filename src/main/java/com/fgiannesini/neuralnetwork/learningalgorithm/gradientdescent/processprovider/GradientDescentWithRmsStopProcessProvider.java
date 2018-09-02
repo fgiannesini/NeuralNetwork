@@ -12,13 +12,13 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class GradientDescentWithRmsStopProcessProvider implements IGradientDescentProcessProvider {
+public class GradientDescentWithRmsStopProcessProvider<L extends Layer> implements IGradientDescentProcessProvider<L> {
     private final List<List<DoubleMatrix>> rmsStopLayers;
-    private final IGradientDescentProcessProvider processProvider;
+    private final IGradientDescentProcessProvider<L> processProvider;
     private final Double rmsStopCoeff;
     private final Double epsilon;
 
-    public GradientDescentWithRmsStopProcessProvider(IGradientDescentProcessProvider processProvider, Double rmsStopCoeff) {
+    public GradientDescentWithRmsStopProcessProvider(IGradientDescentProcessProvider<L> processProvider, Double rmsStopCoeff) {
         this.rmsStopCoeff = rmsStopCoeff;
         this.epsilon = Math.pow(10, -8);
         this.processProvider = processProvider;
@@ -26,10 +26,10 @@ public class GradientDescentWithRmsStopProcessProvider implements IGradientDesce
     }
 
     @Override
-    public Function<GradientDescentCorrectionsContainer, GradientDescentCorrectionsContainer> getGradientDescentCorrectionsLauncher() {
+    public Function<GradientDescentCorrectionsContainer<L>, GradientDescentCorrectionsContainer<L>> getGradientDescentCorrectionsLauncher() {
         return container -> {
-            NeuralNetworkModel<Layer> correctedNeuralNetworkModel = container.getCorrectedNeuralNetworkModel();
-            List<Layer> layers = correctedNeuralNetworkModel.getLayers();
+            NeuralNetworkModel<L> correctedNeuralNetworkModel = container.getCorrectedNeuralNetworkModel();
+            List<L> layers = correctedNeuralNetworkModel.getLayers();
             if (rmsStopLayers.isEmpty()) {
                 rmsStopLayers.addAll(initRmsStopLayers(layers));
             }
@@ -47,11 +47,11 @@ public class GradientDescentWithRmsStopProcessProvider implements IGradientDesce
 
                 }
             }
-            return new GradientDescentCorrectionsContainer(correctedNeuralNetworkModel, container.getGradientDescentCorrections(), container.getInputCount(), container.getLearningRate());
+            return new GradientDescentCorrectionsContainer<>(correctedNeuralNetworkModel, container.getGradientDescentCorrections(), container.getInputCount(), container.getLearningRate());
         };
     }
 
-    private List<List<DoubleMatrix>> initRmsStopLayers(List<Layer> layers) {
+    private List<List<DoubleMatrix>> initRmsStopLayers(List<L> layers) {
         return layers.stream()
                 .map(layer -> layer.getParametersMatrix()
                         .stream()
@@ -77,7 +77,7 @@ public class GradientDescentWithRmsStopProcessProvider implements IGradientDesce
     }
 
     @Override
-    public Function<ForwardComputationContainer, GradientLayerProvider> getForwardComputationLauncher() {
+    public Function<ForwardComputationContainer<L>, GradientLayerProvider<L>> getForwardComputationLauncher() {
         return processProvider.getForwardComputationLauncher();
     }
 

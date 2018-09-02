@@ -4,12 +4,12 @@ import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
 
-public class ForwardComputationContainer {
+public class ForwardComputationContainer<L extends Layer> {
 
     private final DoubleMatrix inputMatrix;
-    private final NeuralNetworkModel<Layer> neuralNetworkModel;
+    private final NeuralNetworkModel<L> neuralNetworkModel;
 
-    public ForwardComputationContainer(DoubleMatrix inputMatrix, NeuralNetworkModel<Layer> neuralNetworkModel) {
+    public ForwardComputationContainer(DoubleMatrix inputMatrix, NeuralNetworkModel<L> neuralNetworkModel) {
         this.inputMatrix = inputMatrix;
         this.neuralNetworkModel = neuralNetworkModel;
     }
@@ -18,7 +18,7 @@ public class ForwardComputationContainer {
         return inputMatrix;
     }
 
-    public NeuralNetworkModel<Layer> getNeuralNetworkModel() {
+    public NeuralNetworkModel<L> getNeuralNetworkModel() {
         return neuralNetworkModel;
     }
 }

@@ -7,7 +7,6 @@ import com.fgiannesini.neuralnetwork.cost.CostType;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescent;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.GradientDescentBatchNormProcessProvider;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.GradientDescentDefaultProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.GradientDescentOnLinearRegressionProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.IGradientDescentProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivation;
@@ -22,6 +21,10 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 
 public class GradientDescentBatchNormTest {
+
+    private IGradientDescentProcessProvider<BatchNormLayer> getGradientDescentProvider() {
+        return new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentBatchNormProcessProvider());
+    }
 
     @Nested
     class VariationOnInputAndLayerSize {
@@ -118,7 +121,7 @@ public class GradientDescentBatchNormTest {
                     {0.84, 0.84}
             };
             double[] expectedSecondBiasMatrix = {0.985, 0.985};
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, getGradientDescentProvider());
+            LearningAlgorithm gradientDescent = new GradientDescent<>(neuralNetworkModel, getGradientDescentProvider());
             NeuralNetworkModel<BatchNormLayer> gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 0, Arrays.asList(DataFormatConverter.fromDoubleTabToDoubleMatrix(expectedFirstWeightMatrix), DataFormatConverter.fromTabToDoubleMatrix(expectedFirstBiasMatrix)));
@@ -176,7 +179,7 @@ public class GradientDescentBatchNormTest {
             };
             double[] expectedSecondBiasMatrix = {0.530751, 0.619049};
 
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, getGradientDescentProvider());
+            LearningAlgorithm gradientDescent = new GradientDescent<BatchNormLayer>(neuralNetworkModel, getGradientDescentProvider());
             gradientDescent.updateLearningRate(0.5);
             NeuralNetworkModel<BatchNormLayer> gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
@@ -188,9 +191,5 @@ public class GradientDescentBatchNormTest {
             NeuralNetworkModel<BatchNormLayer> gradientWithDerivativeNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);
             NeuralNetworkAssertions.checkSameNeuralNetworks(gradientNeuralNetworkModel, gradientWithDerivativeNeuralNetworkModel);
         }
-    }
-
-    private IGradientDescentProcessProvider getGradientDescentProvider() {
-        return new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentBatchNormProcessProvider(new GradientDescentDefaultProcessProvider()));
     }
 }
