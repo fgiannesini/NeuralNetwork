@@ -18,4 +18,12 @@ public class MeanDeviation {
     public DoubleMatrix getDeviation() {
         return deviation;
     }
+
+    @Override
+    public String toString() {
+        return "MeanDeviation{" +
+                "mean=" + mean +
+                ", deviation=" + deviation +
+                '}';
+    }
 }

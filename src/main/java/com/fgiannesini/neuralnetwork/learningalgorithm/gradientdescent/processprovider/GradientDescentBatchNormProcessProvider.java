@@ -72,19 +72,19 @@ public class GradientDescentBatchNormProcessProvider implements IGradientDescent
     public BatchNormBackwardReturn getBatchNormBackwardReturn(int inputCount, GradientBatchNormLayerProvider gradientLayerProvider, DoubleMatrix dz) {
         //  #step9
 //            dbeta = np.sum(dout, axis=0)
-        DoubleMatrix dBeta = dz.columnSums();
+        DoubleMatrix dBeta = dz.rowSums();
 //            dgammax = dout #not necessary, but more understandable
         DoubleMatrix dGammaX = dz;
 
 //  #step8
 //            dgamma = np.sum(dgammax*xhat, axis=0)
-        DoubleMatrix dGamma = dGammaX.mul(gradientLayerProvider.getCurrentResult());
+        DoubleMatrix dGamma = dGammaX.mulColumnVector(gradientLayerProvider.getCurrentResult()).rowSums();
 //            dxhat = dgammax * gamma
         DoubleMatrix dXhat = dGammaX.mul(gradientLayerProvider.getGammaMatrix());
 
 //  #step7
 //                    divar = np.sum(dxhat*xmu, axis=0)
-        DoubleMatrix diVar = dXhat.mul(gradientLayerProvider.getMean());
+        DoubleMatrix diVar = dXhat.mulColumnVector(gradientLayerProvider.getMean()).rowSums();
 //            dxmu1 = dxhat * ivar
         DoubleMatrix dXmu1 = dXhat.div(gradientLayerProvider.getStandardDeviation());
 //
@@ -95,11 +95,11 @@ public class GradientDescentBatchNormProcessProvider implements IGradientDescent
 //  #step5
 //                    dvar = 0.5 * 1. /np.sqrt(var+eps) * dsqrtvar
 
-        DoubleMatrix dVar = dSqrtVar.div(MatrixFunctions.sqrt(gradientLayerProvider.getStandardDeviation().add(epsilon)));
+        DoubleMatrix dVar = dSqrtVar.mul(0.5).div(MatrixFunctions.sqrt(gradientLayerProvider.getStandardDeviation().add(epsilon)));
 //
 //  #step4
 //                    dsq = 1. /N * np.ones((N,D)) * dvar
-        DoubleMatrix dsq = dVar.div(DoubleMatrix.ones(gradientLayerProvider.getInputSize(), gradientLayerProvider.getOutputSize()));
+        DoubleMatrix dsq = DoubleMatrix.ones(gradientLayerProvider.getInputSize(), gradientLayerProvider.getOutputSize()).divi(inputCount).mmul(dVar);
 //
 //  #step3
 //                    dxmu2 = 2 * xmu * dsq
@@ -109,11 +109,11 @@ public class GradientDescentBatchNormProcessProvider implements IGradientDescent
 //                    dx1 = (dxmu1 + dxmu2)
         DoubleMatrix dX1 = dXmu1.add(dXmu2);
 //            dmu = -1 * np.sum(dxmu1+dxmu2, axis=0)
-        DoubleMatrix dMu = dXmu1.add(dXmu2).columnSums().muli(-1);
+        DoubleMatrix dMu = dXmu1.add(dXmu2).rowSums().muli(-1);
 //
 //  #step1
 //                    dx2 = 1. /N * np.ones((N,D)) * dmu
-        DoubleMatrix dx2 = dMu.div(DoubleMatrix.ones(gradientLayerProvider.getInputSize(), gradientLayerProvider.getOutputSize()));
+        DoubleMatrix dx2 = DoubleMatrix.ones(gradientLayerProvider.getInputSize(), gradientLayerProvider.getOutputSize()).divi(inputCount).mmul(dMu);
 //
 //  #step0
 //                    dx = dx1 + dx2

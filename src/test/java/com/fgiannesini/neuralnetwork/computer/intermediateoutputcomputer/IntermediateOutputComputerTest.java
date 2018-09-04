@@ -10,7 +10,6 @@ import org.jblas.DoubleMatrix;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.List;
 
 class IntermediateOutputComputerTest {
@@ -74,7 +73,7 @@ class IntermediateOutputComputerTest {
     }
 
     @Test
-    void compute_one_dimension_output_with_three_hidden_layers() {
+    void compute_one_dimension_output_with_three_hidden_weight_bias_layers() {
         NeuralNetworkModel model = NeuralNetworkModelBuilder.init()
                 .input(3)
                 .addLayer(2, ActivationFunctionType.NONE)
@@ -84,22 +83,31 @@ class IntermediateOutputComputerTest {
                 .useInitializer(InitializerType.ONES)
                 .buildWeightBiasModel();
 
-        double[] inputData = new double[3];
-        Arrays.fill(inputData, 1);
+        DoubleMatrix inputData = new DoubleMatrix(3, 1, 1, 1, 1);
 
-        List<double[]> output = OutputComputerBuilder.init()
+        List<IntermediateOutputResult> output = OutputComputerBuilder.init()
                 .withModel(model)
                 .buildIntermediateOutputComputer()
                 .compute(inputData);
-        Assertions.assertArrayEquals(inputData, output.get(0));
-        Assertions.assertArrayEquals(new double[]{4, 4}, output.get(1));
-        Assertions.assertArrayEquals(new double[]{9, 9}, output.get(2));
-        Assertions.assertArrayEquals(new double[]{19, 19}, output.get(3));
-        Assertions.assertArrayEquals(new double[]{39, 39}, output.get(4));
+
+        DoubleMatrixAssertions.assertMatrices(inputData, output.get(0).getResult());
+        Assertions.assertNull(output.get(0).getMeanDeviation());
+
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 4, 4), output.get(1).getResult());
+        Assertions.assertNull(output.get(1).getMeanDeviation());
+
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 9, 9), output.get(2).getResult());
+        Assertions.assertNull(output.get(2).getMeanDeviation());
+
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 19, 19), output.get(3).getResult());
+        Assertions.assertNull(output.get(3).getMeanDeviation());
+
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 39, 39), output.get(4).getResult());
+        Assertions.assertNull(output.get(4).getMeanDeviation());
     }
 
     @Test
-    void compute_two_dimension_output_with_three_hidden_layers() {
+    void compute_two_dimension_output_with_three_hidden_weight_bias_layers() {
         NeuralNetworkModel model = NeuralNetworkModelBuilder.init()
                 .input(3)
                 .addLayer(2, ActivationFunctionType.NONE)
@@ -109,20 +117,65 @@ class IntermediateOutputComputerTest {
                 .useInitializer(InitializerType.ONES)
                 .buildWeightBiasModel();
 
-        double[][] inputData = {
-                {1, 1, 1},
-                {2, 2, 2}
-        };
+        DoubleMatrix inputData = new DoubleMatrix(3, 2, 1, 1, 1, 2, 2, 2);
 
-        List<double[][]> output = OutputComputerBuilder.init()
+        List<IntermediateOutputResult> output = OutputComputerBuilder.init()
                 .withModel(model)
                 .buildIntermediateOutputComputer()
                 .compute(inputData);
 
-        Assertions.assertArrayEquals(inputData, output.get(0));
-        Assertions.assertArrayEquals(new double[][]{{4, 4}, {7, 7}}, output.get(1));
-        Assertions.assertArrayEquals(new double[][]{{9, 9}, {15, 15}}, output.get(2));
-        Assertions.assertArrayEquals(new double[][]{{19, 19}, {31, 31}}, output.get(3));
-        Assertions.assertArrayEquals(new double[][]{{39, 39}, {63, 63}}, output.get(4));
+        DoubleMatrixAssertions.assertMatrices(inputData, output.get(0).getResult());
+        Assertions.assertNull(output.get(0).getMeanDeviation());
+
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, 4, 4, 7, 7), output.get(1).getResult());
+        Assertions.assertNull(output.get(1).getMeanDeviation());
+
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, 9, 9, 15, 15), output.get(2).getResult());
+        Assertions.assertNull(output.get(2).getMeanDeviation());
+
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, 19, 19, 31, 31), output.get(3).getResult());
+        Assertions.assertNull(output.get(3).getMeanDeviation());
+
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, 39, 39, 63, 63), output.get(4).getResult());
+        Assertions.assertNull(output.get(4).getMeanDeviation());
+    }
+
+    @Test
+    void compute_two_dimension_output_with_three_hidden_batch_norm_layers() {
+        NeuralNetworkModel model = NeuralNetworkModelBuilder.init()
+                .input(3)
+                .addLayer(2, ActivationFunctionType.NONE)
+                .addLayer(2, ActivationFunctionType.NONE)
+                .addLayer(2, ActivationFunctionType.NONE)
+                .addLayer(2, ActivationFunctionType.NONE)
+                .useInitializer(InitializerType.ONES)
+                .buildBatchNormModel();
+
+
+        DoubleMatrix inputData = new DoubleMatrix(3, 2, 1, 1, 1, 2, 2, 2);
+
+        List<IntermediateOutputResult> output = OutputComputerBuilder.init()
+                .withModel(model)
+                .buildIntermediateOutputComputer()
+                .compute(inputData);
+
+        DoubleMatrixAssertions.assertMatrices(inputData, output.get(0).getResult());
+        Assertions.assertNull(output.get(0).getMeanDeviation());
+
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, 0, 0, 2, 2), output.get(1).getResult());
+        DoubleMatrixAssertions.assertMatrices(DoubleMatrix.ones(2, 1).muli(4.5), output.get(1).getMeanDeviation().getMean());
+        DoubleMatrixAssertions.assertMatrices(DoubleMatrix.ones(2, 1).muli(1.5), output.get(1).getMeanDeviation().getDeviation());
+
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, 0, 0, 2, 2), output.get(2).getResult());
+        DoubleMatrixAssertions.assertMatrices(DoubleMatrix.ones(2, 1).muli(2), output.get(2).getMeanDeviation().getMean());
+        DoubleMatrixAssertions.assertMatrices(DoubleMatrix.ones(2, 1).muli(2), output.get(2).getMeanDeviation().getDeviation());
+
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, 0, 0, 2, 2), output.get(3).getResult());
+        DoubleMatrixAssertions.assertMatrices(DoubleMatrix.ones(2, 1).muli(2), output.get(3).getMeanDeviation().getMean());
+        DoubleMatrixAssertions.assertMatrices(DoubleMatrix.ones(2, 1).muli(2), output.get(3).getMeanDeviation().getDeviation());
+
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, 0, 0, 2, 2), output.get(4).getResult());
+        DoubleMatrixAssertions.assertMatrices(DoubleMatrix.ones(2, 1).muli(2), output.get(4).getMeanDeviation().getMean());
+        DoubleMatrixAssertions.assertMatrices(DoubleMatrix.ones(2, 1).muli(2), output.get(4).getMeanDeviation().getDeviation());
     }
 }

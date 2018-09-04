@@ -28,10 +28,10 @@ public class GradientBatchNormLayerProvider extends GradientLayerProvider<BatchN
     }
 
     public int getInputSize() {
-        return layers.get(currentLayerIndex).getInputLayerSize();
+        return layers.get(currentLayerIndex - 1).getInputLayerSize();
     }
 
     public int getOutputSize() {
-        return layers.get(currentLayerIndex).getOutputLayerSize();
+        return layers.get(currentLayerIndex - 1).getOutputLayerSize();
     }
 }
