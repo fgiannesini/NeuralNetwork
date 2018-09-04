@@ -7,7 +7,7 @@ import org.jblas.DoubleMatrix;
 public class BatchNormLayerComputer implements ILayerComputer<BatchNormLayer> {
 
     private final MeanDeviationProvider meanDeviationProvider;
-    private final double epsilon = Math.pow(10, -8);
+
 
     public BatchNormLayerComputer(MeanDeviationProvider meanDeviationProvider) {
         this.meanDeviationProvider = meanDeviationProvider;
@@ -20,7 +20,7 @@ public class BatchNormLayerComputer implements ILayerComputer<BatchNormLayer> {
         MeanDeviation meanDeviation = meanDeviationProvider.get(z);
 
         //Z2 = (Z1 - mean) / sigma * gamma + beta
-        DoubleMatrix result = z.subColumnVector(meanDeviation.getMean()).diviColumnVector(meanDeviation.getDeviation().add(epsilon)).muliColumnVector(layer.getGammaMatrix()).addiColumnVector(layer.getBetaMatrix());
+        DoubleMatrix result = z.subColumnVector(meanDeviation.getMean()).diviColumnVector(meanDeviation.getDeviation()).muliColumnVector(layer.getGammaMatrix()).addiColumnVector(layer.getBetaMatrix());
         return new IntermediateOutputResult(result, meanDeviation);
     }
 

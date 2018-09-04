@@ -6,7 +6,6 @@ import org.jblas.DoubleMatrix;
 
 public class MeanAndDeviationNormalizer implements INormalizer {
 
-    private double epsilon = Math.pow(10, -8);
     private MeanDeviation meanDeviation;
 
     @Override
@@ -15,7 +14,7 @@ public class MeanAndDeviationNormalizer implements INormalizer {
             meanDeviation = new MeanDeviationProvider().get(input);
         }
         //(x-mu)/sigma
-        return input.subColumnVector(meanDeviation.getMean()).diviColumnVector(meanDeviation.getDeviation().add(epsilon));
+        return input.subColumnVector(meanDeviation.getMean()).diviColumnVector(meanDeviation.getDeviation());
     }
 
 

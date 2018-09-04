@@ -70,6 +70,7 @@ public class GradientDescentBatchNormProcessProvider implements IGradientDescent
     }
 
     public BatchNormBackwardReturn getBatchNormBackwardReturn(int inputCount, GradientBatchNormLayerProvider gradientLayerProvider, DoubleMatrix dz) {
+        //https://kratzert.github.io/2016/02/12/understanding-the-gradient-flow-through-the-batch-normalization-layer.html
         //  #step9
 //            dbeta = np.sum(dout, axis=0)
         DoubleMatrix dBeta = dz.rowSums();
