@@ -39,12 +39,12 @@ public class GradientDescentBatchNormTest {
             double[] output = new double[]{3, 5};
 
             double[][] expectedWeightMatrix = {
-                    {0.99, 1.01},
-                    {0.98, 1.02}
+                    {1, 1},
+                    {1, 1}
             };
-            double[] expectedGammaMatrix = {0.99, 1.01};
+            double[] expectedGammaMatrix = {1, 1};
 
-            double[] expectedBetaMatrix = {0.99, 1.01};
+            double[] expectedBetaMatrix = {1.02, 1.04};
 
             LearningAlgorithm gradientDescent = new GradientDescent<>(neuralNetworkModel, getGradientDescentProvider());
             NeuralNetworkModel<BatchNormLayer> gradientNeuralNetworkModel = gradientDescent.learn(input, output);

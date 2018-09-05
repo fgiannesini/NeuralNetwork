@@ -43,7 +43,9 @@ public class GradientLayerProviderBuilder {
             case BATCH_NORM:
                 List<DoubleMatrix> batchNormResults = intermediateOutputResultList.stream().map(IntermediateOutputResult::getResult).collect(Collectors.toList());
                 List<MeanDeviation> meanDeviations = intermediateOutputResultList.stream().map(IntermediateOutputResult::getMeanDeviation).collect(Collectors.toList());
-                gradientLayerProvider = (GradientLayerProvider<L>) new GradientBatchNormLayerProvider(neuralNetworkModel.getLayers(), batchNormResults, meanDeviations);
+                List<DoubleMatrix> afterMeanApplicationResults = intermediateOutputResultList.stream().map(IntermediateOutputResult::getAfterMeanApplicationResult).collect(Collectors.toList());
+                List<DoubleMatrix> beforeNormalizationResults = intermediateOutputResultList.stream().map(IntermediateOutputResult::getBeforeNormalisationResult).collect(Collectors.toList());
+                gradientLayerProvider = (GradientLayerProvider<L>) new GradientBatchNormLayerProvider(neuralNetworkModel.getLayers(), batchNormResults, beforeNormalizationResults, meanDeviations, afterMeanApplicationResults);
                 break;
             case WEIGHT_BIAS:
                 if (intermediateOutputResultList != null) {
@@ -54,7 +56,7 @@ public class GradientLayerProviderBuilder {
                 }
                 break;
             default:
-                throw new IllegalArgumentException(layerType + " layerTpye is not managed");
+                throw new IllegalArgumentException(layerType + " layerType is not managed");
         }
         return gradientLayerProvider;
     }

@@ -79,24 +79,25 @@ public class GradientDescentBatchNormProcessProvider implements IGradientDescent
 
 //  #step8
 //            dgamma = np.sum(dgammax*xhat, axis=0)
-        DoubleMatrix dGamma = dGammaX.mulColumnVector(gradientLayerProvider.getCurrentResult()).rowSums();
+        DoubleMatrix beforeActivationResult = gradientLayerProvider.getBeforeNormalisationCurrentResult();
+        DoubleMatrix dGamma = dGammaX.mulColumnVector(beforeActivationResult).rowSums();
 //            dxhat = dgammax * gamma
-        DoubleMatrix dXhat = dGammaX.mul(gradientLayerProvider.getGammaMatrix());
+        DoubleMatrix dXhat = dGammaX.mulColumnVector(gradientLayerProvider.getGammaMatrix());
 
 //  #step7
 //                    divar = np.sum(dxhat*xmu, axis=0)
-        DoubleMatrix diVar = dXhat.mulColumnVector(gradientLayerProvider.getMean()).rowSums();
+        DoubleMatrix diVar = dXhat.mulColumnVector(gradientLayerProvider.getAfterMeanApplicationCurrentResult()).rowSums();
 //            dxmu1 = dxhat * ivar
-        DoubleMatrix dXmu1 = dXhat.div(gradientLayerProvider.getStandardDeviation());
+        DoubleMatrix dXmu1 = dXhat.divColumnVector(MatrixFunctions.pow(gradientLayerProvider.getStandardDeviation(), 2));
 //
 //  #step6
 //                    dsqrtvar = -1. /(sqrtvar**2) * divar
-        DoubleMatrix dSqrtVar = diVar.mul(MatrixFunctions.pow(gradientLayerProvider.getStandardDeviation(), 2).muli(-1));
+        DoubleMatrix dSqrtVar = diVar.div(MatrixFunctions.pow(gradientLayerProvider.getStandardDeviation(), 2).muli(-1));
 //
 //  #step5
 //                    dvar = 0.5 * 1. /np.sqrt(var+eps) * dsqrtvar
 
-        DoubleMatrix dVar = dSqrtVar.mul(0.5).div(MatrixFunctions.sqrt(gradientLayerProvider.getStandardDeviation().add(epsilon)));
+        DoubleMatrix dVar = dSqrtVar.mul(0.5).div(gradientLayerProvider.getStandardDeviation());
 //
 //  #step4
 //                    dsq = 1. /N * np.ones((N,D)) * dvar
@@ -104,7 +105,7 @@ public class GradientDescentBatchNormProcessProvider implements IGradientDescent
 //
 //  #step3
 //                    dxmu2 = 2 * xmu * dsq
-        DoubleMatrix dXmu2 = gradientLayerProvider.getMean().mul(dsq).mul(2);
+        DoubleMatrix dXmu2 = gradientLayerProvider.getAfterMeanApplicationCurrentResult().mul(dsq).mul(2);
 //
 //  #step2
 //                    dx1 = (dxmu1 + dxmu2)

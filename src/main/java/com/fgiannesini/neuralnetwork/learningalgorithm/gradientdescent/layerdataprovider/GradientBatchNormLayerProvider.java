@@ -9,10 +9,15 @@ import java.util.List;
 public class GradientBatchNormLayerProvider extends GradientLayerProvider<BatchNormLayer> {
 
     private List<MeanDeviation> meanDeviations;
+    private List<DoubleMatrix> beforeNormalisationResults;
 
-    public GradientBatchNormLayerProvider(List<BatchNormLayer> layers, List<DoubleMatrix> results, List<MeanDeviation> meanDeviations) {
+    private List<DoubleMatrix> afterMeanApplicationResult;
+
+    public GradientBatchNormLayerProvider(List<BatchNormLayer> layers, List<DoubleMatrix> results, List<DoubleMatrix> beforeNormalisationResults, List<MeanDeviation> meanDeviations, List<DoubleMatrix> afterMeanApplicationResult) {
         super(layers, results);
         this.meanDeviations = meanDeviations;
+        this.beforeNormalisationResults = beforeNormalisationResults;
+        this.afterMeanApplicationResult = afterMeanApplicationResult;
     }
 
     public DoubleMatrix getGammaMatrix() {
@@ -23,15 +28,19 @@ public class GradientBatchNormLayerProvider extends GradientLayerProvider<BatchN
         return meanDeviations.get(currentLayerIndex).getDeviation();
     }
 
-    public DoubleMatrix getMean() {
-        return meanDeviations.get(currentLayerIndex).getMean();
-    }
-
     public int getInputSize() {
         return layers.get(currentLayerIndex - 1).getInputLayerSize();
     }
 
     public int getOutputSize() {
         return layers.get(currentLayerIndex - 1).getOutputLayerSize();
+    }
+
+    public DoubleMatrix getBeforeNormalisationCurrentResult() {
+        return beforeNormalisationResults.get(currentLayerIndex);
+    }
+
+    public DoubleMatrix getAfterMeanApplicationCurrentResult() {
+        return afterMeanApplicationResult.get(currentLayerIndex);
     }
 }
