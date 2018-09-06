@@ -80,13 +80,13 @@ public class GradientDescentBatchNormProcessProvider implements IGradientDescent
 //  #step8
 //            dgamma = np.sum(dgammax*xhat, axis=0)
         DoubleMatrix beforeActivationResult = gradientLayerProvider.getBeforeNormalisationCurrentResult();
-        DoubleMatrix dGamma = dGammaX.mulColumnVector(beforeActivationResult).rowSums();
+        DoubleMatrix dGamma = dGammaX.mul(beforeActivationResult).rowSums();
 //            dxhat = dgammax * gamma
         DoubleMatrix dXhat = dGammaX.mulColumnVector(gradientLayerProvider.getGammaMatrix());
 
 //  #step7
 //                    divar = np.sum(dxhat*xmu, axis=0)
-        DoubleMatrix diVar = dXhat.mulColumnVector(gradientLayerProvider.getAfterMeanApplicationCurrentResult()).rowSums();
+        DoubleMatrix diVar = dXhat.mul(gradientLayerProvider.getAfterMeanApplicationCurrentResult()).rowSums();
 //            dxmu1 = dxhat * ivar
         DoubleMatrix dXmu1 = dXhat.divColumnVector(MatrixFunctions.pow(gradientLayerProvider.getStandardDeviation(), 2));
 //
@@ -101,7 +101,7 @@ public class GradientDescentBatchNormProcessProvider implements IGradientDescent
 //
 //  #step4
 //                    dsq = 1. /N * np.ones((N,D)) * dvar
-        DoubleMatrix dsq = DoubleMatrix.ones(gradientLayerProvider.getInputSize(), gradientLayerProvider.getOutputSize()).divi(inputCount).mmul(dVar);
+        DoubleMatrix dsq = DoubleMatrix.ones(gradientLayerProvider.getInputSize(), gradientLayerProvider.getOutputSize()).divi(inputCount).muliColumnVector(dVar);
 //
 //  #step3
 //                    dxmu2 = 2 * xmu * dsq
@@ -115,7 +115,7 @@ public class GradientDescentBatchNormProcessProvider implements IGradientDescent
 //
 //  #step1
 //                    dx2 = 1. /N * np.ones((N,D)) * dmu
-        DoubleMatrix dx2 = DoubleMatrix.ones(gradientLayerProvider.getInputSize(), gradientLayerProvider.getOutputSize()).divi(inputCount).mmul(dMu);
+        DoubleMatrix dx2 = DoubleMatrix.ones(gradientLayerProvider.getInputSize(), gradientLayerProvider.getOutputSize()).divi(inputCount).muliColumnVector(dMu);
 //
 //  #step0
 //                    dx = dx1 + dx2
