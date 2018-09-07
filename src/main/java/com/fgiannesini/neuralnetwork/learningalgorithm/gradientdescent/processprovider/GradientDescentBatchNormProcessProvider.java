@@ -73,20 +73,20 @@ public class GradientDescentBatchNormProcessProvider implements IGradientDescent
         //https://kratzert.github.io/2016/02/12/understanding-the-gradient-flow-through-the-batch-normalization-layer.html
         //  #step9
 //            dbeta = np.sum(dout, axis=0)
-        DoubleMatrix dBeta = dz.rowSums();
+        DoubleMatrix dBeta = dz.rowMeans();
 //            dgammax = dout #not necessary, but more understandable
         DoubleMatrix dGammaX = dz;
 
 //  #step8
 //            dgamma = np.sum(dgammax*xhat, axis=0)
         DoubleMatrix beforeActivationResult = gradientLayerProvider.getBeforeNormalisationCurrentResult();
-        DoubleMatrix dGamma = dGammaX.mul(beforeActivationResult).rowSums();
+        DoubleMatrix dGamma = dGammaX.mul(beforeActivationResult).rowMeans();
 //            dxhat = dgammax * gamma
         DoubleMatrix dXhat = dGammaX.mulColumnVector(gradientLayerProvider.getGammaMatrix());
 
 //  #step7
 //                    divar = np.sum(dxhat*xmu, axis=0)
-        DoubleMatrix diVar = dXhat.mul(gradientLayerProvider.getAfterMeanApplicationCurrentResult()).rowSums();
+        DoubleMatrix diVar = dXhat.mul(gradientLayerProvider.getAfterMeanApplicationCurrentResult()).rowMeans();
 //            dxmu1 = dxhat * ivar
         DoubleMatrix dXmu1 = dXhat.divColumnVector(MatrixFunctions.pow(gradientLayerProvider.getStandardDeviation(), 2));
 //

@@ -77,57 +77,20 @@ public class GradientDescentBatchNormTest {
                     {1, 1},
                     {1, 1}
             };
-            double[] expectedGammaMatrix = {1, 1};
+            double[] expectedGammaMatrix = {1.01, 1.01};
 
-            double[] expectedBetaMatrix = {1.02, 1.04};
+            double[] expectedBetaMatrix = {1.04, 1.06};
 
             LearningAlgorithm gradientDescent = new GradientDescent<>(neuralNetworkModel, getGradientDescentProvider());
             NeuralNetworkModel<BatchNormLayer> gradientNeuralNetworkModel = gradientDescent.learn(input, output);
-//            NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 0, Arrays.asList(DataFormatConverter.fromDoubleTabToDoubleMatrix(expectedWeightMatrix), DataFormatConverter.fromTabToDoubleMatrix(expectedGammaMatrix), DataFormatConverter.fromTabToDoubleMatrix(expectedBetaMatrix)));
+            NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 0, Arrays.asList(DataFormatConverter.fromDoubleTabToDoubleMatrix(expectedWeightMatrix), DataFormatConverter.fromTabToDoubleMatrix(expectedGammaMatrix), DataFormatConverter.fromTabToDoubleMatrix(expectedBetaMatrix)));
 
             LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LINEAR_REGRESSION, new GradientDescentWithDerivationProcessProvider());
             NeuralNetworkModel<BatchNormLayer> gradientWithDerivativeNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);
+            NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientWithDerivativeNeuralNetworkModel, 0, Arrays.asList(DataFormatConverter.fromDoubleTabToDoubleMatrix(expectedWeightMatrix), DataFormatConverter.fromTabToDoubleMatrix(expectedGammaMatrix), DataFormatConverter.fromTabToDoubleMatrix(expectedBetaMatrix)));
             NeuralNetworkAssertions.checkSameNeuralNetworks(gradientNeuralNetworkModel, gradientWithDerivativeNeuralNetworkModel);
         }
 
-
-        @Test
-        void learn_on_vector_with_two_hidden_layers() {
-            NeuralNetworkModel<BatchNormLayer> neuralNetworkModel = NeuralNetworkModelBuilder.init()
-                    .useInitializer(InitializerType.ONES)
-                    .input(2)
-                    .addLayer(3, ActivationFunctionType.NONE)
-                    .addLayer(2, ActivationFunctionType.NONE)
-                    .buildBatchNormModel();
-
-            double[] input = new double[]{1, 2};
-            double[] output = new double[]{10, 15};
-
-            double[][] expectedFirstWeightMatrix = {
-                    {0.99, 0.99, 0.99},
-                    {0.98, 0.98, 0.98}
-            };
-            double[] expectedFirstGammaMatrix = {0.99, 0.99, 0.99};
-            double[] expectedFirstBetaMatrix = {0.99, 0.99, 0.99};
-
-            double[][] expectedSecondWeightMatrix = {
-                    {0.88, 1.08},
-                    {0.88, 1.08},
-                    {0.88, 1.08}
-            };
-            double[] expectedSecondGammaMatrix = {0.97, 1.02};
-            double[] expectedSecondBetaMatrix = {0.97, 1.02};
-
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, getGradientDescentProvider());
-            NeuralNetworkModel<BatchNormLayer> gradientNeuralNetworkModel = gradientDescent.learn(input, output);
-
-            NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 0, Arrays.asList(DataFormatConverter.fromDoubleTabToDoubleMatrix(expectedFirstWeightMatrix), DataFormatConverter.fromTabToDoubleMatrix(expectedFirstGammaMatrix), DataFormatConverter.fromTabToDoubleMatrix(expectedFirstBetaMatrix)));
-            NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 1, Arrays.asList(DataFormatConverter.fromDoubleTabToDoubleMatrix(expectedSecondWeightMatrix), DataFormatConverter.fromTabToDoubleMatrix(expectedSecondGammaMatrix), DataFormatConverter.fromTabToDoubleMatrix(expectedSecondBetaMatrix)));
-
-            LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LINEAR_REGRESSION, new GradientDescentWithDerivationProcessProvider());
-            NeuralNetworkModel<BatchNormLayer> gradientWithDerivativeNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);
-            NeuralNetworkAssertions.checkSameNeuralNetworks(gradientNeuralNetworkModel, gradientWithDerivativeNeuralNetworkModel);
-        }
 
         @Test
         void learn_on_matrix_with_two_hidden_layers() {
@@ -139,8 +102,8 @@ public class GradientDescentBatchNormTest {
                     .buildBatchNormModel();
 
             double[][] input = new double[][]{
-                    {1, 2},
-                    {3, 4}
+                    {2, 4, 6},
+                    {5, 6, 7}
             };
 
             double[][] output = new double[][]{
