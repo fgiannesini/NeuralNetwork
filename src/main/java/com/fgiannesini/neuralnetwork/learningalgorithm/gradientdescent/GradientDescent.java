@@ -10,19 +10,19 @@ import org.jblas.DoubleMatrix;
 
 import java.util.List;
 
-public class GradientDescent<L extends Layer> implements LearningAlgorithm {
+public class GradientDescent<L extends Layer> implements LearningAlgorithm<L> {
     private final IGradientDescentProcessProvider<L> gradientDescentProcessProvider;
     private double learningRate;
     private NeuralNetworkModel<L> correctedNeuralNetworkModel;
 
-    public GradientDescent(NeuralNetworkModel originalNeuralNetworkModel, IGradientDescentProcessProvider<L> gradientDescentProcessProvider) {
+    public GradientDescent(NeuralNetworkModel<L> originalNeuralNetworkModel, IGradientDescentProcessProvider<L> gradientDescentProcessProvider) {
         this.gradientDescentProcessProvider = gradientDescentProcessProvider;
         this.correctedNeuralNetworkModel = originalNeuralNetworkModel.clone();
         this.learningRate = 0.01;
     }
 
     @Override
-    public NeuralNetworkModel learn(DoubleMatrix inputMatrix, DoubleMatrix y) {
+    public NeuralNetworkModel<L> learn(DoubleMatrix inputMatrix, DoubleMatrix y) {
         DataContainer dataContainer = new DataContainer(inputMatrix, y);
         dataContainer = gradientDescentProcessProvider.getDataProcessLauncher().apply(dataContainer);
 

@@ -10,7 +10,6 @@ import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdata
 import com.fgiannesini.neuralnetwork.model.BatchNormLayer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
-import org.jblas.MatrixFunctions;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,7 +50,7 @@ public class GradientDescentBatchNormProcessProvider implements IGradientDescent
             DoubleMatrix dz = container.getFirstErrorComputationLauncher()
                     .apply(new ErrorComputationContainer(gradientLayerProvider, container.getY()))
                     .getPreviousError();
-            BatchNormBackwardReturn batchNormBackwardReturn = getBatchNormBackwardReturn(inputCount, gradientLayerProvider, dz);
+            BatchNormBackwardReturn batchNormBackwardReturn = getBatchNormBackwardReturn2(inputCount, gradientLayerProvider, dz);
 
             gradientDescentCorrections.add(batchNormBackwardReturn.getCorrections());
 
@@ -59,7 +58,7 @@ public class GradientDescentBatchNormProcessProvider implements IGradientDescent
                 dz = container.getErrorComputationLauncher()
                         .apply(new ErrorComputationContainer(gradientLayerProvider, batchNormBackwardReturn.getNextError()))
                         .getPreviousError();
-                batchNormBackwardReturn = getBatchNormBackwardReturn(inputCount, gradientLayerProvider, dz);
+                batchNormBackwardReturn = getBatchNormBackwardReturn2(inputCount, gradientLayerProvider, dz);
                 gradientDescentCorrections.add(batchNormBackwardReturn.getCorrections());
             }
 
@@ -69,57 +68,23 @@ public class GradientDescentBatchNormProcessProvider implements IGradientDescent
 
     }
 
-    public BatchNormBackwardReturn getBatchNormBackwardReturn(int inputCount, GradientBatchNormLayerProvider gradientLayerProvider, DoubleMatrix dz) {
-        //https://kratzert.github.io/2016/02/12/understanding-the-gradient-flow-through-the-batch-normalization-layer.html
-        //  #step9
-//            dbeta = np.sum(dout, axis=0)
-        DoubleMatrix dBeta = dz.rowMeans();
-//            dgammax = dout #not necessary, but more understandable
-        DoubleMatrix dGammaX = dz;
-
-//  #step8
-//            dgamma = np.sum(dgammax*xhat, axis=0)
+    public BatchNormBackwardReturn getBatchNormBackwardReturn2(int inputCount, GradientBatchNormLayerProvider gradientLayerProvider, DoubleMatrix dz) {
+//        https://kevinzakka.github.io/2016/09/14/batch_normalization/
+//        dxhat = dout * gamma
+        DoubleMatrix dXhat = dz.mulColumnVector(gradientLayerProvider.getGammaMatrix());
         DoubleMatrix beforeActivationResult = gradientLayerProvider.getBeforeNormalisationCurrentResult();
-        DoubleMatrix dGamma = dGammaX.mul(beforeActivationResult).rowMeans();
-//            dxhat = dgammax * gamma
-        DoubleMatrix dXhat = dGammaX.mulColumnVector(gradientLayerProvider.getGammaMatrix());
+//        dx = (1. / N) * inv_var * (N * dxhat - np.sum(dxhat, axis = 0)
+//                - x_hat * np.sum(dxhat * x_hat, axis = 0))
+        DoubleMatrix p1 = dXhat.mul(inputCount);
+        DoubleMatrix p2 = dXhat.rowSums();
+        DoubleMatrix p3 = beforeActivationResult.mulColumnVector(dXhat.mul(beforeActivationResult).rowSums());
+        DoubleMatrix dx = p1.subiColumnVector(p2).subi(p3).divi(inputCount).diviColumnVector(gradientLayerProvider.getStandardDeviation());
 
-//  #step7
-//                    divar = np.sum(dxhat*xmu, axis=0)
-        DoubleMatrix diVar = dXhat.mul(gradientLayerProvider.getAfterMeanApplicationCurrentResult()).rowMeans();
-//            dxmu1 = dxhat * ivar
-        DoubleMatrix dXmu1 = dXhat.divColumnVector(MatrixFunctions.pow(gradientLayerProvider.getStandardDeviation(), 2));
-//
-//  #step6
-//                    dsqrtvar = -1. /(sqrtvar**2) * divar
-        DoubleMatrix dSqrtVar = diVar.div(MatrixFunctions.pow(gradientLayerProvider.getStandardDeviation(), 2).muli(-1));
-//
-//  #step5
-//                    dvar = 0.5 * 1. /np.sqrt(var+eps) * dsqrtvar
+//        dbeta = np.sum(dout, axis = 0)
+        DoubleMatrix dBeta = dz.rowMeans();
+//        dgamma = np.sum(x_hat * dout, axis = 0)
+        DoubleMatrix dGamma = dz.mul(beforeActivationResult).rowMeans();
 
-        DoubleMatrix dVar = dSqrtVar.mul(0.5).div(gradientLayerProvider.getStandardDeviation());
-//
-//  #step4
-//                    dsq = 1. /N * np.ones((N,D)) * dvar
-        DoubleMatrix dsq = DoubleMatrix.ones(gradientLayerProvider.getInputSize(), gradientLayerProvider.getOutputSize()).divi(inputCount).muliColumnVector(dVar);
-//
-//  #step3
-//                    dxmu2 = 2 * xmu * dsq
-        DoubleMatrix dXmu2 = gradientLayerProvider.getAfterMeanApplicationCurrentResult().mul(dsq).mul(2);
-//
-//  #step2
-//                    dx1 = (dxmu1 + dxmu2)
-        DoubleMatrix dX1 = dXmu1.add(dXmu2);
-//            dmu = -1 * np.sum(dxmu1+dxmu2, axis=0)
-        DoubleMatrix dMu = dXmu1.add(dXmu2).rowSums().muli(-1);
-//
-//  #step1
-//                    dx2 = 1. /N * np.ones((N,D)) * dmu
-        DoubleMatrix dx2 = DoubleMatrix.ones(gradientLayerProvider.getInputSize(), gradientLayerProvider.getOutputSize()).divi(inputCount).muliColumnVector(dMu);
-//
-//  #step0
-//                    dx = dx1 + dx2
-        DoubleMatrix dx = dX1.add(dx2);
         DoubleMatrix weightCorrection = computeWeightCorrection(gradientLayerProvider.getPreviousResult(), dx, inputCount);
         return new BatchNormBackwardReturn(weightCorrection, dGamma, dBeta, dx);
     }

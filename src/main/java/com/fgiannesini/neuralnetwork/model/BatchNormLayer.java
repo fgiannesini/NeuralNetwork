@@ -62,12 +62,4 @@ public class BatchNormLayer extends Layer implements Cloneable {
                 ", betaMatrix=" + betaMatrix +
                 "} " + super.toString();
     }
-
-    public void setGammaMatrix(DoubleMatrix gammaMatrix) {
-        this.gammaMatrix = gammaMatrix;
-    }
-
-    public void setBetaMatrix(DoubleMatrix betaMatrix) {
-        this.betaMatrix = betaMatrix;
-    }
 }

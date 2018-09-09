@@ -1,7 +1,6 @@
 package com.fgiannesini.neuralnetwork.activationfunctions;
 
 import org.jblas.DoubleMatrix;
-import org.jblas.MatrixFunctions;
 
 public class IdentityFunctionApplier implements ActivationFunctionApplier {
 
@@ -12,6 +11,6 @@ public class IdentityFunctionApplier implements ActivationFunctionApplier {
 
     @Override
     public DoubleMatrix derivate(DoubleMatrix input) {
-        return MatrixFunctions.signum(input);
+        return DoubleMatrix.ones(input.getRows(), input.getColumns());
     }
 }
