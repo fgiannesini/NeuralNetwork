@@ -32,12 +32,12 @@ public class FloorExampleLauncherWithStatsDisplay extends Application {
             @Override
             protected NeuralNetworkStats call() {
                 HyperParameters parameters = new HyperParameters()
-                        .batchSize(1_000)
-                        .epochCount(20)
-                        .rmsStopCoeff(0.999)
-                        .momentumCoeff(0.9)
-                        .hiddenLayerSize(new int[]{20})
-                        .learningRateUpdater(LearningRateUpdaterType.CONSTANT.get(0.01));
+                        .batchSize(4_000)
+                        .epochCount(27)
+                        .rmsStopCoeff(0.993)
+                        .momentumCoeff(0.7)
+                        .hiddenLayerSize(new int[]{13})
+                        .learningRateUpdater(LearningRateUpdaterType.CONSTANT.get(0.05));
                 FloorExampleLauncher floorExampleLauncher = new FloorExampleLauncher(this::updateValue, parameters);
                 double successRate = floorExampleLauncher.launch();
                 System.out.println("Success Rate: " + successRate + "%");

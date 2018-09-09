@@ -32,7 +32,7 @@ class ReluFunctionApplierTest {
     @Test
     void derivate() {
         Assertions.assertAll(
-                checkReluDerivate(new double[]{1}, new double[]{0}),
+                checkReluDerivate(new double[]{0}, new double[]{0}),
                 checkReluDerivate(new double[]{1}, new double[]{2}),
                 checkReluDerivate(new double[]{0}, new double[]{-2}),
                 checkReluDerivate(new double[]{1, 1, 1, 1, 1}, new double[]{1, 2, 3, 4, 5})

@@ -11,7 +11,7 @@ public class ReluFunctionApplier implements ActivationFunctionApplier {
 
     @Override
     public DoubleMatrix derivate(DoubleMatrix input) {
-        // if input>=0 1, else 0
-        return input.ge(0);
+        // if input>0 1, else 0
+        return input.gt(0);
     }
 }

@@ -12,8 +12,8 @@ public class LeakyReluFunctionApplier implements ActivationFunctionApplier {
     @Override
     public DoubleMatrix derivate(DoubleMatrix input) {
         // if input>=0 1, else -0.01
-        DoubleMatrix greaterEqualZero = input.ge(0);
-        DoubleMatrix lesserThanZero = input.lt(0).negi().muli(0.01f);
+        DoubleMatrix greaterEqualZero = input.gt(0);
+        DoubleMatrix lesserThanZero = input.le(0).negi().muli(0.01f);
         return greaterEqualZero.addi(lesserThanZero);
     }
 }

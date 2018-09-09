@@ -63,6 +63,7 @@ public class GradientDescentBatchNormTest {
                     .useInitializer(InitializerType.RANDOM)
                     .input(2)
                     .addLayer(2, ActivationFunctionType.RELU)
+                    .addLayer(2, ActivationFunctionType.SOFT_MAX)
                     .buildBatchNormModel();
 
             DoubleMatrix input = DoubleMatrix.rand(2, 2);
