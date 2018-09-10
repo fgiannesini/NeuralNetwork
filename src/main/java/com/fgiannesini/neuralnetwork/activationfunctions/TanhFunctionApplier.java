@@ -11,8 +11,8 @@ public class TanhFunctionApplier implements ActivationFunctionApplier {
     }
 
     @Override
-    public DoubleMatrix derivate(DoubleMatrix input) {
+    public DoubleMatrix derivate(DoubleMatrix input, DoubleMatrix previousError) {
         //1-a²
-        return MatrixFunctions.pow(input, 2).negi().addi(1);
+        return MatrixFunctions.pow(input, 2).negi().addi(1).muli(previousError);
     }
 }

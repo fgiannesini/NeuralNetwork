@@ -34,9 +34,9 @@ public class GradientDescentOnLinearRegressionProcessProvider implements IGradie
     public Function<ErrorComputationContainer, ErrorComputationContainer> getFirstErrorComputationLauncher() {
         return container -> {
             //dZ2 = (A2 - Y) .* g2'(A2)
-            DoubleMatrix error = container.getProvider().getCurrentResult()
-                    .sub(container.getPreviousError())
-                    .muli(container.getProvider().getCurrentActivationFunction().derivate(container.getProvider().getCurrentResult()));
+            DoubleMatrix delta = container.getProvider().getCurrentResult()
+                    .sub(container.getPreviousError());
+            DoubleMatrix error = container.getProvider().getCurrentActivationFunction().derivate(container.getProvider().getCurrentResult(), delta);
             return new ErrorComputationContainer(container.getProvider(), error);
         };
     }

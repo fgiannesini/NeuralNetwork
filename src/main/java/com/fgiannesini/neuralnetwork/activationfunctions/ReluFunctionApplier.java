@@ -10,8 +10,8 @@ public class ReluFunctionApplier implements ActivationFunctionApplier {
     }
 
     @Override
-    public DoubleMatrix derivate(DoubleMatrix input) {
+    public DoubleMatrix derivate(DoubleMatrix input, DoubleMatrix previousError) {
         // if input>0 1, else 0
-        return input.gt(0);
+        return input.gt(0).mul(previousError);
     }
 }

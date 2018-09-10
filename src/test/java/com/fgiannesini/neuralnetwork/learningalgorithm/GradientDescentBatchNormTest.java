@@ -8,6 +8,7 @@ import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescent;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.GradientDescentBatchNormProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.GradientDescentOnLinearRegressionProcessProvider;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.GradientDescentOnSoftMaxRegressionProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.IGradientDescentProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivation;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.processprovider.GradientDescentWithDerivationProcessProvider;
@@ -60,19 +61,18 @@ public class GradientDescentBatchNormTest {
         @Test
         void learn_on_vector_with_one_hidden_layer_and_random_weights() {
             NeuralNetworkModel<BatchNormLayer> neuralNetworkModel = NeuralNetworkModelBuilder.init()
-                    .useInitializer(InitializerType.RANDOM)
+                    .useInitializer(InitializerType.ONES)
                     .input(2)
-                    .addLayer(2, ActivationFunctionType.RELU)
                     .addLayer(2, ActivationFunctionType.SOFT_MAX)
                     .buildBatchNormModel();
 
             DoubleMatrix input = DoubleMatrix.rand(2, 2);
             DoubleMatrix output = DoubleMatrix.rand(2, 2);
 
-            LearningAlgorithm gradientDescent = new GradientDescent<>(neuralNetworkModel, getGradientDescentProvider());
+            LearningAlgorithm gradientDescent = new GradientDescent<>(neuralNetworkModel, new GradientDescentOnSoftMaxRegressionProcessProvider(new GradientDescentBatchNormProcessProvider()));
             NeuralNetworkModel<BatchNormLayer> gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
-            LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LINEAR_REGRESSION, new GradientDescentWithDerivationProcessProvider());
+            LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.SOFT_MAX_REGRESSION, new GradientDescentWithDerivationProcessProvider());
             NeuralNetworkModel<BatchNormLayer> gradientWithDerivativeNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);
             NeuralNetworkAssertions.checkSameNeuralNetworks(gradientNeuralNetworkModel, gradientWithDerivativeNeuralNetworkModel);
         }

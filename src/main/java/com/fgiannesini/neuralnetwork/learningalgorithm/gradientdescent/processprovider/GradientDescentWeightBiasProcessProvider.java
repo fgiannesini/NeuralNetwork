@@ -67,9 +67,9 @@ public class GradientDescentWeightBiasProcessProvider implements IGradientDescen
     public Function<ErrorComputationContainer, ErrorComputationContainer> getErrorComputationLauncher() {
         return container -> {
             //dZ1 = W2t * dZ2 .* g1'(A1)
-            DoubleMatrix error = container.getProvider().getPreviousWeightMatrix().transpose()
-                    .mmul(container.getPreviousError())
-                    .muli(container.getProvider().getCurrentActivationFunction().derivate(container.getProvider().getCurrentResult()));
+            DoubleMatrix delta = container.getProvider().getPreviousWeightMatrix().transpose()
+                    .mmul(container.getPreviousError());
+            DoubleMatrix error = container.getProvider().getCurrentActivationFunction().derivate(container.getProvider().getCurrentResult(), delta);
             return new ErrorComputationContainer(container.getProvider(), error);
         };
     }

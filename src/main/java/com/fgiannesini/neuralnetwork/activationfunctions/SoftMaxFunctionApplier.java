@@ -15,7 +15,8 @@ public class SoftMaxFunctionApplier implements ActivationFunctionApplier {
     }
 
     @Override
-    public DoubleMatrix derivate(DoubleMatrix input) {
-        return DoubleMatrix.ones(input.getRows(), input.getColumns());
+    public DoubleMatrix derivate(DoubleMatrix input, DoubleMatrix previousError) {
+        DoubleMatrix derivative = DoubleMatrix.eye(input.getRows()).mulColumnVector(input).sub(input.mmul(input.transpose()));
+        return derivative.mmul(previousError);
     }
 }
