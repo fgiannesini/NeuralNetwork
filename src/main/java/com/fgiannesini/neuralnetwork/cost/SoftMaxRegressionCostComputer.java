@@ -17,7 +17,7 @@ public class SoftMaxRegressionCostComputer implements CostComputer {
     public double compute(DoubleMatrix input, DoubleMatrix output) {
         double inputCount = input.columns;
         DoubleMatrix computedOutput = outputComputer.compute(input);
-        //cost = -1/m sum(y * log(^y)
+        //cost = -1/m sum(y * log(^y))
         double result = 0;
         for (int index = 0; index < output.length; index++) {
             double outputValue = output.get(index);

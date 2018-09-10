@@ -61,13 +61,13 @@ public class GradientDescentBatchNormTest {
         @Test
         void learn_on_vector_with_one_hidden_layer_and_random_weights() {
             NeuralNetworkModel<BatchNormLayer> neuralNetworkModel = NeuralNetworkModelBuilder.init()
-                    .useInitializer(InitializerType.ONES)
+                    .useInitializer(InitializerType.RANDOM)
                     .input(2)
                     .addLayer(2, ActivationFunctionType.SOFT_MAX)
                     .buildBatchNormModel();
 
-            DoubleMatrix input = DoubleMatrix.rand(2, 2);
-            DoubleMatrix output = DoubleMatrix.rand(2, 2);
+            DoubleMatrix input = DoubleMatrix.rand(2, 1);
+            DoubleMatrix output = DoubleMatrix.rand(2, 1);
 
             LearningAlgorithm gradientDescent = new GradientDescent<>(neuralNetworkModel, new GradientDescentOnSoftMaxRegressionProcessProvider(new GradientDescentBatchNormProcessProvider()));
             NeuralNetworkModel<BatchNormLayer> gradientNeuralNetworkModel = gradientDescent.learn(input, output);
