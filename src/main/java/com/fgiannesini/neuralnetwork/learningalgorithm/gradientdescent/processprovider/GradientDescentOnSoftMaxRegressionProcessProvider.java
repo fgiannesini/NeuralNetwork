@@ -33,8 +33,8 @@ public class GradientDescentOnSoftMaxRegressionProcessProvider implements IGradi
     @Override
     public Function<ErrorComputationContainer, ErrorComputationContainer> getFirstErrorComputationLauncher() {
         return container -> {
-            //dZ2 = -Y/A2 .* g2'(A2)
-            DoubleMatrix delta = container.getPreviousError().mul(-1).divi(container.getProvider().getCurrentResult());
+            //dZ2 = A2-Y .* g2'(A2)
+            DoubleMatrix delta = container.getProvider().getCurrentResult().sub(container.getPreviousError());
             DoubleMatrix error = container.getProvider().getCurrentActivationFunction().derivate(container.getProvider().getCurrentResult(), delta);
             return new ErrorComputationContainer(container.getProvider(), error);
         };

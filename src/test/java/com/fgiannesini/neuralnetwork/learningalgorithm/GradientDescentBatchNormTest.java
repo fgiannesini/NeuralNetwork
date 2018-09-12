@@ -15,7 +15,6 @@ import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderiva
 import com.fgiannesini.neuralnetwork.model.BatchNormLayer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
-import org.jblas.DoubleMatrix;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -59,18 +58,46 @@ public class GradientDescentBatchNormTest {
         }
 
         @Test
-        void learn_on_vector_with_one_hidden_layer_and_random_weights() {
+        void learn_on_vector_with_one_hidden_layer_with_softmax_layer() {
             NeuralNetworkModel<BatchNormLayer> neuralNetworkModel = NeuralNetworkModelBuilder.init()
-                    .useInitializer(InitializerType.RANDOM)
+                    .useInitializer(InitializerType.ONES)
                     .input(2)
+                    .addLayer(2, ActivationFunctionType.NONE)
                     .addLayer(2, ActivationFunctionType.SOFT_MAX)
                     .buildBatchNormModel();
 
-            DoubleMatrix input = DoubleMatrix.rand(2, 1);
-            DoubleMatrix output = DoubleMatrix.rand(2, 1);
+            double[][] input = new double[][]{
+                    {2, 4},
+                    {5, 6},
+                    {9, 10}
+            };
+
+            double[][] output = new double[][]{
+                    {11, 13},
+                    {15, 17},
+                    {19, 21}
+            };
+
+            double[][] expectedFirstWeightMatrix = {
+                    {1, 1, 1},
+                    {1, 1, 1}
+            };
+            double[] expectedFirstGammaMatrix = {1, 1, 1};
+            double[] expectedFirstBetaMatrix = {1, 1, 1};
+
+            double[][] expectedSecondWeightMatrix = {
+                    {1, 1},
+                    {1, 1},
+                    {1, 1}
+            };
+            double[] expectedSecondGammaMatrix = {1, 1};
+            double[] expectedSecondBetaMatrix = {0.99565,1.00434};
 
             LearningAlgorithm gradientDescent = new GradientDescent<>(neuralNetworkModel, new GradientDescentOnSoftMaxRegressionProcessProvider(new GradientDescentBatchNormProcessProvider()));
             NeuralNetworkModel<BatchNormLayer> gradientNeuralNetworkModel = gradientDescent.learn(input, output);
+
+            NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 1, Arrays.asList(DataFormatConverter.fromDoubleTabToDoubleMatrix(expectedSecondWeightMatrix), DataFormatConverter.fromTabToDoubleMatrix(expectedSecondGammaMatrix), DataFormatConverter.fromTabToDoubleMatrix(expectedSecondBetaMatrix)));
+            NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 0, Arrays.asList(DataFormatConverter.fromDoubleTabToDoubleMatrix(expectedFirstWeightMatrix), DataFormatConverter.fromTabToDoubleMatrix(expectedFirstGammaMatrix), DataFormatConverter.fromTabToDoubleMatrix(expectedFirstBetaMatrix)));
 
             LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.SOFT_MAX_REGRESSION, new GradientDescentWithDerivationProcessProvider());
             NeuralNetworkModel<BatchNormLayer> gradientWithDerivativeNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);

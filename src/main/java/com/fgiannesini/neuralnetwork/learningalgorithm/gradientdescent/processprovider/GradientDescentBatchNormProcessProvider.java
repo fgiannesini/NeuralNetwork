@@ -50,7 +50,7 @@ public class GradientDescentBatchNormProcessProvider implements IGradientDescent
             DoubleMatrix dz = container.getFirstErrorComputationLauncher()
                     .apply(new ErrorComputationContainer(gradientLayerProvider, container.getY()))
                     .getPreviousError();
-            BatchNormBackwardReturn batchNormBackwardReturn = getBatchNormBackwardReturn2(inputCount, gradientLayerProvider, dz);
+            BatchNormBackwardReturn batchNormBackwardReturn = getBatchNormBackwardReturn(inputCount, gradientLayerProvider, dz);
 
             gradientDescentCorrections.add(batchNormBackwardReturn.getCorrections());
 
@@ -58,7 +58,7 @@ public class GradientDescentBatchNormProcessProvider implements IGradientDescent
                 dz = container.getErrorComputationLauncher()
                         .apply(new ErrorComputationContainer(gradientLayerProvider, batchNormBackwardReturn.getNextError()))
                         .getPreviousError();
-                batchNormBackwardReturn = getBatchNormBackwardReturn2(inputCount, gradientLayerProvider, dz);
+                batchNormBackwardReturn = getBatchNormBackwardReturn(inputCount, gradientLayerProvider, dz);
                 gradientDescentCorrections.add(batchNormBackwardReturn.getCorrections());
             }
 
@@ -68,7 +68,7 @@ public class GradientDescentBatchNormProcessProvider implements IGradientDescent
 
     }
 
-    public BatchNormBackwardReturn getBatchNormBackwardReturn2(int inputCount, GradientBatchNormLayerProvider gradientLayerProvider, DoubleMatrix dz) {
+    public BatchNormBackwardReturn getBatchNormBackwardReturn(int inputCount, GradientBatchNormLayerProvider gradientLayerProvider, DoubleMatrix dz) {
 //        https://kevinzakka.github.io/2016/09/14/batch_normalization/
 //        dxhat = dout * gamma
         DoubleMatrix dXhat = dz.mulColumnVector(gradientLayerProvider.getGammaMatrix());
