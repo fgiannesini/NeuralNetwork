@@ -40,6 +40,6 @@ class IdentityFunctionApplierTest {
     }
 
     private Executable checkIdentityDerivate(double[] expected, double[] input) {
-        return () -> Assertions.assertArrayEquals(expected, identityFunctionApplier.derivate(new DoubleMatrix(input), null).data, 0.0001f);
+        return () -> Assertions.assertArrayEquals(expected, identityFunctionApplier.derivate(new DoubleMatrix(input)).data, 0.0001f);
     }
 }

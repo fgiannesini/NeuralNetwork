@@ -40,6 +40,6 @@ class TanhFunctionApplierTest {
     }
 
     private Executable checkTanhDerivate(double[] expected, double[] input) {
-        return () -> Assertions.assertArrayEquals(expected, tanhFunctionApplier.derivate(new DoubleMatrix(input), null).data, 0.0001f);
+        return () -> Assertions.assertArrayEquals(expected, tanhFunctionApplier.derivate(new DoubleMatrix(input)).data, 0.0001f);
     }
 }

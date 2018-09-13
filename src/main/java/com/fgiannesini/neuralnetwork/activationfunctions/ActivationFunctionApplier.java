@@ -6,5 +6,5 @@ public interface ActivationFunctionApplier {
 
     DoubleMatrix apply(DoubleMatrix input);
 
-    DoubleMatrix derivate(DoubleMatrix input, DoubleMatrix previousError);
+    DoubleMatrix derivate(DoubleMatrix input);
 }

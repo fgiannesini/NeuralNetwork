@@ -10,7 +10,7 @@ public class IdentityFunctionApplier implements ActivationFunctionApplier {
     }
 
     @Override
-    public DoubleMatrix derivate(DoubleMatrix input, DoubleMatrix previousError) {
-        return previousError.dup();
+    public DoubleMatrix derivate(DoubleMatrix input) {
+        return DoubleMatrix.ones(input.getRows(), input.getColumns());
     }
 }

@@ -100,9 +100,9 @@ public class GradientDescentBatchNormProcessProvider implements IGradientDescent
     public Function<ErrorComputationContainer, ErrorComputationContainer> getErrorComputationLauncher() {
         return container -> {
             //dZ1 = W2t * dZ2 .* g1'(A1)
-            DoubleMatrix delta = container.getProvider().getPreviousWeightMatrix().transpose()
-                    .mmul(container.getPreviousError());
-            DoubleMatrix error = container.getProvider().getCurrentActivationFunction().derivate(container.getProvider().getCurrentResult(), delta);
+            DoubleMatrix error = container.getProvider().getPreviousWeightMatrix().transpose()
+                    .mmul(container.getPreviousError())
+                    .muli(container.getProvider().getCurrentActivationFunction().derivate(container.getProvider().getCurrentResult()));
             return new ErrorComputationContainer(container.getProvider(), error);
         };
     }

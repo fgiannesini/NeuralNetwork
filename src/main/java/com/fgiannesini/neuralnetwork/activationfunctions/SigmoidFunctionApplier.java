@@ -15,8 +15,8 @@ public class SigmoidFunctionApplier implements ActivationFunctionApplier {
     }
 
     @Override
-    public DoubleMatrix derivate(DoubleMatrix input, DoubleMatrix previousError) {
+    public DoubleMatrix derivate(DoubleMatrix input) {
         //(1-a)*a
-        return input.neg().addi(1).muli(input).mul(previousError);
+        return input.neg().addi(1).muli(input);
     }
 }

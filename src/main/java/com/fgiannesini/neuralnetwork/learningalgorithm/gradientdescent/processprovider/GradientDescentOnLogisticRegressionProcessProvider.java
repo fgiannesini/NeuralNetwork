@@ -34,10 +34,10 @@ public class GradientDescentOnLogisticRegressionProcessProvider implements IGrad
     public Function<ErrorComputationContainer, ErrorComputationContainer> getFirstErrorComputationLauncher() {
         return container -> {
             //dZ2 = (A2 - Y)/A2(1-A2)) .* g2'(A2)
-            DoubleMatrix delta = container.getProvider().getCurrentResult().sub(container.getPreviousError())
+            DoubleMatrix error = container.getProvider().getCurrentResult().sub(container.getPreviousError())
                     .divi(container.getProvider().getCurrentResult())
-                    .divi(container.getProvider().getCurrentResult().neg().addi(1));
-            DoubleMatrix error = container.getProvider().getCurrentActivationFunction().derivate(container.getProvider().getCurrentResult(), delta);
+                    .divi(container.getProvider().getCurrentResult().neg().addi(1))
+                    .muli(container.getProvider().getCurrentActivationFunction().derivate(container.getProvider().getCurrentResult()));
 
             return new ErrorComputationContainer(container.getProvider(), error);
         };
