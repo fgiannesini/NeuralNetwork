@@ -1,6 +1,7 @@
 package com.fgiannesini.neuralnetwork;
 
 import com.fgiannesini.neuralnetwork.learningrate.ILearningRateUpdater;
+import com.fgiannesini.neuralnetwork.model.LayerType;
 
 import java.util.Arrays;
 
@@ -12,6 +13,8 @@ public class HyperParameters implements Cloneable {
     private ILearningRateUpdater learningRateUpdater;
     private Double momentumCoeff;
     private Double rmsStopCoeff;
+    private LayerType layerType;
+    private RegularizationCoeffs regularizationCoeffs;
 
     public HyperParameters() {
     }
@@ -46,6 +49,16 @@ public class HyperParameters implements Cloneable {
         return this;
     }
 
+    public HyperParameters regularizationCoeff(RegularizationCoeffs regularizationCoeffs) {
+        this.regularizationCoeffs = regularizationCoeffs;
+        return this;
+    }
+
+    public HyperParameters layerType(LayerType layerType) {
+        this.layerType = layerType;
+        return this;
+    }
+
     public int getEpochCount() {
         return epochCount;
     }
@@ -70,6 +83,14 @@ public class HyperParameters implements Cloneable {
         return rmsStopCoeff;
     }
 
+    public LayerType getLayerType() {
+        return layerType;
+    }
+
+    public RegularizationCoeffs getRegularizationCoeffs() {
+        return regularizationCoeffs;
+    }
+
     @Override
     public HyperParameters clone() {
         try {
@@ -88,6 +109,8 @@ public class HyperParameters implements Cloneable {
                 ", learningRateUpdater=" + learningRateUpdater.getClass().getSimpleName() + " " + learningRateUpdater.get(0) +
                 ", momentumCoeff=" + momentumCoeff +
                 ", rmsStopCoeff=" + rmsStopCoeff +
+                ", layerType=" + layerType +
+                ", regularizationCoeffs=" + regularizationCoeffs +
                 '}';
     }
 }

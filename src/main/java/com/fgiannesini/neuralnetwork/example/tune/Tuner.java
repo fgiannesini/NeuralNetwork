@@ -2,9 +2,11 @@ package com.fgiannesini.neuralnetwork.example.tune;
 
 import com.fgiannesini.neuralnetwork.HyperParameters;
 import com.fgiannesini.neuralnetwork.NeuralNetworkStats;
+import com.fgiannesini.neuralnetwork.RegularizationCoeffs;
 import com.fgiannesini.neuralnetwork.example.FloorExampleLauncher;
 import com.fgiannesini.neuralnetwork.learningrate.ILearningRateUpdater;
 import com.fgiannesini.neuralnetwork.learningrate.LearningRateUpdaterType;
+import com.fgiannesini.neuralnetwork.model.LayerType;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -12,6 +14,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 
 public class Tuner {
@@ -49,7 +52,7 @@ public class Tuner {
         for (int i = 0; i < population / 2; i++) {
             HyperParameters firstParameter = tuneStates.get(random.nextInt(3)).getHyperParameters().clone();
             HyperParameters secondParameter = tuneStates.get(random.nextInt(population)).getHyperParameters();
-            int parameterToMerge = random.nextInt(6);
+            int parameterToMerge = random.nextInt(8);
             switch (parameterToMerge) {
                 case 0:
                     firstParameter.epochCount(secondParameter.getEpochCount());
@@ -75,6 +78,14 @@ public class Tuner {
                     firstParameter.rmsStopCoeff(secondParameter.getRmsStopCoeff());
                     mergedTuneStates.add(new TuneState(firstParameter));
                     break;
+                case 6:
+                    firstParameter.layerType(secondParameter.getLayerType());
+                    mergedTuneStates.add(new TuneState(firstParameter));
+                    break;
+                case 7:
+                    firstParameter.regularizationCoeff(secondParameter.getRegularizationCoeffs());
+                    mergedTuneStates.add(new TuneState(firstParameter));
+                    break;
                 default:
                     throw new RuntimeException("Missing parameter management");
             }
@@ -89,7 +100,7 @@ public class Tuner {
         List<TuneState> mutatedTuneStates = new ArrayList<>();
         for (int i = 0; i < population / 2; i++) {
             HyperParameters parameter = tuneStates.get(random.nextInt(3)).getHyperParameters().clone();
-            int parameterToMerge = random.nextInt(6);
+            int parameterToMerge = random.nextInt(8);
             switch (parameterToMerge) {
                 case 0:
                     parameter.epochCount(generateEpochCount(random));
@@ -114,6 +125,14 @@ public class Tuner {
                 case 5:
                     parameter.rmsStopCoeff(generateRmsStopCoeff(random));
                     mutatedTuneStates.add(new TuneState(parameter));
+                    break;
+                case 6:
+                    parameter.layerType(generateLayerType(random));
+                    mutatedTuneStates.add(new TuneState(parameter));
+                    break;
+                case 7:
+                    RegularizationCoeffs regularizationCoeffs = generateRegularizationCoeffs(random, parameter.getHiddenLayerSize());
+                    parameter.regularizationCoeff(regularizationCoeffs);
                     break;
                 default:
                     throw new RuntimeException("Missing parameter management");
@@ -172,13 +191,16 @@ public class Tuner {
         Random random = new Random();
         return IntStream.range(0, statePopulation)
                 .mapToObj(i -> {
+                    int[] hiddenLayerSize = generateHiddenLayerSize(random);
                     HyperParameters hyperParameters = new HyperParameters()
                             .batchSize(generateBatchSize(random))
-                            .hiddenLayerSize(generateHiddenLayerSize(random))
+                            .hiddenLayerSize(hiddenLayerSize)
                             .learningRateUpdater(generateLearningRateUpdater(random))
                             .epochCount(generateEpochCount(random))
                             .momentumCoeff(generateMomentumCoeff(random))
-                            .rmsStopCoeff(generateRmsStopCoeff(random));
+                            .rmsStopCoeff(generateRmsStopCoeff(random))
+                            .layerType(generateLayerType(random))
+                            .regularizationCoeff(generateRegularizationCoeffs(random, hiddenLayerSize));
 
                     return new TuneState(hyperParameters);
                 })
@@ -186,7 +208,7 @@ public class Tuner {
     }
 
     private static int[] generateHiddenLayerSize(Random random) {
-        int streamSize = random.nextInt(2) + 1;
+        int streamSize = random.nextInt(5) + 1;
         return random.ints(streamSize, 5, 20).toArray();
     }
 
@@ -198,4 +220,24 @@ public class Tuner {
         return (random.nextInt(25) + 1) * 2_000;
     }
 
+    private static RegularizationCoeffs generateRegularizationCoeffs(Random random, int[] hiddenLayerSize) {
+        int regularizationMethod = random.nextInt(3);
+        RegularizationCoeffs regularizationCoeffs = new RegularizationCoeffs();
+        switch (regularizationMethod) {
+            case 0:
+                regularizationCoeffs.setL2RegularizationCoeff(random.nextDouble());
+                break;
+            case 1:
+                double[] dropOutRegularizationCoeffs = DoubleStream.concat(DoubleStream.concat(DoubleStream.of(1), random.doubles(hiddenLayerSize.length)), DoubleStream.of(1)).toArray();
+                regularizationCoeffs.setDropOutRegularizationCoeffs(dropOutRegularizationCoeffs);
+                break;
+            default:
+        }
+        return regularizationCoeffs;
+    }
+
+    private static LayerType generateLayerType(Random random) {
+        LayerType[] values = LayerType.values();
+        return values[random.nextInt(values.length)];
+    }
 }

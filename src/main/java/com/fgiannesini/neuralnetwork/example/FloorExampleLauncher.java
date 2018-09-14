@@ -1,14 +1,12 @@
 package com.fgiannesini.neuralnetwork.example;
 
-import com.fgiannesini.neuralnetwork.HyperParameters;
-import com.fgiannesini.neuralnetwork.NeuralNetwork;
-import com.fgiannesini.neuralnetwork.NeuralNetworkBuilder;
-import com.fgiannesini.neuralnetwork.NeuralNetworkStats;
+import com.fgiannesini.neuralnetwork.*;
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import com.fgiannesini.neuralnetwork.cost.CostType;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithmType;
 import com.fgiannesini.neuralnetwork.learningrate.LearningRateUpdaterType;
+import com.fgiannesini.neuralnetwork.model.LayerType;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
 import com.fgiannesini.neuralnetwork.normalizer.NormalizerType;
@@ -42,7 +40,9 @@ public class FloorExampleLauncher {
                 .epochCount(20)
                 .hiddenLayerSize(new int[]{20})
                 .momentumCoeff(0.9)
-                .rmsStopCoeff(0.999);
+                .rmsStopCoeff(0.999)
+                .layerType(LayerType.WEIGHT_BIAS)
+                .regularizationCoeff(new RegularizationCoeffs());
         FloorExampleLauncher floorExampleLauncher = new FloorExampleLauncher(statsUpdateAction, parameters);
         double successRate = floorExampleLauncher.launch();
         System.out.println("Success Rate: " + successRate + "%");
@@ -74,7 +74,13 @@ public class FloorExampleLauncher {
             neuralNetworkModelBuilder.addLayer(hiddenLayerIndex, ActivationFunctionType.RELU);
         }
         neuralNetworkModelBuilder.addLayer(10, ActivationFunctionType.SOFT_MAX);
-        NeuralNetworkModel neuralNetworkModel = neuralNetworkModelBuilder.buildWeightBiasModel();
+
+        NeuralNetworkModel neuralNetworkModel;
+        if (hyperParameters.getLayerType() == LayerType.WEIGHT_BIAS) {
+            neuralNetworkModel = neuralNetworkModelBuilder.buildWeightBiasModel();
+        } else {
+            neuralNetworkModel = neuralNetworkModelBuilder.buildBatchNormModel();
+        }
 
         return NeuralNetworkBuilder.init()
                 .withNeuralNetworkModel(neuralNetworkModel)

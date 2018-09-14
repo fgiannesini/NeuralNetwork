@@ -15,8 +15,6 @@ public class NeuralNetworkBuilder {
     private INormalizer normalizer;
     private NeuralNetworkModel neuralNetworkModel;
     private LearningAlgorithmType learningAlgorithmType;
-    private double[] dropOutCoeffs;
-    private Double l2RegularizationCoeff;
     private CostType costType;
     private Consumer<NeuralNetworkStats> statsUpdateAction;
     private HyperParameters hyperParameters;
@@ -48,16 +46,6 @@ public class NeuralNetworkBuilder {
         return this;
     }
 
-    public NeuralNetworkBuilder withDropOutRegularization(double[] dropOutCoeffs) {
-        this.dropOutCoeffs = dropOutCoeffs;
-        return this;
-    }
-
-    public NeuralNetworkBuilder withL2Regularization(Double l2RegularizationCoeff) {
-        this.l2RegularizationCoeff = l2RegularizationCoeff;
-        return this;
-    }
-
     public NeuralNetworkBuilder withCostType(CostType costType) {
         this.costType = costType;
         return this;
@@ -79,8 +67,8 @@ public class NeuralNetworkBuilder {
                 .withModel(neuralNetworkModel)
                 .withAlgorithmType(learningAlgorithmType)
                 .withCostType(costType)
-                .withDropOutRegularitation(dropOutCoeffs)
-                .withL2Regularization(l2RegularizationCoeff)
+                .withDropOutRegularitation(hyperParameters.getRegularizationCoeffs().getDropOutRegularizationCoeffs())
+                .withL2Regularization(hyperParameters.getRegularizationCoeffs().getL2RegularizationCoeff())
                 .withMomentumCoeff(hyperParameters.getMomentumCoeff())
                 .withRmsStopCoeff(hyperParameters.getRmsStopCoeff());
 
