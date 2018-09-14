@@ -1,9 +1,10 @@
 package com.fgiannesini.neuralnetwork.cost;
 
 import com.fgiannesini.neuralnetwork.converter.DataFormatConverter;
+import com.fgiannesini.neuralnetwork.model.Layer;
 import org.jblas.DoubleMatrix;
 
-public interface CostComputer {
+public interface CostComputer<L extends Layer> {
 
     default double compute(double[] input, double[] output) {
         DoubleMatrix inputMatrix = DataFormatConverter.fromTabToDoubleMatrix(input);

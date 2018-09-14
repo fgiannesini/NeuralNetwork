@@ -7,7 +7,7 @@ import org.jblas.DoubleMatrix;
 
 import java.util.List;
 
-public class FinalOutputComputerWithDropOutRegularization<L extends Layer> implements IFinalOutputComputer {
+public class FinalOutputComputerWithDropOutRegularization<L extends Layer> implements IFinalOutputComputer<L> {
 
     private final List<DoubleMatrix> dropOutMatrixList;
     private final ILayerComputer<L> layerComputer;

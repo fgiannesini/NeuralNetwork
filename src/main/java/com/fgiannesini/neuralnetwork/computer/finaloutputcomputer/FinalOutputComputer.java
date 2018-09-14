@@ -7,7 +7,7 @@ import org.jblas.DoubleMatrix;
 
 import java.util.List;
 
-public class FinalOutputComputer<L extends Layer> implements IFinalOutputComputer {
+public class FinalOutputComputer<L extends Layer> implements IFinalOutputComputer<L> {
 
     private final ILayerComputer<L> layerComputer;
     private List<L> layers;

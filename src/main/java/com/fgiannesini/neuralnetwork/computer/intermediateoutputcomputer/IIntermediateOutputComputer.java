@@ -1,12 +1,13 @@
 package com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer;
 
 import com.fgiannesini.neuralnetwork.converter.DataFormatConverter;
+import com.fgiannesini.neuralnetwork.model.Layer;
 import org.jblas.DoubleMatrix;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public interface IIntermediateOutputComputer {
+public interface IIntermediateOutputComputer<L extends Layer> {
 
     default List<double[]> compute(double[] input) {
         DoubleMatrix inputMatrix = DataFormatConverter.fromTabToDoubleMatrix(input);

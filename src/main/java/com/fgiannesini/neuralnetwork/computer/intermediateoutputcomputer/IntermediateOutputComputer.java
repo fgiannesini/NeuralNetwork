@@ -8,7 +8,7 @@ import org.jblas.DoubleMatrix;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IntermediateOutputComputer<L extends Layer> implements IIntermediateOutputComputer {
+public class IntermediateOutputComputer<L extends Layer> implements IIntermediateOutputComputer<L> {
 
     private final NeuralNetworkModel<L> model;
     private final ILayerComputer<L> layerComputer;

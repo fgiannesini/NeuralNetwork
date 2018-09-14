@@ -2,14 +2,15 @@ package com.fgiannesini.neuralnetwork.cost;
 
 import com.fgiannesini.neuralnetwork.computer.OutputComputerBuilder;
 import com.fgiannesini.neuralnetwork.computer.finaloutputcomputer.IFinalOutputComputer;
+import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
 
 import java.util.List;
 
-public class CostComputerBuilder {
+public class CostComputerBuilder<L extends Layer> {
 
-    private NeuralNetworkModel neuralNetworkModel;
+    private NeuralNetworkModel<L> neuralNetworkModel;
     private CostType costType;
     private Double l2RegularizationCoeff;
     private List<DoubleMatrix> dropOutCoeffs;
@@ -22,7 +23,7 @@ public class CostComputerBuilder {
         return new CostComputerBuilder();
     }
 
-    public CostComputerBuilder withNeuralNetworkModel(NeuralNetworkModel neuralNetworkModel) {
+    public CostComputerBuilder withNeuralNetworkModel(NeuralNetworkModel<L> neuralNetworkModel) {
         this.neuralNetworkModel = neuralNetworkModel;
         return this;
     }
@@ -42,10 +43,10 @@ public class CostComputerBuilder {
         return this;
     }
 
-    public CostComputer build() {
+    public CostComputer<L> build() {
         checkInputs();
-        IFinalOutputComputer outputComputer = buildFinalOutputComputer();
-        CostComputer costComputer;
+        IFinalOutputComputer<L> outputComputer = buildFinalOutputComputer();
+        CostComputer<L> costComputer;
         switch (costType) {
             case LOGISTIC_REGRESSION:
                 costComputer = new LogisticRegressionCostComputer(outputComputer);
@@ -76,8 +77,8 @@ public class CostComputerBuilder {
         }
     }
 
-    private IFinalOutputComputer buildFinalOutputComputer() {
-        OutputComputerBuilder outputComputerBuilder = OutputComputerBuilder.init()
+    private IFinalOutputComputer<L> buildFinalOutputComputer() {
+        OutputComputerBuilder<L> outputComputerBuilder = OutputComputerBuilder.init()
                 .withModel(neuralNetworkModel);
         if (dropOutCoeffs != null) {
             outputComputerBuilder.withDropOutParameters(dropOutCoeffs);

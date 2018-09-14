@@ -18,10 +18,7 @@ import java.util.function.Function;
 
 public class GradientDescentBatchNormProcessProvider implements IGradientDescentProcessProvider<BatchNormLayer> {
 
-    private double epsilon;
-
     public GradientDescentBatchNormProcessProvider() {
-        epsilon = Math.pow(10, -8);
     }
 
     @Override
