@@ -6,15 +6,9 @@ import java.util.stream.Collectors;
 
 public class NeuralNetworkModel<L extends Layer> implements Cloneable {
 
-    private final int inputSize;
-    private final int outputSize;
-    private final LayerType layerType;
     private List<L> layers;
 
-    public NeuralNetworkModel(int inputSize, int outputSize, LayerType layerType) {
-        this.inputSize = inputSize;
-        this.outputSize = outputSize;
-        this.layerType = layerType;
+    public NeuralNetworkModel() {
         this.layers = new ArrayList<>();
     }
 
@@ -26,14 +20,6 @@ public class NeuralNetworkModel<L extends Layer> implements Cloneable {
         return layers;
     }
 
-    public int getInputSize() {
-        return inputSize;
-    }
-
-    public int getOutputSize() {
-        return outputSize;
-    }
-
     @Override
     public NeuralNetworkModel clone() {
         try {
@@ -43,10 +29,6 @@ public class NeuralNetworkModel<L extends Layer> implements Cloneable {
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public LayerType getLayerType() {
-        return layerType;
     }
 
     @Override

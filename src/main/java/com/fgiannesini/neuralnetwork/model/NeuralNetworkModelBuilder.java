@@ -12,13 +12,16 @@ public class NeuralNetworkModelBuilder {
 
     private final List<Integer> layerNodeCounts;
     private final List<ActivationFunctionType> layerActivationFunctions;
+    private final List<LayerType> layerTypes;
+
     private int inputSize;
     private InitializerType initializerType;
 
     private NeuralNetworkModelBuilder() {
         layerNodeCounts = new ArrayList<>();
-        initializerType = InitializerType.RANDOM;
+        initializerType = InitializerType.XAVIER;
         layerActivationFunctions = new ArrayList<>();
+        layerTypes = new ArrayList<>();
     }
 
     public static NeuralNetworkModelBuilder init() {
@@ -30,15 +33,17 @@ public class NeuralNetworkModelBuilder {
         return this;
     }
 
-    public NeuralNetworkModelBuilder addLayer(int layerNodeCount) {
+    public NeuralNetworkModelBuilder addWeightBiasLayer(int layerNodeCount, ActivationFunctionType activationFunctionType) {
         layerNodeCounts.add(layerNodeCount);
-        layerActivationFunctions.add(ActivationFunctionType.RELU);
+        layerActivationFunctions.add(activationFunctionType);
+        layerTypes.add(LayerType.WEIGHT_BIAS);
         return this;
     }
 
-    public NeuralNetworkModelBuilder addLayer(int layerNodeCount, ActivationFunctionType activationFunctionType) {
+    public NeuralNetworkModelBuilder addBatchNormLayer(int layerNodeCount, ActivationFunctionType activationFunctionType) {
         layerNodeCounts.add(layerNodeCount);
         layerActivationFunctions.add(activationFunctionType);
+        layerTypes.add(LayerType.BATCH_NORM);
         return this;
     }
 
@@ -47,44 +52,40 @@ public class NeuralNetworkModelBuilder {
         return this;
     }
 
-    public NeuralNetworkModel<WeightBiasLayer> buildWeightBiasModel() {
+    public NeuralNetworkModel buildWeightBiasModel() {
         checkInputs();
-        return buildWeightBiasNeuralNetworkModel();
+        return buildNeuralNetworkModel();
     }
 
-    private NeuralNetworkModel<WeightBiasLayer> buildWeightBiasNeuralNetworkModel() {
-        int outputSize = layerNodeCounts.get(layerNodeCounts.size() - 1);
-        NeuralNetworkModel<WeightBiasLayer> neuralNetworkModel = new NeuralNetworkModel<>(inputSize, outputSize, LayerType.WEIGHT_BIAS);
+    private NeuralNetworkModel buildNeuralNetworkModel() {
+        checkInputs();
+
+        NeuralNetworkModel neuralNetworkModel = new NeuralNetworkModel();
         Initializer initializer = initializerType.getInitializer();
-        WeightBiasLayer firstWeightBiasLayer = new WeightBiasLayer(inputSize, layerNodeCounts.get(0), initializer, layerActivationFunctions.get(0));
-        neuralNetworkModel.addLayer(firstWeightBiasLayer);
+        Layer firstLayer = buildLayerInstance(initializer, inputSize, layerNodeCounts.get(0), layerActivationFunctions.get(0), layerTypes.get(0));
+        neuralNetworkModel.addLayer(firstLayer);
         IntStream.range(1, layerNodeCounts.size()).forEach(i -> {
             Integer inputLayerSize = layerNodeCounts.get(i - 1);
             Integer outputLayerSize = layerNodeCounts.get(i);
-            WeightBiasLayer weightBiasLayer = new WeightBiasLayer(inputLayerSize, outputLayerSize, initializer, layerActivationFunctions.get(i));
-            neuralNetworkModel.addLayer(weightBiasLayer);
+            Layer layer = buildLayerInstance(initializer, inputLayerSize, outputLayerSize, layerActivationFunctions.get(i), layerTypes.get(i));
+            neuralNetworkModel.addLayer(layer);
         });
         return neuralNetworkModel;
     }
 
-    public NeuralNetworkModel<BatchNormLayer> buildBatchNormModel() {
-        checkInputs();
-        return buildBatchNormNeuralNetworkModel();
-    }
-
-    private NeuralNetworkModel<BatchNormLayer> buildBatchNormNeuralNetworkModel() {
-        int outputSize = layerNodeCounts.get(layerNodeCounts.size() - 1);
-        NeuralNetworkModel<BatchNormLayer> neuralNetworkModel = new NeuralNetworkModel<>(inputSize, outputSize, LayerType.BATCH_NORM);
-        Initializer initializer = initializerType.getInitializer();
-        BatchNormLayer firstBatchNormLayer = new BatchNormLayer(inputSize, layerNodeCounts.get(0), initializer, layerActivationFunctions.get(0));
-        neuralNetworkModel.addLayer(firstBatchNormLayer);
-        IntStream.range(1, layerNodeCounts.size()).forEach(i -> {
-            Integer inputLayerSize = layerNodeCounts.get(i - 1);
-            Integer outputLayerSize = layerNodeCounts.get(i);
-            BatchNormLayer batchNormLayer = new BatchNormLayer(inputLayerSize, outputLayerSize, initializer, layerActivationFunctions.get(i));
-            neuralNetworkModel.addLayer(batchNormLayer);
-        });
-        return neuralNetworkModel;
+    private Layer buildLayerInstance(Initializer initializer, int inputLayerSize, Integer outputLayerSize, ActivationFunctionType activationFunctionType, LayerType layerType) {
+        Layer layer;
+        switch (layerType) {
+            case WEIGHT_BIAS:
+                layer = new WeightBiasLayer(inputLayerSize, outputLayerSize, initializer, activationFunctionType);
+                break;
+            case BATCH_NORM:
+                layer = new BatchNormLayer(inputLayerSize, outputLayerSize, initializer, activationFunctionType);
+                break;
+            default:
+                throw new IllegalArgumentException(layerType + " is not allowed for neural network model");
+        }
+        return layer;
     }
 
     private void checkInputs() {
