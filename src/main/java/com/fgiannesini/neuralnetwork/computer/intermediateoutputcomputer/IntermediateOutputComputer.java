@@ -22,7 +22,7 @@ public class IntermediateOutputComputer<L extends Layer> implements IIntermediat
         List<IntermediateOutputResult> intermediateOutputResults = new ArrayList<>();
         IntermediateOutputResult intermediateOutputResult = new IntermediateOutputResult(inputMatrix.dup());
         intermediateOutputResults.add(intermediateOutputResult);
-        for (L layer : model.getLayers()) {
+        for (Layer layer : model.getLayers()) {
             intermediateOutputResult = layerComputer.computeAFromInput(intermediateOutputResult.getResult(), layer);
             intermediateOutputResults.add(intermediateOutputResult);
         }

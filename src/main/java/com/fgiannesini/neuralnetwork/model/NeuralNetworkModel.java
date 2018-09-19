@@ -1,22 +1,17 @@
 package com.fgiannesini.neuralnetwork.model;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class NeuralNetworkModel<L extends Layer> implements Cloneable {
 
-    private List<L> layers;
+    private List<Layer> layers;
 
-    public NeuralNetworkModel() {
-        this.layers = new ArrayList<>();
+    public NeuralNetworkModel(List<Layer> layers) {
+        this.layers = layers;
     }
 
-    public void addLayer(L layer) {
-        layers.add(layer);
-    }
-
-    public List<L> getLayers() {
+    public List<Layer> getLayers() {
         return layers;
     }
 

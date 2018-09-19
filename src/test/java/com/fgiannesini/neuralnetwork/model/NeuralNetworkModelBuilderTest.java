@@ -2,6 +2,7 @@ package com.fgiannesini.neuralnetwork.model;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
+import org.jblas.DoubleMatrix;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -18,72 +19,32 @@ class NeuralNetworkModelBuilderTest {
         @Test
         void create_Network_Model_Missing_InputSize_Throw_Exception() {
             Assertions.assertThrows(IllegalArgumentException.class, () -> NeuralNetworkModelBuilder.init()
-                    .addLayer(5)
-                    .addLayer(7)
-                    .addLayer(10)
-                    .buildWeightBiasModel());
+                    .addWeightBiasLayer(5, ActivationFunctionType.NONE)
+                    .addWeightBiasLayer(7, ActivationFunctionType.NONE)
+                    .addWeightBiasLayer(10, ActivationFunctionType.NONE)
+                    .buildNeuralNetworkModel());
         }
 
         @Test
         void create_Network_Model_Missing_Layer_Throw_Exception() {
             Assertions.assertThrows(IllegalArgumentException.class, () -> NeuralNetworkModelBuilder.init()
                     .input(10)
-                    .buildWeightBiasModel());
+                    .buildNeuralNetworkModel());
         }
 
         @Test
-        void create_Network_Model_Default_Activation_Function() {
-            NeuralNetworkModel<WeightBiasLayer> neuralNetworkModel = NeuralNetworkModelBuilder.init()
+        void create_Network_Model() {
+            NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                     .input(10)
-                    .addLayer(5)
-                    .addLayer(3)
-                    .buildWeightBiasModel();
+                    .addWeightBiasLayer(5, ActivationFunctionType.NONE)
+                    .addWeightBiasLayer(7, ActivationFunctionType.NONE)
+                    .addWeightBiasLayer(10, ActivationFunctionType.SIGMOID)
+                    .buildNeuralNetworkModel();
 
-            Assertions.assertAll(
-                    () -> Assertions.assertEquals(10, neuralNetworkModel.getInputSize()),
-                    () -> Assertions.assertEquals(3, neuralNetworkModel.getOutputSize())
-            );
-
-            List<WeightBiasLayer> layers = neuralNetworkModel.getLayers();
-            Assertions.assertEquals(2, layers.size());
-
-            WeightBiasLayer firstLayer = layers.get(0);
-            Assertions.assertAll(
-                    () -> Assertions.assertEquals(5, firstLayer.getWeightMatrix().rows),
-                    () -> Assertions.assertEquals(10, firstLayer.getWeightMatrix().columns),
-                    () -> Assertions.assertEquals(5, firstLayer.getBiasMatrix().rows),
-                    () -> Assertions.assertEquals(1, firstLayer.getBiasMatrix().columns),
-                    () -> Assertions.assertEquals(ActivationFunctionType.RELU, firstLayer.getActivationFunctionType(), "Default layer activation function is not None")
-            );
-
-            WeightBiasLayer secondLayer = layers.get(1);
-            Assertions.assertAll(
-                    () -> Assertions.assertEquals(3, secondLayer.getWeightMatrix().rows),
-                    () -> Assertions.assertEquals(5, secondLayer.getWeightMatrix().columns),
-                    () -> Assertions.assertEquals(3, secondLayer.getBiasMatrix().rows),
-                    () -> Assertions.assertEquals(1, secondLayer.getBiasMatrix().columns),
-                    () -> Assertions.assertEquals(ActivationFunctionType.RELU, secondLayer.getActivationFunctionType(), "Last layer activation function is not Sigmoid")
-            );
-        }
-
-        @Test
-        void create_Network_Model_Override_Activation_Function() {
-            NeuralNetworkModel<WeightBiasLayer> neuralNetworkModel = NeuralNetworkModelBuilder.init()
-                    .input(10)
-                    .addLayer(5, ActivationFunctionType.NONE)
-                    .addLayer(7, ActivationFunctionType.NONE)
-                    .addLayer(10, ActivationFunctionType.SIGMOID)
-                    .buildWeightBiasModel();
-
-            Assertions.assertAll(
-                    () -> Assertions.assertEquals(10, neuralNetworkModel.getInputSize()),
-                    () -> Assertions.assertEquals(10, neuralNetworkModel.getOutputSize())
-            );
-
-            List<WeightBiasLayer> layers = neuralNetworkModel.getLayers();
+            List<Layer> layers = neuralNetworkModel.getLayers();
             Assertions.assertEquals(3, layers.size());
 
-            WeightBiasLayer firstLayer = layers.get(0);
+            WeightBiasLayer firstLayer = (WeightBiasLayer) layers.get(0);
             Assertions.assertAll(
                     () -> Assertions.assertEquals(5, firstLayer.getWeightMatrix().rows),
                     () -> Assertions.assertEquals(10, firstLayer.getWeightMatrix().columns),
@@ -92,7 +53,7 @@ class NeuralNetworkModelBuilderTest {
                     () -> Assertions.assertEquals(ActivationFunctionType.NONE, firstLayer.getActivationFunctionType())
             );
 
-            WeightBiasLayer secondLayer = layers.get(1);
+            WeightBiasLayer secondLayer = (WeightBiasLayer) layers.get(1);
             Assertions.assertAll(
                     () -> Assertions.assertEquals(7, secondLayer.getWeightMatrix().rows),
                     () -> Assertions.assertEquals(5, secondLayer.getWeightMatrix().columns),
@@ -101,7 +62,7 @@ class NeuralNetworkModelBuilderTest {
                     () -> Assertions.assertEquals(ActivationFunctionType.NONE, secondLayer.getActivationFunctionType())
             );
 
-            WeightBiasLayer thirdLayer = layers.get(2);
+            WeightBiasLayer thirdLayer = (WeightBiasLayer) layers.get(2);
             Assertions.assertAll(
                     () -> Assertions.assertEquals(10, thirdLayer.getWeightMatrix().rows),
                     () -> Assertions.assertEquals(7, thirdLayer.getWeightMatrix().columns),
@@ -113,18 +74,18 @@ class NeuralNetworkModelBuilderTest {
 
         @Test
         void check_random_weight_boudaries() {
-            NeuralNetworkModel<WeightBiasLayer> neuralNetworkModel = NeuralNetworkModelBuilder.init()
+            NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                     .useInitializer(InitializerType.RANDOM)
                     .input(256)
-                    .addLayer(100)
-                    .addLayer(100)
-                    .buildWeightBiasModel();
+                    .addWeightBiasLayer(100, ActivationFunctionType.NONE)
+                    .addWeightBiasLayer(100, ActivationFunctionType.NONE)
+                    .buildNeuralNetworkModel();
 
             Assertions.assertTrue(
-                    Stream.concat(
-                            neuralNetworkModel.getLayers().stream().map(WeightBiasLayer::getWeightMatrix),
-                            neuralNetworkModel.getLayers().stream().map(WeightBiasLayer::getBiasMatrix)
-                    ).flatMapToDouble(m -> Arrays.stream(m.data))
+                    ((Stream<DoubleMatrix>) Stream.concat(
+                            neuralNetworkModel.getLayers().stream().map(layer -> ((WeightBiasLayer) layer).getWeightMatrix()),
+                            neuralNetworkModel.getLayers().stream().map(layer -> ((WeightBiasLayer) layer).getBiasMatrix())
+                    )).flatMapToDouble(m -> Arrays.stream(m.data))
                             .allMatch(d -> d < 0.01 && d > 0)
             );
 
@@ -136,76 +97,25 @@ class NeuralNetworkModelBuilderTest {
         @Test
         void create_Network_Model_Missing_InputSize_Throw_Exception() {
             Assertions.assertThrows(IllegalArgumentException.class, () -> NeuralNetworkModelBuilder.init()
-                    .addLayer(5)
-                    .addLayer(7)
-                    .addLayer(10)
-                    .buildBatchNormModel());
+                    .addBatchNormLayer(5, ActivationFunctionType.NONE)
+                    .addBatchNormLayer(7, ActivationFunctionType.NONE)
+                    .addBatchNormLayer(10, ActivationFunctionType.NONE)
+                    .buildNeuralNetworkModel());
         }
 
         @Test
-        void create_Network_Model_Missing_Layer_Throw_Exception() {
-            Assertions.assertThrows(IllegalArgumentException.class, () -> NeuralNetworkModelBuilder.init()
-                    .input(10)
-                    .buildBatchNormModel());
-        }
-
-        @Test
-        void create_Network_Model_Default_Activation_Function() {
+        void create_Network_Model() {
             NeuralNetworkModel<BatchNormLayer> neuralNetworkModel = NeuralNetworkModelBuilder.init()
                     .input(10)
-                    .addLayer(5)
-                    .addLayer(3)
-                    .buildBatchNormModel();
+                    .addBatchNormLayer(5, ActivationFunctionType.NONE)
+                    .addBatchNormLayer(7, ActivationFunctionType.NONE)
+                    .addBatchNormLayer(10, ActivationFunctionType.SIGMOID)
+                    .buildNeuralNetworkModel();
 
-            Assertions.assertAll(
-                    () -> Assertions.assertEquals(10, neuralNetworkModel.getInputSize()),
-                    () -> Assertions.assertEquals(3, neuralNetworkModel.getOutputSize())
-            );
-
-            List<BatchNormLayer> layers = neuralNetworkModel.getLayers();
-            Assertions.assertEquals(2, layers.size());
-
-            BatchNormLayer firstLayer = layers.get(0);
-            Assertions.assertAll(
-                    () -> Assertions.assertEquals(5, firstLayer.getWeightMatrix().rows),
-                    () -> Assertions.assertEquals(10, firstLayer.getWeightMatrix().columns),
-                    () -> Assertions.assertEquals(5, firstLayer.getGammaMatrix().rows),
-                    () -> Assertions.assertEquals(1, firstLayer.getGammaMatrix().columns),
-                    () -> Assertions.assertEquals(5, firstLayer.getBetaMatrix().rows),
-                    () -> Assertions.assertEquals(1, firstLayer.getBetaMatrix().columns),
-                    () -> Assertions.assertEquals(ActivationFunctionType.RELU, firstLayer.getActivationFunctionType(), "Default layer activation function is not None")
-            );
-
-            BatchNormLayer secondLayer = layers.get(1);
-            Assertions.assertAll(
-                    () -> Assertions.assertEquals(3, secondLayer.getWeightMatrix().rows),
-                    () -> Assertions.assertEquals(5, secondLayer.getWeightMatrix().columns),
-                    () -> Assertions.assertEquals(3, secondLayer.getGammaMatrix().rows),
-                    () -> Assertions.assertEquals(1, secondLayer.getGammaMatrix().columns),
-                    () -> Assertions.assertEquals(3, secondLayer.getBetaMatrix().rows),
-                    () -> Assertions.assertEquals(1, secondLayer.getBetaMatrix().columns),
-                    () -> Assertions.assertEquals(ActivationFunctionType.RELU, secondLayer.getActivationFunctionType(), "Last layer activation function is not Sigmoid")
-            );
-        }
-
-        @Test
-        void create_Network_Model_Override_Activation_Function() {
-            NeuralNetworkModel<BatchNormLayer> neuralNetworkModel = NeuralNetworkModelBuilder.init()
-                    .input(10)
-                    .addLayer(5, ActivationFunctionType.NONE)
-                    .addLayer(7, ActivationFunctionType.NONE)
-                    .addLayer(10, ActivationFunctionType.SIGMOID)
-                    .buildBatchNormModel();
-
-            Assertions.assertAll(
-                    () -> Assertions.assertEquals(10, neuralNetworkModel.getInputSize()),
-                    () -> Assertions.assertEquals(10, neuralNetworkModel.getOutputSize())
-            );
-
-            List<BatchNormLayer> layers = neuralNetworkModel.getLayers();
+            List<Layer> layers = neuralNetworkModel.getLayers();
             Assertions.assertEquals(3, layers.size());
 
-            BatchNormLayer firstLayer = layers.get(0);
+            BatchNormLayer firstLayer = (BatchNormLayer) layers.get(0);
             Assertions.assertAll(
                     () -> Assertions.assertEquals(5, firstLayer.getWeightMatrix().rows),
                     () -> Assertions.assertEquals(10, firstLayer.getWeightMatrix().columns),
@@ -216,7 +126,7 @@ class NeuralNetworkModelBuilderTest {
                     () -> Assertions.assertEquals(ActivationFunctionType.NONE, firstLayer.getActivationFunctionType())
             );
 
-            BatchNormLayer secondLayer = layers.get(1);
+            BatchNormLayer secondLayer = (BatchNormLayer) layers.get(1);
             Assertions.assertAll(
                     () -> Assertions.assertEquals(7, secondLayer.getWeightMatrix().rows),
                     () -> Assertions.assertEquals(5, secondLayer.getWeightMatrix().columns),
@@ -227,7 +137,7 @@ class NeuralNetworkModelBuilderTest {
                     () -> Assertions.assertEquals(ActivationFunctionType.NONE, secondLayer.getActivationFunctionType())
             );
 
-            BatchNormLayer thirdLayer = layers.get(2);
+            BatchNormLayer thirdLayer = (BatchNormLayer) layers.get(2);
             Assertions.assertAll(
                     () -> Assertions.assertEquals(10, thirdLayer.getWeightMatrix().rows),
                     () -> Assertions.assertEquals(7, thirdLayer.getWeightMatrix().columns),
@@ -244,15 +154,15 @@ class NeuralNetworkModelBuilderTest {
             NeuralNetworkModel<BatchNormLayer> neuralNetworkModel = NeuralNetworkModelBuilder.init()
                     .useInitializer(InitializerType.RANDOM)
                     .input(256)
-                    .addLayer(100)
-                    .addLayer(100)
-                    .buildBatchNormModel();
+                    .addBatchNormLayer(100, ActivationFunctionType.NONE)
+                    .addBatchNormLayer(100, ActivationFunctionType.NONE)
+                    .buildNeuralNetworkModel();
 
             Assertions.assertTrue(
                     Stream.of(
-                            neuralNetworkModel.getLayers().stream().map(BatchNormLayer::getWeightMatrix),
-                            neuralNetworkModel.getLayers().stream().map(BatchNormLayer::getGammaMatrix),
-                            neuralNetworkModel.getLayers().stream().map(BatchNormLayer::getBetaMatrix)
+                            neuralNetworkModel.getLayers().stream().map(layer -> ((BatchNormLayer) layer).getWeightMatrix()),
+                            neuralNetworkModel.getLayers().stream().map(layer -> ((BatchNormLayer) layer).getGammaMatrix()),
+                            neuralNetworkModel.getLayers().stream().map(layer -> ((BatchNormLayer) layer).getBetaMatrix())
                     ).flatMap(Function.identity())
                             .flatMapToDouble(m -> Arrays.stream(m.data))
                             .allMatch(d -> d < 0.01 && d > 0)

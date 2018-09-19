@@ -52,25 +52,25 @@ public class NeuralNetworkModelBuilder {
         return this;
     }
 
-    public NeuralNetworkModel buildWeightBiasModel() {
-        checkInputs();
-        return buildNeuralNetworkModel();
+    public NeuralNetworkModel buildNeuralNetworkModel() {
+        return new NeuralNetworkModel(buildLayers());
     }
 
-    private NeuralNetworkModel buildNeuralNetworkModel() {
+    List<Layer> buildLayers() {
         checkInputs();
 
-        NeuralNetworkModel neuralNetworkModel = new NeuralNetworkModel();
+        List<Layer> layers = new ArrayList<>();
+
         Initializer initializer = initializerType.getInitializer();
         Layer firstLayer = buildLayerInstance(initializer, inputSize, layerNodeCounts.get(0), layerActivationFunctions.get(0), layerTypes.get(0));
-        neuralNetworkModel.addLayer(firstLayer);
+        layers.add(firstLayer);
         IntStream.range(1, layerNodeCounts.size()).forEach(i -> {
             Integer inputLayerSize = layerNodeCounts.get(i - 1);
             Integer outputLayerSize = layerNodeCounts.get(i);
             Layer layer = buildLayerInstance(initializer, inputLayerSize, outputLayerSize, layerActivationFunctions.get(i), layerTypes.get(i));
-            neuralNetworkModel.addLayer(layer);
+            layers.add(layer);
         });
-        return neuralNetworkModel;
+        return layers;
     }
 
     private Layer buildLayerInstance(Initializer initializer, int inputLayerSize, Integer outputLayerSize, ActivationFunctionType activationFunctionType, LayerType layerType) {

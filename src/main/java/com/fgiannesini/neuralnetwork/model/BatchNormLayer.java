@@ -10,13 +10,19 @@ import java.util.Objects;
 
 public class BatchNormLayer extends Layer implements Cloneable {
 
+    private int inputLayerSize;
+    private int outputLayerSize;
+    private DoubleMatrix weightMatrix;
     private DoubleMatrix gammaMatrix;
     private DoubleMatrix betaMatrix;
 
     public BatchNormLayer(int inputLayerSize, int outputLayerSize, Initializer initializer, ActivationFunctionType activationFunctionType) {
-        super(inputLayerSize, outputLayerSize, activationFunctionType, initializer);
+        super(activationFunctionType);
+        weightMatrix = initializer.initDoubleMatrix(outputLayerSize, inputLayerSize);
         gammaMatrix = initializer.initDoubleMatrix(outputLayerSize, 1);
         betaMatrix = initializer.initDoubleMatrix(outputLayerSize, 1);
+        this.inputLayerSize = inputLayerSize;
+        this.outputLayerSize = outputLayerSize;
     }
 
     public DoubleMatrix getGammaMatrix() {
@@ -27,9 +33,22 @@ public class BatchNormLayer extends Layer implements Cloneable {
         return betaMatrix;
     }
 
+    public int getInputLayerSize() {
+        return inputLayerSize;
+    }
+
+    public int getOutputLayerSize() {
+        return outputLayerSize;
+    }
+
+    public DoubleMatrix getWeightMatrix() {
+        return weightMatrix;
+    }
+
     @Override
     public BatchNormLayer clone() {
         BatchNormLayer clone = (BatchNormLayer) super.clone();
+        clone.weightMatrix = weightMatrix.dup();
         clone.gammaMatrix = gammaMatrix.dup();
         clone.betaMatrix = betaMatrix.dup();
         return clone;
@@ -43,23 +62,28 @@ public class BatchNormLayer extends Layer implements Cloneable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof BatchNormLayer)) return false;
-        if (!super.equals(o)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         BatchNormLayer that = (BatchNormLayer) o;
-        return Objects.equals(gammaMatrix, that.gammaMatrix) &&
+        return inputLayerSize == that.inputLayerSize &&
+                outputLayerSize == that.outputLayerSize &&
+                Objects.equals(weightMatrix, that.weightMatrix) &&
+                Objects.equals(gammaMatrix, that.gammaMatrix) &&
                 Objects.equals(betaMatrix, that.betaMatrix);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), gammaMatrix, betaMatrix);
+        return Objects.hash(inputLayerSize, outputLayerSize, weightMatrix, gammaMatrix, betaMatrix);
     }
 
     @Override
     public String toString() {
         return "BatchNormLayer{" +
-                "gammaMatrix=" + gammaMatrix +
+                "inputLayerSize=" + inputLayerSize +
+                ", outputLayerSize=" + outputLayerSize +
+                ", weightMatrix=" + weightMatrix +
+                ", gammaMatrix=" + gammaMatrix +
                 ", betaMatrix=" + betaMatrix +
-                "} " + super.toString();
+                '}';
     }
 }
