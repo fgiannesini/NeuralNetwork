@@ -8,10 +8,14 @@ import java.util.List;
 import java.util.Objects;
 
 public abstract class Layer implements Cloneable {
-    private final int inputLayerSize;
-    private final int outputLayerSize;
-    private final ActivationFunctionType activationFunctionType;
+    private int inputLayerSize;
+    private int outputLayerSize;
+    private ActivationFunctionType activationFunctionType;
     private DoubleMatrix weightMatrix;
+
+    Layer(ActivationFunctionType activationFunctionType) {
+        this.activationFunctionType = activationFunctionType;
+    }
 
     Layer(int inputLayerSize, int outputLayerSize, ActivationFunctionType activationFunctionType, Initializer initializer) {
         this.inputLayerSize = inputLayerSize;
@@ -40,7 +44,9 @@ public abstract class Layer implements Cloneable {
         return activationFunctionType;
     }
 
-    public abstract List<DoubleMatrix> getParametersMatrix();
+    public List<DoubleMatrix> getParametersMatrix() {
+        return null;
+    }
 
     @Override
     public boolean equals(Object o) {
