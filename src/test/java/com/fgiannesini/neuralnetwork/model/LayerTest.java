@@ -47,4 +47,53 @@ class LayerTest {
 
         Assertions.assertEquals(clone.getActivationFunctionType(), layer.getActivationFunctionType());
     }
+
+    @Test
+    void test_convolutionLayer_clone() {
+        ConvolutionLayer layer = new ConvolutionLayer(ActivationFunctionType.NONE, InitializerType.ONES.getInitializer(),1,2,3,4);
+        ConvolutionLayer clone = layer.clone();
+
+        Assertions.assertNotSame(clone, layer);
+
+        Assertions.assertEquals(clone.getBiasMatrices(), layer.getBiasMatrices());
+        Assertions.assertNotSame(clone.getBiasMatrices(), layer.getBiasMatrices());
+
+        Assertions.assertEquals(clone.getWeightMatrices(), layer.getWeightMatrices());
+        Assertions.assertNotSame(clone.getWeightMatrices(), layer.getWeightMatrices());
+
+        Assertions.assertEquals(clone.getChannelCount(), layer.getChannelCount());
+        Assertions.assertEquals(clone.getFilterSize(), layer.getFilterSize());
+        Assertions.assertEquals(clone.getPadding(), layer.getPadding());
+        Assertions.assertEquals(clone.getStride(), layer.getStride());
+
+        Assertions.assertEquals(clone.getActivationFunctionType(), layer.getActivationFunctionType());
+    }
+
+    @Test
+    void test_MaxPoolingLayer_clone() {
+        MaxPoolingLayer layer = new MaxPoolingLayer(ActivationFunctionType.NONE, 1,2,3);
+        MaxPoolingLayer clone = layer.clone();
+
+        Assertions.assertNotSame(clone, layer);
+
+        Assertions.assertEquals(clone.getFilterSize(), layer.getFilterSize());
+        Assertions.assertEquals(clone.getPadding(), layer.getPadding());
+        Assertions.assertEquals(clone.getStride(), layer.getStride());
+
+        Assertions.assertEquals(clone.getActivationFunctionType(), layer.getActivationFunctionType());
+    }
+
+    @Test
+    void test_AveragePoolingLayer_clone() {
+        AveragePoolingLayer layer = new AveragePoolingLayer(ActivationFunctionType.NONE, 1,2,3);
+        AveragePoolingLayer clone = layer.clone();
+
+        Assertions.assertNotSame(clone, layer);
+
+        Assertions.assertEquals(clone.getFilterSize(), layer.getFilterSize());
+        Assertions.assertEquals(clone.getPadding(), layer.getPadding());
+        Assertions.assertEquals(clone.getStride(), layer.getStride());
+
+        Assertions.assertEquals(clone.getActivationFunctionType(), layer.getActivationFunctionType());
+    }
 }
