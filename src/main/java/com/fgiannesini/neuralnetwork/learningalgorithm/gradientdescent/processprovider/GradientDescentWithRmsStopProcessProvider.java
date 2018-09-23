@@ -1,7 +1,7 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider;
 
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container.*;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientLayerProvider;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container.GradientDescentCorrection;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container.GradientDescentCorrectionsContainer;
 import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
@@ -12,13 +12,13 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class GradientDescentWithRmsStopProcessProvider<L extends Layer> implements IGradientDescentProcessProvider<L> {
+public class GradientDescentWithRmsStopProcessProvider implements IGradientDescentProcessProvider {
     private final List<List<DoubleMatrix>> rmsStopLayers;
-    private final IGradientDescentProcessProvider<L> processProvider;
+    private final IGradientDescentProcessProvider processProvider;
     private final Double rmsStopCoeff;
     private final Double epsilon;
 
-    public GradientDescentWithRmsStopProcessProvider(IGradientDescentProcessProvider<L> processProvider, Double rmsStopCoeff) {
+    public GradientDescentWithRmsStopProcessProvider(IGradientDescentProcessProvider processProvider, Double rmsStopCoeff) {
         this.rmsStopCoeff = rmsStopCoeff;
         this.epsilon = Math.pow(10, -8);
         this.processProvider = processProvider;
@@ -26,10 +26,15 @@ public class GradientDescentWithRmsStopProcessProvider<L extends Layer> implemen
     }
 
     @Override
-    public Function<GradientDescentCorrectionsContainer<L>, GradientDescentCorrectionsContainer<L>> getGradientDescentCorrectionsLauncher() {
+    public IGradientDescentProcessProvider getPreviousProcessProvider() {
+        return processProvider;
+    }
+
+    @Override
+    public Function<GradientDescentCorrectionsContainer, GradientDescentCorrectionsContainer> getGradientDescentCorrectionsLauncher() {
         return container -> {
-            NeuralNetworkModel<L> correctedNeuralNetworkModel = container.getCorrectedNeuralNetworkModel();
-            List<L> layers = correctedNeuralNetworkModel.getLayers();
+            NeuralNetworkModel correctedNeuralNetworkModel = container.getCorrectedNeuralNetworkModel();
+            List<Layer> layers = correctedNeuralNetworkModel.getLayers();
             if (rmsStopLayers.isEmpty()) {
                 rmsStopLayers.addAll(initRmsStopLayers(layers));
             }
@@ -47,11 +52,11 @@ public class GradientDescentWithRmsStopProcessProvider<L extends Layer> implemen
 
                 }
             }
-            return new GradientDescentCorrectionsContainer<>(correctedNeuralNetworkModel, container.getGradientDescentCorrections(), container.getInputCount(), container.getLearningRate());
+            return new GradientDescentCorrectionsContainer(correctedNeuralNetworkModel, container.getGradientDescentCorrections(), container.getInputCount(), container.getLearningRate());
         };
     }
 
-    private List<List<DoubleMatrix>> initRmsStopLayers(List<L> layers) {
+    private List<List<DoubleMatrix>> initRmsStopLayers(List<Layer> layers) {
         return layers.stream()
                 .map(layer -> layer.getParametersMatrix()
                         .stream()
@@ -60,29 +65,4 @@ public class GradientDescentWithRmsStopProcessProvider<L extends Layer> implemen
                 .collect(Collectors.toList());
     }
 
-
-    @Override
-    public Function<BackwardComputationContainer, List<GradientDescentCorrection>> getBackwardComputationLauncher() {
-        return processProvider.getBackwardComputationLauncher();
-    }
-
-    @Override
-    public Function<ErrorComputationContainer, ErrorComputationContainer> getErrorComputationLauncher() {
-        return processProvider.getErrorComputationLauncher();
-    }
-
-    @Override
-    public Function<ErrorComputationContainer, ErrorComputationContainer> getFirstErrorComputationLauncher() {
-        return processProvider.getFirstErrorComputationLauncher();
-    }
-
-    @Override
-    public Function<ForwardComputationContainer<L>, GradientLayerProvider<L>> getForwardComputationLauncher() {
-        return processProvider.getForwardComputationLauncher();
-    }
-
-    @Override
-    public Function<DataContainer, DataContainer> getDataProcessLauncher() {
-        return processProvider.getDataProcessLauncher();
-    }
 }

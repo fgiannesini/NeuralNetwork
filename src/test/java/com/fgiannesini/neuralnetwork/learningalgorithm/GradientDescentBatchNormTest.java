@@ -23,7 +23,7 @@ import java.util.Arrays;
 
 public class GradientDescentBatchNormTest {
 
-    private IGradientDescentProcessProvider<BatchNormLayer> getGradientDescentProvider() {
+    private IGradientDescentProcessProvider getGradientDescentProvider() {
         return new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentBatchNormProcessProvider());
     }
 

@@ -1,10 +1,8 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider;
 
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container.*;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientLayerProvider;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container.ErrorComputationContainer;
 import org.jblas.DoubleMatrix;
 
-import java.util.List;
 import java.util.function.Function;
 
 public class GradientDescentOnLogisticRegressionProcessProvider implements IGradientDescentProcessProvider {
@@ -16,18 +14,8 @@ public class GradientDescentOnLogisticRegressionProcessProvider implements IGrad
     }
 
     @Override
-    public Function<GradientDescentCorrectionsContainer, GradientDescentCorrectionsContainer> getGradientDescentCorrectionsLauncher() {
-        return processProvider.getGradientDescentCorrectionsLauncher();
-    }
-
-    @Override
-    public Function<BackwardComputationContainer, List<GradientDescentCorrection>> getBackwardComputationLauncher() {
-        return processProvider.getBackwardComputationLauncher();
-    }
-
-    @Override
-    public Function<ErrorComputationContainer, ErrorComputationContainer> getErrorComputationLauncher() {
-        return processProvider.getErrorComputationLauncher();
+    public IGradientDescentProcessProvider getPreviousProcessProvider() {
+        return processProvider;
     }
 
     @Override
@@ -43,13 +31,4 @@ public class GradientDescentOnLogisticRegressionProcessProvider implements IGrad
         };
     }
 
-    @Override
-    public Function<ForwardComputationContainer, GradientLayerProvider> getForwardComputationLauncher() {
-        return processProvider.getForwardComputationLauncher();
-    }
-
-    @Override
-    public Function<DataContainer, DataContainer> getDataProcessLauncher() {
-        return processProvider.getDataProcessLauncher();
-    }
 }

@@ -1,13 +1,12 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.container;
 
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container.GradientDescentCorrection;
-import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 
 import java.util.List;
 
 public class GradientDescentWithDerivationCorrectionsContainer {
-    private final NeuralNetworkModel<Layer> correctedNeuralNetworkModel;
+    private final NeuralNetworkModel correctedNeuralNetworkModel;
     private final List<GradientDescentCorrection> gradientDescentCorrections;
     private final int inputCount;
     private final double learningRate;
@@ -19,7 +18,7 @@ public class GradientDescentWithDerivationCorrectionsContainer {
         this.learningRate = learningRate;
     }
 
-    public NeuralNetworkModel<Layer> getCorrectedNeuralNetworkModel() {
+    public NeuralNetworkModel getCorrectedNeuralNetworkModel() {
         return correctedNeuralNetworkModel;
     }
 

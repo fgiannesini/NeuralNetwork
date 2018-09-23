@@ -7,7 +7,7 @@ import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientBatchNormLayerProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientLayerProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientLayerProviderBuilder;
-import com.fgiannesini.neuralnetwork.model.BatchNormLayer;
+import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
 
@@ -16,24 +16,27 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-public class GradientDescentBatchNormProcessProvider implements IGradientDescentProcessProvider<BatchNormLayer> {
+public class GradientDescentBatchNormProcessProvider implements IGradientDescentProcessProvider {
 
-    public GradientDescentBatchNormProcessProvider() {
+    @Override
+    public IGradientDescentProcessProvider getPreviousProcessProvider() {
+        throw new RuntimeException("Should not be called");
     }
 
     @Override
-    public Function<GradientDescentCorrectionsContainer<BatchNormLayer>, GradientDescentCorrectionsContainer<BatchNormLayer>> getGradientDescentCorrectionsLauncher() {
+    public Function<GradientDescentCorrectionsContainer, GradientDescentCorrectionsContainer> getGradientDescentCorrectionsLauncher() {
         return container -> {
-            NeuralNetworkModel<BatchNormLayer> correctedNeuralNetworkModel = container.getCorrectedNeuralNetworkModel();
-            List<BatchNormLayer> layers = correctedNeuralNetworkModel.getLayers();
+            NeuralNetworkModel correctedNeuralNetworkModel = container.getCorrectedNeuralNetworkModel();
+            List<Layer> layers = correctedNeuralNetworkModel.getLayers();
             for (int layerIndex = 0; layerIndex < layers.size(); layerIndex++) {
                 GradientDescentCorrection gradientDescentCorrection = container.getGradientDescentCorrections().get(layerIndex);
-                List<DoubleMatrix> parametersMatrices = layers.get(layerIndex).getParametersMatrix();
+                Layer layer = layers.get(layerIndex);
+                List<DoubleMatrix> parametersMatrices = layer.getParametersMatrix();
                 for (int parameterIndex = 0; parameterIndex < parametersMatrices.size(); parameterIndex++) {
                     parametersMatrices.get(parameterIndex).subi(gradientDescentCorrection.getCorrectionResults().get(parameterIndex).mul(container.getLearningRate()));
                 }
             }
-            return new GradientDescentCorrectionsContainer<>(correctedNeuralNetworkModel, container.getGradientDescentCorrections(), container.getInputCount(), container.getLearningRate());
+            return new GradientDescentCorrectionsContainer(correctedNeuralNetworkModel, container.getGradientDescentCorrections(), container.getInputCount(), container.getLearningRate());
         };
     }
 
@@ -65,7 +68,7 @@ public class GradientDescentBatchNormProcessProvider implements IGradientDescent
 
     }
 
-    public BatchNormBackwardReturn getBatchNormBackwardReturn(int inputCount, GradientBatchNormLayerProvider gradientLayerProvider, DoubleMatrix dz) {
+    private BatchNormBackwardReturn getBatchNormBackwardReturn(int inputCount, GradientBatchNormLayerProvider gradientLayerProvider, DoubleMatrix dz) {
 //        https://kevinzakka.github.io/2016/09/14/batch_normalization/
 //        dxhat = dout * gamma
         DoubleMatrix dXhat = dz.mulColumnVector(gradientLayerProvider.getGammaMatrix());
@@ -112,9 +115,9 @@ public class GradientDescentBatchNormProcessProvider implements IGradientDescent
     }
 
     @Override
-    public Function<ForwardComputationContainer<BatchNormLayer>, GradientLayerProvider<BatchNormLayer>> getForwardComputationLauncher() {
+    public Function<ForwardComputationContainer, GradientLayerProvider> getForwardComputationLauncher() {
         return container -> {
-            NeuralNetworkModel<BatchNormLayer> neuralNetworkModel = container.getNeuralNetworkModel();
+            NeuralNetworkModel neuralNetworkModel = container.getNeuralNetworkModel();
             IIntermediateOutputComputer intermediateOutputComputer = OutputComputerBuilder.init()
                     .withModel(neuralNetworkModel)
                     .buildIntermediateOutputComputer();

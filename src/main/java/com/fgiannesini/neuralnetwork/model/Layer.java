@@ -6,6 +6,7 @@ import org.jblas.DoubleMatrix;
 import java.util.List;
 
 public abstract class Layer implements Cloneable {
+
     private ActivationFunctionType activationFunctionType;
 
     Layer(ActivationFunctionType activationFunctionType) {
@@ -16,9 +17,9 @@ public abstract class Layer implements Cloneable {
         return activationFunctionType;
     }
 
-    public List<DoubleMatrix> getParametersMatrix() {
-        return null;
-    }
+    public abstract List<DoubleMatrix> getParametersMatrix();
+
+    public abstract void accept(LayerVisitor layerVisitor);
 
     @Override
     public Layer clone() {
@@ -28,5 +29,4 @@ public abstract class Layer implements Cloneable {
             throw new RuntimeException(e);
         }
     }
-
 }

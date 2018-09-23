@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class ConvolutionLayer extends Layer {
 
@@ -94,5 +95,15 @@ public class ConvolutionLayer extends Layer {
                 ", stride=" + stride +
                 ", channelCount=" + channelCount +
                 '}';
+    }
+
+    @Override
+    public List<DoubleMatrix> getParametersMatrix() {
+        return Stream.of(weightMatrices, biasMatrices).flatMap(List::stream).collect(Collectors.toList());
+    }
+
+    @Override
+    public void accept(LayerVisitor layerVisitor) {
+        layerVisitor.visit(this);
     }
 }

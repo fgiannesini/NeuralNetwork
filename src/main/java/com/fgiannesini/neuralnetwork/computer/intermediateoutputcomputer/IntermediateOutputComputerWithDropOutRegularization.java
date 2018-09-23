@@ -1,38 +1,35 @@
 package com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer;
 
-import com.fgiannesini.neuralnetwork.computer.ILayerComputer;
+import com.fgiannesini.neuralnetwork.computer.DataFunctionApplier;
+import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
+import com.fgiannesini.neuralnetwork.computer.finaloutputcomputer.LayerComputerWithDropOutRegularizationVisitor;
 import com.fgiannesini.neuralnetwork.model.Layer;
 import org.jblas.DoubleMatrix;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class IntermediateOutputComputerWithDropOutRegularization<L extends Layer> implements IIntermediateOutputComputer<L> {
+public class IntermediateOutputComputerWithDropOutRegularization implements IIntermediateOutputComputer {
 
     private final List<DoubleMatrix> dropOutMatrixList;
-    private final ILayerComputer<L> layerComputer;
-    private List<L> layers;
+    private List<Layer> layers;
 
-    public IntermediateOutputComputerWithDropOutRegularization(List<DoubleMatrix> dropOutMatrixList, ILayerComputer<L> layerComputer, List<L> layers) {
+    public IntermediateOutputComputerWithDropOutRegularization(List<DoubleMatrix> dropOutMatrixList, List<Layer> layers) {
         this.dropOutMatrixList = dropOutMatrixList;
-        this.layerComputer = layerComputer;
         this.layers = layers;
     }
 
-    public List<IntermediateOutputResult> compute(DoubleMatrix inputMatrix) {
+    public List<IntermediateOutputResult> compute(LayerTypeData data) {
         List<IntermediateOutputResult> intermediateOutputResults = new ArrayList<>();
 
-        DoubleMatrix firstMatrix = inputMatrix.dup().muliColumnVector(dropOutMatrixList.get(0));
-        IntermediateOutputResult intermediateOutputResult = new IntermediateOutputResult(firstMatrix);
+        LayerTypeData regularizedInput = data.accept(new DataFunctionApplier(matrix -> matrix.dup().muliColumnVector(dropOutMatrixList.get(0))));
+        IntermediateOutputResult intermediateOutputResult = new IntermediateOutputResult(regularizedInput);
         intermediateOutputResults.add(intermediateOutputResult);
 
         for (int layerIndex = 0, dropOutIndex = 1; layerIndex < layers.size(); layerIndex++, dropOutIndex++) {
-            L layer = layers.get(layerIndex);
-            intermediateOutputResult = layerComputer.computeZFromInput(intermediateOutputResult.getResult(), layer);
-            DoubleMatrix currentResult = intermediateOutputResult.getResult();
-            currentResult.muliColumnVector(dropOutMatrixList.get(dropOutIndex));
-            currentResult = layerComputer.computeAFromZ(currentResult, layer);
-            intermediateOutputResult.setResult(currentResult);
+            LayerComputerWithDropOutRegularizationVisitor computerVisitor = new LayerComputerWithDropOutRegularizationVisitor(dropOutMatrixList.get(dropOutIndex), intermediateOutputResult.getResult());
+            layers.get(layerIndex).accept(computerVisitor);
+            intermediateOutputResult = computerVisitor.getIntermediateOutputResult();
             intermediateOutputResults.add(intermediateOutputResult);
         }
         return intermediateOutputResults;

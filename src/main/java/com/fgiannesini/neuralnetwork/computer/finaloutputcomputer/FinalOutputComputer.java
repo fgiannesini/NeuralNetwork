@@ -1,28 +1,30 @@
 package com.fgiannesini.neuralnetwork.computer.finaloutputcomputer;
 
-import com.fgiannesini.neuralnetwork.computer.ILayerComputer;
+import com.fgiannesini.neuralnetwork.computer.DataFunctionApplier;
+import com.fgiannesini.neuralnetwork.computer.LayerComputerVisitor;
+import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IntermediateOutputResult;
 import com.fgiannesini.neuralnetwork.model.Layer;
 import org.jblas.DoubleMatrix;
 
 import java.util.List;
 
-public class FinalOutputComputer<L extends Layer> implements IFinalOutputComputer<L> {
+public class FinalOutputComputer implements IFinalOutputComputer {
 
-    private final ILayerComputer<L> layerComputer;
-    private List<L> layers;
+    private List<Layer> layers;
 
-    public FinalOutputComputer(List<L> layers, ILayerComputer<L> layerComputer) {
+    public FinalOutputComputer(List<Layer> layers) {
         this.layers = layers;
-        this.layerComputer = layerComputer;
     }
 
     @Override
-    public DoubleMatrix compute(DoubleMatrix inputMatrix) {
-        DoubleMatrix firstCurrentMatrix = inputMatrix.dup();
-        IntermediateOutputResult intermediateOutputResult = new IntermediateOutputResult(firstCurrentMatrix);
-        for (L layer : layers) {
-            intermediateOutputResult = layerComputer.computeAFromInput(intermediateOutputResult.getResult(), layer);
+    public LayerTypeData compute(LayerTypeData input) {
+        LayerTypeData firstData = input.accept(new DataFunctionApplier(DoubleMatrix::dup));
+        IntermediateOutputResult intermediateOutputResult = new IntermediateOutputResult(firstData);
+        for (Layer layer : layers) {
+            LayerComputerVisitor layerComputerVisitor = new LayerComputerVisitor(intermediateOutputResult.getResult());
+            layer.accept(layerComputerVisitor);
+            intermediateOutputResult = layerComputerVisitor.getIntermediateOutputResult();
         }
         return intermediateOutputResult.getResult();
     }

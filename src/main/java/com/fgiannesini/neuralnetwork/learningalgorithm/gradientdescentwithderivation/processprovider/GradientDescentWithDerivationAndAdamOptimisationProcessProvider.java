@@ -36,7 +36,7 @@ public class GradientDescentWithDerivationAndAdamOptimisationProcessProvider imp
     @Override
     public Function<GradientDescentWithDerivationCorrectionsContainer, GradientDescentWithDerivationCorrectionsContainer> getGradientDescentCorrectionsLauncher() {
         return container -> {
-            NeuralNetworkModel<Layer> correctedNeuralNetworkModel = container.getCorrectedNeuralNetworkModel();
+            NeuralNetworkModel correctedNeuralNetworkModel = container.getCorrectedNeuralNetworkModel();
             List<Layer> layers = correctedNeuralNetworkModel.getLayers();
             if (momentumMatrices.isEmpty()) {
                 momentumMatrices.addAll(initLayers(layers));

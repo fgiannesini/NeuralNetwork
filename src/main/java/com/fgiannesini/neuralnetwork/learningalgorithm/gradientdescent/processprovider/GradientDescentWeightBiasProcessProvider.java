@@ -6,8 +6,8 @@ import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.Interme
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container.*;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientLayerProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientLayerProviderBuilder;
+import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
-import com.fgiannesini.neuralnetwork.model.WeightBiasLayer;
 import org.jblas.DoubleMatrix;
 
 import java.util.ArrayList;
@@ -15,13 +15,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-public class GradientDescentWeightBiasProcessProvider implements IGradientDescentProcessProvider<WeightBiasLayer> {
+public class GradientDescentWeightBiasProcessProvider implements IGradientDescentProcessProvider {
 
     @Override
-    public Function<GradientDescentCorrectionsContainer<WeightBiasLayer>, GradientDescentCorrectionsContainer<WeightBiasLayer>> getGradientDescentCorrectionsLauncher() {
+    public IGradientDescentProcessProvider getPreviousProcessProvider() {
+        throw new RuntimeException("should not be called");
+    }
+
+    @Override
+    public Function<GradientDescentCorrectionsContainer, GradientDescentCorrectionsContainer> getGradientDescentCorrectionsLauncher() {
         return container -> {
-            NeuralNetworkModel<WeightBiasLayer> correctedNeuralNetworkModel = container.getCorrectedNeuralNetworkModel();
-            List<WeightBiasLayer> layers = correctedNeuralNetworkModel.getLayers();
+            NeuralNetworkModel<Layer> correctedNeuralNetworkModel = container.getCorrectedNeuralNetworkModel();
+            List<Layer> layers = correctedNeuralNetworkModel.getLayers();
             for (int layerIndex = 0; layerIndex < layers.size(); layerIndex++) {
                 GradientDescentCorrection gradientDescentCorrection = container.getGradientDescentCorrections().get(layerIndex);
                 List<DoubleMatrix> parametersMatrices = layers.get(layerIndex).getParametersMatrix();
@@ -29,7 +34,7 @@ public class GradientDescentWeightBiasProcessProvider implements IGradientDescen
                     parametersMatrices.get(parameterIndex).subi(gradientDescentCorrection.getCorrectionResults().get(parameterIndex).mul(container.getLearningRate()));
                 }
             }
-            return new GradientDescentCorrectionsContainer<>(correctedNeuralNetworkModel, container.getGradientDescentCorrections(), container.getInputCount(), container.getLearningRate());
+            return new GradientDescentCorrectionsContainer(correctedNeuralNetworkModel, container.getGradientDescentCorrections(), container.getInputCount(), container.getLearningRate());
         };
     }
 
@@ -95,7 +100,7 @@ public class GradientDescentWeightBiasProcessProvider implements IGradientDescen
     }
 
     @Override
-    public Function<ForwardComputationContainer<WeightBiasLayer>, GradientLayerProvider<WeightBiasLayer>> getForwardComputationLauncher() {
+    public Function<ForwardComputationContainer, GradientLayerProvider> getForwardComputationLauncher() {
         return container -> {
             IIntermediateOutputComputer intermediateOutputComputer = OutputComputerBuilder.init()
                     .withModel(container.getNeuralNetworkModel())

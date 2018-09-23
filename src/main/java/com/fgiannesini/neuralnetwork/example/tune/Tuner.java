@@ -19,10 +19,13 @@ import java.util.stream.IntStream;
 
 public class Tuner {
 
+    private static int PARAMETER_COUNT = 7;
+    private static int POPULATION = PARAMETER_COUNT * 3;
+
     public static void main(String[] args) {
-        int statePopulation = 10;
+        int statePopulation = POPULATION;
         int meanCount = 1;
-        int maxIteration = 10;
+        int maxIteration = 5;
 
         List<TuneState> tuneStates = initTuneStates(statePopulation);
         computeMark(meanCount, tuneStates);
@@ -50,9 +53,9 @@ public class Tuner {
 
         List<TuneState> mergedTuneStates = new ArrayList<>();
         for (int i = 0; i < population / 2; i++) {
-            HyperParameters firstParameter = tuneStates.get(random.nextInt(3)).getHyperParameters().clone();
+            HyperParameters firstParameter = tuneStates.get(random.nextInt(POPULATION / 3)).getHyperParameters().clone();
             HyperParameters secondParameter = tuneStates.get(random.nextInt(population)).getHyperParameters();
-            int parameterToMerge = random.nextInt(8);
+            int parameterToMerge = random.nextInt(PARAMETER_COUNT + 1);
             switch (parameterToMerge) {
                 case 0:
                     firstParameter.epochCount(secondParameter.getEpochCount());
@@ -99,8 +102,8 @@ public class Tuner {
 
         List<TuneState> mutatedTuneStates = new ArrayList<>();
         for (int i = 0; i < population / 2; i++) {
-            HyperParameters parameter = tuneStates.get(random.nextInt(3)).getHyperParameters().clone();
-            int parameterToMerge = random.nextInt(8);
+            HyperParameters parameter = tuneStates.get(random.nextInt(POPULATION / 3)).getHyperParameters().clone();
+            int parameterToMerge = random.nextInt(PARAMETER_COUNT + 1);
             switch (parameterToMerge) {
                 case 0:
                     parameter.epochCount(generateEpochCount(random));

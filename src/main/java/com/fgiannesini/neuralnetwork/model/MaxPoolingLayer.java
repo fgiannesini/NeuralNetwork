@@ -1,7 +1,10 @@
 package com.fgiannesini.neuralnetwork.model;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
+import org.jblas.DoubleMatrix;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 public class MaxPoolingLayer extends Layer {
@@ -57,5 +60,15 @@ public class MaxPoolingLayer extends Layer {
     @Override
     public MaxPoolingLayer clone() {
         return (MaxPoolingLayer) super.clone();
+    }
+
+    @Override
+    public List<DoubleMatrix> getParametersMatrix() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public void accept(LayerVisitor layerVisitor) {
+        layerVisitor.visit(this);
     }
 }

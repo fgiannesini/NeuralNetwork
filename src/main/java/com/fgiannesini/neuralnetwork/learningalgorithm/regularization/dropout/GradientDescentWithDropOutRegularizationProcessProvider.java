@@ -3,24 +3,25 @@ package com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout;
 import com.fgiannesini.neuralnetwork.computer.OutputComputerBuilder;
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IIntermediateOutputComputer;
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IntermediateOutputResult;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container.*;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container.DataContainer;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container.ErrorComputationContainer;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container.ForwardComputationContainer;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientLayerProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientLayerProviderBuilder;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.IGradientDescentProcessProvider;
-import com.fgiannesini.neuralnetwork.model.Layer;
 import org.jblas.DoubleMatrix;
 
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class GradientDescentWithDropOutRegularizationProcessProvider<L extends Layer> implements IGradientDescentProcessProvider<L> {
+public class GradientDescentWithDropOutRegularizationProcessProvider implements IGradientDescentProcessProvider {
 
-    private final IGradientDescentProcessProvider<L> gradientDescentProcessProvider;
+    private final IGradientDescentProcessProvider gradientDescentProcessProvider;
     private final Supplier<List<DoubleMatrix>> dropOutMatricesSupplier;
     private List<DoubleMatrix> dropOutMatrices;
 
-    public GradientDescentWithDropOutRegularizationProcessProvider(Supplier<List<DoubleMatrix>> dropOutMatricesSupplier, IGradientDescentProcessProvider<L> processProvider) {
+    public GradientDescentWithDropOutRegularizationProcessProvider(Supplier<List<DoubleMatrix>> dropOutMatricesSupplier, IGradientDescentProcessProvider processProvider) {
         this.dropOutMatricesSupplier = dropOutMatricesSupplier;
         gradientDescentProcessProvider = processProvider;
     }
@@ -44,19 +45,13 @@ public class GradientDescentWithDropOutRegularizationProcessProvider<L extends L
     }
 
     @Override
-    public Function<GradientDescentCorrectionsContainer<L>, GradientDescentCorrectionsContainer<L>> getGradientDescentCorrectionsLauncher() {
-        return gradientDescentProcessProvider.getGradientDescentCorrectionsLauncher();
+    public IGradientDescentProcessProvider getPreviousProcessProvider() {
+        return gradientDescentProcessProvider;
     }
 
     @Override
-    public Function<BackwardComputationContainer, List<GradientDescentCorrection>> getBackwardComputationLauncher() {
-        return gradientDescentProcessProvider.getBackwardComputationLauncher();
-    }
-
-    @Override
-    public Function<ForwardComputationContainer<L>, GradientLayerProvider<L>> getForwardComputationLauncher() {
+    public Function<ForwardComputationContainer, GradientLayerProvider> getForwardComputationLauncher() {
         return container -> {
-            List<L> layers = container.getNeuralNetworkModel().getLayers();
             IIntermediateOutputComputer intermediateOutputComputer = OutputComputerBuilder.init()
                     .withModel(container.getNeuralNetworkModel())
                     .withDropOutParameters(dropOutMatrices)

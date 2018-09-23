@@ -1,17 +1,16 @@
 package com.fgiannesini.neuralnetwork.cost;
 
-import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
 import org.jblas.MatrixFunctions;
 
-public class CostComputerWithL2Regularization<L extends Layer> implements CostComputer<L> {
+public class CostComputerWithL2Regularization implements CostComputer {
 
-    private final NeuralNetworkModel<L> neuralNetworkModel;
-    private final CostComputer<L> costComputer;
+    private final NeuralNetworkModel neuralNetworkModel;
+    private final CostComputer costComputer;
     private final double regularizationCoeff;
 
-    public CostComputerWithL2Regularization(NeuralNetworkModel<L> neuralNetworkModel, CostComputer<L> costComputer, double regularizationCoeff) {
+    public CostComputerWithL2Regularization(NeuralNetworkModel neuralNetworkModel, CostComputer costComputer, double regularizationCoeff) {
         this.neuralNetworkModel = neuralNetworkModel;
         this.costComputer = costComputer;
         this.regularizationCoeff = regularizationCoeff;

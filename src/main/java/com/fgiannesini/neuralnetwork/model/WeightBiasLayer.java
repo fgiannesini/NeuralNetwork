@@ -77,4 +77,9 @@ public class WeightBiasLayer extends Layer implements Cloneable {
                 ", biasMatrix=" + biasMatrix +
                 '}';
     }
+
+    @Override
+    public void accept(LayerVisitor layerVisitor) {
+        layerVisitor.visit(this);
+    }
 }

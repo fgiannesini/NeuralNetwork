@@ -106,10 +106,10 @@ public class HyperParameters implements Cloneable {
                 "epochCount=" + epochCount +
                 ", batchSize=" + batchSize +
                 ", hiddenLayerSize=" + Arrays.toString(hiddenLayerSize) +
+                ", layerType=" + layerType +
                 ", learningRateUpdater=" + learningRateUpdater.getClass().getSimpleName() + " " + learningRateUpdater.get(0) +
                 ", momentumCoeff=" + momentumCoeff +
                 ", rmsStopCoeff=" + rmsStopCoeff +
-                ", layerType=" + layerType +
                 ", regularizationCoeffs=" + regularizationCoeffs +
                 '}';
     }

@@ -1,29 +1,32 @@
 package com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer;
 
-import com.fgiannesini.neuralnetwork.computer.ILayerComputer;
+import com.fgiannesini.neuralnetwork.computer.DataFunctionApplier;
+import com.fgiannesini.neuralnetwork.computer.LayerComputerVisitor;
+import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
 import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
-import org.jblas.DoubleMatrix;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class IntermediateOutputComputer<L extends Layer> implements IIntermediateOutputComputer<L> {
+public class IntermediateOutputComputer implements IIntermediateOutputComputer {
 
-    private final NeuralNetworkModel<L> model;
-    private final ILayerComputer<L> layerComputer;
+    private final NeuralNetworkModel model;
 
-    public IntermediateOutputComputer(NeuralNetworkModel<L> model, ILayerComputer<L> layerComputer) {
+    public IntermediateOutputComputer(NeuralNetworkModel model) {
         this.model = model;
-        this.layerComputer = layerComputer;
     }
 
-    public List<IntermediateOutputResult> compute(DoubleMatrix inputMatrix) {
+    public List<IntermediateOutputResult> compute(LayerTypeData data) {
         List<IntermediateOutputResult> intermediateOutputResults = new ArrayList<>();
-        IntermediateOutputResult intermediateOutputResult = new IntermediateOutputResult(inputMatrix.dup());
+        DataFunctionApplier dataFunctionApplier = new DataFunctionApplier(matrix -> matrix.dup());
+        LayerTypeData firstData = data.accept(dataFunctionApplier);
+        IntermediateOutputResult intermediateOutputResult = new IntermediateOutputResult(firstData);
         intermediateOutputResults.add(intermediateOutputResult);
         for (Layer layer : model.getLayers()) {
-            intermediateOutputResult = layerComputer.computeAFromInput(intermediateOutputResult.getResult(), layer);
+            LayerComputerVisitor layerComputerVisitor = new LayerComputerVisitor(intermediateOutputResult.getResult());
+            layer.accept(layerComputerVisitor);
+            intermediateOutputResult = layerComputerVisitor.getIntermediateOutputResult();
             intermediateOutputResults.add(intermediateOutputResult);
         }
         return intermediateOutputResults;

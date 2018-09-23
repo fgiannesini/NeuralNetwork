@@ -8,7 +8,7 @@ class LayerComputerBuilderTest {
 
     @Test
     void instanciate_batch_norm() {
-        ILayerComputer layerComputer = LayerComputerBuilder.init()
+        LayerComputer layerComputer = LayerComputerBuilder.init()
                 .withLayerType(LayerType.BATCH_NORM)
                 .build();
         Assertions.assertTrue(layerComputer instanceof BatchNormLayerComputer);
@@ -16,7 +16,7 @@ class LayerComputerBuilderTest {
 
     @Test
     void instanciate_weight_bias() {
-        ILayerComputer layerComputer = LayerComputerBuilder.init()
+        LayerComputer layerComputer = LayerComputerBuilder.init()
                 .withLayerType(LayerType.WEIGHT_BIAS)
                 .build();
         Assertions.assertTrue(layerComputer instanceof WeighBiasLayerComputer);

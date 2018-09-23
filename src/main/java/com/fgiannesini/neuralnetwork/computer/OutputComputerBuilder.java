@@ -6,15 +6,14 @@ import com.fgiannesini.neuralnetwork.computer.finaloutputcomputer.IFinalOutputCo
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IIntermediateOutputComputer;
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IntermediateOutputComputer;
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IntermediateOutputComputerWithDropOutRegularization;
-import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
 
 import java.util.List;
 
-public class OutputComputerBuilder<L extends Layer> {
+public class OutputComputerBuilder {
 
-    private NeuralNetworkModel<L> neuralNetworkModel;
+    private NeuralNetworkModel neuralNetworkModel;
 
     private List<DoubleMatrix> dropOutMatrixList;
 
@@ -22,10 +21,10 @@ public class OutputComputerBuilder<L extends Layer> {
     }
 
     public static OutputComputerBuilder init() {
-        return new OutputComputerBuilder<>();
+        return new OutputComputerBuilder();
     }
 
-    public OutputComputerBuilder withModel(NeuralNetworkModel<L> neuralNetworkModel) {
+    public OutputComputerBuilder withModel(NeuralNetworkModel neuralNetworkModel) {
         this.neuralNetworkModel = neuralNetworkModel;
         return this;
     }
@@ -35,30 +34,24 @@ public class OutputComputerBuilder<L extends Layer> {
         return this;
     }
 
-    public IFinalOutputComputer<L> buildFinalOutputComputer() {
+    public IFinalOutputComputer buildFinalOutputComputer() {
         checkParameters();
-        ILayerComputer<L> layerComputer = LayerComputerBuilder.init()
-                .withLayerType(neuralNetworkModel.getLayerType())
-                .build();
-        IFinalOutputComputer<L> finalOutputComputer;
+        IFinalOutputComputer finalOutputComputer;
         if (dropOutMatrixList != null) {
-            finalOutputComputer = new FinalOutputComputerWithDropOutRegularization<>(dropOutMatrixList, layerComputer, neuralNetworkModel.getLayers());
+            finalOutputComputer = new FinalOutputComputerWithDropOutRegularization(dropOutMatrixList, neuralNetworkModel.getLayers());
         } else {
-            finalOutputComputer = new FinalOutputComputer<>(neuralNetworkModel.getLayers(), layerComputer);
+            finalOutputComputer = new FinalOutputComputer(neuralNetworkModel.getLayers());
         }
         return finalOutputComputer;
     }
 
-    public IIntermediateOutputComputer<L> buildIntermediateOutputComputer() {
+    public IIntermediateOutputComputer buildIntermediateOutputComputer() {
         checkParameters();
-        ILayerComputer<L> layerComputer = LayerComputerBuilder.init()
-                .withLayerType(neuralNetworkModel.getLayerType())
-                .build();
-        IIntermediateOutputComputer<L> intermediateOutputComputer;
+        IIntermediateOutputComputer intermediateOutputComputer;
         if (dropOutMatrixList != null) {
-            intermediateOutputComputer = new IntermediateOutputComputerWithDropOutRegularization<>(dropOutMatrixList, layerComputer, neuralNetworkModel.getLayers());
+            intermediateOutputComputer = new IntermediateOutputComputerWithDropOutRegularization(dropOutMatrixList, neuralNetworkModel.getLayers());
         } else {
-            intermediateOutputComputer = new IntermediateOutputComputer<>(neuralNetworkModel, layerComputer);
+            intermediateOutputComputer = new IntermediateOutputComputer(neuralNetworkModel);
         }
 
         return intermediateOutputComputer;

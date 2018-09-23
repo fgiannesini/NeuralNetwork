@@ -1,20 +1,8 @@
 package com.fgiannesini.neuralnetwork.computer.finaloutputcomputer;
 
-import com.fgiannesini.neuralnetwork.converter.DataFormatConverter;
-import com.fgiannesini.neuralnetwork.model.Layer;
-import org.jblas.DoubleMatrix;
+import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
 
-public interface IFinalOutputComputer<L extends Layer> {
+public interface IFinalOutputComputer {
 
-    default double[] compute(double[] input) {
-        DoubleMatrix inputMatrix = DataFormatConverter.fromTabToDoubleMatrix(input);
-        return DataFormatConverter.fromDoubleMatrixToTab(compute(inputMatrix));
-    }
-
-    default double[][] compute(double[][] input) {
-        DoubleMatrix inputMatrix = DataFormatConverter.fromDoubleTabToDoubleMatrix(input);
-        return DataFormatConverter.fromDoubleMatrixToDoubleTab(compute(inputMatrix));
-    }
-
-    DoubleMatrix compute(DoubleMatrix inputMatrix);
+    LayerTypeData compute(LayerTypeData input);
 }

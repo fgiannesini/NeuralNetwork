@@ -1,19 +1,18 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.container;
 
 import com.fgiannesini.neuralnetwork.cost.CostType;
-import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 
 public class GradientDescentWithDerivationCostComputerContainer {
-    private final NeuralNetworkModel<Layer> neuralNetworkModel;
+    private final NeuralNetworkModel neuralNetworkModel;
     private final CostType costType;
 
-    public GradientDescentWithDerivationCostComputerContainer(NeuralNetworkModel<Layer> neuralNetworkModel, CostType costType) {
+    public GradientDescentWithDerivationCostComputerContainer(NeuralNetworkModel neuralNetworkModel, CostType costType) {
         this.neuralNetworkModel = neuralNetworkModel;
         this.costType = costType;
     }
 
-    public NeuralNetworkModel<Layer> getNeuralNetworkModel() {
+    public NeuralNetworkModel getNeuralNetworkModel() {
         return neuralNetworkModel;
     }
 

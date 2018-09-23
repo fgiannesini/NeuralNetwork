@@ -32,7 +32,7 @@ public class GradientDescentWithDerivationAndRmsStopProcessProvider implements I
     @Override
     public Function<GradientDescentWithDerivationCorrectionsContainer, GradientDescentWithDerivationCorrectionsContainer> getGradientDescentCorrectionsLauncher() {
         return container -> {
-            NeuralNetworkModel<Layer> correctedNeuralNetworkModel = container.getCorrectedNeuralNetworkModel();
+            NeuralNetworkModel correctedNeuralNetworkModel = container.getCorrectedNeuralNetworkModel();
             List<Layer> layers = correctedNeuralNetworkModel.getLayers();
             if (rmsStopLayers.isEmpty()) {
                 rmsStopLayers.addAll(initRmsStopLayers(layers));

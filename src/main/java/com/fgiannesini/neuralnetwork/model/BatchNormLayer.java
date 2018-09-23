@@ -86,4 +86,9 @@ public class BatchNormLayer extends Layer implements Cloneable {
                 ", betaMatrix=" + betaMatrix +
                 '}';
     }
+
+    @Override
+    public void accept(LayerVisitor layerVisitor) {
+        layerVisitor.visit(this);
+    }
 }

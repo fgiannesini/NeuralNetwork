@@ -2,22 +2,35 @@ package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processp
 
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container.*;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientLayerProvider;
-import com.fgiannesini.neuralnetwork.model.Layer;
 
 import java.util.List;
 import java.util.function.Function;
 
-public interface IGradientDescentProcessProvider<L extends Layer> {
+public interface IGradientDescentProcessProvider {
 
-    Function<GradientDescentCorrectionsContainer<L>, GradientDescentCorrectionsContainer<L>> getGradientDescentCorrectionsLauncher();
+    IGradientDescentProcessProvider getPreviousProcessProvider();
 
-    Function<BackwardComputationContainer, List<GradientDescentCorrection>> getBackwardComputationLauncher();
+    default Function<GradientDescentCorrectionsContainer, GradientDescentCorrectionsContainer> getGradientDescentCorrectionsLauncher() {
+        return getPreviousProcessProvider().getGradientDescentCorrectionsLauncher();
+    }
 
-    Function<ErrorComputationContainer, ErrorComputationContainer> getErrorComputationLauncher();
+    default Function<BackwardComputationContainer, List<GradientDescentCorrection>> getBackwardComputationLauncher() {
+        return getPreviousProcessProvider().getBackwardComputationLauncher();
+    }
 
-    Function<ErrorComputationContainer, ErrorComputationContainer> getFirstErrorComputationLauncher();
+    default Function<ErrorComputationContainer, ErrorComputationContainer> getErrorComputationLauncher() {
+        return getPreviousProcessProvider().getErrorComputationLauncher();
+    }
 
-    Function<ForwardComputationContainer<L>, GradientLayerProvider<L>> getForwardComputationLauncher();
+    default Function<ErrorComputationContainer, ErrorComputationContainer> getFirstErrorComputationLauncher() {
+        return getPreviousProcessProvider().getFirstErrorComputationLauncher();
+    }
 
-    Function<DataContainer, DataContainer> getDataProcessLauncher();
+    default Function<ForwardComputationContainer, GradientLayerProvider> getForwardComputationLauncher() {
+        return getPreviousProcessProvider().getForwardComputationLauncher();
+    }
+
+    default Function<DataContainer, DataContainer> getDataProcessLauncher() {
+        return getPreviousProcessProvider().getDataProcessLauncher();
+    }
 }

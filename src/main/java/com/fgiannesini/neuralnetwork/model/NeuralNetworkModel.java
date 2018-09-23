@@ -3,7 +3,7 @@ package com.fgiannesini.neuralnetwork.model;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class NeuralNetworkModel<L extends Layer> implements Cloneable {
+public class NeuralNetworkModel implements Cloneable {
 
     private List<Layer> layers;
 

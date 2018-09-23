@@ -4,30 +4,29 @@ import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithm;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container.*;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientLayerProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.IGradientDescentProcessProvider;
-import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
 
 import java.util.List;
 
-public class GradientDescent<L extends Layer> implements LearningAlgorithm<L> {
-    private final IGradientDescentProcessProvider<L> gradientDescentProcessProvider;
+public class GradientDescent implements LearningAlgorithm {
+    private final IGradientDescentProcessProvider gradientDescentProcessProvider;
     private double learningRate;
-    private NeuralNetworkModel<L> correctedNeuralNetworkModel;
+    private NeuralNetworkModel correctedNeuralNetworkModel;
 
-    public GradientDescent(NeuralNetworkModel<L> originalNeuralNetworkModel, IGradientDescentProcessProvider<L> gradientDescentProcessProvider) {
+    public GradientDescent(NeuralNetworkModel originalNeuralNetworkModel, IGradientDescentProcessProvider gradientDescentProcessProvider) {
         this.gradientDescentProcessProvider = gradientDescentProcessProvider;
         this.correctedNeuralNetworkModel = originalNeuralNetworkModel.clone();
         this.learningRate = 0.01;
     }
 
     @Override
-    public NeuralNetworkModel<L> learn(DoubleMatrix inputMatrix, DoubleMatrix y) {
+    public NeuralNetworkModel learn(DoubleMatrix inputMatrix, DoubleMatrix y) {
         DataContainer dataContainer = new DataContainer(inputMatrix, y);
         dataContainer = gradientDescentProcessProvider.getDataProcessLauncher().apply(dataContainer);
 
-        GradientLayerProvider<L> provider = gradientDescentProcessProvider.getForwardComputationLauncher()
-                .apply(new ForwardComputationContainer<>(dataContainer.getInput(), correctedNeuralNetworkModel));
+        GradientLayerProvider provider = gradientDescentProcessProvider.getForwardComputationLauncher()
+                .apply(new ForwardComputationContainer(dataContainer.getInput(), correctedNeuralNetworkModel));
 
         List<GradientDescentCorrection> gradientDescentCorrections = gradientDescentProcessProvider.getBackwardComputationLauncher()
                 .apply(new BackwardComputationContainer(provider, dataContainer.getOutput(), gradientDescentProcessProvider.getFirstErrorComputationLauncher(), gradientDescentProcessProvider.getErrorComputationLauncher()));
