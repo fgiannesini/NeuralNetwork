@@ -40,7 +40,7 @@ public class GradientDescentWithDerivationProcessProvider implements IGradientDe
                     DoubleMatrix correctedMatrix = DoubleMatrix.zeros(parametersMatrices.get(parameterIndex).getRows(), parametersMatrices.get(parameterIndex).getColumns());
 
                     for (int elementIndex = 0; elementIndex < correctedMatrix.length; elementIndex++) {
-                        NeuralNetworkModel<Layer> modifiedNeuralNetworkModel = container.getNeuralNetworkModel().clone();
+                        NeuralNetworkModel modifiedNeuralNetworkModel = container.getNeuralNetworkModel().clone();
                         CostComputer costComputer = container.getCostComputerProcessLauncher().apply(new GradientDescentWithDerivationCostComputerContainer(modifiedNeuralNetworkModel, container.getCostType()));
 
                         DoubleMatrix modifiedMatrix = modifiedNeuralNetworkModel.getLayers().get(layerIndex).getParametersMatrix().get(parameterIndex);
@@ -78,7 +78,7 @@ public class GradientDescentWithDerivationProcessProvider implements IGradientDe
     @Override
     public Function<GradientDescentWithDerivationCorrectionsContainer, GradientDescentWithDerivationCorrectionsContainer> getGradientDescentCorrectionsLauncher() {
         return container -> {
-            NeuralNetworkModel<Layer> correctedNeuralNetworkModel = container.getCorrectedNeuralNetworkModel();
+            NeuralNetworkModel correctedNeuralNetworkModel = container.getCorrectedNeuralNetworkModel();
             List<Layer> layers = correctedNeuralNetworkModel.getLayers();
             for (int layerIndex = 0; layerIndex < layers.size(); layerIndex++) {
                 GradientDescentCorrection gradientDescentCorrection = container.getGradientDescentCorrections().get(layerIndex);

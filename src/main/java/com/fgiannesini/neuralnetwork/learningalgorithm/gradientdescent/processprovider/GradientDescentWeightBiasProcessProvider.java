@@ -6,6 +6,7 @@ import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.Interme
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container.*;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientLayerProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientLayerProviderBuilder;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientWeightBiasLayerProvider;
 import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
@@ -25,7 +26,7 @@ public class GradientDescentWeightBiasProcessProvider implements IGradientDescen
     @Override
     public Function<GradientDescentCorrectionsContainer, GradientDescentCorrectionsContainer> getGradientDescentCorrectionsLauncher() {
         return container -> {
-            NeuralNetworkModel<Layer> correctedNeuralNetworkModel = container.getCorrectedNeuralNetworkModel();
+            NeuralNetworkModel correctedNeuralNetworkModel = container.getCorrectedNeuralNetworkModel();
             List<Layer> layers = correctedNeuralNetworkModel.getLayers();
             for (int layerIndex = 0; layerIndex < layers.size(); layerIndex++) {
                 GradientDescentCorrection gradientDescentCorrection = container.getGradientDescentCorrections().get(layerIndex);
@@ -72,10 +73,11 @@ public class GradientDescentWeightBiasProcessProvider implements IGradientDescen
     public Function<ErrorComputationContainer, ErrorComputationContainer> getErrorComputationLauncher() {
         return container -> {
             //dZ1 = W2t * dZ2 .* g1'(A1)
-            DoubleMatrix error = container.getProvider().getPreviousWeightMatrix().transpose()
+            GradientWeightBiasLayerProvider provider = (GradientWeightBiasLayerProvider) container.getProvider();
+            DoubleMatrix error = provider.getPreviousWeightMatrix().transpose()
                     .mmul(container.getPreviousError())
-                    .muli(container.getProvider().getCurrentActivationFunction().derivate(container.getProvider().getCurrentResult()));
-            return new ErrorComputationContainer(container.getProvider(), error);
+                    .muli(provider.getCurrentActivationFunction().derivate(provider.getCurrentResult()));
+            return new ErrorComputationContainer(provider, error);
         };
     }
 
@@ -105,7 +107,7 @@ public class GradientDescentWeightBiasProcessProvider implements IGradientDescen
             IIntermediateOutputComputer intermediateOutputComputer = OutputComputerBuilder.init()
                     .withModel(container.getNeuralNetworkModel())
                     .buildIntermediateOutputComputer();
-            List<IntermediateOutputResult> intermediateResults = intermediateOutputComputer.compute(container.getInputMatrix());
+            List<IntermediateOutputResult> intermediateResults = intermediateOutputComputer.compute(container.getInput());
             return GradientLayerProviderBuilder.init()
                     .withModel(container.getNeuralNetworkModel())
                     .withIntermediateResults(intermediateResults)

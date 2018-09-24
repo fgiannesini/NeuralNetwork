@@ -21,7 +21,7 @@ public class BatchNormData implements LayerTypeData {
     }
 
     @Override
-    public LayerTypeData accept(DataVisitor dataVisitor) {
-        return dataVisitor.visit(this);
+    public void accept(DataVisitor dataVisitor) {
+        dataVisitor.visit(this);
     }
 }

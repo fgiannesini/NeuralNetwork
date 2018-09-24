@@ -57,7 +57,7 @@ public class GradientDescentWithDropOutRegularizationProcessProvider implements 
                     .withDropOutParameters(dropOutMatrices)
                     .buildIntermediateOutputComputer();
 
-            List<IntermediateOutputResult> intermediateResults = intermediateOutputComputer.compute(container.getInputMatrix());
+            List<IntermediateOutputResult> intermediateResults = intermediateOutputComputer.compute(container.getInput());
             return GradientLayerProviderBuilder.init()
                     .withModel(container.getNeuralNetworkModel())
                     .withIntermediateResults(intermediateResults)

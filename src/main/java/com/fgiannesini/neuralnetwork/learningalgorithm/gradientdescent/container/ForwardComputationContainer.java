@@ -13,7 +13,7 @@ public class ForwardComputationContainer {
         this.neuralNetworkModel = neuralNetworkModel;
     }
 
-    public DoubleMatrix getInputMatrix() {
+    public DoubleMatrix getInput() {
         return inputMatrix;
     }
 

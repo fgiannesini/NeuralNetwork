@@ -15,8 +15,7 @@ public class WeightBiasData implements LayerTypeData {
     }
 
     @Override
-    public LayerTypeData accept(DataVisitor dataVisitor) {
+    public void accept(DataVisitor dataVisitor) {
         dataVisitor.visit(this);
-        return null;
     }
 }

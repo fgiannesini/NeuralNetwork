@@ -1,20 +1,25 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider;
 
+import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionApplier;
 import com.fgiannesini.neuralnetwork.computer.MeanDeviation;
 import com.fgiannesini.neuralnetwork.model.BatchNormLayer;
+import com.fgiannesini.neuralnetwork.model.Layer;
 import org.jblas.DoubleMatrix;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class GradientBatchNormLayerProvider extends GradientLayerProvider<BatchNormLayer> {
+public class GradientBatchNormLayerProvider extends GradientLayerProvider {
 
+    private List<BatchNormLayer> layers;
     private List<MeanDeviation> meanDeviations;
     private List<DoubleMatrix> beforeNormalisationResults;
 
     private List<DoubleMatrix> afterMeanApplicationResult;
 
-    public GradientBatchNormLayerProvider(List<BatchNormLayer> layers, List<DoubleMatrix> results, List<DoubleMatrix> beforeNormalisationResults, List<MeanDeviation> meanDeviations, List<DoubleMatrix> afterMeanApplicationResult) {
-        super(layers, results);
+    public GradientBatchNormLayerProvider(List<Layer> layers, List<DoubleMatrix> results, List<DoubleMatrix> beforeNormalisationResults, List<MeanDeviation> meanDeviations, List<DoubleMatrix> afterMeanApplicationResult) {
+        super(results, layers.size());
+        this.layers = layers.stream().map(BatchNormLayer.class::cast).collect(Collectors.toList());
         this.meanDeviations = meanDeviations;
         this.beforeNormalisationResults = beforeNormalisationResults;
         this.afterMeanApplicationResult = afterMeanApplicationResult;
@@ -42,5 +47,13 @@ public class GradientBatchNormLayerProvider extends GradientLayerProvider<BatchN
 
     public DoubleMatrix getAfterMeanApplicationCurrentResult() {
         return afterMeanApplicationResult.get(currentLayerIndex);
+    }
+
+    public DoubleMatrix getPreviousWeightMatrix() {
+        return layers.get(currentLayerIndex).getWeightMatrix();
+    }
+
+    public ActivationFunctionApplier getCurrentActivationFunction() {
+        return layers.get(currentLayerIndex - 1).getActivationFunctionType().getActivationFunction();
     }
 }

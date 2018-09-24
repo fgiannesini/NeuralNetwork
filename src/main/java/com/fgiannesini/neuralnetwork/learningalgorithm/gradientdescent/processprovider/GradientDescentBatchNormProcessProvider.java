@@ -100,10 +100,11 @@ public class GradientDescentBatchNormProcessProvider implements IGradientDescent
     public Function<ErrorComputationContainer, ErrorComputationContainer> getErrorComputationLauncher() {
         return container -> {
             //dZ1 = W2t * dZ2 .* g1'(A1)
-            DoubleMatrix error = container.getProvider().getPreviousWeightMatrix().transpose()
+            GradientBatchNormLayerProvider provider = (GradientBatchNormLayerProvider) container.getProvider();
+            DoubleMatrix error = provider.getPreviousWeightMatrix().transpose()
                     .mmul(container.getPreviousError())
-                    .muli(container.getProvider().getCurrentActivationFunction().derivate(container.getProvider().getCurrentResult()));
-            return new ErrorComputationContainer(container.getProvider(), error);
+                    .muli(provider.getCurrentActivationFunction().derivate(provider.getCurrentResult()));
+            return new ErrorComputationContainer(provider, error);
         };
     }
 
@@ -121,7 +122,8 @@ public class GradientDescentBatchNormProcessProvider implements IGradientDescent
             IIntermediateOutputComputer intermediateOutputComputer = OutputComputerBuilder.init()
                     .withModel(neuralNetworkModel)
                     .buildIntermediateOutputComputer();
-            List<IntermediateOutputResult> intermediateResults = intermediateOutputComputer.compute(container.getInputMatrix());
+            DoubleMatrix inputMatrix = container.getInput();
+            List<IntermediateOutputResult> intermediateResults = intermediateOutputComputer.compute(inputMatrix);
             return GradientLayerProviderBuilder.init()
                     .withModel(neuralNetworkModel)
                     .withIntermediateResults(intermediateResults)
