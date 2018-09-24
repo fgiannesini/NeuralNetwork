@@ -1,8 +1,7 @@
 package com.fgiannesini.neuralnetwork.cost;
 
+import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
-import org.jblas.DoubleMatrix;
-import org.jblas.MatrixFunctions;
 
 public class CostComputerWithL2Regularization implements CostComputer {
 
@@ -17,15 +16,11 @@ public class CostComputerWithL2Regularization implements CostComputer {
     }
 
     @Override
-    public double compute(DoubleMatrix input, DoubleMatrix output) {
+    public double compute(LayerTypeData input, LayerTypeData output) {
         double costWithoutLinearRegression = costComputer.compute(input, output);
-
-        //sum(Wij²) * lambda / 2m
-        double squaredWeightsSum = neuralNetworkModel.getLayers().stream()
-                .mapToDouble(layer -> MatrixFunctions.pow(layer.getWeightMatrix(), 2).sum())
-                .sum();
-        double inputCount = input.getColumns();
-        double regularizationCost = squaredWeightsSum * regularizationCoeff / 2d / inputCount;
-        return costWithoutLinearRegression + regularizationCost;
+        CostComputerWithL2RegularizationVisitor regularizationVisitor = new CostComputerWithL2RegularizationVisitor(neuralNetworkModel, regularizationCoeff);
+        input.accept(regularizationVisitor);
+        return costWithoutLinearRegression + regularizationVisitor.getCost();
     }
+
 }
