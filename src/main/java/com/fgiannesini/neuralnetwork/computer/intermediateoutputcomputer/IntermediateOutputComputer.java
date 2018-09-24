@@ -5,6 +5,7 @@ import com.fgiannesini.neuralnetwork.computer.LayerComputerVisitor;
 import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
 import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
+import org.jblas.DoubleMatrix;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +20,9 @@ public class IntermediateOutputComputer implements IIntermediateOutputComputer {
 
     public List<IntermediateOutputResult> compute(LayerTypeData data) {
         List<IntermediateOutputResult> intermediateOutputResults = new ArrayList<>();
-        DataFunctionApplier dataFunctionApplier = new DataFunctionApplier(matrix -> matrix.dup());
-        LayerTypeData firstData = data.accept(dataFunctionApplier);
+        DataFunctionApplier dataFunctionApplier = new DataFunctionApplier(DoubleMatrix::dup);
+        data.accept(dataFunctionApplier);
+        LayerTypeData firstData = dataFunctionApplier.getLayerTypeData();
         IntermediateOutputResult intermediateOutputResult = new IntermediateOutputResult(firstData);
         intermediateOutputResults.add(intermediateOutputResult);
         for (Layer layer : model.getLayers()) {

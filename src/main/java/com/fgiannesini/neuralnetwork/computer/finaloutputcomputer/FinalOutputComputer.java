@@ -19,7 +19,10 @@ public class FinalOutputComputer implements IFinalOutputComputer {
 
     @Override
     public LayerTypeData compute(LayerTypeData input) {
-        LayerTypeData firstData = input.accept(new DataFunctionApplier(DoubleMatrix::dup));
+        DataFunctionApplier dataVisitor = new DataFunctionApplier(DoubleMatrix::dup);
+        input.accept(dataVisitor);
+        LayerTypeData firstData = dataVisitor.getLayerTypeData();
+
         IntermediateOutputResult intermediateOutputResult = new IntermediateOutputResult(firstData);
         for (Layer layer : layers) {
             LayerComputerVisitor layerComputerVisitor = new LayerComputerVisitor(intermediateOutputResult.getResult());

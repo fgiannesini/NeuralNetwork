@@ -2,7 +2,7 @@ package com.fgiannesini.neuralnetwork.computer;
 
 public interface DataVisitor {
 
-    LayerTypeData visit(WeightBiasData data);
+    void visit(WeightBiasData data);
 
-    LayerTypeData visit(BatchNormData data);
+    void visit(BatchNormData data);
 }

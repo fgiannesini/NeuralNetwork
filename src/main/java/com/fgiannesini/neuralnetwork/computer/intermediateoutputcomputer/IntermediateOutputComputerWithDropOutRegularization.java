@@ -22,7 +22,9 @@ public class IntermediateOutputComputerWithDropOutRegularization implements IInt
     public List<IntermediateOutputResult> compute(LayerTypeData data) {
         List<IntermediateOutputResult> intermediateOutputResults = new ArrayList<>();
 
-        LayerTypeData regularizedInput = data.accept(new DataFunctionApplier(matrix -> matrix.dup().muliColumnVector(dropOutMatrixList.get(0))));
+        DataFunctionApplier dataVisitor = new DataFunctionApplier(matrix -> matrix.dup().muliColumnVector(dropOutMatrixList.get(0)));
+        data.accept(dataVisitor);
+        LayerTypeData regularizedInput = dataVisitor.getLayerTypeData();
         IntermediateOutputResult intermediateOutputResult = new IntermediateOutputResult(regularizedInput);
         intermediateOutputResults.add(intermediateOutputResult);
 

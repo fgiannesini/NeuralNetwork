@@ -20,7 +20,8 @@ public class FinalOutputComputerWithDropOutRegularization implements IFinalOutpu
 
     public LayerTypeData compute(LayerTypeData input) {
         DataFunctionApplier dataFunctionApplier = new DataFunctionApplier(matrix -> matrix.dup().muliColumnVector(dropOutMatrixList.get(0)));
-        LayerTypeData regularizedInput = input.accept(dataFunctionApplier);
+        input.accept(dataFunctionApplier);
+        LayerTypeData regularizedInput = dataFunctionApplier.getLayerTypeData();
         IntermediateOutputResult intermediateOutputResult = new IntermediateOutputResult(regularizedInput);
         for (int layerIndex = 0, dropOutIndex = 1; layerIndex < layers.size(); layerIndex++, dropOutIndex++) {
             Layer layer = layers.get(layerIndex);
