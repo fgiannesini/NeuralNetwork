@@ -30,8 +30,9 @@ public class GradientDescentWithDropOutRegularizationProcessProvider implements 
     public Function<ErrorComputationContainer, ErrorComputationContainer> getErrorComputationLauncher() {
         return gradientDescentProcessProvider.getErrorComputationLauncher().andThen(container -> {
             DoubleMatrix dropOutMatrix = dropOutMatrices.get(container.getProvider().getCurrentLayerIndex());
-            DoubleMatrix error = container.getPreviousError().muliColumnVector(dropOutMatrix);
-            return new ErrorComputationContainer(container.getProvider(), error);
+            DropOutApplierVisitor dropOutApplierVisitor = new DropOutApplierVisitor(dropOutMatrix);
+            container.getPreviousError().accept(dropOutApplierVisitor);
+            return new ErrorComputationContainer(container.getProvider(), dropOutApplierVisitor.getLayerTypeData());
         });
     }
 
@@ -39,8 +40,9 @@ public class GradientDescentWithDropOutRegularizationProcessProvider implements 
     public Function<ErrorComputationContainer, ErrorComputationContainer> getFirstErrorComputationLauncher() {
         return gradientDescentProcessProvider.getFirstErrorComputationLauncher().andThen(container -> {
             DoubleMatrix dropOutMatrix = dropOutMatrices.get(container.getProvider().getCurrentLayerIndex());
-            DoubleMatrix error = container.getPreviousError().muliColumnVector(dropOutMatrix);
-            return new ErrorComputationContainer(container.getProvider(), error);
+            DropOutApplierVisitor dropOutApplierVisitor = new DropOutApplierVisitor(dropOutMatrix);
+            container.getPreviousError().accept(dropOutApplierVisitor);
+            return new ErrorComputationContainer(container.getProvider(), dropOutApplierVisitor.getLayerTypeData());
         });
     }
 
@@ -69,8 +71,10 @@ public class GradientDescentWithDropOutRegularizationProcessProvider implements 
     public Function<DataContainer, DataContainer> getDataProcessLauncher() {
         return container-> {
             dropOutMatrices = dropOutMatricesSupplier.get();
-            DoubleMatrix dropOutOutput = container.getOutput().mulColumnVector(dropOutMatrices.get(dropOutMatrices.size() - 1));
-            return new DataContainer(container.getInput(), dropOutOutput);
+            DoubleMatrix dropOutMatrix = dropOutMatrices.get(dropOutMatrices.size() - 1);
+            DropOutApplierVisitor dropOutApplierVisitor = new DropOutApplierVisitor(dropOutMatrix);
+            container.getOutput().accept(dropOutApplierVisitor);
+            return new DataContainer(container.getInput(), dropOutApplierVisitor.getLayerTypeData());
         };
     }
 }

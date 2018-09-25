@@ -3,12 +3,12 @@ package com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout;
 import com.fgiannesini.neuralnetwork.model.*;
 import org.jblas.DoubleMatrix;
 
-public class FirstDropOutVisitor implements LayerVisitor {
+public class FirstDropOutMatrixGeneratorVisitor implements LayerVisitor {
 
     private double firstDropOutParameter;
     private DoubleMatrix firstDropOutMatrix;
 
-    public FirstDropOutVisitor(double firstDropOutParameter) {
+    public FirstDropOutMatrixGeneratorVisitor(double firstDropOutParameter) {
         this.firstDropOutParameter = firstDropOutParameter;
     }
 

@@ -3,6 +3,7 @@ package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderiv
 import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
 import com.fgiannesini.neuralnetwork.cost.CostType;
 import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithm;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.InputCountVisitor;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container.DataContainer;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container.GradientDescentCorrection;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.container.GradientDescentWithDerivationContainer;
@@ -31,7 +32,10 @@ public class GradientDescentWithDerivation implements LearningAlgorithm {
         DataContainer dataContainer = gradientDescentProcessProvider.getDataProcessLauncher().apply(new DataContainer(inputData, outputData));
         GradientDescentWithDerivationContainer gradientDescentWithDerivationContainer = new GradientDescentWithDerivationContainer(dataContainer.getInput(), dataContainer.getOutput(), originalNeuralNetworkModel, costType, gradientDescentProcessProvider.getCostComputerBuildingLauncher());
         List<GradientDescentCorrection> gradientDescentCorrections = gradientDescentProcessProvider.getGradientWithDerivationLauncher().apply(gradientDescentWithDerivationContainer);
-        originalNeuralNetworkModel = gradientDescentProcessProvider.getGradientDescentCorrectionsLauncher().apply(new GradientDescentWithDerivationCorrectionsContainer(originalNeuralNetworkModel, gradientDescentCorrections, dataContainer.getOutput().getColumns(), learningRate)).getCorrectedNeuralNetworkModel();
+        InputCountVisitor inputCountVisitor = new InputCountVisitor();
+        dataContainer.getOutput().accept(inputCountVisitor);
+        int columns = inputCountVisitor.getInputCount();
+        originalNeuralNetworkModel = gradientDescentProcessProvider.getGradientDescentCorrectionsLauncher().apply(new GradientDescentWithDerivationCorrectionsContainer(originalNeuralNetworkModel, gradientDescentCorrections, columns, learningRate)).getCorrectedNeuralNetworkModel();
         return originalNeuralNetworkModel;
     }
 

@@ -1,5 +1,6 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider;
 
+import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionApplier;
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import org.jblas.DoubleMatrix;
 
@@ -7,10 +8,12 @@ public abstract class GradientLayerProvider {
 
     private final DoubleMatrix results;
     private final DoubleMatrix previousResults;
+    private ActivationFunctionType activationFunctionType;
 
     GradientLayerProvider(DoubleMatrix results, DoubleMatrix previousResults, ActivationFunctionType activationFunctionType) {
         this.results = results;
         this.previousResults = previousResults;
+        this.activationFunctionType = activationFunctionType;
     }
 
     public DoubleMatrix getPreviousResult() {
@@ -19,5 +22,9 @@ public abstract class GradientLayerProvider {
 
     public DoubleMatrix getCurrentResult() {
         return results;
+    }
+
+    public ActivationFunctionApplier getActivationFunction() {
+        return activationFunctionType.getActivationFunction();
     }
 }

@@ -29,8 +29,9 @@ public class GradientDescentWithDerivationAndDropOutRegularizationProcessProvide
     public Function<DataContainer, DataContainer> getDataProcessLauncher() {
         return container -> {
             dropOutMatrices = dropOutMatricesSupplier.get();
-            DoubleMatrix dropOutOutput = container.getOutput().mulColumnVector(dropOutMatrices.get(dropOutMatrices.size() - 1));
-            return new DataContainer(container.getInput(), dropOutOutput);
+            DropOutApplierVisitor dropOutApplierVisitor = new DropOutApplierVisitor(dropOutMatrices.get(dropOutMatrices.size() - 1));
+            container.getOutput().accept(dropOutApplierVisitor);
+            return new DataContainer(container.getInput(), dropOutApplierVisitor.getLayerTypeData());
         };
     }
 

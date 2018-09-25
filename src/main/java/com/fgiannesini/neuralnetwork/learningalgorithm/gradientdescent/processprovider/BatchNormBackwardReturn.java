@@ -3,7 +3,7 @@ package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processp
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container.GradientDescentCorrection;
 import org.jblas.DoubleMatrix;
 
-class BatchNormBackwardReturn {
+public class BatchNormBackwardReturn {
 
     private final DoubleMatrix weightCorrection;
     private final DoubleMatrix dGamma;

@@ -1,6 +1,7 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider;
 
 import com.fgiannesini.neuralnetwork.computer.OutputComputerBuilder;
+import com.fgiannesini.neuralnetwork.computer.WeightBiasData;
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IIntermediateOutputComputer;
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IntermediateOutputResult;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container.*;
@@ -11,8 +12,6 @@ import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
@@ -40,45 +39,15 @@ public class GradientDescentWeightBiasProcessProvider implements IGradientDescen
     }
 
     @Override
-    public Function<BackwardComputationContainer, GradientDescentCorrection> getBackwardComputationLauncher() {
-        return container -> {
-            List<GradientDescentCorrection> gradientDescentCorrections = new ArrayList<>();
-            int inputCount = container.getY().getColumns();
-
-            GradientLayerProvider gradientLayerProvider = container.getProvider();
-            DoubleMatrix dz = container.getFirstErrorComputationLauncher()
-                    .apply(new ErrorComputationContainer(gradientLayerProvider, container.getY()))
-                    .getPreviousError();
-            DoubleMatrix weightCorrection = computeWeightCorrection(gradientLayerProvider.getPreviousResult(), dz, inputCount);
-            DoubleMatrix biasCorrection = computeBiasCorrection(dz, inputCount);
-
-            GradientDescentCorrection firstCorrection = new GradientDescentCorrection(weightCorrection, biasCorrection);
-            gradientDescentCorrections.add(firstCorrection);
-
-            for (gradientLayerProvider.nextLayer(); gradientLayerProvider.hasNextLayer(); gradientLayerProvider.nextLayer()) {
-                dz = container.getErrorComputationLauncher()
-                        .apply(new ErrorComputationContainer(gradientLayerProvider, dz))
-                        .getPreviousError();
-                weightCorrection = computeWeightCorrection(gradientLayerProvider.getPreviousResult(), dz, inputCount);
-                biasCorrection = computeBiasCorrection(dz, inputCount);
-                gradientDescentCorrections.add(new GradientDescentCorrection(weightCorrection, biasCorrection));
-            }
-
-            Collections.reverse(gradientDescentCorrections);
-
-            return gradientDescentCorrections;
-        };
-    }
-
-    @Override
     public Function<ErrorComputationContainer, ErrorComputationContainer> getErrorComputationLauncher() {
         return container -> {
             //dZ1 = W2t * dZ2 .* g1'(A1)
             GradientWeightBiasLayerProvider provider = (GradientWeightBiasLayerProvider) container.getProvider();
+            WeightBiasData previousError = (WeightBiasData) container.getPreviousError();
             DoubleMatrix error = provider.getPreviousWeightMatrix().transpose()
-                    .mmul(container.getPreviousError())
-                    .muli(provider.getCurrentActivationFunction().derivate(provider.getCurrentResult()));
-            return new ErrorComputationContainer(provider, error);
+                    .mmul(previousError.getInput())
+                    .muli(provider.getActivationFunction().derivate(provider.getCurrentResult()));
+            return new ErrorComputationContainer(provider, new WeightBiasData(error));
         };
     }
 
@@ -87,19 +56,6 @@ public class GradientDescentWeightBiasProcessProvider implements IGradientDescen
         return container -> {
             throw new RuntimeException("Should use a regression type process provider");
         };
-    }
-
-    private DoubleMatrix computeBiasCorrection(DoubleMatrix dz, int inputCount) {
-        //dB = sum(dZ) ./ m
-        return dz.rowSums()
-                .divi(inputCount);
-    }
-
-    private DoubleMatrix computeWeightCorrection(DoubleMatrix previousaLayerResult, DoubleMatrix dz, int inputCount) {
-        //dW1 = dZ1 * A0t ./m
-        return dz
-                .mmul(previousaLayerResult.transpose())
-                .divi(inputCount);
     }
 
     @Override

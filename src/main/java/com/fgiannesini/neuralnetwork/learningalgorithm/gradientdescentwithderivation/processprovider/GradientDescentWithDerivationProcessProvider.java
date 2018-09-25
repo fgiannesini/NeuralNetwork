@@ -1,5 +1,6 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.processprovider;
 
+import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
 import com.fgiannesini.neuralnetwork.cost.CostComputer;
 import com.fgiannesini.neuralnetwork.cost.CostComputerBuilder;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container.DataContainer;
@@ -27,8 +28,8 @@ public class GradientDescentWithDerivationProcessProvider implements IGradientDe
     @Override
     public Function<GradientDescentWithDerivationContainer, List<GradientDescentCorrection>> getGradientWithDerivationLauncher() {
         return container -> {
-            DoubleMatrix output = container.getY();
-            DoubleMatrix input = container.getInput();
+            LayerTypeData output = container.getY();
+            LayerTypeData input = container.getInput();
             List<Layer> layers = container.getNeuralNetworkModel().getLayers();
             List<GradientDescentCorrection> corrections = new ArrayList<>();
 

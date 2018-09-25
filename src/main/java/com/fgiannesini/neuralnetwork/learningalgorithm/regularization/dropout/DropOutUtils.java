@@ -18,16 +18,16 @@ public class DropOutUtils {
     public List<DoubleMatrix> getDropOutMatrix(double[] dropOutParameters, List<Layer> layers) {
         List<DoubleMatrix> dropOutMatrixList = new ArrayList<>();
 
-        FirstDropOutVisitor firstDropOutVisitor = new FirstDropOutVisitor(dropOutParameters[0]);
-        layers.get(0).accept(firstDropOutVisitor);
-        dropOutMatrixList.add(firstDropOutVisitor.getFirstDropOutMatrix());
+        FirstDropOutMatrixGeneratorVisitor firstDropOutMatrixGeneratorVisitor = new FirstDropOutMatrixGeneratorVisitor(dropOutParameters[0]);
+        layers.get(0).accept(firstDropOutMatrixGeneratorVisitor);
+        dropOutMatrixList.add(firstDropOutMatrixGeneratorVisitor.getFirstDropOutMatrix());
 
         for (int layerIndex = 0, dropOutParameterIndex = 1; layerIndex < layers.size(); layerIndex++, dropOutParameterIndex++) {
             Layer layer = layers.get(layerIndex);
             double dropOutParameter = dropOutParameters[dropOutParameterIndex];
-            DropOutVisitor dropOutVisitor = new DropOutVisitor(dropOutParameter);
-            layer.accept(firstDropOutVisitor);
-            dropOutMatrixList.add(dropOutVisitor.getDropOutMatrix());
+            DropOutMatrixGeneratorVisitor dropOutMatrixGeneratorVisitor = new DropOutMatrixGeneratorVisitor(dropOutParameter);
+            layer.accept(firstDropOutMatrixGeneratorVisitor);
+            dropOutMatrixList.add(dropOutMatrixGeneratorVisitor.getDropOutMatrix());
         }
         return dropOutMatrixList;
     }

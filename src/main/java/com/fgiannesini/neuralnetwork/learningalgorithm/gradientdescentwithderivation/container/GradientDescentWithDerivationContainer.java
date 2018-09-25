@@ -1,33 +1,33 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.container;
 
+import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
 import com.fgiannesini.neuralnetwork.cost.CostComputer;
 import com.fgiannesini.neuralnetwork.cost.CostType;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
-import org.jblas.DoubleMatrix;
 
 import java.util.function.Function;
 
 public class GradientDescentWithDerivationContainer {
 
-    private final DoubleMatrix input;
-    private final DoubleMatrix y;
+    private final LayerTypeData input;
+    private final LayerTypeData y;
     private final NeuralNetworkModel neuralNetworkModel;
     private final CostType costType;
     private final Function<GradientDescentWithDerivationCostComputerContainer, CostComputer> costComputerProcessLauncher;
 
-    public GradientDescentWithDerivationContainer(DoubleMatrix input, DoubleMatrix y, NeuralNetworkModel neuralNetworkModel, CostType costType, Function<GradientDescentWithDerivationCostComputerContainer, CostComputer> costComputerProcessLauncher) {
-        this.input = input;
-        this.y = y;
+    public GradientDescentWithDerivationContainer(LayerTypeData inputData, LayerTypeData outputData, NeuralNetworkModel neuralNetworkModel, CostType costType, Function<GradientDescentWithDerivationCostComputerContainer, CostComputer> costComputerProcessLauncher) {
+        this.input = inputData;
+        this.y = outputData;
         this.neuralNetworkModel = neuralNetworkModel;
         this.costType = costType;
         this.costComputerProcessLauncher = costComputerProcessLauncher;
     }
 
-    public DoubleMatrix getInput() {
+    public LayerTypeData getInput() {
         return input;
     }
 
-    public DoubleMatrix getY() {
+    public LayerTypeData getY() {
         return y;
     }
 

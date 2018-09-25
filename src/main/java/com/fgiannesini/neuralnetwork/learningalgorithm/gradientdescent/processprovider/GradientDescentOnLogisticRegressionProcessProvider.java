@@ -25,7 +25,7 @@ public class GradientDescentOnLogisticRegressionProcessProvider implements IGrad
             DoubleMatrix error = container.getProvider().getCurrentResult().sub(container.getPreviousError())
                     .divi(container.getProvider().getCurrentResult())
                     .divi(container.getProvider().getCurrentResult().neg().addi(1))
-                    .muli(container.getProvider().getCurrentActivationFunction().derivate(container.getProvider().getCurrentResult()));
+                    .muli(container.getProvider().getActivationFunction().derivate(container.getProvider().getCurrentResult()));
 
             return new ErrorComputationContainer(container.getProvider(), error);
         };
