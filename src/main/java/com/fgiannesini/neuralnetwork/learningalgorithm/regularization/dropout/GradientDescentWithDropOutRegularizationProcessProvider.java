@@ -50,7 +50,7 @@ public class GradientDescentWithDropOutRegularizationProcessProvider implements 
     }
 
     @Override
-    public Function<ForwardComputationContainer, GradientLayerProvider> getForwardComputationLauncher() {
+    public Function<ForwardComputationContainer, List<GradientLayerProvider>> getForwardComputationLauncher() {
         return container -> {
             IIntermediateOutputComputer intermediateOutputComputer = OutputComputerBuilder.init()
                     .withModel(container.getNeuralNetworkModel())

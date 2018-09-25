@@ -1,22 +1,22 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container;
 
-import org.jblas.DoubleMatrix;
+import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
 
 public class DataContainer {
 
-    private final DoubleMatrix input;
-    private final DoubleMatrix output;
+    private final LayerTypeData input;
+    private final LayerTypeData output;
 
-    public DataContainer(DoubleMatrix input, DoubleMatrix output) {
-        this.input = input;
-        this.output = output;
+    public DataContainer(LayerTypeData inputData, LayerTypeData outputData) {
+        this.input = inputData;
+        this.output = outputData;
     }
 
-    public DoubleMatrix getInput() {
+    public LayerTypeData getInput() {
         return input;
     }
 
-    public DoubleMatrix getOutput() {
+    public LayerTypeData getOutput() {
         return output;
     }
 }

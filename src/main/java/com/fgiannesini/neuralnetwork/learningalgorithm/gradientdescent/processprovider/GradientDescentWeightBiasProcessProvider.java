@@ -40,7 +40,7 @@ public class GradientDescentWeightBiasProcessProvider implements IGradientDescen
     }
 
     @Override
-    public Function<BackwardComputationContainer, List<GradientDescentCorrection>> getBackwardComputationLauncher() {
+    public Function<BackwardComputationContainer, GradientDescentCorrection> getBackwardComputationLauncher() {
         return container -> {
             List<GradientDescentCorrection> gradientDescentCorrections = new ArrayList<>();
             int inputCount = container.getY().getColumns();
@@ -52,7 +52,8 @@ public class GradientDescentWeightBiasProcessProvider implements IGradientDescen
             DoubleMatrix weightCorrection = computeWeightCorrection(gradientLayerProvider.getPreviousResult(), dz, inputCount);
             DoubleMatrix biasCorrection = computeBiasCorrection(dz, inputCount);
 
-            gradientDescentCorrections.add(new GradientDescentCorrection(weightCorrection, biasCorrection));
+            GradientDescentCorrection firstCorrection = new GradientDescentCorrection(weightCorrection, biasCorrection);
+            gradientDescentCorrections.add(firstCorrection);
 
             for (gradientLayerProvider.nextLayer(); gradientLayerProvider.hasNextLayer(); gradientLayerProvider.nextLayer()) {
                 dz = container.getErrorComputationLauncher()
@@ -102,7 +103,7 @@ public class GradientDescentWeightBiasProcessProvider implements IGradientDescen
     }
 
     @Override
-    public Function<ForwardComputationContainer, GradientLayerProvider> getForwardComputationLauncher() {
+    public Function<ForwardComputationContainer, List<GradientLayerProvider>> getForwardComputationLauncher() {
         return container -> {
             IIntermediateOutputComputer intermediateOutputComputer = OutputComputerBuilder.init()
                     .withModel(container.getNeuralNetworkModel())

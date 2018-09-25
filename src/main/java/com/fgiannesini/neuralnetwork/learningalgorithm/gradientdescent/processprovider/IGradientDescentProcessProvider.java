@@ -14,7 +14,7 @@ public interface IGradientDescentProcessProvider {
         return getPreviousProcessProvider().getGradientDescentCorrectionsLauncher();
     }
 
-    default Function<BackwardComputationContainer, List<GradientDescentCorrection>> getBackwardComputationLauncher() {
+    default Function<BackwardComputationContainer, GradientDescentCorrection> getBackwardComputationLauncher() {
         return getPreviousProcessProvider().getBackwardComputationLauncher();
     }
 
@@ -26,7 +26,7 @@ public interface IGradientDescentProcessProvider {
         return getPreviousProcessProvider().getFirstErrorComputationLauncher();
     }
 
-    default Function<ForwardComputationContainer, GradientLayerProvider> getForwardComputationLauncher() {
+    default Function<ForwardComputationContainer, List<GradientLayerProvider>> getForwardComputationLauncher() {
         return getPreviousProcessProvider().getForwardComputationLauncher();
     }
 

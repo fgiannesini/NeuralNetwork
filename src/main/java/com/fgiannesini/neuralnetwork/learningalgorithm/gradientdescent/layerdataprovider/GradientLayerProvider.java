@@ -1,37 +1,23 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider;
 
+import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import org.jblas.DoubleMatrix;
-
-import java.util.List;
 
 public abstract class GradientLayerProvider {
 
-    private final List<DoubleMatrix> results;
-    int currentLayerIndex;
+    private final DoubleMatrix results;
+    private final DoubleMatrix previousResults;
 
-    GradientLayerProvider(List<DoubleMatrix> results, int layersCount) {
-        currentLayerIndex = layersCount;
+    GradientLayerProvider(DoubleMatrix results, DoubleMatrix previousResults, ActivationFunctionType activationFunctionType) {
         this.results = results;
-    }
-
-    public void nextLayer() {
-        currentLayerIndex--;
-    }
-
-    public boolean hasNextLayer() {
-        return currentLayerIndex > 0;
+        this.previousResults = previousResults;
     }
 
     public DoubleMatrix getPreviousResult() {
-        return results.get(currentLayerIndex - 1);
+        return previousResults;
     }
 
     public DoubleMatrix getCurrentResult() {
-        return results.get(currentLayerIndex);
+        return results;
     }
-
-    public int getCurrentLayerIndex() {
-        return currentLayerIndex;
-    }
-
 }

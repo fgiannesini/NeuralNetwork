@@ -1,13 +1,13 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container;
 
+import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientLayerProvider;
-import org.jblas.DoubleMatrix;
 
 public class ErrorComputationContainer {
     private final GradientLayerProvider provider;
-    private final DoubleMatrix previousError;
+    private final LayerTypeData previousError;
 
-    public ErrorComputationContainer(GradientLayerProvider provider, DoubleMatrix previousError) {
+    public ErrorComputationContainer(GradientLayerProvider provider, LayerTypeData previousError) {
         this.provider = provider;
         this.previousError = previousError;
     }
@@ -16,7 +16,7 @@ public class ErrorComputationContainer {
         return provider;
     }
 
-    public DoubleMatrix getPreviousError() {
+    public LayerTypeData getPreviousError() {
         return previousError;
     }
 }

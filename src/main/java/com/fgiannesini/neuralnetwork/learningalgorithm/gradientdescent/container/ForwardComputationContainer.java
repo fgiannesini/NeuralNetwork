@@ -1,19 +1,19 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container;
 
+import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
-import org.jblas.DoubleMatrix;
 
 public class ForwardComputationContainer {
 
-    private final DoubleMatrix inputMatrix;
+    private final LayerTypeData inputMatrix;
     private final NeuralNetworkModel neuralNetworkModel;
 
-    public ForwardComputationContainer(DoubleMatrix inputMatrix, NeuralNetworkModel neuralNetworkModel) {
-        this.inputMatrix = inputMatrix;
+    public ForwardComputationContainer(LayerTypeData inputData, NeuralNetworkModel neuralNetworkModel) {
+        this.inputMatrix = inputData;
         this.neuralNetworkModel = neuralNetworkModel;
     }
 
-    public DoubleMatrix getInput() {
+    public LayerTypeData getInput() {
         return inputMatrix;
     }
 

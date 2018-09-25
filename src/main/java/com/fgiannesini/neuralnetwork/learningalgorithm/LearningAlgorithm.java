@@ -1,5 +1,6 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm;
 
+import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
 import com.fgiannesini.neuralnetwork.converter.DataFormatConverter;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
@@ -18,7 +19,7 @@ public interface LearningAlgorithm {
         return learn(inputMatrix, y);
     }
 
-    NeuralNetworkModel learn(DoubleMatrix inputMatrix, DoubleMatrix y);
+    NeuralNetworkModel learn(LayerTypeData inputData, LayerTypeData outputData);
 
     void updateLearningRate(double learningRate);
 }

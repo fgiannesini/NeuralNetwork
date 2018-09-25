@@ -1,5 +1,6 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider;
 
+import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
 import com.fgiannesini.neuralnetwork.computer.OutputComputerBuilder;
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IIntermediateOutputComputer;
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IntermediateOutputResult;
@@ -41,7 +42,7 @@ public class GradientDescentBatchNormProcessProvider implements IGradientDescent
     }
 
     @Override
-    public Function<BackwardComputationContainer, List<GradientDescentCorrection>> getBackwardComputationLauncher() {
+    public Function<BackwardComputationContainer, GradientDescentCorrection> getBackwardComputationLauncher() {
         return container -> {
             List<GradientDescentCorrection> gradientDescentCorrections = new ArrayList<>();
             int inputCount = container.getY().getColumns();
@@ -116,14 +117,14 @@ public class GradientDescentBatchNormProcessProvider implements IGradientDescent
     }
 
     @Override
-    public Function<ForwardComputationContainer, GradientLayerProvider> getForwardComputationLauncher() {
+    public Function<ForwardComputationContainer, List<GradientLayerProvider>> getForwardComputationLauncher() {
         return container -> {
             NeuralNetworkModel neuralNetworkModel = container.getNeuralNetworkModel();
             IIntermediateOutputComputer intermediateOutputComputer = OutputComputerBuilder.init()
                     .withModel(neuralNetworkModel)
                     .buildIntermediateOutputComputer();
-            DoubleMatrix inputMatrix = container.getInput();
-            List<IntermediateOutputResult> intermediateResults = intermediateOutputComputer.compute(inputMatrix);
+            LayerTypeData inputData = container.getInput();
+            List<IntermediateOutputResult> intermediateResults = intermediateOutputComputer.compute(inputData);
             return GradientLayerProviderBuilder.init()
                     .withModel(neuralNetworkModel)
                     .withIntermediateResults(intermediateResults)
