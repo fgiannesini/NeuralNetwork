@@ -10,7 +10,6 @@ import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout.Gr
 import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout.GradientDescentWithDropOutRegularizationProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.l2.GradientDescentWithDerivationAndL2RegularizationProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.regularization.l2.GradientDescentWithL2RegularizationProcessProvider;
-import com.fgiannesini.neuralnetwork.model.LayerType;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
 
@@ -78,12 +77,7 @@ public class LearningAlgorithmBuilder {
         LearningAlgorithm learningAlgorithm;
         switch (learningAlgorithmType) {
             case GRADIENT_DESCENT:
-                IGradientDescentProcessProvider processProvider;
-                if (neuralNetworkModel.getLayerType().equals(LayerType.BATCH_NORM)) {
-                    processProvider = new GradientDescentBatchNormProcessProvider();
-                } else {
-                    processProvider = new GradientDescentWeightBiasProcessProvider();
-                }
+                IGradientDescentProcessProvider processProvider = new GradientDescentDefaultProcessProvider();
                 switch (costType) {
                     case LINEAR_REGRESSION:
                         processProvider = new GradientDescentOnLinearRegressionProcessProvider(processProvider);

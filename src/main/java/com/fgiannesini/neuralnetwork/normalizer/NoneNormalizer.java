@@ -1,11 +1,11 @@
 package com.fgiannesini.neuralnetwork.normalizer;
 
-import org.jblas.DoubleMatrix;
+import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
 
 public class NoneNormalizer implements INormalizer {
 
     @Override
-    public DoubleMatrix normalize(DoubleMatrix input) {
-        return input.dup();
+    public LayerTypeData normalize(LayerTypeData input) {
+        return input;
     }
 }

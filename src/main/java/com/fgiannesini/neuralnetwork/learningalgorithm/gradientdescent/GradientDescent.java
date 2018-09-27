@@ -34,14 +34,14 @@ public class GradientDescent implements LearningAlgorithm {
 
         List<GradientDescentCorrection> gradientDescentCorrections = new ArrayList<>();
 
-        LayerTypeData firstError = gradientDescentProcessProvider.getFirstErrorComputationLauncher().apply(new ErrorComputationContainer(providers.get(0), outputData)).getPreviousError();
+        LayerTypeData firstError = gradientDescentProcessProvider.getFirstErrorComputationLauncher().apply(new ErrorComputationContainer(providers.get(0), outputData, 0)).getPreviousError();
         LayerTypeCorrectionsVisitor firstLayerTypeCorrectionsVisitor = new LayerTypeCorrectionsVisitor(providers.get(0));
         firstError.accept(firstLayerTypeCorrectionsVisitor);
         gradientDescentCorrections.add(firstLayerTypeCorrectionsVisitor.getCorrection());
 
         for (int i = 1; i < providers.size(); i++) {
             GradientLayerProvider provider = providers.get(i);
-            LayerTypeData error = gradientDescentProcessProvider.getErrorComputationLauncher().apply(new ErrorComputationContainer(provider, outputData)).getPreviousError();
+            LayerTypeData error = gradientDescentProcessProvider.getErrorComputationLauncher().apply(new ErrorComputationContainer(provider, outputData, i)).getPreviousError();
             LayerTypeCorrectionsVisitor layerTypeCorrectionsVisitor = new LayerTypeCorrectionsVisitor(provider);
             error.accept(layerTypeCorrectionsVisitor);
             gradientDescentCorrections.add(layerTypeCorrectionsVisitor.getCorrection());

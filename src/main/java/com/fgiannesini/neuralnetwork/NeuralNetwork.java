@@ -1,8 +1,8 @@
 package com.fgiannesini.neuralnetwork;
 
 import com.fgiannesini.neuralnetwork.batch.BatchIterator;
+import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
 import com.fgiannesini.neuralnetwork.computer.OutputComputerBuilder;
-import com.fgiannesini.neuralnetwork.converter.DataFormatConverter;
 import com.fgiannesini.neuralnetwork.cost.CostComputer;
 import com.fgiannesini.neuralnetwork.cost.CostComputerBuilder;
 import com.fgiannesini.neuralnetwork.cost.CostType;
@@ -10,7 +10,6 @@ import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithm;
 import com.fgiannesini.neuralnetwork.learningrate.ILearningRateUpdater;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.normalizer.INormalizer;
-import org.jblas.DoubleMatrix;
 
 import java.util.function.Consumer;
 
@@ -35,31 +34,15 @@ public class NeuralNetwork {
         this.learningRateUpdater = hyperParameters.getLearningRateUpdater();
     }
 
-    void learn(double[] input, double[] expected, double[] testInput, double[] testExpected) {
-        DoubleMatrix inputMatrix = DataFormatConverter.fromTabToDoubleMatrix(input);
-        DoubleMatrix outputMatrix = DataFormatConverter.fromTabToDoubleMatrix(expected);
-        DoubleMatrix testInputMatrix = DataFormatConverter.fromTabToDoubleMatrix(testInput);
-        DoubleMatrix testExpectedMatrix = DataFormatConverter.fromTabToDoubleMatrix(testExpected);
-        learn(inputMatrix, outputMatrix, testInputMatrix, testExpectedMatrix);
-    }
-
-    void learn(double[][] input, double[][] expected, double[][] testInput, double[][] testExpected) {
-        DoubleMatrix inputMatrix = DataFormatConverter.fromDoubleTabToDoubleMatrix(input);
-        DoubleMatrix outputMatrix = DataFormatConverter.fromDoubleTabToDoubleMatrix(expected);
-        DoubleMatrix testInputMatrix = DataFormatConverter.fromDoubleTabToDoubleMatrix(testInput);
-        DoubleMatrix testExpectedMatrix = DataFormatConverter.fromDoubleTabToDoubleMatrix(testExpected);
-        learn(inputMatrix, outputMatrix, testInputMatrix, testExpectedMatrix);
-    }
-
-    public void learn(DoubleMatrix input, DoubleMatrix outpout, DoubleMatrix testInput, DoubleMatrix testOutpout) {
-        DoubleMatrix normalizedInput = normalizer.normalize(input);
-        DoubleMatrix normalizedTestInput = normalizer.normalize(testInput);
+    public void learn(LayerTypeData input, LayerTypeData outpout, LayerTypeData testInput, LayerTypeData testOutpout) {
+        LayerTypeData normalizedInput = normalizer.normalize(input);
+        LayerTypeData normalizedTestInput = normalizer.normalize(testInput);
 
         for (int epochNumber = 0; epochNumber < epochCount; epochNumber++) {
             learningAlgorithm.updateLearningRate(learningRateUpdater.get(epochNumber));
             for (BatchIterator batchIterator = BatchIterator.init(normalizedInput, outpout, batchSize); batchIterator.hasNext(); batchIterator.next()) {
-                DoubleMatrix subInput = batchIterator.getSubInput();
-                DoubleMatrix subOutput = batchIterator.getSubOutput();
+                LayerTypeData subInput = batchIterator.getSubInput();
+                LayerTypeData subOutput = batchIterator.getSubOutput();
 
                 neuralNetworkModel = learningAlgorithm.learn(subInput, subOutput);
                 CostComputer costComputer = CostComputerBuilder.init()
@@ -80,18 +63,8 @@ public class NeuralNetwork {
         }
     }
 
-    public double[] apply(double[] input) {
-        DoubleMatrix inputMatrix = new DoubleMatrix(input);
-        return apply(inputMatrix).toArray();
-    }
-
-    public double[][] apply(double[][] input) {
-        DoubleMatrix inputMatrix = new DoubleMatrix(input);
-        return apply(inputMatrix).transpose().toArray2();
-    }
-
-    public DoubleMatrix apply(DoubleMatrix input) {
-        DoubleMatrix normalizedInput = normalizer.normalize(input);
+    public LayerTypeData apply(LayerTypeData input) {
+        LayerTypeData normalizedInput = normalizer.normalize(input);
         return OutputComputerBuilder.init()
                 .withModel(neuralNetworkModel)
                 .buildFinalOutputComputer()

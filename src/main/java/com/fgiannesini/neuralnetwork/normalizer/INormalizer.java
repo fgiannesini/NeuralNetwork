@@ -1,8 +1,8 @@
 package com.fgiannesini.neuralnetwork.normalizer;
 
-import org.jblas.DoubleMatrix;
+import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
 
 public interface INormalizer {
 
-    DoubleMatrix normalize(DoubleMatrix input);
+    LayerTypeData normalize(LayerTypeData input);
 }

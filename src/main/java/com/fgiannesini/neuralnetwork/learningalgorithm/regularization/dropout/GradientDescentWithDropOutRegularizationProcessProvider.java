@@ -29,20 +29,20 @@ public class GradientDescentWithDropOutRegularizationProcessProvider implements 
     @Override
     public Function<ErrorComputationContainer, ErrorComputationContainer> getErrorComputationLauncher() {
         return gradientDescentProcessProvider.getErrorComputationLauncher().andThen(container -> {
-            DoubleMatrix dropOutMatrix = dropOutMatrices.get(container.getProvider().getCurrentLayerIndex());
+            DoubleMatrix dropOutMatrix = dropOutMatrices.get(container.getCurrentLayerIndex());
             DropOutApplierVisitor dropOutApplierVisitor = new DropOutApplierVisitor(dropOutMatrix);
             container.getPreviousError().accept(dropOutApplierVisitor);
-            return new ErrorComputationContainer(container.getProvider(), dropOutApplierVisitor.getLayerTypeData());
+            return new ErrorComputationContainer(container.getProvider(), dropOutApplierVisitor.getLayerTypeData(), container.getCurrentLayerIndex());
         });
     }
 
     @Override
     public Function<ErrorComputationContainer, ErrorComputationContainer> getFirstErrorComputationLauncher() {
         return gradientDescentProcessProvider.getFirstErrorComputationLauncher().andThen(container -> {
-            DoubleMatrix dropOutMatrix = dropOutMatrices.get(container.getProvider().getCurrentLayerIndex());
+            DoubleMatrix dropOutMatrix = dropOutMatrices.get(container.getCurrentLayerIndex());
             DropOutApplierVisitor dropOutApplierVisitor = new DropOutApplierVisitor(dropOutMatrix);
             container.getPreviousError().accept(dropOutApplierVisitor);
-            return new ErrorComputationContainer(container.getProvider(), dropOutApplierVisitor.getLayerTypeData());
+            return new ErrorComputationContainer(container.getProvider(), dropOutApplierVisitor.getLayerTypeData(), container.getCurrentLayerIndex());
         });
     }
 
@@ -69,7 +69,7 @@ public class GradientDescentWithDropOutRegularizationProcessProvider implements 
 
     @Override
     public Function<DataContainer, DataContainer> getDataProcessLauncher() {
-        return container-> {
+        return container -> {
             dropOutMatrices = dropOutMatricesSupplier.get();
             DoubleMatrix dropOutMatrix = dropOutMatrices.get(dropOutMatrices.size() - 1);
             DropOutApplierVisitor dropOutApplierVisitor = new DropOutApplierVisitor(dropOutMatrix);

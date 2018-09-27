@@ -2,6 +2,10 @@ package com.fgiannesini.neuralnetwork.example;
 
 import com.fgiannesini.neuralnetwork.*;
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
+import com.fgiannesini.neuralnetwork.computer.BatchNormData;
+import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
+import com.fgiannesini.neuralnetwork.computer.MeanDeviationProvider;
+import com.fgiannesini.neuralnetwork.computer.WeightBiasData;
 import com.fgiannesini.neuralnetwork.cost.CostType;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithmType;
@@ -57,11 +61,29 @@ public class FloorExampleLauncher {
         DoubleMatrix testInputMatrix = ExampleDataManager.generateInputData(TEST_INPUT_COUNT);
         DoubleMatrix testOutputMatrix = ExampleDataManager.convertToOutputFormat(testInputMatrix.data);
 
-        neuralNetwork.learn(inputMatrix, outputMatrix, testInputMatrix, testOutputMatrix);
+        LayerTypeData testInput = getData(testInputMatrix, hyperParameters.getLayerType());
+        neuralNetwork.learn(
+                getData(inputMatrix, hyperParameters.getLayerType()),
+                getData(outputMatrix, hyperParameters.getLayerType()),
+                testInput,
+                getData(testOutputMatrix, hyperParameters.getLayerType())
+        );
 
-        DoubleMatrix testOutputPredictionMatrix = neuralNetwork.apply(testInputMatrix);
+        LayerTypeData testOutputPredictionMatrix = neuralNetwork.apply(testInput);
+        DataExtractorVisitor dataVisitor = new DataExtractorVisitor();
+        testOutputPredictionMatrix.accept(dataVisitor);
+        return ExampleDataManager.computeSuccessRate(testOutputMatrix, dataVisitor.getData());
+    }
 
-        return ExampleDataManager.computeSuccessRate(testOutputMatrix, testOutputPredictionMatrix);
+    private LayerTypeData getData(DoubleMatrix matrix, LayerType layerType) {
+        switch (layerType) {
+            case WEIGHT_BIAS:
+                return new WeightBiasData(matrix);
+            case BATCH_NORM:
+                return new BatchNormData(matrix, new MeanDeviationProvider());
+            default:
+                throw new RuntimeException(layerType + " not managed");
+        }
     }
 
     private NeuralNetwork prepare() {
@@ -71,17 +93,19 @@ public class FloorExampleLauncher {
 
         int[] hiddenLayerSize = hyperParameters.getHiddenLayerSize();
         for (int hiddenLayerIndex : hiddenLayerSize) {
-            neuralNetworkModelBuilder.addLayer(hiddenLayerIndex, ActivationFunctionType.RELU);
+            if (hyperParameters.getLayerType() == LayerType.WEIGHT_BIAS) {
+                neuralNetworkModelBuilder.addWeightBiasLayer(hiddenLayerIndex, ActivationFunctionType.RELU);
+            } else {
+                neuralNetworkModelBuilder.addBatchNormLayer(hiddenLayerIndex, ActivationFunctionType.RELU);
+            }
         }
-        neuralNetworkModelBuilder.addLayer(10, ActivationFunctionType.SOFT_MAX);
-
-        NeuralNetworkModel neuralNetworkModel;
         if (hyperParameters.getLayerType() == LayerType.WEIGHT_BIAS) {
-            neuralNetworkModel = neuralNetworkModelBuilder.buildWeightBiasModel();
+            neuralNetworkModelBuilder.addWeightBiasLayer(10, ActivationFunctionType.SOFT_MAX);
         } else {
-            neuralNetworkModel = neuralNetworkModelBuilder.buildBatchNormModel();
+            neuralNetworkModelBuilder.addBatchNormLayer(10, ActivationFunctionType.SOFT_MAX);
         }
 
+        NeuralNetworkModel neuralNetworkModel = neuralNetworkModelBuilder.buildNeuralNetworkModel();
         return NeuralNetworkBuilder.init()
                 .withNeuralNetworkModel(neuralNetworkModel)
                 .withLearningAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT)

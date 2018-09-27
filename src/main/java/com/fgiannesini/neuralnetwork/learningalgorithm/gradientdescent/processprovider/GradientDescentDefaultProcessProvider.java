@@ -1,12 +1,10 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider;
 
-import com.fgiannesini.neuralnetwork.computer.BatchNormData;
 import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
 import com.fgiannesini.neuralnetwork.computer.OutputComputerBuilder;
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IIntermediateOutputComputer;
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IntermediateOutputResult;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container.*;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientBatchNormLayerProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientLayerProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientLayerProviderBuilder;
 import com.fgiannesini.neuralnetwork.model.Layer;
@@ -16,7 +14,7 @@ import org.jblas.DoubleMatrix;
 import java.util.List;
 import java.util.function.Function;
 
-public class GradientDescentBatchNormProcessProvider implements IGradientDescentProcessProvider {
+public class GradientDescentDefaultProcessProvider implements IGradientDescentProcessProvider {
 
     @Override
     public IGradientDescentProcessProvider getPreviousProcessProvider() {
@@ -43,14 +41,9 @@ public class GradientDescentBatchNormProcessProvider implements IGradientDescent
     @Override
     public Function<ErrorComputationContainer, ErrorComputationContainer> getErrorComputationLauncher() {
         return container -> {
-            //dZ1 = W2t * dZ2 .* g1'(A1)
-            GradientBatchNormLayerProvider provider = (GradientBatchNormLayerProvider) container.getProvider();
-            BatchNormData batchNormData = (BatchNormData) container.getPreviousError();
-            DoubleMatrix previousError = batchNormData.getInput();
-            DoubleMatrix error = provider.getPreviousWeightMatrix().transpose()
-                    .mmul(previousError)
-                    .muli(provider.getCurrentActivationFunction().derivate(provider.getCurrentResult()));
-            return new ErrorComputationContainer(provider, new BatchNormData(error, batchNormData.getMeanDeviationProvider()));
+            GradientDescentErrorComputationVisitor errorComputationVisitor = new GradientDescentErrorComputationVisitor(container.getProvider());
+            container.getPreviousError().accept(errorComputationVisitor);
+            return new ErrorComputationContainer(container.getProvider(), errorComputationVisitor.getErrorData(), container.getCurrentLayerIndex());
         };
     }
 
