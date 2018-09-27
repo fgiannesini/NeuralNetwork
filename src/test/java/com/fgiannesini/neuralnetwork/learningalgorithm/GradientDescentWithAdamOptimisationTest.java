@@ -6,8 +6,8 @@ import com.fgiannesini.neuralnetwork.converter.DataFormatConverter;
 import com.fgiannesini.neuralnetwork.cost.CostType;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescent;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.GradientDescentDefaultProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.GradientDescentOnLinearRegressionProcessProvider;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.GradientDescentWeightBiasProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.GradientDescentWithAdamOptimisationProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivation;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.processprovider.GradientDescentWithDerivationAndAdamOptimisationProcessProvider;
@@ -58,7 +58,7 @@ class GradientDescentWithAdamOptimisationTest {
             double rmsStopCoeff = 0.999;
             double momentumCoeff = 0.9;
 
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentWithAdamOptimisationProcessProvider(new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentWeightBiasProcessProvider()), momentumCoeff, rmsStopCoeff));
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentWithAdamOptimisationProcessProvider(new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentDefaultProcessProvider()), momentumCoeff, rmsStopCoeff));
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 0, Arrays.asList(DataFormatConverter.fromDoubleTabToDoubleMatrix(expectedFirstWeightMatrix), DataFormatConverter.fromTabToDoubleMatrix(expectedFirstBiasMatrix)));
@@ -103,7 +103,7 @@ class GradientDescentWithAdamOptimisationTest {
             double rmsStopCoeff = 0.999;
             double momentumCoeff = 0.9;
 
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentWithAdamOptimisationProcessProvider(new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentWeightBiasProcessProvider()), momentumCoeff, rmsStopCoeff));
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentWithAdamOptimisationProcessProvider(new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentDefaultProcessProvider()), momentumCoeff, rmsStopCoeff));
             gradientDescent.learn(input, output);
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 

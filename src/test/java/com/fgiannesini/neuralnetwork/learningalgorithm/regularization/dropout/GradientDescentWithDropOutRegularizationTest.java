@@ -2,12 +2,14 @@ package com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import com.fgiannesini.neuralnetwork.assertions.NeuralNetworkAssertions;
+import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
+import com.fgiannesini.neuralnetwork.computer.WeightBiasData;
 import com.fgiannesini.neuralnetwork.cost.CostType;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithm;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescent;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.GradientDescentDefaultProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.GradientDescentOnLinearRegressionProcessProvider;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.GradientDescentWeightBiasProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.IGradientDescentProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivation;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.processprovider.GradientDescentWithDerivationProcessProvider;
@@ -28,19 +30,18 @@ class GradientDescentWithDropOutRegularizationTest {
         NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                 .useInitializer(InitializerType.ONES)
                 .input(2)
-                .addLayer(2, ActivationFunctionType.NONE)
-                .buildWeightBiasModel();
+                .addWeightBiasLayer(2, ActivationFunctionType.NONE)
+                .buildNeuralNetworkModel();
 
-        double[] input = new double[]{1, 2};
-        double[] output = new double[]{3, 5};
+        LayerTypeData input = new WeightBiasData(new DoubleMatrix(2, 1, 1, 2));
+        LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 1, 3, 5));
 
         Supplier<List<DoubleMatrix>> dropOutMatrices = () -> Arrays.asList(
                 new DoubleMatrix(new double[]{1, 1}),
                 new DoubleMatrix(new double[]{0, 2})
         );
 
-        double learningRate = 0.01;
-        IGradientDescentProcessProvider processProvider = new GradientDescentWithDropOutRegularizationProcessProvider(dropOutMatrices, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentWeightBiasProcessProvider()));
+        IGradientDescentProcessProvider processProvider = new GradientDescentWithDropOutRegularizationProcessProvider(dropOutMatrices, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentDefaultProcessProvider()));
         LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, processProvider);
         NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
@@ -70,7 +71,7 @@ class GradientDescentWithDropOutRegularizationTest {
         );
 
         double learningRate = 0.01;
-        IGradientDescentProcessProvider processProvider = new GradientDescentWithDropOutRegularizationProcessProvider(dropOutMatrices, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentWeightBiasProcessProvider()));
+        IGradientDescentProcessProvider processProvider = new GradientDescentWithDropOutRegularizationProcessProvider(dropOutMatrices, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentDefaultProcessProvider()));
         LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, processProvider);
         NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
@@ -100,7 +101,7 @@ class GradientDescentWithDropOutRegularizationTest {
         );
 
         double learningRate = 0.01;
-        IGradientDescentProcessProvider processProvider = new GradientDescentWithDropOutRegularizationProcessProvider(dropOutMatrices, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentWeightBiasProcessProvider()));
+        IGradientDescentProcessProvider processProvider = new GradientDescentWithDropOutRegularizationProcessProvider(dropOutMatrices, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentDefaultProcessProvider()));
         LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, processProvider);
         NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
@@ -136,7 +137,7 @@ class GradientDescentWithDropOutRegularizationTest {
         );
 
         double learningRate = 0.01;
-        IGradientDescentProcessProvider processProvider = new GradientDescentWithDropOutRegularizationProcessProvider(dropOutMatrices, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentWeightBiasProcessProvider()));
+        IGradientDescentProcessProvider processProvider = new GradientDescentWithDropOutRegularizationProcessProvider(dropOutMatrices, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentDefaultProcessProvider()));
         LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, processProvider);
         NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
@@ -169,7 +170,7 @@ class GradientDescentWithDropOutRegularizationTest {
         Supplier<List<DoubleMatrix>> dropOutMatrices = () -> dropOutMatrix;
 
         double learningRate = 0.01;
-        IGradientDescentProcessProvider processProvider = new GradientDescentWithDropOutRegularizationProcessProvider(dropOutMatrices, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentWeightBiasProcessProvider()));
+        IGradientDescentProcessProvider processProvider = new GradientDescentWithDropOutRegularizationProcessProvider(dropOutMatrices, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentDefaultProcessProvider()));
         LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, processProvider);
         NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 

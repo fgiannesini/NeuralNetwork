@@ -2,7 +2,7 @@ package com.fgiannesini.neuralnetwork.computer;
 
 import org.jblas.DoubleMatrix;
 
-public class MeanDeviation {
+public abstract class MeanDeviation {
     private DoubleMatrix mean;
     private DoubleMatrix deviation;
 

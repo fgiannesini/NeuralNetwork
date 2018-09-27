@@ -1,10 +1,7 @@
 package com.fgiannesini.neuralnetwork.computer.finaloutputcomputer;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionApplier;
-import com.fgiannesini.neuralnetwork.computer.BatchNormData;
-import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
-import com.fgiannesini.neuralnetwork.computer.MeanDeviation;
-import com.fgiannesini.neuralnetwork.computer.WeightBiasData;
+import com.fgiannesini.neuralnetwork.computer.*;
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IntermediateOutputResult;
 import com.fgiannesini.neuralnetwork.model.*;
 import org.jblas.DoubleMatrix;
@@ -42,7 +39,9 @@ public class LayerComputerWithDropOutRegularizationVisitor implements LayerVisit
         BatchNormData batchNormData = (BatchNormData) layerTypeData;
         DoubleMatrix z = layer.getWeightMatrix().mmul(batchNormData.getInput());
 
-        MeanDeviation meanDeviation = batchNormData.getMeanDeviationProvider().get(z);
+        MeanDeviationProvider meanDeviationProvider = batchNormData.getMeanDeviationProvider();
+        new BatchNormData(z, null).accept(meanDeviationProvider);
+        MeanDeviation meanDeviation = meanDeviationProvider.getMeanDeviation();
 
         //Z2 = (Z1 - mean) / sigma * gamma + beta
         DoubleMatrix afterMeanApplicationResult = z.subColumnVector(meanDeviation.getMean());
@@ -51,7 +50,7 @@ public class LayerComputerWithDropOutRegularizationVisitor implements LayerVisit
         result.muliColumnVector(dropOutMatrix);
         ActivationFunctionApplier activationFunctionApplier = layer.getActivationFunctionType().getActivationFunction();
         DoubleMatrix activatedResult = activationFunctionApplier.apply(result);
-        BatchNormData newData = new BatchNormData(activatedResult, batchNormData.getMeanDeviationProvider());
+        BatchNormData newData = new BatchNormData(activatedResult, meanDeviationProvider);
         intermediateOutputResult = new IntermediateOutputResult(newData, meanDeviation, beforeNormalizationResult, afterMeanApplicationResult);
     }
 

@@ -2,12 +2,14 @@ package com.fgiannesini.neuralnetwork.learningalgorithm;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import com.fgiannesini.neuralnetwork.assertions.NeuralNetworkAssertions;
+import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
+import com.fgiannesini.neuralnetwork.computer.WeightBiasData;
 import com.fgiannesini.neuralnetwork.converter.DataFormatConverter;
 import com.fgiannesini.neuralnetwork.cost.CostType;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescent;
+import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.GradientDescentDefaultProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.GradientDescentOnLinearRegressionProcessProvider;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.GradientDescentWeightBiasProcessProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivation;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.processprovider.GradientDescentWithDerivationProcessProvider;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
@@ -28,13 +30,13 @@ class GradientDescentOnLinearRegressionTest {
             NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                     .useInitializer(InitializerType.ONES)
                     .input(2)
-                    .addLayer(2, ActivationFunctionType.NONE)
-                    .buildWeightBiasModel();
+                    .addWeightBiasLayer(2, ActivationFunctionType.NONE)
+                    .buildNeuralNetworkModel();
 
-            double[] input = new double[]{1, 2};
-            double[] output = new double[]{4, 4};
+            LayerTypeData input = new WeightBiasData(new DoubleMatrix(2, 1, 1, 2));
+            LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 1, 4, 4));
 
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentWeightBiasProcessProvider()));
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentDefaultProcessProvider()));
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
             NeuralNetworkAssertions.checkSameNeuralNetworks(neuralNetworkModel, gradientNeuralNetworkModel);
@@ -49,14 +51,14 @@ class GradientDescentOnLinearRegressionTest {
             NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                     .useInitializer(InitializerType.ONES)
                     .input(2)
-                    .addLayer(3, ActivationFunctionType.NONE)
-                    .addLayer(2, ActivationFunctionType.NONE)
-                    .buildWeightBiasModel();
+                    .addWeightBiasLayer(3, ActivationFunctionType.NONE)
+                    .addWeightBiasLayer(2, ActivationFunctionType.NONE)
+                    .buildNeuralNetworkModel();
 
-            double[] input = new double[]{1, 2};
-            double[] output = new double[]{13, 13};
+            LayerTypeData input = new WeightBiasData(new DoubleMatrix(2, 1, 1, 2));
+            LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 1, 13, 13));
 
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentWeightBiasProcessProvider()));
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentDefaultProcessProvider()));
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
             NeuralNetworkAssertions.checkSameNeuralNetworks(neuralNetworkModel, gradientNeuralNetworkModel);
@@ -71,9 +73,9 @@ class GradientDescentOnLinearRegressionTest {
             NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                     .useInitializer(InitializerType.ONES)
                     .input(2)
-                    .addLayer(3, ActivationFunctionType.NONE)
-                    .addLayer(2, ActivationFunctionType.NONE)
-                    .buildWeightBiasModel();
+                    .addWeightBiasLayer(3, ActivationFunctionType.NONE)
+                    .addWeightBiasLayer(2, ActivationFunctionType.NONE)
+                    .buildNeuralNetworkModel();
 
             double[][] input = new double[][]{
                     {1, 2},
@@ -85,7 +87,7 @@ class GradientDescentOnLinearRegressionTest {
                     {25, 25}
             };
 
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentWeightBiasProcessProvider()));
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentDefaultProcessProvider()));
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
             NeuralNetworkAssertions.checkSameNeuralNetworks(neuralNetworkModel, gradientNeuralNetworkModel);
@@ -104,10 +106,10 @@ class GradientDescentOnLinearRegressionTest {
             NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                     .useInitializer(InitializerType.ONES)
                     .input(2)
-                    .addLayer(2, ActivationFunctionType.NONE)
-                    .buildWeightBiasModel();
+                    .addWeightBiasLayer(2, ActivationFunctionType.NONE)
+                    .buildNeuralNetworkModel();
 
-            double[] input = new double[]{1, 2};
+            LayerTypeData input = new WeightBiasData(new DoubleMatrix(2, 1, 1, 2));
             double[] output = new double[]{3, 5};
 
             double[][] expectedWeightMatrix = {
@@ -116,7 +118,7 @@ class GradientDescentOnLinearRegressionTest {
             };
             double[] expectedBiasMatrix = {0.99, 1.01};
 
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentWeightBiasProcessProvider()));
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentDefaultProcessProvider()));
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 0, Arrays.asList(DataFormatConverter.fromDoubleTabToDoubleMatrix(expectedWeightMatrix), DataFormatConverter.fromTabToDoubleMatrix(expectedBiasMatrix)));
 
@@ -130,11 +132,11 @@ class GradientDescentOnLinearRegressionTest {
             NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                     .useInitializer(InitializerType.ONES)
                     .input(2)
-                    .addLayer(3, ActivationFunctionType.NONE)
-                    .addLayer(2, ActivationFunctionType.NONE)
-                    .buildWeightBiasModel();
+                    .addWeightBiasLayer(3, ActivationFunctionType.NONE)
+                    .addWeightBiasLayer(2, ActivationFunctionType.NONE)
+                    .buildNeuralNetworkModel();
 
-            double[] input = new double[]{1, 2};
+            LayerTypeData input = new WeightBiasData(new DoubleMatrix(2, 1, 1, 2));
             double[] output = new double[]{10, 15};
 
             double[][] expectedFirstWeightMatrix = {
@@ -150,7 +152,7 @@ class GradientDescentOnLinearRegressionTest {
             };
             double[] expectedSecondBiasMatrix = {0.97, 1.02};
 
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentWeightBiasProcessProvider()));
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentDefaultProcessProvider()));
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 0, Arrays.asList(DataFormatConverter.fromDoubleTabToDoubleMatrix(expectedFirstWeightMatrix), DataFormatConverter.fromTabToDoubleMatrix(expectedFirstBiasMatrix)));
@@ -166,9 +168,9 @@ class GradientDescentOnLinearRegressionTest {
             NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                     .useInitializer(InitializerType.ONES)
                     .input(2)
-                    .addLayer(3, ActivationFunctionType.NONE)
-                    .addLayer(2, ActivationFunctionType.NONE)
-                    .buildWeightBiasModel();
+                    .addWeightBiasLayer(3, ActivationFunctionType.NONE)
+                    .addWeightBiasLayer(2, ActivationFunctionType.NONE)
+                    .buildNeuralNetworkModel();
 
             double[][] input = new double[][]{
                     {1, 2},
@@ -192,7 +194,7 @@ class GradientDescentOnLinearRegressionTest {
                     {0.84, 0.84}
             };
             double[] expectedSecondBiasMatrix = {0.985, 0.985};
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentWeightBiasProcessProvider()));
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentDefaultProcessProvider()));
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 0, Arrays.asList(DataFormatConverter.fromDoubleTabToDoubleMatrix(expectedFirstWeightMatrix), DataFormatConverter.fromTabToDoubleMatrix(expectedFirstBiasMatrix)));
@@ -212,9 +214,9 @@ class GradientDescentOnLinearRegressionTest {
             NeuralNetworkModel<WeightBiasLayer> neuralNetworkModel = NeuralNetworkModelBuilder.init()
                     .useInitializer(InitializerType.ZEROS)
                     .input(2)
-                    .addLayer(2, ActivationFunctionType.SIGMOID)
-                    .addLayer(2, ActivationFunctionType.SIGMOID)
-                    .buildWeightBiasModel();
+                    .addWeightBiasLayer(2, ActivationFunctionType.SIGMOID)
+                    .addWeightBiasLayer(2, ActivationFunctionType.SIGMOID)
+                    .buildNeuralNetworkModel();
 
             double[][] firstWeightMatrix = new double[][]{
                     {0.15, 0.2},
@@ -248,7 +250,7 @@ class GradientDescentOnLinearRegressionTest {
             };
             double[] expectedSecondBiasMatrix = {0.530751, 0.619049};
 
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentWeightBiasProcessProvider()));
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentDefaultProcessProvider()));
             gradientDescent.updateLearningRate(0.5);
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
 

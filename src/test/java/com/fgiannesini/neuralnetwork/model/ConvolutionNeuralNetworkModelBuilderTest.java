@@ -64,6 +64,9 @@ class ConvolutionNeuralNetworkModelBuilderTest {
                     () -> Assertions.assertEquals(10, thirdLayer.getWeightMatrix().rows),
                     () -> Assertions.assertEquals(7, thirdLayer.getWeightMatrix().columns),
                     () -> Assertions.assertEquals(10, thirdLayer.getBiasMatrix().rows),
-                    () -> Assertions.assertEquals(1, thirdLayer.getBiasMatrix().columns),
+                    () -> Assertions.assertEquals(1, thirdLayer.getBiasMatrix().columns)
+            );
 
         }
+    }
+}

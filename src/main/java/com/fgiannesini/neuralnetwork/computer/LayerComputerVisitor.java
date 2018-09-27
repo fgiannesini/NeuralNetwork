@@ -30,7 +30,9 @@ public class LayerComputerVisitor implements LayerVisitor {
         BatchNormData batchNormData = (BatchNormData) layerTypeData;
         DoubleMatrix z = layer.getWeightMatrix().mmul(batchNormData.getInput());
 
-        MeanDeviation meanDeviation = batchNormData.getMeanDeviationProvider().get(z);
+        MeanDeviationProvider meanDeviationProvider = batchNormData.getMeanDeviationProvider();
+        new BatchNormData(z, null).accept(meanDeviationProvider);
+        MeanDeviation meanDeviation = meanDeviationProvider.getMeanDeviation();
 
         //Z2 = (Z1 - mean) / sigma * gamma + beta
         DoubleMatrix afterMeanApplicationResult = z.subColumnVector(meanDeviation.getMean());
@@ -38,7 +40,7 @@ public class LayerComputerVisitor implements LayerVisitor {
         DoubleMatrix result = beforeNormalizationResult.mulColumnVector(layer.getGammaMatrix()).addiColumnVector(layer.getBetaMatrix());
         ActivationFunctionApplier activationFunctionApplier = layer.getActivationFunctionType().getActivationFunction();
         DoubleMatrix activatedResult = activationFunctionApplier.apply(result);
-        BatchNormData newBatchNormData = new BatchNormData(activatedResult, batchNormData.getMeanDeviationProvider());
+        BatchNormData newBatchNormData = new BatchNormData(activatedResult, meanDeviationProvider);
         intermediateOutputResult = new IntermediateOutputResult(newBatchNormData, meanDeviation, beforeNormalizationResult, afterMeanApplicationResult);
     }
 
