@@ -1,5 +1,6 @@
 package com.fgiannesini.neuralnetwork;
 
+import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
 import org.junit.jupiter.api.Assertions;
@@ -26,8 +27,8 @@ class NeuralNetworkBuilderTest {
                     () -> {
                         NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                                 .input(1)
-                                .addLayer(1)
-                                .buildWeightBiasModel();
+                                .addWeightBiasLayer(1, ActivationFunctionType.RELU)
+                                .buildNeuralNetworkModel();
                         return NeuralNetworkBuilder.init()
                                 .withNeuralNetworkModel(neuralNetworkModel)
                                 .build();
@@ -43,8 +44,8 @@ class NeuralNetworkBuilderTest {
         void create_neuralNetwork() {
             NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                     .input(1)
-                    .addLayer(1)
-                    .buildWeightBiasModel();
+                    .addWeightBiasLayer(1, ActivationFunctionType.RELU)
+                    .buildNeuralNetworkModel();
             NeuralNetwork neuralNetwork = NeuralNetworkBuilder.init()
                     .withNeuralNetworkModel(neuralNetworkModel)
                     .withHyperParameters(new HyperParameters())

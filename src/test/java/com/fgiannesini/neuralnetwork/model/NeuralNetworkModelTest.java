@@ -6,14 +6,15 @@ import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
+
 class NeuralNetworkModelTest {
 
     @Test
     void clone_WeightBiasNeuralNetworkModel() {
         Initializer initializer = InitializerType.ZEROS.getInitializer();
-        NeuralNetworkModel neuralNetworkModel = new NeuralNetworkModel<>(3, 2);
         WeightBiasLayer weightBiasLayer = new WeightBiasLayer(3, 2, initializer, ActivationFunctionType.NONE);
-        neuralNetworkModel.addLayer(weightBiasLayer);
+        NeuralNetworkModel neuralNetworkModel = new NeuralNetworkModel(Collections.singletonList(weightBiasLayer));
 
         NeuralNetworkModel clone = neuralNetworkModel.clone();
 
@@ -23,9 +24,8 @@ class NeuralNetworkModelTest {
     @Test
     void clone_BatchNormNeuralNetworkModel() {
         Initializer initializer = InitializerType.ZEROS.getInitializer();
-        NeuralNetworkModel neuralNetworkModel = new NeuralNetworkModel<>(3, 2);
         BatchNormLayer batchNormLayer = new BatchNormLayer(3, 2, initializer, ActivationFunctionType.NONE);
-        neuralNetworkModel.addLayer(batchNormLayer);
+        NeuralNetworkModel neuralNetworkModel = new NeuralNetworkModel(Collections.singletonList(batchNormLayer));
 
         NeuralNetworkModel clone = neuralNetworkModel.clone();
 
@@ -37,8 +37,5 @@ class NeuralNetworkModelTest {
 
         Assertions.assertNotSame(clone.getLayers(), neuralNetworkModel.getLayers());
         Assertions.assertEquals(clone.getLayers(), neuralNetworkModel.getLayers());
-
-        Assertions.assertEquals(clone.getInputSize(), neuralNetworkModel.getInputSize());
-        Assertions.assertEquals(clone.getOutputSize(), neuralNetworkModel.getOutputSize());
     }
 }

@@ -1,5 +1,6 @@
 package com.fgiannesini.neuralnetwork.cost;
 
+import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
 import org.junit.jupiter.api.Assertions;
@@ -68,8 +69,8 @@ class CostComputerBuilderTest {
     private NeuralNetworkModel buildNeuralNetworkModel() {
         return NeuralNetworkModelBuilder.init()
                 .input(1)
-                .addLayer(1)
-                .buildWeightBiasModel();
+                .addWeightBiasLayer(1, ActivationFunctionType.RELU)
+                .buildNeuralNetworkModel();
     }
 
 }

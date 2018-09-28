@@ -1,5 +1,6 @@
 package com.fgiannesini.neuralnetwork.computer;
 
+import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import com.fgiannesini.neuralnetwork.computer.finaloutputcomputer.FinalOutputComputer;
 import com.fgiannesini.neuralnetwork.computer.finaloutputcomputer.FinalOutputComputerWithDropOutRegularization;
 import com.fgiannesini.neuralnetwork.computer.finaloutputcomputer.IFinalOutputComputer;
@@ -26,8 +27,8 @@ class OutputComputerBuilderTest {
     void test_FinalOutputComputer_instance_creation() {
         NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                 .input(1)
-                .addLayer(1)
-                .buildWeightBiasModel();
+                .addWeightBiasLayer(1, ActivationFunctionType.RELU)
+                .buildNeuralNetworkModel();
 
         IFinalOutputComputer finalOutputComputer = OutputComputerBuilder.init()
                 .withModel(neuralNetworkModel)
@@ -40,8 +41,8 @@ class OutputComputerBuilderTest {
     void test_FinalOutputComputerWithDropOutRegularization_instance_creation() {
         NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                 .input(1)
-                .addLayer(1)
-                .buildWeightBiasModel();
+                .addWeightBiasLayer(1, ActivationFunctionType.RELU)
+                .buildNeuralNetworkModel();
 
         IFinalOutputComputer finalOutputComputer = OutputComputerBuilder.init()
                 .withModel(neuralNetworkModel)
@@ -55,8 +56,8 @@ class OutputComputerBuilderTest {
     void test_IntermediateOutputComputer_instance_creation() {
         NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                 .input(1)
-                .addLayer(1)
-                .buildWeightBiasModel();
+                .addWeightBiasLayer(1, ActivationFunctionType.RELU)
+                .buildNeuralNetworkModel();
 
         IIntermediateOutputComputer outputComputer = OutputComputerBuilder.init()
                 .withModel(neuralNetworkModel)
@@ -69,8 +70,8 @@ class OutputComputerBuilderTest {
     void test_IntermediateOutputComputerWithDropOutRegularization_instance_creation() {
         NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                 .input(1)
-                .addLayer(1)
-                .buildWeightBiasModel();
+                .addWeightBiasLayer(1, ActivationFunctionType.RELU)
+                .buildNeuralNetworkModel();
 
         IIntermediateOutputComputer outputComputer = OutputComputerBuilder.init()
                 .withModel(neuralNetworkModel)
