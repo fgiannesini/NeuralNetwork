@@ -1,25 +1,28 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider;
 
+import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
+import com.fgiannesini.neuralnetwork.computer.BatchNormData;
+import com.fgiannesini.neuralnetwork.computer.MeanDeviationProvider;
+import com.fgiannesini.neuralnetwork.computer.WeightBiasData;
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IntermediateOutputResult;
-import com.fgiannesini.neuralnetwork.model.BatchNormLayer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
-import com.fgiannesini.neuralnetwork.model.WeightBiasLayer;
 import org.jblas.DoubleMatrix;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
+import java.util.List;
 
 class GradientLayerProviderBuilderTest {
 
     @Test
     void results_are_not_present() {
-        NeuralNetworkModel<WeightBiasLayer> neuralNetwork =
+        NeuralNetworkModel neuralNetwork =
                 NeuralNetworkModelBuilder.init()
                         .input(2)
-                        .addLayer(2)
-                        .buildWeightBiasModel();
+                        .addWeightBiasLayer(2, ActivationFunctionType.RELU)
+                        .buildNeuralNetworkModel();
 
         Assertions.assertThrows(IllegalArgumentException.class, () ->
                 GradientLayerProviderBuilder.init()
@@ -29,11 +32,11 @@ class GradientLayerProviderBuilderTest {
 
     @Test
     void intermediate_results_are_not_present_on_batch_norm_type() {
-        NeuralNetworkModel<BatchNormLayer> neuralNetwork =
+        NeuralNetworkModel neuralNetwork =
                 NeuralNetworkModelBuilder.init()
                         .input(2)
-                        .addLayer(2)
-                        .buildBatchNormModel();
+                        .addBatchNormLayer(2, ActivationFunctionType.RELU)
+                        .buildNeuralNetworkModel();
 
         Assertions.assertThrows(IllegalArgumentException.class, () ->
                 GradientLayerProviderBuilder.init()
@@ -43,11 +46,11 @@ class GradientLayerProviderBuilderTest {
 
     @Test
     void results_and_intermediate_results_are_not_present_on_weight_bias_type() {
-        NeuralNetworkModel<WeightBiasLayer> neuralNetwork =
+        NeuralNetworkModel neuralNetwork =
                 NeuralNetworkModelBuilder.init()
                         .input(2)
-                        .addLayer(2)
-                        .buildWeightBiasModel();
+                        .addWeightBiasLayer(2, ActivationFunctionType.RELU)
+                        .buildNeuralNetworkModel();
 
         Assertions.assertThrows(IllegalArgumentException.class, () ->
                 GradientLayerProviderBuilder.init()
@@ -57,31 +60,33 @@ class GradientLayerProviderBuilderTest {
 
     @Test
     void instanciate_batch_norm_provider() {
-        NeuralNetworkModel<BatchNormLayer> neuralNetwork =
+        NeuralNetworkModel neuralNetwork =
                 NeuralNetworkModelBuilder.init()
                         .input(2)
-                        .addLayer(2)
-                        .buildBatchNormModel();
+                        .addBatchNormLayer(2, ActivationFunctionType.RELU)
+                        .buildNeuralNetworkModel();
 
-        GradientLayerProvider<BatchNormLayer> build = GradientLayerProviderBuilder.init()
+        List<IntermediateOutputResult> intermediateOutputResultList = Collections.singletonList(new IntermediateOutputResult(new BatchNormData(DoubleMatrix.ones(2), new MeanDeviationProvider())));
+        List<GradientLayerProvider> build = GradientLayerProviderBuilder.init()
                 .withModel(neuralNetwork)
-                .withIntermediateResults(Collections.singletonList(new IntermediateOutputResult(DoubleMatrix.ones(2))))
+                .withIntermediateResults(intermediateOutputResultList)
                 .build();
-        Assertions.assertTrue(build instanceof GradientBatchNormLayerProvider);
+        build.forEach(i -> Assertions.assertTrue(i instanceof GradientBatchNormLayerProvider));
     }
 
     @Test
     void instanciate_weight_bias_provider() {
-        NeuralNetworkModel<WeightBiasLayer> neuralNetwork =
+        NeuralNetworkModel neuralNetwork =
                 NeuralNetworkModelBuilder.init()
                         .input(2)
-                        .addLayer(2)
-                        .buildWeightBiasModel();
+                        .addWeightBiasLayer(2, ActivationFunctionType.RELU)
+                        .buildNeuralNetworkModel();
 
-        GradientLayerProvider<WeightBiasLayer> build = GradientLayerProviderBuilder.init()
+        List<IntermediateOutputResult> intermediateOutputResultList = Collections.singletonList(new IntermediateOutputResult(new WeightBiasData(DoubleMatrix.ones(2))));
+        List<GradientLayerProvider> build = GradientLayerProviderBuilder.init()
                 .withModel(neuralNetwork)
-                .withResults(Collections.singletonList(DoubleMatrix.ones(2)))
+                .withIntermediateResults(intermediateOutputResultList)
                 .build();
-        Assertions.assertTrue(build instanceof GradientWeightBiasLayerProvider);
+        build.forEach(i -> Assertions.assertTrue(i instanceof GradientWeightBiasLayerProvider));
     }
 }

@@ -2,6 +2,8 @@ package com.fgiannesini.neuralnetwork.learningalgorithm;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import com.fgiannesini.neuralnetwork.assertions.NeuralNetworkAssertions;
+import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
+import com.fgiannesini.neuralnetwork.computer.WeightBiasData;
 import com.fgiannesini.neuralnetwork.cost.CostType;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescent;
@@ -11,6 +13,7 @@ import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderiva
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.processprovider.GradientDescentWithDerivationProcessProvider;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
+import org.jblas.DoubleMatrix;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -23,11 +26,11 @@ class GradientDescentOnSoftMaxRegressionTest {
             NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                     .useInitializer(InitializerType.ONES)
                     .input(2)
-                    .addLayer(2, ActivationFunctionType.SOFT_MAX)
-                    .buildWeightBiasModel();
+                    .addWeightBiasLayer(2, ActivationFunctionType.SOFT_MAX)
+                    .buildNeuralNetworkModel();
 
-            double[] input = new double[]{1, 2};
-            double[] output = new double[]{1, 0};
+            LayerTypeData input = new WeightBiasData(new DoubleMatrix(2, 1, 1, 2));
+            LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 1, 1, 0));
 
             LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentOnSoftMaxRegressionProcessProvider(new GradientDescentDefaultProcessProvider()));
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
@@ -43,12 +46,12 @@ class GradientDescentOnSoftMaxRegressionTest {
             NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                     .useInitializer(InitializerType.ONES)
                     .input(2)
-                    .addLayer(3, ActivationFunctionType.NONE)
-                    .addLayer(2, ActivationFunctionType.SOFT_MAX)
-                    .buildWeightBiasModel();
+                    .addWeightBiasLayer(3, ActivationFunctionType.NONE)
+                    .addWeightBiasLayer(2, ActivationFunctionType.SOFT_MAX)
+                    .buildNeuralNetworkModel();
 
-            double[] input = new double[]{1, 2};
-            double[] output = new double[]{1, 0};
+            LayerTypeData input = new WeightBiasData(new DoubleMatrix(2, 1, 1, 2));
+            LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 1, 1, 0));
 
             LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentOnSoftMaxRegressionProcessProvider(new GradientDescentDefaultProcessProvider()));
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
@@ -63,19 +66,13 @@ class GradientDescentOnSoftMaxRegressionTest {
             NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                     .useInitializer(InitializerType.ONES)
                     .input(2)
-                    .addLayer(3, ActivationFunctionType.RELU)
-                    .addLayer(2, ActivationFunctionType.SOFT_MAX)
-                    .buildWeightBiasModel();
+                    .addWeightBiasLayer(3, ActivationFunctionType.RELU)
+                    .addWeightBiasLayer(2, ActivationFunctionType.SOFT_MAX)
+                    .buildNeuralNetworkModel();
 
-            double[][] input = new double[][]{
-                    {1, 2},
-                    {3, 4}
-            };
+            LayerTypeData input = new WeightBiasData(new DoubleMatrix(2, 2, 1, 2, 3, 4));
 
-            double[][] output = new double[][]{
-                    {0, 1},
-                    {1, 0}
-            };
+            LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 2, 0, 1, 1, 0));
 
             LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentOnSoftMaxRegressionProcessProvider(new GradientDescentDefaultProcessProvider()));
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);

@@ -105,7 +105,7 @@ class NeuralNetworkModelBuilderTest {
 
         @Test
         void create_Network_Model() {
-            NeuralNetworkModel<BatchNormLayer> neuralNetworkModel = NeuralNetworkModelBuilder.init()
+            NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                     .input(10)
                     .addBatchNormLayer(5, ActivationFunctionType.NONE)
                     .addBatchNormLayer(7, ActivationFunctionType.NONE)
@@ -151,7 +151,7 @@ class NeuralNetworkModelBuilderTest {
 
         @Test
         void check_random_weight_boudaries() {
-            NeuralNetworkModel<BatchNormLayer> neuralNetworkModel = NeuralNetworkModelBuilder.init()
+            NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                     .useInitializer(InitializerType.RANDOM)
                     .input(256)
                     .addBatchNormLayer(100, ActivationFunctionType.NONE)

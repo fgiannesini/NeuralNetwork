@@ -1,5 +1,6 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout;
 
+import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
 import org.jblas.DoubleMatrix;
@@ -15,9 +16,9 @@ class DropOutUtilsTest {
     void getDropOutMatrix() {
         NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                 .input(3)
-                .addLayer(2000)
-                .addLayer(1000)
-                .buildWeightBiasModel();
+                .addWeightBiasLayer(2000, ActivationFunctionType.RELU)
+                .addWeightBiasLayer(1000, ActivationFunctionType.RELU)
+                .buildNeuralNetworkModel();
         double[] dropOutParameters = {1, 0.4, 0.8};
         List<DoubleMatrix> dropOutMatrixList = DropOutUtils.init()
                 .getDropOutMatrix(dropOutParameters, neuralNetworkModel.getLayers());

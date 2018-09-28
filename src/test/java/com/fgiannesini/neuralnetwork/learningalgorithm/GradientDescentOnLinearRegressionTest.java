@@ -77,15 +77,8 @@ class GradientDescentOnLinearRegressionTest {
                     .addWeightBiasLayer(2, ActivationFunctionType.NONE)
                     .buildNeuralNetworkModel();
 
-            double[][] input = new double[][]{
-                    {1, 2},
-                    {3, 4}
-            };
-
-            double[][] output = new double[][]{
-                    {13, 13},
-                    {25, 25}
-            };
+            LayerTypeData input = new WeightBiasData(new DoubleMatrix(2, 2, 1, 2, 3, 4));
+            LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 2, 13, 13, 25, 25));
 
             LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentDefaultProcessProvider()));
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
@@ -110,7 +103,7 @@ class GradientDescentOnLinearRegressionTest {
                     .buildNeuralNetworkModel();
 
             LayerTypeData input = new WeightBiasData(new DoubleMatrix(2, 1, 1, 2));
-            double[] output = new double[]{3, 5};
+            LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 1, 3, 5));
 
             double[][] expectedWeightMatrix = {
                     {0.99, 1.01},
@@ -137,7 +130,7 @@ class GradientDescentOnLinearRegressionTest {
                     .buildNeuralNetworkModel();
 
             LayerTypeData input = new WeightBiasData(new DoubleMatrix(2, 1, 1, 2));
-            double[] output = new double[]{10, 15};
+            LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 1, 10, 15));
 
             double[][] expectedFirstWeightMatrix = {
                     {0.99, 0.99, 0.99},
@@ -172,15 +165,8 @@ class GradientDescentOnLinearRegressionTest {
                     .addWeightBiasLayer(2, ActivationFunctionType.NONE)
                     .buildNeuralNetworkModel();
 
-            double[][] input = new double[][]{
-                    {1, 2},
-                    {3, 4}
-            };
-
-            double[][] output = new double[][]{
-                    {15, 15},
-                    {20, 20}
-            };
+            LayerTypeData input = new WeightBiasData(new DoubleMatrix(2, 2, 1, 2, 3, 4));
+            LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 2, 15, 15, 20, 20));
 
             double[][] expectedFirstWeightMatrix = {
                     {0.87, 0.87, 0.87},
@@ -211,7 +197,7 @@ class GradientDescentOnLinearRegressionTest {
 
         @Test
         void learn_on_vector_with_two_hidden_layers_and_sigmoid_activation_function() {
-            NeuralNetworkModel<WeightBiasLayer> neuralNetworkModel = NeuralNetworkModelBuilder.init()
+            NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                     .useInitializer(InitializerType.ZEROS)
                     .input(2)
                     .addWeightBiasLayer(2, ActivationFunctionType.SIGMOID)
@@ -223,20 +209,21 @@ class GradientDescentOnLinearRegressionTest {
                     {0.25, 0.3}
             };
             double[] firstBiasMatrix = new double[]{0.35, 0.35};
-            neuralNetworkModel.getLayers().get(0).setWeightMatrix(new DoubleMatrix(firstWeightMatrix));
-            neuralNetworkModel.getLayers().get(0).setBiasMatrix(new DoubleMatrix(firstBiasMatrix));
+            WeightBiasLayer firstLayer = (WeightBiasLayer) neuralNetworkModel.getLayers().get(0);
+            firstLayer.setWeightMatrix(new DoubleMatrix(firstWeightMatrix));
+            firstLayer.setBiasMatrix(new DoubleMatrix(firstBiasMatrix));
 
             double[][] secondWeightMatrix = new double[][]{
                     {0.40, 0.45},
                     {0.50, 0.55}
             };
             double[] secondBiasMatrix = new double[]{0.6, 0.6};
-            neuralNetworkModel.getLayers().get(1).setWeightMatrix(new DoubleMatrix(secondWeightMatrix));
-            neuralNetworkModel.getLayers().get(1).setBiasMatrix(new DoubleMatrix(secondBiasMatrix));
+            WeightBiasLayer secondLayer = (WeightBiasLayer) neuralNetworkModel.getLayers().get(1);
+            secondLayer.setWeightMatrix(new DoubleMatrix(secondWeightMatrix));
+            secondLayer.setBiasMatrix(new DoubleMatrix(secondBiasMatrix));
 
-            double[] input = new double[]{0.05, 0.1};
-
-            double[] output = new double[]{0.01, 0.99};
+            LayerTypeData input = new WeightBiasData(new DoubleMatrix(2, 1, 0.05, 0.1));
+            LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 1, 0.01, 0.99));
 
             double[][] expectedFirstWeightMatrix = {
                     {0.149781, 0.249751},

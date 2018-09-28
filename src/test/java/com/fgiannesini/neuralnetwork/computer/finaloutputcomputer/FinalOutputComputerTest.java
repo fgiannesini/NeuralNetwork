@@ -1,14 +1,15 @@
 package com.fgiannesini.neuralnetwork.computer.finaloutputcomputer;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
+import com.fgiannesini.neuralnetwork.assertions.DoubleMatrixAssertions;
+import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
 import com.fgiannesini.neuralnetwork.computer.OutputComputerBuilder;
+import com.fgiannesini.neuralnetwork.computer.WeightBiasData;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
-import org.junit.jupiter.api.Assertions;
+import org.jblas.DoubleMatrix;
 import org.junit.jupiter.api.Test;
-
-import java.util.Arrays;
 
 class FinalOutputComputerTest {
 
@@ -16,63 +17,58 @@ class FinalOutputComputerTest {
     void compute_one_dimension_output_with_one_hidden_layer() {
         NeuralNetworkModel model = NeuralNetworkModelBuilder.init()
                 .input(3)
-                .addLayer(4, ActivationFunctionType.NONE)
-                .addLayer(2, ActivationFunctionType.NONE)
+                .addWeightBiasLayer(4, ActivationFunctionType.NONE)
+                .addWeightBiasLayer(2, ActivationFunctionType.NONE)
                 .useInitializer(InitializerType.ONES)
-                .buildWeightBiasModel();
+                .buildNeuralNetworkModel();
 
-        double[] inputData = new double[3];
-        Arrays.fill(inputData, 1);
 
-        double[] output = OutputComputerBuilder.init()
+        LayerTypeData inputData = new WeightBiasData(new DoubleMatrix(3, 1, 1, 1, 1));
+
+        WeightBiasData output = (WeightBiasData) OutputComputerBuilder.init()
                 .withModel(model)
                 .buildFinalOutputComputer()
                 .compute(inputData);
-        Assertions.assertArrayEquals(new double[]{17, 17}, output);
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 17, 17), output.getInput());
     }
 
     @Test
     void compute_one_dimension_output_with_three_hidden_layers() {
         NeuralNetworkModel model = NeuralNetworkModelBuilder.init()
                 .input(3)
-                .addLayer(2, ActivationFunctionType.NONE)
-                .addLayer(2, ActivationFunctionType.NONE)
-                .addLayer(2, ActivationFunctionType.NONE)
-                .addLayer(2, ActivationFunctionType.NONE)
+                .addWeightBiasLayer(2, ActivationFunctionType.NONE)
+                .addWeightBiasLayer(2, ActivationFunctionType.NONE)
+                .addWeightBiasLayer(2, ActivationFunctionType.NONE)
+                .addWeightBiasLayer(2, ActivationFunctionType.NONE)
                 .useInitializer(InitializerType.ONES)
-                .buildWeightBiasModel();
+                .buildNeuralNetworkModel();
 
-        double[] inputData = new double[3];
-        Arrays.fill(inputData, 1);
+        LayerTypeData inputData = new WeightBiasData(new DoubleMatrix(3, 1, 1, 1, 1));
 
-        double[] output = OutputComputerBuilder.init()
+        WeightBiasData output = (WeightBiasData) OutputComputerBuilder.init()
                 .withModel(model)
                 .buildFinalOutputComputer()
                 .compute(inputData);
-        Assertions.assertArrayEquals(new double[]{39, 39}, output);
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 39, 39), output.getInput());
     }
 
     @Test
     void compute_two_dimension_output_with_three_hidden_layers() {
         NeuralNetworkModel model = NeuralNetworkModelBuilder.init()
                 .input(3)
-                .addLayer(2, ActivationFunctionType.NONE)
-                .addLayer(2, ActivationFunctionType.NONE)
-                .addLayer(2, ActivationFunctionType.NONE)
-                .addLayer(2, ActivationFunctionType.NONE)
+                .addWeightBiasLayer(2, ActivationFunctionType.NONE)
+                .addWeightBiasLayer(2, ActivationFunctionType.NONE)
+                .addWeightBiasLayer(2, ActivationFunctionType.NONE)
+                .addWeightBiasLayer(2, ActivationFunctionType.NONE)
                 .useInitializer(InitializerType.ONES)
-                .buildWeightBiasModel();
+                .buildNeuralNetworkModel();
 
-        double[][] inputData = {
-                {1, 1, 1},
-                {2, 2, 2}
-        };
-
-        double[][] output = OutputComputerBuilder.init()
+        LayerTypeData inputData = new WeightBiasData(new DoubleMatrix(3, 2, 1, 1, 1, 2, 2, 2));
+        WeightBiasData output = (WeightBiasData) OutputComputerBuilder.init()
                 .withModel(model)
                 .buildFinalOutputComputer()
                 .compute(inputData);
-        double[][] expected = {{39, 39}, {63, 63}};
-        Assertions.assertArrayEquals(expected, output);
+        DoubleMatrixAssertions.assertMatrices(output.getInput(), new DoubleMatrix(2, 2, 39, 39, 63, 63));
+
     }
 }

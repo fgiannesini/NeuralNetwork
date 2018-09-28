@@ -2,6 +2,8 @@ package com.fgiannesini.neuralnetwork.learningalgorithm.regularization.l2;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import com.fgiannesini.neuralnetwork.assertions.NeuralNetworkAssertions;
+import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
+import com.fgiannesini.neuralnetwork.computer.WeightBiasData;
 import com.fgiannesini.neuralnetwork.cost.CostType;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithm;
@@ -12,6 +14,7 @@ import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderiva
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.processprovider.GradientDescentWithDerivationProcessProvider;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
+import org.jblas.DoubleMatrix;
 import org.junit.jupiter.api.Test;
 
 class GradientDescentWithL2RegularizationTest {
@@ -21,19 +24,13 @@ class GradientDescentWithL2RegularizationTest {
         NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                 .useInitializer(InitializerType.ONES)
                 .input(2)
-                .addLayer(3, ActivationFunctionType.NONE)
-                .addLayer(2, ActivationFunctionType.NONE)
-                .buildWeightBiasModel();
+                .addWeightBiasLayer(3, ActivationFunctionType.NONE)
+                .addWeightBiasLayer(2, ActivationFunctionType.NONE)
+                .buildNeuralNetworkModel();
 
-        double[][] input = new double[][]{
-                {1, 2},
-                {3, 4}
-        };
+        LayerTypeData input = new WeightBiasData(new DoubleMatrix(2, 2, 1, 2, 3, 4));
 
-        double[][] output = new double[][]{
-                {15, 15},
-                {20, 20}
-        };
+        LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 2, 15, 15, 20, 20));
 
         GradientDescentWithL2RegularizationProcessProvider processProvider = new GradientDescentWithL2RegularizationProcessProvider(0.5, neuralNetworkModel, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentDefaultProcessProvider()));
         LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, processProvider);
@@ -49,19 +46,13 @@ class GradientDescentWithL2RegularizationTest {
     void learn_on_matrix_with_two_hidden_layers_and_random_weights() {
         NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                 .input(2)
-                .addLayer(3, ActivationFunctionType.TANH)
-                .addLayer(2, ActivationFunctionType.TANH)
-                .buildWeightBiasModel();
+                .addWeightBiasLayer(3, ActivationFunctionType.TANH)
+                .addWeightBiasLayer(2, ActivationFunctionType.TANH)
+                .buildNeuralNetworkModel();
 
-        double[][] input = new double[][]{
-                {1, 2},
-                {3, 4}
-        };
+        LayerTypeData input = new WeightBiasData(new DoubleMatrix(2, 2, 1, 2, 3, 4));
 
-        double[][] output = new double[][]{
-                {15, 15},
-                {20, 20}
-        };
+        LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 2, 15, 15, 20, 20));
 
         GradientDescentWithL2RegularizationProcessProvider processProvider = new GradientDescentWithL2RegularizationProcessProvider(0.5, neuralNetworkModel, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentDefaultProcessProvider()));
         LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, processProvider);

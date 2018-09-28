@@ -11,16 +11,12 @@ import java.util.List;
 
 public class NeuralNetworkAssertions {
 
-    public static void checkSameNeuralNetworks(NeuralNetworkModel<? extends Layer> firstNeuralNetworkModel, NeuralNetworkModel<? extends Layer> secondNeuralNetworkModel) {
-        Assertions.assertAll(
-                () -> Assertions.assertEquals(firstNeuralNetworkModel.getOutputSize(), secondNeuralNetworkModel.getOutputSize()),
-                () -> Assertions.assertEquals(firstNeuralNetworkModel.getInputSize(), secondNeuralNetworkModel.getInputSize())
-        );
-
-        List<? extends Layer> firstLayers = firstNeuralNetworkModel.getLayers();
-        List<? extends Layer> secondLayers = secondNeuralNetworkModel.getLayers();
+    public static void checkSameNeuralNetworks(NeuralNetworkModel firstNeuralNetworkModel, NeuralNetworkModel secondNeuralNetworkModel) {
+        List<Layer> firstLayers = firstNeuralNetworkModel.getLayers();
+        List<Layer> secondLayers = secondNeuralNetworkModel.getLayers();
         List<Executable> executables = new ArrayList<>();
         for (int i = 0; i < secondLayers.size(); i++) {
+
             List<DoubleMatrix> firstParameterMatrix = firstLayers.get(i).getParametersMatrix();
             List<DoubleMatrix> secondParameterMatrix = secondLayers.get(i).getParametersMatrix();
             Assertions.assertEquals(firstParameterMatrix.size(), secondParameterMatrix.size());
@@ -31,7 +27,7 @@ public class NeuralNetworkAssertions {
         Assertions.assertAll(executables);
     }
 
-    public static void checkNeuralNetworksLayer(NeuralNetworkModel<? extends Layer> neuralNetworkModel, int layerIndex, List<DoubleMatrix> expectedParametersMatrix) {
+    public static void checkNeuralNetworksLayer(NeuralNetworkModel neuralNetworkModel, int layerIndex, List<DoubleMatrix> expectedParametersMatrix) {
         Layer layer = neuralNetworkModel.getLayers().get(layerIndex);
         List<Executable> matrixAssertions = new ArrayList<>();
         List<DoubleMatrix> parametersMatrix = layer.getParametersMatrix();

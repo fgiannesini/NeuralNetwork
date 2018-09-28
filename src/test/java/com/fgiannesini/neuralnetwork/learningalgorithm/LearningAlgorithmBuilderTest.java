@@ -1,5 +1,6 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm;
 
+import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import com.fgiannesini.neuralnetwork.cost.CostType;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.GradientDescent;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.*;
@@ -23,8 +24,8 @@ class LearningAlgorithmBuilderTest {
     private NeuralNetworkModel buildNeuralNetworkModel() {
         return NeuralNetworkModelBuilder.init()
                 .input(1)
-                .addLayer(1)
-                .buildWeightBiasModel();
+                .addWeightBiasLayer(1, ActivationFunctionType.RELU)
+                .buildNeuralNetworkModel();
     }
 
     @Nested

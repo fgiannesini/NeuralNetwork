@@ -39,6 +39,15 @@ public class WeightBiasLayer extends Layer implements Cloneable {
         return weightMatrix;
     }
 
+
+    public void setWeightMatrix(DoubleMatrix weightMatrix) {
+        this.weightMatrix = weightMatrix;
+    }
+
+    public void setBiasMatrix(DoubleMatrix biasMatrix) {
+        this.biasMatrix = biasMatrix;
+    }
+
     @Override
     public WeightBiasLayer clone() {
         WeightBiasLayer clone = (WeightBiasLayer) super.clone();

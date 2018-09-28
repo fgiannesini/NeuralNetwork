@@ -56,13 +56,12 @@ class GradientDescentWithDropOutRegularizationTest {
         NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                 .useInitializer(InitializerType.ONES)
                 .input(2)
-                .addLayer(3, ActivationFunctionType.NONE)
-                .addLayer(2, ActivationFunctionType.NONE)
-                .buildWeightBiasModel();
+                .addWeightBiasLayer(3, ActivationFunctionType.NONE)
+                .addWeightBiasLayer(2, ActivationFunctionType.NONE)
+                .buildNeuralNetworkModel();
 
-        double[] input = new double[]{1, 2};
-
-        double[] output = new double[]{15, 15};
+        LayerTypeData input = new WeightBiasData(new DoubleMatrix(2, 1, 1, 2));
+        LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 1, 15, 15));
 
         Supplier<List<DoubleMatrix>> dropOutMatrices = () -> Arrays.asList(
                 new DoubleMatrix(new double[]{1, 1}),
@@ -70,7 +69,6 @@ class GradientDescentWithDropOutRegularizationTest {
                 new DoubleMatrix(new double[]{0, 2})
         );
 
-        double learningRate = 0.01;
         IGradientDescentProcessProvider processProvider = new GradientDescentWithDropOutRegularizationProcessProvider(dropOutMatrices, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentDefaultProcessProvider()));
         LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, processProvider);
         NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
@@ -86,13 +84,12 @@ class GradientDescentWithDropOutRegularizationTest {
         NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                 .useInitializer(InitializerType.ONES)
                 .input(2)
-                .addLayer(3, ActivationFunctionType.TANH)
-                .addLayer(2, ActivationFunctionType.TANH)
-                .buildWeightBiasModel();
+                .addWeightBiasLayer(3, ActivationFunctionType.TANH)
+                .addWeightBiasLayer(2, ActivationFunctionType.TANH)
+                .buildNeuralNetworkModel();
 
-        double[] input = new double[]{1, 2};
-
-        double[] output = new double[]{15, 15};
+        LayerTypeData input = new WeightBiasData(new DoubleMatrix(2, 1, 1, 2));
+        LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 1, 15, 15));
 
         Supplier<List<DoubleMatrix>> dropOutMatrices = () -> Arrays.asList(
                 new DoubleMatrix(new double[]{1, 1}),
@@ -100,7 +97,6 @@ class GradientDescentWithDropOutRegularizationTest {
                 new DoubleMatrix(new double[]{0, 2})
         );
 
-        double learningRate = 0.01;
         IGradientDescentProcessProvider processProvider = new GradientDescentWithDropOutRegularizationProcessProvider(dropOutMatrices, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentDefaultProcessProvider()));
         LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, processProvider);
         NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
@@ -116,19 +112,13 @@ class GradientDescentWithDropOutRegularizationTest {
         NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                 .useInitializer(InitializerType.ONES)
                 .input(2)
-                .addLayer(3, ActivationFunctionType.NONE)
-                .addLayer(2, ActivationFunctionType.NONE)
-                .buildWeightBiasModel();
+                .addWeightBiasLayer(3, ActivationFunctionType.NONE)
+                .addWeightBiasLayer(2, ActivationFunctionType.NONE)
+                .buildNeuralNetworkModel();
 
-        double[][] input = new double[][]{
-                {1, 2},
-                {3, 4}
-        };
+        LayerTypeData input = new WeightBiasData(new DoubleMatrix(2, 2, 1, 2, 3, 4));
 
-        double[][] output = new double[][]{
-                {15, 15},
-                {20, 20}
-        };
+        LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 2, 15, 15, 20, 20));
 
         Supplier<List<DoubleMatrix>> dropOutMatrices = () -> Arrays.asList(
                 new DoubleMatrix(new double[]{1, 1}),
@@ -136,7 +126,6 @@ class GradientDescentWithDropOutRegularizationTest {
                 new DoubleMatrix(new double[]{0, 2})
         );
 
-        double learningRate = 0.01;
         IGradientDescentProcessProvider processProvider = new GradientDescentWithDropOutRegularizationProcessProvider(dropOutMatrices, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentDefaultProcessProvider()));
         LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, processProvider);
         NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
@@ -151,25 +140,18 @@ class GradientDescentWithDropOutRegularizationTest {
     void learn_on_matrix_with_two_hidden_layers_and_random_weights() {
         NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
                 .input(2)
-                .addLayer(3, ActivationFunctionType.TANH)
-                .addLayer(2, ActivationFunctionType.TANH)
-                .buildWeightBiasModel();
+                .addWeightBiasLayer(3, ActivationFunctionType.TANH)
+                .addWeightBiasLayer(2, ActivationFunctionType.TANH)
+                .buildNeuralNetworkModel();
 
-        double[][] input = new double[][]{
-                {1, 2},
-                {3, 4}
-        };
+        LayerTypeData input = new WeightBiasData(new DoubleMatrix(2, 2, 1, 2, 3, 4));
 
-        double[][] output = new double[][]{
-                {15, 15},
-                {20, 20}
-        };
+        LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 2, 15, 15, 20, 20));
 
         List<DoubleMatrix> dropOutMatrix = DropOutUtils.init()
                 .getDropOutMatrix(new double[]{1, 2d / 3d, 0.5}, neuralNetworkModel.getLayers());
         Supplier<List<DoubleMatrix>> dropOutMatrices = () -> dropOutMatrix;
 
-        double learningRate = 0.01;
         IGradientDescentProcessProvider processProvider = new GradientDescentWithDropOutRegularizationProcessProvider(dropOutMatrices, new GradientDescentOnLinearRegressionProcessProvider(new GradientDescentDefaultProcessProvider()));
         LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, processProvider);
         NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
