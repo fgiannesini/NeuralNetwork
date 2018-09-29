@@ -8,12 +8,14 @@ public abstract class GradientLayerProvider {
 
     private final DoubleMatrix results;
     private final DoubleMatrix previousResults;
-    private ActivationFunctionType activationFunctionType;
+    private final ActivationFunctionType activationFunctionType;
+    private final int layerIndex;
 
-    GradientLayerProvider(DoubleMatrix results, DoubleMatrix previousResults, ActivationFunctionType activationFunctionType) {
+    GradientLayerProvider(DoubleMatrix results, DoubleMatrix previousResults, ActivationFunctionType activationFunctionType, int layerIndex) {
         this.results = results;
         this.previousResults = previousResults;
         this.activationFunctionType = activationFunctionType;
+        this.layerIndex = layerIndex;
     }
 
     public DoubleMatrix getPreviousResult() {
@@ -26,5 +28,9 @@ public abstract class GradientLayerProvider {
 
     public ActivationFunctionApplier getActivationFunction() {
         return activationFunctionType.getActivationFunction();
+    }
+
+    public int getLayerIndex() {
+        return layerIndex;
     }
 }

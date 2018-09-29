@@ -19,8 +19,8 @@ import java.util.stream.IntStream;
 
 public class Tuner {
 
-    private static int PARAMETER_COUNT = 7;
-    private static int POPULATION = PARAMETER_COUNT * 3;
+    private static final int PARAMETER_COUNT = 7;
+    private static final int POPULATION = PARAMETER_COUNT * 3;
 
     public static void main(String[] args) {
         int statePopulation = POPULATION;

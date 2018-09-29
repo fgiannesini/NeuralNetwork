@@ -11,7 +11,7 @@ import java.util.List;
 
 public class FinalOutputComputer implements IFinalOutputComputer {
 
-    private List<Layer> layers;
+    private final List<Layer> layers;
 
     public FinalOutputComputer(List<Layer> layers) {
         this.layers = layers;

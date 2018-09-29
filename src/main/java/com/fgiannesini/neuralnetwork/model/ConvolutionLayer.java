@@ -15,10 +15,10 @@ public class ConvolutionLayer extends Layer {
     private List<DoubleMatrix> weightMatrices;
     private List<DoubleMatrix> biasMatrices;
 
-    private int filterSize;
-    private int padding;
-    private int stride;
-    private int channelCount;
+    private final int filterSize;
+    private final int padding;
+    private final int stride;
+    private final int channelCount;
 
     public ConvolutionLayer(ActivationFunctionType activationFunctionType, Initializer initializer, int filterSize, int padding, int stride, int channelCount) {
         super(activationFunctionType);

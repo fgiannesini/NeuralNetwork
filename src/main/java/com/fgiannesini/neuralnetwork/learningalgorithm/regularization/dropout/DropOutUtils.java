@@ -26,7 +26,7 @@ public class DropOutUtils {
             Layer layer = layers.get(layerIndex);
             double dropOutParameter = dropOutParameters[dropOutParameterIndex];
             DropOutMatrixGeneratorVisitor dropOutMatrixGeneratorVisitor = new DropOutMatrixGeneratorVisitor(dropOutParameter);
-            layer.accept(firstDropOutMatrixGeneratorVisitor);
+            layer.accept(dropOutMatrixGeneratorVisitor);
             dropOutMatrixList.add(dropOutMatrixGeneratorVisitor.getDropOutMatrix());
         }
         return dropOutMatrixList;

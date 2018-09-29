@@ -8,8 +8,8 @@ import org.jblas.DoubleMatrix;
 
 public class LayerComputerWithDropOutRegularizationVisitor implements LayerVisitor {
 
-    private DoubleMatrix dropOutMatrix;
-    private LayerTypeData layerTypeData;
+    private final DoubleMatrix dropOutMatrix;
+    private final LayerTypeData layerTypeData;
 
     private IntermediateOutputResult intermediateOutputResult;
 

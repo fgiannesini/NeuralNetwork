@@ -55,7 +55,7 @@ public class NeuralNetwork {
                         .withNeuralNetworkModel(neuralNetworkModel)
                         .withType(costType)
                         .build();
-                double testCost = costComputer.compute(normalizedTestInput, testOutpout);
+                double testCost = testCostComputer.compute(normalizedTestInput, testOutpout);
 
                 NeuralNetworkStats stats = new NeuralNetworkStats(learningCost, testCost, batchIterator.getBatchNumber(), epochNumber);
                 statsUpdateAction.accept(stats);

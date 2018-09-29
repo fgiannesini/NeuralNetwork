@@ -5,7 +5,7 @@ import org.jblas.DoubleMatrix;
 
 public class DropOutMatrixGeneratorVisitor implements LayerVisitor {
 
-    private double dropOutParameter;
+    private final double dropOutParameter;
     private DoubleMatrix dropOutMatrix;
 
     public DropOutMatrixGeneratorVisitor(double dropOutParameter) {

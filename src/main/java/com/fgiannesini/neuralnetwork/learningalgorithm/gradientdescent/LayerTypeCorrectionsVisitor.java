@@ -2,6 +2,7 @@ package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent;
 
 import com.fgiannesini.neuralnetwork.computer.BatchNormData;
 import com.fgiannesini.neuralnetwork.computer.DataVisitor;
+import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
 import com.fgiannesini.neuralnetwork.computer.WeightBiasData;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container.GradientDescentCorrection;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientBatchNormLayerProvider;
@@ -11,6 +12,7 @@ import org.jblas.DoubleMatrix;
 
 public class LayerTypeCorrectionsVisitor implements DataVisitor {
     private final GradientLayerProvider gradientLayerProvider;
+    private LayerTypeData nextGradientLayerProvider;
     private GradientDescentCorrection correction;
 
     public LayerTypeCorrectionsVisitor(GradientLayerProvider gradientLayerProvider) {
@@ -23,7 +25,7 @@ public class LayerTypeCorrectionsVisitor implements DataVisitor {
         int inputCount = errorInput.getColumns();
         DoubleMatrix weightCorrection = computeWeightCorrection(gradientLayerProvider.getPreviousResult(), errorInput, inputCount);
         DoubleMatrix biasCorrection = computeBiasCorrection(errorInput, inputCount);
-
+        nextGradientLayerProvider = new WeightBiasData(error.getInput());
         correction = new GradientDescentCorrection(weightCorrection, biasCorrection);
     }
 
@@ -44,7 +46,9 @@ public class LayerTypeCorrectionsVisitor implements DataVisitor {
     public void visit(BatchNormData error) {
         DoubleMatrix errorInput = error.getInput();
         int inputCount = errorInput.getColumns();
-        correction = getBatchNormBackwardReturn(inputCount, (GradientBatchNormLayerProvider) gradientLayerProvider, errorInput).getCorrections();
+        BatchNormBackwardReturn batchNormBackwardReturn = getBatchNormBackwardReturn(inputCount, (GradientBatchNormLayerProvider) gradientLayerProvider, errorInput);
+        nextGradientLayerProvider = new BatchNormData(batchNormBackwardReturn.getNextError(), error.getMeanDeviationProvider());
+        correction = batchNormBackwardReturn.getCorrections();
     }
 
     private BatchNormBackwardReturn getBatchNormBackwardReturn(int inputCount, GradientBatchNormLayerProvider gradientLayerProvider, DoubleMatrix dz) {
@@ -70,5 +74,9 @@ public class LayerTypeCorrectionsVisitor implements DataVisitor {
 
     public GradientDescentCorrection getCorrection() {
         return correction;
+    }
+
+    public LayerTypeData getNextGradientLayerProvider() {
+        return nextGradientLayerProvider;
     }
 }

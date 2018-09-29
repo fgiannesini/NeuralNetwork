@@ -7,7 +7,7 @@ import org.jblas.DoubleMatrix;
 
 public class LayerComputerVisitor implements LayerVisitor {
 
-    private LayerTypeData layerTypeData;
+    private final LayerTypeData layerTypeData;
     private IntermediateOutputResult intermediateOutputResult;
 
     public LayerComputerVisitor(LayerTypeData layerTypeData) {

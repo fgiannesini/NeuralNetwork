@@ -40,7 +40,7 @@ class IntermediateOutputComputerWithDropOutRegularizationTest {
 
         Assertions.assertEquals(3, output.size());
         DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(3, 1, 1, 1, 1), ((WeightBiasData) output.get(0).getResult()).getInput());
-        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(3, 1, 4.8, 0, 4.8, 0), ((WeightBiasData) output.get(1).getResult()).getInput());
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(4, 1, 4.8, 0, 4.8, 0), ((WeightBiasData) output.get(1).getResult()).getInput());
         DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 10.6, 10.6), ((WeightBiasData) output.get(2).getResult()).getInput());
     }
 
@@ -105,7 +105,7 @@ class IntermediateOutputComputerWithDropOutRegularizationTest {
                 .withDropOutParameters(dropOutMatrices)
                 .buildIntermediateOutputComputer()
                 .compute(inputData);
-        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, 1, 1, 1, 2, 2, 2), ((WeightBiasData) output.get(0).getResult()).getInput());
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(3, 2, 1, 1, 1, 2, 2, 2), ((WeightBiasData) output.get(0).getResult()).getInput());
         DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, 4.8, 0, 8.4, 0), ((WeightBiasData) output.get(1).getResult()).getInput());
         DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, 0, 8.7, 0, 14.1), ((WeightBiasData) output.get(2).getResult()).getInput());
         DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, 17.46, 0, 27.18, 0), ((WeightBiasData) output.get(3).getResult()).getInput());

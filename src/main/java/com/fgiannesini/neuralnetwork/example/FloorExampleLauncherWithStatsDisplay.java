@@ -2,7 +2,9 @@ package com.fgiannesini.neuralnetwork.example;
 
 import com.fgiannesini.neuralnetwork.HyperParameters;
 import com.fgiannesini.neuralnetwork.NeuralNetworkStats;
+import com.fgiannesini.neuralnetwork.RegularizationCoeffs;
 import com.fgiannesini.neuralnetwork.learningrate.LearningRateUpdaterType;
+import com.fgiannesini.neuralnetwork.model.LayerType;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -37,6 +39,8 @@ public class FloorExampleLauncherWithStatsDisplay extends Application {
                         .rmsStopCoeff(0.993)
                         .momentumCoeff(0.7)
                         .hiddenLayerSize(new int[]{13})
+                        .regularizationCoeff(new RegularizationCoeffs())
+                        .layerType(LayerType.WEIGHT_BIAS)
                         .learningRateUpdater(LearningRateUpdaterType.CONSTANT.get(0.05));
                 FloorExampleLauncher floorExampleLauncher = new FloorExampleLauncher(this::updateValue, parameters);
                 double successRate = floorExampleLauncher.launch();

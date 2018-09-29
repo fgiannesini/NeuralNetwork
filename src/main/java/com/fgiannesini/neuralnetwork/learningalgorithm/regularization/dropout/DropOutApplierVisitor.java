@@ -8,7 +8,7 @@ import org.jblas.DoubleMatrix;
 
 public class DropOutApplierVisitor implements DataVisitor {
 
-    private DoubleMatrix dropOutMatrix;
+    private final DoubleMatrix dropOutMatrix;
     private LayerTypeData layerTypeData;
 
     public DropOutApplierVisitor(DoubleMatrix dropOutMatrix) {

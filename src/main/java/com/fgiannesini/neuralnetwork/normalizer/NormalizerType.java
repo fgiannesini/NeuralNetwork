@@ -1,19 +1,26 @@
 package com.fgiannesini.neuralnetwork.normalizer;
 
+import com.fgiannesini.neuralnetwork.computer.MeanDeviationProvider;
+
+import java.util.Arrays;
+
 public enum NormalizerType {
 
     NONE {
-        @Override
-        public INormalizer get() {
+        public INormalizer get(Object... args) {
             return new NoneNormalizer();
         }
     },
     MEAN_AND_DEVIATION {
-        @Override
-        public INormalizer get() {
-            return new MeanAndDeviationNormalizer();
+        public INormalizer get(Object... args) {
+            MeanDeviationProvider meanDeviationProvider = Arrays.stream(args)
+                    .filter(arg -> arg instanceof MeanDeviationProvider)
+                    .map(MeanDeviationProvider.class::cast)
+                    .findAny()
+                    .orElseThrow(() -> new IllegalArgumentException(MEAN_AND_DEVIATION + " should have a arument" + MeanDeviationProvider.class.getSimpleName()));
+            return new MeanAndDeviationNormalizer(meanDeviationProvider);
         }
     };
 
-    public abstract INormalizer get();
+    public abstract INormalizer get(Object... args);
 }

@@ -2,7 +2,6 @@ package com.fgiannesini.neuralnetwork.model;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
-import org.jblas.DoubleMatrix;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -82,10 +81,10 @@ class NeuralNetworkModelBuilderTest {
                     .buildNeuralNetworkModel();
 
             Assertions.assertTrue(
-                    ((Stream<DoubleMatrix>) Stream.concat(
+                    Stream.concat(
                             neuralNetworkModel.getLayers().stream().map(layer -> ((WeightBiasLayer) layer).getWeightMatrix()),
                             neuralNetworkModel.getLayers().stream().map(layer -> ((WeightBiasLayer) layer).getBiasMatrix())
-                    )).flatMapToDouble(m -> Arrays.stream(m.data))
+                    ).flatMapToDouble(m -> Arrays.stream(m.data))
                             .allMatch(d -> d < 0.01 && d > 0)
             );
 

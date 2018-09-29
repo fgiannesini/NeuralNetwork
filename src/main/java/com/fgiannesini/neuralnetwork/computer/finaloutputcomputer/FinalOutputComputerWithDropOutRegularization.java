@@ -11,7 +11,7 @@ import java.util.List;
 public class FinalOutputComputerWithDropOutRegularization implements IFinalOutputComputer {
 
     private final List<DoubleMatrix> dropOutMatrixList;
-    private List<Layer> layers;
+    private final List<Layer> layers;
 
     public FinalOutputComputerWithDropOutRegularization(List<DoubleMatrix> dropOutMatrixList, List<Layer> layers) {
         this.dropOutMatrixList = dropOutMatrixList;

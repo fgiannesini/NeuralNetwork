@@ -12,7 +12,7 @@ import java.util.List;
 public class IntermediateOutputComputerWithDropOutRegularization implements IIntermediateOutputComputer {
 
     private final List<DoubleMatrix> dropOutMatrixList;
-    private List<Layer> layers;
+    private final List<Layer> layers;
 
     public IntermediateOutputComputerWithDropOutRegularization(List<DoubleMatrix> dropOutMatrixList, List<Layer> layers) {
         this.dropOutMatrixList = dropOutMatrixList;

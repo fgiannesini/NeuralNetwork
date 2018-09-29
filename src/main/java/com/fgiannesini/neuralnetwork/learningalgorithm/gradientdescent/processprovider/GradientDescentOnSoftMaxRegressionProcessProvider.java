@@ -6,7 +6,7 @@ import java.util.function.Function;
 
 public class GradientDescentOnSoftMaxRegressionProcessProvider implements IGradientDescentProcessProvider {
 
-    private IGradientDescentProcessProvider processProvider;
+    private final IGradientDescentProcessProvider processProvider;
 
     public GradientDescentOnSoftMaxRegressionProcessProvider(IGradientDescentProcessProvider processProvider) {
         this.processProvider = processProvider;
@@ -22,7 +22,7 @@ public class GradientDescentOnSoftMaxRegressionProcessProvider implements IGradi
         return container -> {
             GradientDescentSoftMaxRegressionVisitor softMaxRegressionVisitor = new GradientDescentSoftMaxRegressionVisitor(container.getProvider());
             container.getPreviousError().accept(softMaxRegressionVisitor);
-            return new ErrorComputationContainer(container.getProvider(), softMaxRegressionVisitor.getErrorData(), container.getCurrentLayerIndex());
+            return new ErrorComputationContainer(container.getProvider(), softMaxRegressionVisitor.getErrorData());
         };
     }
 

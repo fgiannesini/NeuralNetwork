@@ -5,15 +5,15 @@ import org.jblas.DoubleMatrix;
 
 public class GradientWeightBiasLayerProvider extends GradientLayerProvider {
 
-    private final WeightBiasLayer layer;
+    private final WeightBiasLayer previousLayer;
 
-    public GradientWeightBiasLayerProvider(WeightBiasLayer layer, DoubleMatrix results, DoubleMatrix previousResult) {
-        super(results, previousResult, layer.getActivationFunctionType());
-        this.layer = layer;
+    public GradientWeightBiasLayerProvider(WeightBiasLayer layer, WeightBiasLayer previousLayer, DoubleMatrix results, DoubleMatrix previousResult, int layerIndex) {
+        super(results, previousResult, layer.getActivationFunctionType(), layerIndex);
+        this.previousLayer = previousLayer;
     }
 
     public DoubleMatrix getPreviousWeightMatrix() {
-        return layer.getWeightMatrix();
+        return previousLayer.getWeightMatrix();
     }
 
 }

@@ -6,7 +6,7 @@ import java.util.function.Function;
 
 public class DataFunctionApplier implements DataVisitor {
 
-    private Function<DoubleMatrix, DoubleMatrix> dataApplier;
+    private final Function<DoubleMatrix, DoubleMatrix> dataApplier;
     private LayerTypeData layerTypeData;
 
     public DataFunctionApplier(Function<DoubleMatrix, DoubleMatrix> dataApplier) {

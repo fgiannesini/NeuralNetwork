@@ -11,7 +11,7 @@ public class SoftMaxRegressionCostComputerVisitor implements DataVisitor {
 
     private final LayerTypeData output;
     private final IFinalOutputComputer outputComputer;
-    private double epsilon;
+    private final double epsilon;
     private double cost;
 
     public SoftMaxRegressionCostComputerVisitor(LayerTypeData output, IFinalOutputComputer outputComputer) {

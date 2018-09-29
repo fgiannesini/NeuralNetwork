@@ -6,12 +6,10 @@ import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdata
 public class ErrorComputationContainer {
     private final GradientLayerProvider provider;
     private final LayerTypeData previousError;
-    private final int currentLayerIndex;
 
-    public ErrorComputationContainer(GradientLayerProvider provider, LayerTypeData previousError, int currentLayerIndex) {
+    public ErrorComputationContainer(GradientLayerProvider provider, LayerTypeData previousError) {
         this.provider = provider;
         this.previousError = previousError;
-        this.currentLayerIndex = currentLayerIndex;
     }
 
     public GradientLayerProvider getProvider() {
@@ -22,7 +20,4 @@ public class ErrorComputationContainer {
         return previousError;
     }
 
-    public int getCurrentLayerIndex() {
-        return currentLayerIndex;
-    }
 }

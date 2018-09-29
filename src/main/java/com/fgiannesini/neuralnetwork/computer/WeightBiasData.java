@@ -4,7 +4,7 @@ import org.jblas.DoubleMatrix;
 
 public class WeightBiasData implements LayerTypeData {
 
-    private DoubleMatrix input;
+    private final DoubleMatrix input;
 
     public WeightBiasData(DoubleMatrix input) {
         this.input = input;

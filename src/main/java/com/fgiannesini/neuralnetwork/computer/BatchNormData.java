@@ -4,8 +4,8 @@ import org.jblas.DoubleMatrix;
 
 public class BatchNormData implements LayerTypeData {
 
-    private DoubleMatrix input;
-    private MeanDeviationProvider meanDeviationProvider;
+    private final DoubleMatrix input;
+    private final MeanDeviationProvider meanDeviationProvider;
 
     public BatchNormData(DoubleMatrix input, MeanDeviationProvider meanDeviationProvider) {
         this.input = input;

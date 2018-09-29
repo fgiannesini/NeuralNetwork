@@ -34,17 +34,20 @@ public class GradientDescent implements LearningAlgorithm {
 
         List<GradientDescentCorrection> gradientDescentCorrections = new ArrayList<>();
 
-        LayerTypeData firstError = gradientDescentProcessProvider.getFirstErrorComputationLauncher().apply(new ErrorComputationContainer(providers.get(0), outputData, 0)).getPreviousError();
+        LayerTypeData firstError = gradientDescentProcessProvider.getFirstErrorComputationLauncher().apply(new ErrorComputationContainer(providers.get(0), outputData)).getPreviousError();
         LayerTypeCorrectionsVisitor firstLayerTypeCorrectionsVisitor = new LayerTypeCorrectionsVisitor(providers.get(0));
         firstError.accept(firstLayerTypeCorrectionsVisitor);
         gradientDescentCorrections.add(firstLayerTypeCorrectionsVisitor.getCorrection());
 
+        LayerTypeData nextError = firstLayerTypeCorrectionsVisitor.getNextGradientLayerProvider();
         for (int i = 1; i < providers.size(); i++) {
             GradientLayerProvider provider = providers.get(i);
-            LayerTypeData error = gradientDescentProcessProvider.getErrorComputationLauncher().apply(new ErrorComputationContainer(provider, outputData, i)).getPreviousError();
+            LayerTypeData currentError = gradientDescentProcessProvider.getErrorComputationLauncher().apply(new ErrorComputationContainer(provider, nextError)).getPreviousError();
             LayerTypeCorrectionsVisitor layerTypeCorrectionsVisitor = new LayerTypeCorrectionsVisitor(provider);
-            error.accept(layerTypeCorrectionsVisitor);
-            gradientDescentCorrections.add(layerTypeCorrectionsVisitor.getCorrection());
+            currentError.accept(layerTypeCorrectionsVisitor);
+            nextError = layerTypeCorrectionsVisitor.getNextGradientLayerProvider();
+            GradientDescentCorrection correction = layerTypeCorrectionsVisitor.getCorrection();
+            gradientDescentCorrections.add(correction);
         }
 
         Collections.reverse(gradientDescentCorrections);

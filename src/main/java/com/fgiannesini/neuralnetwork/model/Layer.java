@@ -7,7 +7,7 @@ import java.util.List;
 
 public abstract class Layer implements Cloneable {
 
-    private ActivationFunctionType activationFunctionType;
+    private final ActivationFunctionType activationFunctionType;
 
     Layer(ActivationFunctionType activationFunctionType) {
         this.activationFunctionType = activationFunctionType;

@@ -11,7 +11,7 @@ import org.jblas.DoubleMatrix;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 class GradientLayerProviderBuilderTest {
@@ -66,7 +66,11 @@ class GradientLayerProviderBuilderTest {
                         .addBatchNormLayer(2, ActivationFunctionType.RELU)
                         .buildNeuralNetworkModel();
 
-        List<IntermediateOutputResult> intermediateOutputResultList = Collections.singletonList(new IntermediateOutputResult(new BatchNormData(DoubleMatrix.ones(2), new MeanDeviationProvider())));
+        MeanDeviationProvider meanDeviationProvider = new MeanDeviationProvider();
+        List<IntermediateOutputResult> intermediateOutputResultList = Arrays.asList(
+                new IntermediateOutputResult(new BatchNormData(DoubleMatrix.ones(2), meanDeviationProvider)),
+                new IntermediateOutputResult(new BatchNormData(DoubleMatrix.ones(2), meanDeviationProvider))
+        );
         List<GradientLayerProvider> build = GradientLayerProviderBuilder.init()
                 .withModel(neuralNetwork)
                 .withIntermediateResults(intermediateOutputResultList)
@@ -82,7 +86,10 @@ class GradientLayerProviderBuilderTest {
                         .addWeightBiasLayer(2, ActivationFunctionType.RELU)
                         .buildNeuralNetworkModel();
 
-        List<IntermediateOutputResult> intermediateOutputResultList = Collections.singletonList(new IntermediateOutputResult(new WeightBiasData(DoubleMatrix.ones(2))));
+        List<IntermediateOutputResult> intermediateOutputResultList = Arrays.asList(
+                new IntermediateOutputResult(new WeightBiasData(DoubleMatrix.ones(2))),
+                new IntermediateOutputResult(new WeightBiasData(DoubleMatrix.ones(2)))
+        );
         List<GradientLayerProvider> build = GradientLayerProviderBuilder.init()
                 .withModel(neuralNetwork)
                 .withIntermediateResults(intermediateOutputResultList)

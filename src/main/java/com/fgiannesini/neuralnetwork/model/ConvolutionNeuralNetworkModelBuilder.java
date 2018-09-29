@@ -24,7 +24,7 @@ public class ConvolutionNeuralNetworkModelBuilder {
     private int inputChannelCount;
 
     private InitializerType initializerType;
-    private NeuralNetworkModelBuilder neuralNetworkModelBuilder;
+    private final NeuralNetworkModelBuilder neuralNetworkModelBuilder;
 
     private ConvolutionNeuralNetworkModelBuilder() {
         filterSizes = new ArrayList<>();

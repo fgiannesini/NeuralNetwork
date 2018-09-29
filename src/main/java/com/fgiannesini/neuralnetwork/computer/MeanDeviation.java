@@ -3,8 +3,8 @@ package com.fgiannesini.neuralnetwork.computer;
 import org.jblas.DoubleMatrix;
 
 public abstract class MeanDeviation {
-    private DoubleMatrix mean;
-    private DoubleMatrix deviation;
+    private final DoubleMatrix mean;
+    private final DoubleMatrix deviation;
 
     public MeanDeviation(DoubleMatrix mean, DoubleMatrix deviation) {
         this.mean = mean;

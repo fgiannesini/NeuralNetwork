@@ -43,7 +43,7 @@ public class GradientDescentDefaultProcessProvider implements IGradientDescentPr
         return container -> {
             GradientDescentErrorComputationVisitor errorComputationVisitor = new GradientDescentErrorComputationVisitor(container.getProvider());
             container.getPreviousError().accept(errorComputationVisitor);
-            return new ErrorComputationContainer(container.getProvider(), errorComputationVisitor.getErrorData(), container.getCurrentLayerIndex());
+            return new ErrorComputationContainer(container.getProvider(), errorComputationVisitor.getErrorData());
         };
     }
 

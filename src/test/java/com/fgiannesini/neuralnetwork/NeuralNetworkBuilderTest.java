@@ -48,7 +48,7 @@ class NeuralNetworkBuilderTest {
                     .buildNeuralNetworkModel();
             NeuralNetwork neuralNetwork = NeuralNetworkBuilder.init()
                     .withNeuralNetworkModel(neuralNetworkModel)
-                    .withHyperParameters(new HyperParameters())
+                    .withHyperParameters(new HyperParameters().regularizationCoeff(new RegularizationCoeffs()))
                     .build();
             Assertions.assertTrue(neuralNetwork instanceof NeuralNetwork);
         }

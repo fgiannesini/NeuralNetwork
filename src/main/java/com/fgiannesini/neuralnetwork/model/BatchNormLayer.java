@@ -10,8 +10,8 @@ import java.util.Objects;
 
 public class BatchNormLayer extends Layer implements Cloneable {
 
-    private int inputLayerSize;
-    private int outputLayerSize;
+    private final int inputLayerSize;
+    private final int outputLayerSize;
     private DoubleMatrix weightMatrix;
     private DoubleMatrix gammaMatrix;
     private DoubleMatrix betaMatrix;

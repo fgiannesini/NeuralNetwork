@@ -48,33 +48,30 @@ class IntermediateOutputComputerTest {
     void compute_one_dimension_output_with_one_hidden_batch_norm_layer() {
         NeuralNetworkModel model = NeuralNetworkModelBuilder.init()
                 .input(3)
-                .addWeightBiasLayer(4, ActivationFunctionType.NONE)
-                .addWeightBiasLayer(2, ActivationFunctionType.NONE)
+                .addBatchNormLayer(4, ActivationFunctionType.NONE)
+                .addBatchNormLayer(2, ActivationFunctionType.NONE)
                 .useInitializer(InitializerType.ONES)
                 .buildNeuralNetworkModel();
 
+        BatchNormData inputData = new BatchNormData(new DoubleMatrix(3, 1, 1, 1, 1), new MeanDeviationProvider());
 
-        WeightBiasData inputData = new WeightBiasData(new DoubleMatrix(3, 1, 1, 1, 1));
-
-        IIntermediateOutputComputer outputComputer = OutputComputerBuilder.init()
+        List<IntermediateOutputResult> output = OutputComputerBuilder.init()
                 .withModel(model)
-                .buildIntermediateOutputComputer();
-
-        List<IntermediateOutputResult> output = outputComputer
+                .buildIntermediateOutputComputer()
                 .compute(inputData);
 
-        DoubleMatrixAssertions.assertMatrices(inputData.getInput(), ((WeightBiasData) output.get(0).getResult()).getInput());
+        DoubleMatrixAssertions.assertMatrices(inputData.getInput(), ((BatchNormData) output.get(0).getResult()).getInput());
         Assertions.assertNull(output.get(0).getMeanDeviation());
         Assertions.assertNull(output.get(0).getAfterMeanApplicationResult());
         Assertions.assertNull(output.get(0).getBeforeNormalisationResult());
 
-        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(4, 1, 1, 1, 1, 1), ((WeightBiasData) output.get(1).getResult()).getInput());
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(4, 1, 1, 1, 1, 1), ((BatchNormData) output.get(1).getResult()).getInput());
         DoubleMatrixAssertions.assertMatrices(DoubleMatrix.ones(4, 1).muli(3), output.get(1).getMeanDeviation().getMean());
         DoubleMatrixAssertions.assertMatrices(DoubleMatrix.zeros(4, 1), output.get(1).getMeanDeviation().getDeviation());
         DoubleMatrixAssertions.assertMatrices(DoubleMatrix.zeros(4, 1), output.get(1).getAfterMeanApplicationResult());
         DoubleMatrixAssertions.assertMatrices(DoubleMatrix.zeros(4, 1), output.get(1).getBeforeNormalisationResult());
 
-        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 1, 1), ((WeightBiasData) output.get(2).getResult()).getInput());
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 1, 1), ((BatchNormData) output.get(2).getResult()).getInput());
         DoubleMatrixAssertions.assertMatrices(DoubleMatrix.ones(2, 1).muli(4), output.get(2).getMeanDeviation().getMean());
         DoubleMatrixAssertions.assertMatrices(DoubleMatrix.zeros(2, 1), output.get(2).getMeanDeviation().getDeviation());
         DoubleMatrixAssertions.assertMatrices(DoubleMatrix.zeros(2, 1), output.get(2).getAfterMeanApplicationResult());

@@ -25,8 +25,8 @@ class LinearRegressionCostComputerTest {
                 .withModel(neuralNetworkModel)
                 .buildFinalOutputComputer();
 
-        LayerTypeData input = new WeightBiasData(new DoubleMatrix(1, 2, 1, 2));
-        LayerTypeData output = new WeightBiasData(new DoubleMatrix(1, 2, 5, 6));
+        LayerTypeData input = new WeightBiasData(new DoubleMatrix(2, 1, 1, 2));
+        LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 1, 5, 6));
 
         double cost = new LinearRegressionCostComputer(outputComputer)
                 .compute(input, output);

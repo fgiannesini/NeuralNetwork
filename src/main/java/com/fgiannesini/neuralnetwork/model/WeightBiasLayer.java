@@ -10,8 +10,8 @@ import java.util.Objects;
 
 public class WeightBiasLayer extends Layer implements Cloneable {
 
-    private int inputLayerSize;
-    private int outputLayerSize;
+    private final int inputLayerSize;
+    private final int outputLayerSize;
     private DoubleMatrix weightMatrix;
     private DoubleMatrix biasMatrix;
 

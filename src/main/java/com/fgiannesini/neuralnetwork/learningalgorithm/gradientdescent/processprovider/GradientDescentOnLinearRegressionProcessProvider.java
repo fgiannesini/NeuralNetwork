@@ -6,7 +6,7 @@ import java.util.function.Function;
 
 public class GradientDescentOnLinearRegressionProcessProvider implements IGradientDescentProcessProvider {
 
-    private IGradientDescentProcessProvider processProvider;
+    private final IGradientDescentProcessProvider processProvider;
 
     public GradientDescentOnLinearRegressionProcessProvider(IGradientDescentProcessProvider processProvider) {
         this.processProvider = processProvider;
@@ -21,7 +21,7 @@ public class GradientDescentOnLinearRegressionProcessProvider implements IGradie
         return container -> {
             GradientDescentLinearRegressionVisitor linearRegressionVisitor = new GradientDescentLinearRegressionVisitor(container.getProvider());
             container.getPreviousError().accept(linearRegressionVisitor);
-            return new ErrorComputationContainer(container.getProvider(), linearRegressionVisitor.getErrorData(), container.getCurrentLayerIndex());
+            return new ErrorComputationContainer(container.getProvider(), linearRegressionVisitor.getErrorData());
         };
     }
 

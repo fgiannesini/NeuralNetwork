@@ -22,8 +22,8 @@ public class FloorExampleLauncher {
 
     private final Consumer<NeuralNetworkStats> statsUpdateAction;
     private final HyperParameters hyperParameters;
-    private static int INPUT_COUNT = 100_000;
-    private static int TEST_INPUT_COUNT = 1_000;
+    private static final int INPUT_COUNT = 100_000;
+    private static final int TEST_INPUT_COUNT = 1_000;
 
     public FloorExampleLauncher(Consumer<NeuralNetworkStats> statsUpdateAction, HyperParameters hyperParameters) {
         this.statsUpdateAction = statsUpdateAction;
@@ -112,7 +112,7 @@ public class FloorExampleLauncher {
                 .withCostType(CostType.SOFT_MAX_REGRESSION)
                 .withNeuralNetworkStatsConsumer(statsUpdateAction)
                 .withHyperParameters(hyperParameters)
-                .withNormalizer(NormalizerType.MEAN_AND_DEVIATION.get())
+                .withNormalizer(NormalizerType.MEAN_AND_DEVIATION.get(new MeanDeviationProvider()))
                 .build();
     }
 

@@ -1,8 +1,8 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider;
 
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IntermediateOutputResult;
+import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
-import org.jblas.DoubleMatrix;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,6 @@ import java.util.List;
 public class GradientLayerProviderBuilder {
 
     private NeuralNetworkModel neuralNetworkModel;
-    private List<DoubleMatrix> results;
     private List<IntermediateOutputResult> intermediateOutputResultList;
 
     public static GradientLayerProviderBuilder init() {
@@ -28,13 +27,21 @@ public class GradientLayerProviderBuilder {
     }
 
     public List<GradientLayerProvider> build() {
+        checkInputs();
         List<GradientLayerProvider> gradientLayerProviders = new ArrayList<>();
 
-        for (int i = 0; i < neuralNetworkModel.getLayers().size(); i++) {
-            GradientLayerProviderVisitor layerProviderVisitor = new GradientLayerProviderVisitor(intermediateOutputResultList, 0);
-            neuralNetworkModel.getLayers().get(i).accept(layerProviderVisitor);
+        List<Layer> layers = neuralNetworkModel.getLayers();
+        for (int i = 0; i < layers.size(); i++) {
+            GradientLayerProviderVisitor layerProviderVisitor = new GradientLayerProviderVisitor(layers, intermediateOutputResultList, i);
+            layers.get(i).accept(layerProviderVisitor);
             gradientLayerProviders.add(layerProviderVisitor.getGradientLayerProvider());
         }
         return gradientLayerProviders;
+    }
+
+    private void checkInputs() {
+        if (intermediateOutputResultList == null) {
+            throw new IllegalArgumentException("Intermediate results are not presents");
+        }
     }
 }

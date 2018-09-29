@@ -6,7 +6,7 @@ import org.jblas.DoubleMatrix;
 
 public class IntermediateOutputResult {
 
-    private LayerTypeData result;
+    private final LayerTypeData result;
     private MeanDeviation meanDeviation;
     private DoubleMatrix beforeNormalisationResult;
     private DoubleMatrix afterMeanApplicationResult;
@@ -24,10 +24,6 @@ public class IntermediateOutputResult {
 
     public LayerTypeData getResult() {
         return result;
-    }
-
-    public void setResult(LayerTypeData result) {
-        this.result = result;
     }
 
     public MeanDeviation getMeanDeviation() {

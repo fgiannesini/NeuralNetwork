@@ -7,7 +7,11 @@ import com.fgiannesini.neuralnetwork.computer.MeanDeviationProvider;
 public class MeanAndDeviationNormalizer implements INormalizer {
 
     private MeanDeviation meanDeviation;
-    private MeanDeviationProvider meanDeviationProvider;
+    private final MeanDeviationProvider meanDeviationProvider;
+
+    public MeanAndDeviationNormalizer(MeanDeviationProvider meanDeviationProvider) {
+        this.meanDeviationProvider = meanDeviationProvider;
+    }
 
     @Override
     public LayerTypeData normalize(LayerTypeData input) {
@@ -21,10 +25,4 @@ public class MeanAndDeviationNormalizer implements INormalizer {
         input.accept(meanAndDeviationNormalizerVisitor);
         return meanAndDeviationNormalizerVisitor.getNormalizedData();
     }
-
-    public void setMeanDeviationProvider(MeanDeviationProvider meanDeviationProvider) {
-        this.meanDeviationProvider = meanDeviationProvider;
-    }
-
-
 }

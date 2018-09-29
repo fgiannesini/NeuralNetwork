@@ -1,19 +1,20 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider;
 
-import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionApplier;
 import com.fgiannesini.neuralnetwork.computer.MeanDeviation;
 import com.fgiannesini.neuralnetwork.model.BatchNormLayer;
 import org.jblas.DoubleMatrix;
 
 public class GradientBatchNormLayerProvider extends GradientLayerProvider {
 
-    private BatchNormLayer layer;
-    private MeanDeviation meanDeviation;
-    private DoubleMatrix beforeNormalisationResults;
+    private final BatchNormLayer layer;
+    private final BatchNormLayer previousLayer;
+    private final MeanDeviation meanDeviation;
+    private final DoubleMatrix beforeNormalisationResults;
 
-    public GradientBatchNormLayerProvider(BatchNormLayer layer, DoubleMatrix results, DoubleMatrix previousResults, DoubleMatrix beforeNormalisationResults, MeanDeviation meanDeviation) {
-        super(results, previousResults, layer.getActivationFunctionType());
+    public GradientBatchNormLayerProvider(BatchNormLayer layer, BatchNormLayer previousLayer, DoubleMatrix results, DoubleMatrix previousResults, DoubleMatrix beforeNormalisationResults, MeanDeviation meanDeviation, int layerIndex) {
+        super(results, previousResults, layer.getActivationFunctionType(), layerIndex);
         this.layer = layer;
+        this.previousLayer = previousLayer;
         this.meanDeviation = meanDeviation;
         this.beforeNormalisationResults = beforeNormalisationResults;
     }
@@ -31,10 +32,7 @@ public class GradientBatchNormLayerProvider extends GradientLayerProvider {
     }
 
     public DoubleMatrix getPreviousWeightMatrix() {
-        return layer.getWeightMatrix();
+        return previousLayer.getWeightMatrix();
     }
 
-    public ActivationFunctionApplier getCurrentActivationFunction() {
-        return layer.getActivationFunctionType().getActivationFunction();
-    }
 }

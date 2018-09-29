@@ -1,5 +1,6 @@
 package com.fgiannesini.neuralnetwork.normalizer;
 
+import com.fgiannesini.neuralnetwork.computer.MeanDeviationProvider;
 import com.fgiannesini.neuralnetwork.computer.WeightBiasData;
 import org.jblas.DoubleMatrix;
 import org.junit.jupiter.api.Assertions;
@@ -10,20 +11,20 @@ class MeanAndDeviationNormalizerTest {
     @Test
     void check_on_vector() {
         WeightBiasData input = new WeightBiasData(new DoubleMatrix(3, 1, -1000, 0, 1000));
-        WeightBiasData output = (WeightBiasData) NormalizerType.MEAN_AND_DEVIATION.get().normalize(input);
+        WeightBiasData output = (WeightBiasData) NormalizerType.MEAN_AND_DEVIATION.get(new MeanDeviationProvider()).normalize(input);
         Assertions.assertArrayEquals(new double[]{0, 0, 0}, output.getInput().data);
     }
 
     @Test
     void check_on_matrix() {
         WeightBiasData input = new WeightBiasData(new DoubleMatrix(3, 2, -1000, 0, 1000, -2000, -1000, 0));
-        WeightBiasData output = (WeightBiasData) NormalizerType.MEAN_AND_DEVIATION.get().normalize(input);
+        WeightBiasData output = (WeightBiasData) NormalizerType.MEAN_AND_DEVIATION.get(new MeanDeviationProvider()).normalize(input);
         Assertions.assertArrayEquals(new double[]{1, 1, 1, -1, -1, -1}, output.getInput().data, 0.0001);
     }
 
     @Test
     void check_keep_normalization_params_on_matrices() {
-        INormalizer normalizer = NormalizerType.MEAN_AND_DEVIATION.get();
+        INormalizer normalizer = NormalizerType.MEAN_AND_DEVIATION.get(new MeanDeviationProvider());
         WeightBiasData input1 = new WeightBiasData(new DoubleMatrix(3, 2, -1000, 0, 1000, -2000, -1000, 0));
         WeightBiasData output1 = (WeightBiasData) normalizer.normalize(input1);
         Assertions.assertArrayEquals(new double[]{1, 1, 1, -1, -1, -1}, output1.getInput().data, 0.0001);

@@ -19,7 +19,7 @@ class ConvolutionNeuralNetworkModelBuilderTest {
                     .addWeightBiasLayer(10, ActivationFunctionType.NONE)
                     .buildNeuralNetworkModel());
 
-            Assertions.fail();
+            Assertions.fail("To implement");
         }
 
         @Test

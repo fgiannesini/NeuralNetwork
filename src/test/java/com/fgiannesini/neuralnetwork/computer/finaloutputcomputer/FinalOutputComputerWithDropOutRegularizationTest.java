@@ -25,7 +25,7 @@ class FinalOutputComputerWithDropOutRegularizationTest {
                 .useInitializer(InitializerType.ONES)
                 .buildNeuralNetworkModel();
 
-        LayerTypeData input = new WeightBiasData(new DoubleMatrix(1, 3, 1, 1, 1));
+        LayerTypeData input = new WeightBiasData(new DoubleMatrix(3, 1, 1, 1, 1));
 
         List<DoubleMatrix> dropOutMatrices = Arrays.asList(
                 new DoubleMatrix(new double[]{1, 1, 1}),
@@ -37,7 +37,7 @@ class FinalOutputComputerWithDropOutRegularizationTest {
                 .withDropOutParameters(dropOutMatrices)
                 .buildFinalOutputComputer()
                 .compute(input);
-        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(1, 2, 10.6, 10.6), output.getInput());
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 10.6, 10.6), output.getInput());
     }
 
     @Test
@@ -51,7 +51,7 @@ class FinalOutputComputerWithDropOutRegularizationTest {
                 .useInitializer(InitializerType.ONES)
                 .buildNeuralNetworkModel();
 
-        LayerTypeData input = new WeightBiasData(new DoubleMatrix(1, 3, 1, 1, 1));
+        LayerTypeData input = new WeightBiasData(new DoubleMatrix(3, 1, 1, 1, 1));
 
         List<DoubleMatrix> dropOutMatrices = Arrays.asList(
                 new DoubleMatrix(new double[]{1, 1, 1}),
@@ -67,7 +67,7 @@ class FinalOutputComputerWithDropOutRegularizationTest {
                 .buildFinalOutputComputer()
                 .compute(input);
 
-        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(1, 2, 18.46, 18.46), output.getInput());
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 18.46, 18.46), output.getInput());
     }
 
     @Test

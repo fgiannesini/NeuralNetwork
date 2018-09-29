@@ -5,7 +5,6 @@ import com.fgiannesini.neuralnetwork.assertions.NeuralNetworkAssertions;
 import com.fgiannesini.neuralnetwork.computer.BatchNormData;
 import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
 import com.fgiannesini.neuralnetwork.computer.MeanDeviationProvider;
-import com.fgiannesini.neuralnetwork.computer.WeightBiasData;
 import com.fgiannesini.neuralnetwork.converter.DataFormatConverter;
 import com.fgiannesini.neuralnetwork.cost.CostType;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
@@ -71,9 +70,10 @@ public class GradientDescentBatchNormTest {
                     .buildNeuralNetworkModel();
 
             BatchNormData input = new BatchNormData(DoubleMatrix.rand(2, 3), new MeanDeviationProvider());
+            DoubleMatrix rand = DoubleMatrix.rand(1, 3);
             BatchNormData output = new BatchNormData(DoubleMatrix.zeros(2, 3), null);
-            output.getInput().putRow(0, DoubleMatrix.ones(1, 3).subi(input.getInput()));
-            output.getInput().putRow(1, input.getInput());
+            output.getInput().putRow(0, DoubleMatrix.ones(1, 3).subi(rand));
+            output.getInput().putRow(1, rand);
 
             LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentOnSoftMaxRegressionProcessProvider(new GradientDescentDefaultProcessProvider()));
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
@@ -93,7 +93,7 @@ public class GradientDescentBatchNormTest {
                     .buildNeuralNetworkModel();
 
             LayerTypeData input = new BatchNormData(new DoubleMatrix(2, 2, 1, 2, 3, 4), new MeanDeviationProvider());
-            LayerTypeData output = new BatchNormData(new DoubleMatrix(3, 5, 7, 9), null);
+            LayerTypeData output = new BatchNormData(new DoubleMatrix(2, 2, 3, 5, 7, 9), null);
 
             double[][] expectedWeightMatrix = {
                     {1, 1},
@@ -123,8 +123,9 @@ public class GradientDescentBatchNormTest {
                     .addBatchNormLayer(2, ActivationFunctionType.NONE)
                     .buildNeuralNetworkModel();
 
-            LayerTypeData input = new WeightBiasData(new DoubleMatrix(2, 3, 2, 4, 5, 6, 9, 10));
-            LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 3, 11, 13, 15, 17, 19, 21));
+            MeanDeviationProvider meanDeviationProvider = new MeanDeviationProvider();
+            LayerTypeData input = new BatchNormData(new DoubleMatrix(2, 3, 2, 4, 5, 6, 9, 10), meanDeviationProvider);
+            LayerTypeData output = new BatchNormData(new DoubleMatrix(2, 3, 11, 13, 15, 17, 19, 21), meanDeviationProvider);
 
             double[][] expectedFirstWeightMatrix = {
                     {1.00008, 1.00008, 1.00008},

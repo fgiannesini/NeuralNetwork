@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.function.Executable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class NeuralNetworkAssertions {
@@ -21,7 +22,13 @@ public class NeuralNetworkAssertions {
             List<DoubleMatrix> secondParameterMatrix = secondLayers.get(i).getParametersMatrix();
             Assertions.assertEquals(firstParameterMatrix.size(), secondParameterMatrix.size());
             for (int j = 0; j < secondParameterMatrix.size(); j++) {
-                executables.addAll(DoubleMatrixAssertions.getMatrixAssertions(firstParameterMatrix.get(j), secondParameterMatrix.get(j)));
+                DoubleMatrix currentMatrix = firstParameterMatrix.get(j);
+                DoubleMatrix expectedMatrix = secondParameterMatrix.get(j);
+                executables.addAll(Arrays.asList(
+                        () -> Assertions.assertEquals(expectedMatrix.getColumns(), currentMatrix.getColumns()),
+                        () -> Assertions.assertEquals(expectedMatrix.getRows(), currentMatrix.getRows()),
+                        () -> Assertions.assertArrayEquals(expectedMatrix.data, currentMatrix.data, 0.00001)
+                ));
             }
         }
         Assertions.assertAll(executables);
@@ -32,7 +39,13 @@ public class NeuralNetworkAssertions {
         List<Executable> matrixAssertions = new ArrayList<>();
         List<DoubleMatrix> parametersMatrix = layer.getParametersMatrix();
         for (int i = 0; i < parametersMatrix.size(); i++) {
-            matrixAssertions.addAll(DoubleMatrixAssertions.getMatrixAssertions(parametersMatrix.get(i), expectedParametersMatrix.get(i)));
+            DoubleMatrix currentMatrix = parametersMatrix.get(i);
+            DoubleMatrix expectedMatrix = expectedParametersMatrix.get(i);
+            matrixAssertions.addAll(Arrays.asList(
+                    () -> Assertions.assertEquals(expectedMatrix.getColumns(), currentMatrix.getColumns()),
+                    () -> Assertions.assertEquals(expectedMatrix.getRows(), currentMatrix.getRows()),
+                    () -> Assertions.assertArrayEquals(expectedMatrix.data, currentMatrix.data, 0.00001)
+            ));
         }
         Assertions.assertAll(matrixAssertions);
     }
