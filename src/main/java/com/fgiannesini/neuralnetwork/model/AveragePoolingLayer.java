@@ -8,37 +8,37 @@ import java.util.List;
 import java.util.Objects;
 
 public class AveragePoolingLayer extends Layer {
-    private final Integer filterSize;
-    private final Integer padding;
-    private final Integer stride;
+    private final int filterSize;
+    private final int padding;
+    private final int stride;
 
-    public AveragePoolingLayer(ActivationFunctionType activationFunctionType, Integer filterSize, Integer padding, Integer stride) {
+    public AveragePoolingLayer(ActivationFunctionType activationFunctionType, int filterSize, int padding, int stride) {
         super(activationFunctionType);
         this.filterSize = filterSize;
         this.padding = padding;
         this.stride = stride;
     }
 
-    public Integer getFilterSize() {
+    public int getFilterSize() {
         return filterSize;
     }
 
-    public Integer getPadding() {
+    public int getPadding() {
         return padding;
     }
 
-    public Integer getStride() {
+    public int getStride() {
         return stride;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof AveragePoolingLayer)) return false;
         AveragePoolingLayer that = (AveragePoolingLayer) o;
-        return Objects.equals(filterSize, that.filterSize) &&
-                Objects.equals(padding, that.padding) &&
-                Objects.equals(stride, that.stride);
+        return filterSize == that.filterSize &&
+                padding == that.padding &&
+                stride == that.stride;
     }
 
     @Override

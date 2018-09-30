@@ -52,7 +52,7 @@ public class ConvolutionNeuralNetworkModelBuilder {
         filterSizes.add(filterSize);
         paddings.add(padding);
         strides.add(stride);
-        channelCounts.add(0);
+        channelCounts.add(-1);
         layerActivationFunctions.add(activationFunctionType);
         layerTypes.add(LayerType.POOLING_MAX);
         return this;
@@ -62,7 +62,7 @@ public class ConvolutionNeuralNetworkModelBuilder {
         filterSizes.add(filterSize);
         paddings.add(padding);
         strides.add(stride);
-        channelCounts.add(0);
+        channelCounts.add(-1);
         layerActivationFunctions.add(activationFunctionType);
         layerTypes.add(LayerType.POOLING_AVERAGE);
         return this;
@@ -71,6 +71,11 @@ public class ConvolutionNeuralNetworkModelBuilder {
     public ConvolutionNeuralNetworkModelBuilder addFullyConnectedLayer(int layerNodeCount, ActivationFunctionType activationFunctionType) {
         neuralNetworkModelBuilder
                 .addWeightBiasLayer(layerNodeCount, activationFunctionType);
+        filterSizes.add(-1);
+        paddings.add(-1);
+        strides.add(-1);
+        channelCounts.add(-1);
+        layerActivationFunctions.add(activationFunctionType);
         layerTypes.add(LayerType.FULLY_CONNECTED);
         return this;
     }
@@ -90,7 +95,7 @@ public class ConvolutionNeuralNetworkModelBuilder {
         return this;
     }
 
-    private NeuralNetworkModel buildConvolutionNetworkModel() {
+    public NeuralNetworkModel buildConvolutionNetworkModel() {
         checkInputs();
         List<Layer> layers = new ArrayList<>();
         Initializer initializer = initializerType.getInitializer();
@@ -135,11 +140,11 @@ public class ConvolutionNeuralNetworkModelBuilder {
     }
 
     private int computeNewDimension(Integer padding, Integer stride, Integer filterSize, int input) {
-        return (input - 2 * padding + filterSize) / stride + 1;
+        return (input + 2 * padding - filterSize) / stride + 1;
     }
 
     private void checkInputs() {
-        if (inputWidth <= 0 || inputHeight <= 0) {
+        if (inputWidth <= 0 || inputHeight <= 0 || inputChannelCount <= 0) {
             throw new IllegalArgumentException("Size of input data should be set");
         }
         if (layerTypes.isEmpty()) {

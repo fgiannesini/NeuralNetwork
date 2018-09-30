@@ -1,6 +1,7 @@
 package com.fgiannesini.neuralnetwork.model;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
+import org.jblas.DoubleMatrix;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -10,62 +11,76 @@ import java.util.List;
 class ConvolutionNeuralNetworkModelBuilderTest {
 
     @Nested
-    class WeightBiasNeuralNetworkModel {
+    class ConvolutionNeuralNetworkModel {
+
         @Test
         void create_Network_Model_Missing_InputSize_Throw_Exception() {
-            Assertions.assertThrows(IllegalArgumentException.class, () -> NeuralNetworkModelBuilder.init()
-                    .addWeightBiasLayer(5, ActivationFunctionType.NONE)
-                    .addWeightBiasLayer(7, ActivationFunctionType.NONE)
-                    .addWeightBiasLayer(10, ActivationFunctionType.NONE)
-                    .buildNeuralNetworkModel());
-
-            Assertions.fail("To implement");
+            Assertions.assertThrows(IllegalArgumentException.class, () -> ConvolutionNeuralNetworkModelBuilder.init()
+                    .addConvolutionLayer(5, 0, 0, 1, ActivationFunctionType.NONE)
+                    .addAveragePoolingLayer(3, 0, 0, ActivationFunctionType.NONE)
+                    .addFullyConnectedLayer(10, ActivationFunctionType.NONE)
+                    .buildConvolutionNetworkModel());
         }
 
         @Test
         void create_Network_Model_Missing_Layer_Throw_Exception() {
-            Assertions.assertThrows(IllegalArgumentException.class, () -> NeuralNetworkModelBuilder.init()
-                    .input(10)
-                    .buildNeuralNetworkModel());
+            Assertions.assertThrows(IllegalArgumentException.class, () -> ConvolutionNeuralNetworkModelBuilder.init()
+                    .input(10, 10, 3)
+                    .buildConvolutionNetworkModel());
         }
 
         @Test
         void create_Network_Model() {
-            NeuralNetworkModel neuralNetworkModel = NeuralNetworkModelBuilder.init()
-                    .input(10)
-                    .addWeightBiasLayer(5, ActivationFunctionType.NONE)
-                    .addWeightBiasLayer(7, ActivationFunctionType.NONE)
-                    .addWeightBiasLayer(10, ActivationFunctionType.SIGMOID)
-                    .buildNeuralNetworkModel();
+            NeuralNetworkModel neuralNetworkModel = ConvolutionNeuralNetworkModelBuilder.init()
+                    .input(34, 34, 3)
+                    .addConvolutionLayer(3, 1, 3, 6, ActivationFunctionType.NONE)
+                    .addAveragePoolingLayer(5, 2, 1, ActivationFunctionType.NONE)
+                    .addMaxPoolingLayer(3, 1, 1, ActivationFunctionType.NONE)
+                    .addFullyConnectedLayer(10, ActivationFunctionType.SOFT_MAX)
+                    .buildConvolutionNetworkModel();
 
             List<Layer> layers = neuralNetworkModel.getLayers();
-            Assertions.assertEquals(3, layers.size());
+            Assertions.assertEquals(4, layers.size());
 
-            WeightBiasLayer firstLayer = (WeightBiasLayer) layers.get(0);
-            Assertions.assertAll(
-                    () -> Assertions.assertEquals(5, firstLayer.getWeightMatrix().rows),
-                    () -> Assertions.assertEquals(10, firstLayer.getWeightMatrix().columns),
-                    () -> Assertions.assertEquals(5, firstLayer.getBiasMatrix().rows),
-                    () -> Assertions.assertEquals(1, firstLayer.getBiasMatrix().columns),
-                    () -> Assertions.assertEquals(ActivationFunctionType.NONE, firstLayer.getActivationFunctionType())
-            );
+            ConvolutionLayer firstLayer = (ConvolutionLayer) layers.get(0);
 
-            WeightBiasLayer secondLayer = (WeightBiasLayer) layers.get(1);
-            Assertions.assertAll(
-                    () -> Assertions.assertEquals(7, secondLayer.getWeightMatrix().rows),
-                    () -> Assertions.assertEquals(5, secondLayer.getWeightMatrix().columns),
-                    () -> Assertions.assertEquals(7, secondLayer.getBiasMatrix().rows),
-                    () -> Assertions.assertEquals(1, secondLayer.getBiasMatrix().columns),
-                    () -> Assertions.assertEquals(ActivationFunctionType.NONE, secondLayer.getActivationFunctionType())
-            );
+            List<DoubleMatrix> firstWeightMatrices = firstLayer.getWeightMatrices();
+            Assertions.assertEquals(6, firstWeightMatrices.size());
+            firstWeightMatrices.forEach(w -> Assertions.assertEquals(3, w.getRows()));
+            firstWeightMatrices.forEach(w -> Assertions.assertEquals(3, w.getColumns()));
 
-            WeightBiasLayer thirdLayer = (WeightBiasLayer) layers.get(2);
-            Assertions.assertAll(
-                    () -> Assertions.assertEquals(10, thirdLayer.getWeightMatrix().rows),
-                    () -> Assertions.assertEquals(7, thirdLayer.getWeightMatrix().columns),
-                    () -> Assertions.assertEquals(10, thirdLayer.getBiasMatrix().rows),
-                    () -> Assertions.assertEquals(1, thirdLayer.getBiasMatrix().columns)
-            );
+            List<DoubleMatrix> firstBiasMatrices = firstLayer.getBiasMatrices();
+            Assertions.assertEquals(6, firstBiasMatrices.size());
+            firstBiasMatrices.forEach(w -> Assertions.assertEquals(1, w.getRows()));
+            firstBiasMatrices.forEach(w -> Assertions.assertEquals(1, w.getColumns()));
+
+            Assertions.assertEquals(6, firstLayer.getChannelCount());
+            Assertions.assertEquals(3, firstLayer.getFilterSize());
+            Assertions.assertEquals(1, firstLayer.getPadding());
+            Assertions.assertEquals(3, firstLayer.getStride());
+            Assertions.assertEquals(ActivationFunctionType.NONE, firstLayer.getActivationFunctionType());
+
+            AveragePoolingLayer secondLayer = (AveragePoolingLayer) layers.get(1);
+
+            Assertions.assertEquals(5, secondLayer.getFilterSize());
+            Assertions.assertEquals(2, secondLayer.getPadding());
+            Assertions.assertEquals(1, secondLayer.getStride());
+            Assertions.assertEquals(ActivationFunctionType.NONE, secondLayer.getActivationFunctionType());
+
+            MaxPoolingLayer thirdLayer = (MaxPoolingLayer) layers.get(2);
+
+            Assertions.assertEquals(3, thirdLayer.getFilterSize());
+            Assertions.assertEquals(1, thirdLayer.getPadding());
+            Assertions.assertEquals(1, thirdLayer.getStride());
+            Assertions.assertEquals(ActivationFunctionType.NONE, thirdLayer.getActivationFunctionType());
+
+            WeightBiasLayer forthLayer = (WeightBiasLayer) layers.get(3);
+
+            Assertions.assertEquals(10, forthLayer.getWeightMatrix().rows);
+            Assertions.assertEquals(864, forthLayer.getWeightMatrix().columns);
+            Assertions.assertEquals(10, forthLayer.getBiasMatrix().rows);
+            Assertions.assertEquals(1, forthLayer.getBiasMatrix().columns);
+            Assertions.assertEquals(ActivationFunctionType.SOFT_MAX, forthLayer.getActivationFunctionType());
 
         }
     }

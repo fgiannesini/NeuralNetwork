@@ -81,7 +81,6 @@ public class ConvolutionLayer extends Layer {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(weightMatrices, biasMatrices, filterSize, padding, stride, channelCount);
     }
 
