@@ -115,7 +115,7 @@ public class ConvolutionNeuralNetworkModelBuilder {
         Optional<Layer> layer;
         switch (layerType) {
             case CONVOLUTION:
-                layer = Optional.of(new ConvolutionLayer(activationFunctionType, initializer, filterSize, padding, stride, channelCount));
+                layer = Optional.of(new ConvolutionLayer(activationFunctionType, initializer, filterSize, padding, stride, channelCount, inputChannelCount));
                 inputWidth = computeNewDimension(padding, stride, filterSize, inputWidth);
                 inputHeight = computeNewDimension(padding, stride, filterSize, inputHeight);
                 inputChannelCount = channelCount;

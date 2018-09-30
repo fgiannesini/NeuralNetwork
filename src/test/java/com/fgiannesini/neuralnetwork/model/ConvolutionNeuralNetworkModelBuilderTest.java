@@ -33,7 +33,7 @@ class ConvolutionNeuralNetworkModelBuilderTest {
         void create_Network_Model() {
             NeuralNetworkModel neuralNetworkModel = ConvolutionNeuralNetworkModelBuilder.init()
                     .input(34, 34, 3)
-                    .addConvolutionLayer(3, 1, 3, 6, ActivationFunctionType.NONE)
+                    .addConvolutionLayer(3, 1, 3, 4, ActivationFunctionType.NONE)
                     .addAveragePoolingLayer(5, 2, 1, ActivationFunctionType.NONE)
                     .addMaxPoolingLayer(3, 1, 1, ActivationFunctionType.NONE)
                     .addFullyConnectedLayer(10, ActivationFunctionType.SOFT_MAX)
@@ -45,16 +45,16 @@ class ConvolutionNeuralNetworkModelBuilderTest {
             ConvolutionLayer firstLayer = (ConvolutionLayer) layers.get(0);
 
             List<DoubleMatrix> firstWeightMatrices = firstLayer.getWeightMatrices();
-            Assertions.assertEquals(6, firstWeightMatrices.size());
+            Assertions.assertEquals(12, firstWeightMatrices.size());
             firstWeightMatrices.forEach(w -> Assertions.assertEquals(3, w.getRows()));
             firstWeightMatrices.forEach(w -> Assertions.assertEquals(3, w.getColumns()));
 
             List<DoubleMatrix> firstBiasMatrices = firstLayer.getBiasMatrices();
-            Assertions.assertEquals(6, firstBiasMatrices.size());
+            Assertions.assertEquals(4, firstBiasMatrices.size());
             firstBiasMatrices.forEach(w -> Assertions.assertEquals(1, w.getRows()));
             firstBiasMatrices.forEach(w -> Assertions.assertEquals(1, w.getColumns()));
 
-            Assertions.assertEquals(6, firstLayer.getChannelCount());
+            Assertions.assertEquals(4, firstLayer.getChannelCount());
             Assertions.assertEquals(3, firstLayer.getFilterSize());
             Assertions.assertEquals(1, firstLayer.getPadding());
             Assertions.assertEquals(3, firstLayer.getStride());
@@ -77,7 +77,7 @@ class ConvolutionNeuralNetworkModelBuilderTest {
             WeightBiasLayer forthLayer = (WeightBiasLayer) layers.get(3);
 
             Assertions.assertEquals(10, forthLayer.getWeightMatrix().rows);
-            Assertions.assertEquals(864, forthLayer.getWeightMatrix().columns);
+            Assertions.assertEquals(576, forthLayer.getWeightMatrix().columns);
             Assertions.assertEquals(10, forthLayer.getBiasMatrix().rows);
             Assertions.assertEquals(1, forthLayer.getBiasMatrix().columns);
             Assertions.assertEquals(ActivationFunctionType.SOFT_MAX, forthLayer.getActivationFunctionType());

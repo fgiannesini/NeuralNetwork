@@ -3,6 +3,7 @@ package com.fgiannesini.neuralnetwork.computer;
 import org.jblas.DoubleMatrix;
 
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class DataFunctionApplier implements DataVisitor {
 
@@ -21,6 +22,11 @@ public class DataFunctionApplier implements DataVisitor {
     @Override
     public void visit(BatchNormData data) {
         layerTypeData = new BatchNormData(dataApplier.apply(data.getInput()), data.getMeanDeviationProvider());
+    }
+
+    @Override
+    public void visit(ConvolutionData convolutionData) {
+        layerTypeData = new ConvolutionData(convolutionData.getDatas().stream().map(dataApplier).collect(Collectors.toList()));
     }
 
     public LayerTypeData getLayerTypeData() {

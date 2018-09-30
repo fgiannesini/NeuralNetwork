@@ -20,13 +20,13 @@ public class ConvolutionLayer extends Layer {
     private final int stride;
     private final int channelCount;
 
-    public ConvolutionLayer(ActivationFunctionType activationFunctionType, Initializer initializer, int filterSize, int padding, int stride, int channelCount) {
+    public ConvolutionLayer(ActivationFunctionType activationFunctionType, Initializer initializer, int filterSize, int padding, int stride, int channelCount, int inputChannelCount) {
         super(activationFunctionType);
         this.padding = padding;
         this.stride = stride;
         this.filterSize = filterSize;
         this.channelCount = channelCount;
-        weightMatrices = IntStream.range(0, channelCount)
+        weightMatrices = IntStream.range(0, channelCount * inputChannelCount)
                 .mapToObj(i -> initializer.initDoubleMatrix(filterSize, filterSize))
                 .collect(Collectors.toList());
         biasMatrices = IntStream.range(0, channelCount)

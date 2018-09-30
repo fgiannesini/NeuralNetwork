@@ -50,7 +50,7 @@ class LayerTest {
 
     @Test
     void test_convolutionLayer_clone() {
-        ConvolutionLayer layer = new ConvolutionLayer(ActivationFunctionType.NONE, InitializerType.ONES.getInitializer(),1,2,3,4);
+        ConvolutionLayer layer = new ConvolutionLayer(ActivationFunctionType.NONE, InitializerType.ONES.getInitializer(), 1, 2, 3, 3, 4);
         ConvolutionLayer clone = layer.clone();
 
         Assertions.assertNotSame(clone, layer);

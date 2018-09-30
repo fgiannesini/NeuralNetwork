@@ -26,7 +26,6 @@ class IntermediateOutputComputerTest {
                 .useInitializer(InitializerType.ONES)
                 .buildNeuralNetworkModel();
 
-
         WeightBiasData inputData = new WeightBiasData(new DoubleMatrix(3, 1, 1, 1, 1));
 
         IIntermediateOutputComputer outputComputer = OutputComputerBuilder.init()
