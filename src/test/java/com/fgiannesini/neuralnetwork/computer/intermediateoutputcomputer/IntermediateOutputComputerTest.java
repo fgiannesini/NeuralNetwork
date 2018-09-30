@@ -2,17 +2,16 @@ package com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import com.fgiannesini.neuralnetwork.assertions.DoubleMatrixAssertions;
-import com.fgiannesini.neuralnetwork.computer.BatchNormData;
-import com.fgiannesini.neuralnetwork.computer.MeanDeviationProvider;
-import com.fgiannesini.neuralnetwork.computer.OutputComputerBuilder;
-import com.fgiannesini.neuralnetwork.computer.WeightBiasData;
+import com.fgiannesini.neuralnetwork.computer.*;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
+import com.fgiannesini.neuralnetwork.model.ConvolutionNeuralNetworkModelBuilder;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
 import org.jblas.DoubleMatrix;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.List;
 
 class IntermediateOutputComputerTest {
@@ -192,5 +191,31 @@ class IntermediateOutputComputerTest {
         DoubleMatrixAssertions.assertMatrices(DoubleMatrix.ones(2, 1).muli(2), output.get(4).getMeanDeviation().getDeviation());
         DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, -2, -2, 2, 2), output.get(4).getAfterMeanApplicationResult());
         DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, -1, -1, 1, 1), output.get(4).getBeforeNormalisationResult());
+    }
+
+    @Test
+    void compute_one_dimension_output_with_convolution_layer() {
+        NeuralNetworkModel model = ConvolutionNeuralNetworkModelBuilder.init()
+                .input(6, 6, 1)
+                .addConvolutionLayer(3, 0, 1, 1, ActivationFunctionType.NONE)
+                .addAveragePoolingLayer(3, 0, 1, ActivationFunctionType.NONE)
+                .addFullyConnectedLayer(2, ActivationFunctionType.NONE)
+                .useInitializer(InitializerType.ONES)
+                .buildConvolutionNetworkModel();
+
+        ConvolutionData inputData = new ConvolutionData(Collections.singletonList(DoubleMatrix.ones(6, 6)));
+
+        IIntermediateOutputComputer outputComputer = OutputComputerBuilder.init()
+                .withModel(model)
+                .buildIntermediateOutputComputer();
+
+        List<IntermediateOutputResult> output = outputComputer
+                .compute(inputData);
+
+        DoubleMatrixAssertions.assertMatrices(inputData.getDatas(), ((ConvolutionData) output.get(0).getResult()).getDatas());
+
+        DoubleMatrixAssertions.assertMatrices(Collections.singletonList(new DoubleMatrix(3, 3, 1, 1, 1, 1, 1, 1)), ((ConvolutionData) output.get(1).getResult()).getDatas());
+        DoubleMatrixAssertions.assertMatrices(Collections.singletonList(new DoubleMatrix(3, 3, 1, 1, 1, 1, 1, 1)), ((ConvolutionData) output.get(2).getResult()).getDatas());
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 1, 1), ((WeightBiasData) output.get(3).getResult()).getInput());
     }
 }
