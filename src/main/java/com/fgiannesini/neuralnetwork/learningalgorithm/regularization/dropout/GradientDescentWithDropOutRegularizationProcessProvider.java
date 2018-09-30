@@ -71,7 +71,7 @@ public class GradientDescentWithDropOutRegularizationProcessProvider implements 
     public Function<DataContainer, DataContainer> getDataProcessLauncher() {
         return container -> {
             dropOutMatrices = dropOutMatricesSupplier.get();
-            DoubleMatrix dropOutMatrix = dropOutMatrices.get(0);
+            DoubleMatrix dropOutMatrix = dropOutMatrices.get(dropOutMatrices.size() - 1);
             DropOutApplierVisitor dropOutApplierVisitor = new DropOutApplierVisitor(dropOutMatrix);
             container.getOutput().accept(dropOutApplierVisitor);
             return new DataContainer(container.getInput(), dropOutApplierVisitor.getLayerTypeData());

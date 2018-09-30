@@ -241,6 +241,6 @@ public class Tuner {
 
     private static LayerType generateLayerType(Random random) {
         LayerType[] values = LayerType.values();
-        return values[random.nextInt(values.length)];
+        return values[random.nextInt(2)];
     }
 }
