@@ -4,6 +4,10 @@ import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionAppli
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IntermediateOutputResult;
 import com.fgiannesini.neuralnetwork.model.*;
 import org.jblas.DoubleMatrix;
+import org.jblas.ranges.IntervalRange;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LayerComputerVisitor implements LayerVisitor {
 
@@ -56,7 +60,36 @@ public class LayerComputerVisitor implements LayerVisitor {
 
     @Override
     public void visit(ConvolutionLayer layer) {
+        ConvolutionData data = (ConvolutionData) layerTypeData;
+        List<DoubleMatrix> inputs = data.getDatas();
+        List<DoubleMatrix> weightMatrices = layer.getWeightMatrices();
+        List<DoubleMatrix> outputs = new ArrayList<>();
+        for (int channel = 0; channel < layer.getChannelCount(); channel++) {
+            for (int inputIndex = 0; inputIndex < inputs.size(); inputIndex++) {
+                DoubleMatrix input = inputs.get(inputIndex);
+                DoubleMatrix weights = weightMatrices.get(inputs.size() * channel + inputIndex);
+                DoubleMatrix output = computeConvolution(input, weights, layer.getPadding(), layer.getStride());
+                outputs.add(output);
+            }
+        }
+        intermediateOutputResult = new IntermediateOutputResult(new ConvolutionData(outputs));
+    }
 
+    private DoubleMatrix computeConvolution(DoubleMatrix input, DoubleMatrix weights, int padding, int stride) {
+        DoubleMatrix paddedInput = DoubleMatrix.zeros(input.rows + 2 * padding, input.columns + 2 * padding);
+        paddedInput.put(new IntervalRange(padding, paddedInput.getRows() - padding), new IntervalRange(padding, paddedInput.getColumns() - padding), input);
+
+        int outputRowCount = (input.getRows() + 2 * padding - weights.getRows()) / stride + 1;
+        int outputColumnCount = (input.getColumns() + 2 * padding - weights.getColumns()) / stride + 1;
+        DoubleMatrix output = DoubleMatrix.zeros(outputRowCount, outputColumnCount);
+        for (int rowIndex = 0; rowIndex < paddedInput.getRows() - weights.getRows() + 1; rowIndex += stride) {
+            for (int columnIndex = 0; columnIndex < paddedInput.getColumns() - weights.getColumns() + 1; columnIndex += stride) {
+                DoubleMatrix inputPart = paddedInput.get(new IntervalRange(rowIndex, rowIndex + weights.getRows()), new IntervalRange(columnIndex, columnIndex + weights.getColumns()));
+                output.put(rowIndex, columnIndex, inputPart.muli(weights).sum());
+            }
+        }
+
+        return output;
     }
 
     public IntermediateOutputResult getIntermediateOutputResult() {
