@@ -63,12 +63,23 @@ public class LayerComputerVisitor implements LayerVisitor {
         ConvolutionData data = (ConvolutionData) layerTypeData;
         List<DoubleMatrix> inputs = data.getDatas();
         List<DoubleMatrix> weightMatrices = layer.getWeightMatrices();
+        int inputCount = inputs.size() / layer.getInputChannelCount();
         List<DoubleMatrix> outputs = new ArrayList<>();
-        for (int channel = 0; channel < layer.getChannelCount(); channel++) {
-            for (int inputIndex = 0; inputIndex < inputs.size(); inputIndex++) {
-                DoubleMatrix input = inputs.get(inputIndex);
-                DoubleMatrix weights = weightMatrices.get(inputs.size() * channel + inputIndex);
-                DoubleMatrix output = computeConvolution(input, weights, layer.getPadding(), layer.getStride());
+
+        for (int inputIndex = 0; inputIndex < inputCount; inputIndex++) {
+            for (int channel = 0, weightIndex = 0; channel < layer.getOutputChannelCount(); channel++) {
+                DoubleMatrix output = DoubleMatrix.EMPTY;
+                for (int inputChannelIndex = inputIndex * layer.getInputChannelCount(); inputChannelIndex < (inputIndex + 1) * layer.getInputChannelCount(); inputChannelIndex++, weightIndex++) {
+                    DoubleMatrix input = inputs.get(inputChannelIndex);
+                    DoubleMatrix weights = weightMatrices.get(weightIndex);
+                    DoubleMatrix convolutedMatrix = computeConvolution(input, weights, layer.getPadding(), layer.getStride());
+                    if (output == DoubleMatrix.EMPTY) {
+                        output = convolutedMatrix;
+                    } else {
+                        output.addi(convolutedMatrix);
+                    }
+                }
+                output.addi(layer.getBiasMatrices().get(channel));
                 outputs.add(output);
             }
         }
@@ -85,7 +96,7 @@ public class LayerComputerVisitor implements LayerVisitor {
         for (int rowIndex = 0; rowIndex < paddedInput.getRows() - weights.getRows() + 1; rowIndex += stride) {
             for (int columnIndex = 0; columnIndex < paddedInput.getColumns() - weights.getColumns() + 1; columnIndex += stride) {
                 DoubleMatrix inputPart = paddedInput.get(new IntervalRange(rowIndex, rowIndex + weights.getRows()), new IntervalRange(columnIndex, columnIndex + weights.getColumns()));
-                output.put(rowIndex, columnIndex, inputPart.muli(weights).sum());
+                output.put(rowIndex / stride, columnIndex / stride, inputPart.muli(weights).sum());
             }
         }
 

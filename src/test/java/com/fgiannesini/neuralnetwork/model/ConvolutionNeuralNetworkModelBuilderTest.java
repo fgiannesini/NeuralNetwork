@@ -54,7 +54,7 @@ class ConvolutionNeuralNetworkModelBuilderTest {
             firstBiasMatrices.forEach(w -> Assertions.assertEquals(1, w.getRows()));
             firstBiasMatrices.forEach(w -> Assertions.assertEquals(1, w.getColumns()));
 
-            Assertions.assertEquals(4, firstLayer.getChannelCount());
+            Assertions.assertEquals(4, firstLayer.getOutputChannelCount());
             Assertions.assertEquals(3, firstLayer.getFilterSize());
             Assertions.assertEquals(1, firstLayer.getPadding());
             Assertions.assertEquals(3, firstLayer.getStride());

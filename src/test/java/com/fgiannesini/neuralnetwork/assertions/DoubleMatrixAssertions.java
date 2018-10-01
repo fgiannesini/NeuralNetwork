@@ -16,6 +16,6 @@ public class DoubleMatrixAssertions {
 
     public static void assertMatrices(List<DoubleMatrix> currentMatrix, List<DoubleMatrix> expectedMatrix) {
         Assertions.assertEquals(currentMatrix.size(), expectedMatrix.size());
-        IntStream.range(0, currentMatrix.size()).forEach(i -> Assertions.assertEquals(expectedMatrix.get(i), currentMatrix.get(i)));
+        IntStream.range(0, currentMatrix.size()).forEach(i -> assertMatrices(expectedMatrix.get(i), currentMatrix.get(i)));
     }
 }

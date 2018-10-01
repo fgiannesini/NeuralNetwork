@@ -18,18 +18,20 @@ public class ConvolutionLayer extends Layer {
     private final int filterSize;
     private final int padding;
     private final int stride;
-    private final int channelCount;
+    private final int inputChannelCount;
+    private final int outputChannelCount;
 
-    public ConvolutionLayer(ActivationFunctionType activationFunctionType, Initializer initializer, int filterSize, int padding, int stride, int channelCount, int inputChannelCount) {
+    public ConvolutionLayer(ActivationFunctionType activationFunctionType, Initializer initializer, int filterSize, int padding, int stride, int outputChannelCount, int inputChannelCount) {
         super(activationFunctionType);
         this.padding = padding;
         this.stride = stride;
         this.filterSize = filterSize;
-        this.channelCount = channelCount;
-        weightMatrices = IntStream.range(0, channelCount * inputChannelCount)
+        this.outputChannelCount = outputChannelCount;
+        this.inputChannelCount = inputChannelCount;
+        weightMatrices = IntStream.range(0, outputChannelCount * this.inputChannelCount)
                 .mapToObj(i -> initializer.initDoubleMatrix(filterSize, filterSize))
                 .collect(Collectors.toList());
-        biasMatrices = IntStream.range(0, channelCount)
+        biasMatrices = IntStream.range(0, outputChannelCount)
                 .mapToObj(i -> initializer.initDoubleMatrix(1, 1))
                 .collect(Collectors.toList());
     }
@@ -54,8 +56,12 @@ public class ConvolutionLayer extends Layer {
         return stride;
     }
 
-    public int getChannelCount() {
-        return channelCount;
+    public int getOutputChannelCount() {
+        return outputChannelCount;
+    }
+
+    public int getInputChannelCount() {
+        return inputChannelCount;
     }
 
     @Override
@@ -69,19 +75,20 @@ public class ConvolutionLayer extends Layer {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof ConvolutionLayer)) return false;
         ConvolutionLayer that = (ConvolutionLayer) o;
-        return filterSize == that.filterSize &&
+        return inputChannelCount == that.inputChannelCount &&
+                filterSize == that.filterSize &&
                 padding == that.padding &&
                 stride == that.stride &&
-                channelCount == that.channelCount &&
+                outputChannelCount == that.outputChannelCount &&
                 Objects.equals(weightMatrices, that.weightMatrices) &&
                 Objects.equals(biasMatrices, that.biasMatrices);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(weightMatrices, biasMatrices, filterSize, padding, stride, channelCount);
+        return Objects.hash(inputChannelCount, weightMatrices, biasMatrices, filterSize, padding, stride, outputChannelCount);
     }
 
     @Override
@@ -92,7 +99,8 @@ public class ConvolutionLayer extends Layer {
                 ", filterSize=" + filterSize +
                 ", padding=" + padding +
                 ", stride=" + stride +
-                ", channelCount=" + channelCount +
+                ", inputChannelCount=" + inputChannelCount +
+                ", outputChannelCount=" + outputChannelCount +
                 '}';
     }
 

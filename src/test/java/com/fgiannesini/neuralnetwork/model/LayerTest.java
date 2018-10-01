@@ -61,7 +61,7 @@ class LayerTest {
         Assertions.assertEquals(clone.getWeightMatrices(), layer.getWeightMatrices());
         Assertions.assertNotSame(clone.getWeightMatrices(), layer.getWeightMatrices());
 
-        Assertions.assertEquals(clone.getChannelCount(), layer.getChannelCount());
+        Assertions.assertEquals(clone.getOutputChannelCount(), layer.getOutputChannelCount());
         Assertions.assertEquals(clone.getFilterSize(), layer.getFilterSize());
         Assertions.assertEquals(clone.getPadding(), layer.getPadding());
         Assertions.assertEquals(clone.getStride(), layer.getStride());
