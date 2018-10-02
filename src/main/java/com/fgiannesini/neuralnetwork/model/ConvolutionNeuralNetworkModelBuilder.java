@@ -121,12 +121,12 @@ public class ConvolutionNeuralNetworkModelBuilder {
                 inputChannelCount = channelCount;
                 break;
             case POOLING_MAX:
-                layer = Optional.of(new MaxPoolingLayer(activationFunctionType, filterSize, padding, stride));
+                layer = Optional.of(new MaxPoolingLayer(activationFunctionType, filterSize, padding, stride, channelCount));
                 inputWidth = computeNewDimension(padding, stride, filterSize, inputWidth);
                 inputHeight = computeNewDimension(padding, stride, filterSize, inputHeight);
                 break;
             case POOLING_AVERAGE:
-                layer = Optional.of(new AveragePoolingLayer(activationFunctionType, filterSize, padding, stride));
+                layer = Optional.of(new AveragePoolingLayer(activationFunctionType, filterSize, padding, stride, ));
                 inputWidth = computeNewDimension(padding, stride, filterSize, inputWidth);
                 inputHeight = computeNewDimension(padding, stride, filterSize, inputHeight);
                 break;

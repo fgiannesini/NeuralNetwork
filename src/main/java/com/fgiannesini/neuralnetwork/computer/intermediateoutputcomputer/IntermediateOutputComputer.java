@@ -26,7 +26,10 @@ public class IntermediateOutputComputer implements IIntermediateOutputComputer {
         IntermediateOutputResult intermediateOutputResult = new IntermediateOutputResult(firstData);
         intermediateOutputResults.add(intermediateOutputResult);
         for (Layer layer : model.getLayers()) {
-            LayerComputerVisitor layerComputerVisitor = new LayerComputerVisitor(intermediateOutputResult.getResult());
+            LayerTypeData previousResult = intermediateOutputResult.getResult();
+            DataAdapterVisitor dataAdaptorVisitor = new DataAdapterVisitor(previousResult);
+            layer.accept(dataAdaptorVisitor);
+            LayerComputerVisitor layerComputerVisitor = new LayerComputerVisitor(dataAdaptorVisitor.getData());
             layer.accept(layerComputerVisitor);
             intermediateOutputResult = layerComputerVisitor.getIntermediateOutputResult();
             intermediateOutputResults.add(intermediateOutputResult);
