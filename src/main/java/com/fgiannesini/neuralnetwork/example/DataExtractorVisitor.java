@@ -11,7 +11,7 @@ public class DataExtractorVisitor implements DataVisitor {
 
     @Override
     public void visit(WeightBiasData input) {
-        data = input.getInput();
+        data = input.getData();
     }
 
     @Override

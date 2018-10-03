@@ -1,5 +1,6 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider;
 
+import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
 import com.fgiannesini.neuralnetwork.computer.MeanDeviation;
 import com.fgiannesini.neuralnetwork.model.BatchNormLayer;
 import org.jblas.DoubleMatrix;
@@ -11,8 +12,8 @@ public class GradientBatchNormLayerProvider extends GradientLayerProvider {
     private final MeanDeviation meanDeviation;
     private final DoubleMatrix beforeNormalisationResults;
 
-    public GradientBatchNormLayerProvider(BatchNormLayer layer, BatchNormLayer previousLayer, DoubleMatrix results, DoubleMatrix previousResults, DoubleMatrix beforeNormalisationResults, MeanDeviation meanDeviation, int layerIndex) {
-        super(results, previousResults, layer.getActivationFunctionType(), layerIndex);
+    public GradientBatchNormLayerProvider(BatchNormLayer layer, BatchNormLayer previousLayer, LayerTypeData results, LayerTypeData previousResults, DoubleMatrix beforeNormalisationResults, MeanDeviation meanDeviation, int layerIndex) {
+        super(results, previousResults, layer, layerIndex, layer.getActivationFunctionType());
         this.layer = layer;
         this.previousLayer = previousLayer;
         this.meanDeviation = meanDeviation;

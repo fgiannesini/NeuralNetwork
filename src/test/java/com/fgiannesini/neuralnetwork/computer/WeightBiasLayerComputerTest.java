@@ -15,7 +15,7 @@ class WeightBiasLayerComputerTest {
         WeightBiasData input = new WeightBiasData(DoubleMatrix.scalar(3f));
         LayerComputerVisitor layerComputerVisitor = new LayerComputerVisitor(input);
         layer.accept(layerComputerVisitor);
-        Assertions.assertArrayEquals(new double[]{4}, ((WeightBiasData) layerComputerVisitor.getIntermediateOutputResult().getResult()).getInput().data);
+        Assertions.assertArrayEquals(new double[]{4}, ((WeightBiasData) layerComputerVisitor.getIntermediateOutputResult().getResult()).getData().data);
     }
 
     @Test
@@ -24,7 +24,7 @@ class WeightBiasLayerComputerTest {
         WeightBiasData input = new WeightBiasData(DoubleMatrix.ones(5).mul(3f));
         LayerComputerVisitor layerComputerVisitor = new LayerComputerVisitor(input);
         layer.accept(layerComputerVisitor);
-        Assertions.assertArrayEquals(new double[]{16}, ((WeightBiasData) layerComputerVisitor.getIntermediateOutputResult().getResult()).getInput().data);
+        Assertions.assertArrayEquals(new double[]{16}, ((WeightBiasData) layerComputerVisitor.getIntermediateOutputResult().getResult()).getData().data);
     }
 
     @Test
@@ -33,7 +33,7 @@ class WeightBiasLayerComputerTest {
         WeightBiasData input = new WeightBiasData(DoubleMatrix.ones(5).mul(3f));
         LayerComputerVisitor layerComputerVisitor = new LayerComputerVisitor(input);
         layer.accept(layerComputerVisitor);
-        Assertions.assertArrayEquals(new double[]{16, 16}, ((WeightBiasData) layerComputerVisitor.getIntermediateOutputResult().getResult()).getInput().data);
+        Assertions.assertArrayEquals(new double[]{16, 16}, ((WeightBiasData) layerComputerVisitor.getIntermediateOutputResult().getResult()).getData().data);
     }
 
 }

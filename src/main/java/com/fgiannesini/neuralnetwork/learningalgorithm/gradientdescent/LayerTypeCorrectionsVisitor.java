@@ -21,11 +21,12 @@ public class LayerTypeCorrectionsVisitor implements DataVisitor {
 
     @Override
     public void visit(WeightBiasData error) {
-        DoubleMatrix errorInput = error.getInput();
+        DoubleMatrix errorInput = error.getData();
         int inputCount = errorInput.getColumns();
-        DoubleMatrix weightCorrection = computeWeightCorrection(gradientLayerProvider.getPreviousResult(), errorInput, inputCount);
+        WeightBiasData previousResult = (WeightBiasData) gradientLayerProvider.getPreviousResult();
+        DoubleMatrix weightCorrection = computeWeightCorrection(previousResult.getData(), errorInput, inputCount);
         DoubleMatrix biasCorrection = computeBiasCorrection(errorInput, inputCount);
-        nextGradientLayerProvider = new WeightBiasData(error.getInput());
+        nextGradientLayerProvider = new WeightBiasData(error.getData());
         correction = new GradientDescentCorrection(weightCorrection, biasCorrection);
     }
 
@@ -68,7 +69,8 @@ public class LayerTypeCorrectionsVisitor implements DataVisitor {
 //        dgamma = np.sum(x_hat * dout, axis = 0)
         DoubleMatrix dGamma = dz.mul(beforeActivationResult).rowMeans();
 
-        DoubleMatrix weightCorrection = computeWeightCorrection(gradientLayerProvider.getPreviousResult(), dx, inputCount);
+        BatchNormData previousResult = (BatchNormData) gradientLayerProvider.getPreviousResult();
+        DoubleMatrix weightCorrection = computeWeightCorrection(previousResult.getInput(), dx, inputCount);
         return new BatchNormBackwardReturn(weightCorrection, dGamma, dBeta, dx);
     }
 

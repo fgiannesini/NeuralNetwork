@@ -43,7 +43,7 @@ class DataAdapterVisitorTest {
     void from_convolution_to_averagePooling() {
         ConvolutionData inputData = new ConvolutionData(Collections.singletonList(DoubleMatrix.EMPTY));
         DataAdapterVisitor dataAdapterVisitor = new DataAdapterVisitor(inputData);
-        AveragePoolingLayer layer = new AveragePoolingLayer(ActivationFunctionType.NONE, 3, 0, 1);
+        AveragePoolingLayer layer = new AveragePoolingLayer(ActivationFunctionType.NONE, 3, 0, 1, 1, 10, 10);
         layer.accept(dataAdapterVisitor);
         Assertions.assertEquals(inputData, dataAdapterVisitor.getData());
     }
@@ -52,7 +52,7 @@ class DataAdapterVisitorTest {
     void from_convolution_to_maxPooling() {
         ConvolutionData inputData = new ConvolutionData(Collections.singletonList(DoubleMatrix.EMPTY));
         DataAdapterVisitor dataAdapterVisitor = new DataAdapterVisitor(inputData);
-        MaxPoolingLayer layer = new MaxPoolingLayer(ActivationFunctionType.NONE, 3, 0, 1);
+        MaxPoolingLayer layer = new MaxPoolingLayer(ActivationFunctionType.NONE, 3, 0, 1, 1, 10, 10);
         layer.accept(dataAdapterVisitor);
         Assertions.assertEquals(inputData, dataAdapterVisitor.getData());
     }
@@ -70,7 +70,7 @@ class DataAdapterVisitorTest {
         WeightBiasLayer layer = new WeightBiasLayer(8, 3, InitializerType.ONES.getInitializer(), ActivationFunctionType.NONE);
         layer.accept(dataAdapterVisitor);
         DoubleMatrix expected = new DoubleMatrix(8, 2, 1, 1, 1, 1, 2, 2, 2, 2, 11, 11, 11, 11, 12, 12, 12, 12);
-        DoubleMatrixAssertions.assertMatrices(expected, ((WeightBiasData) dataAdapterVisitor.getData()).getInput());
+        DoubleMatrixAssertions.assertMatrices(expected, ((WeightBiasData) dataAdapterVisitor.getData()).getData());
     }
 
 }

@@ -117,22 +117,30 @@ public class ConvolutionNeuralNetworkModelBuilder {
 
     private Optional<Layer> buildLayerInstance(LayerType layerType, Initializer initializer, Integer channelCount, Integer padding, Integer stride, Integer filterSize, ActivationFunctionType activationFunctionType) {
         Optional<Layer> layer;
+        int outputWidth;
+        int outputHeight;
         switch (layerType) {
             case CONVOLUTION:
-                layer = Optional.of(new ConvolutionLayer(activationFunctionType, initializer, filterSize, padding, stride, channelCount, inputChannelCount));
-                inputWidth = computeNewDimension(padding, stride, filterSize, inputWidth);
-                inputHeight = computeNewDimension(padding, stride, filterSize, inputHeight);
+                outputWidth = computeNewDimension(padding, stride, filterSize, inputWidth);
+                outputHeight = computeNewDimension(padding, stride, filterSize, inputHeight);
+                layer = Optional.of(new ConvolutionLayer(activationFunctionType, initializer, filterSize, padding, stride, channelCount, inputChannelCount, outputWidth, outputHeight));
                 inputChannelCount = channelCount;
+                inputWidth = outputWidth;
+                inputHeight = outputHeight;
                 break;
             case POOLING_MAX:
-                layer = Optional.of(new MaxPoolingLayer(activationFunctionType, filterSize, padding, stride));
-                inputWidth = computeNewDimension(padding, stride, filterSize, inputWidth);
-                inputHeight = computeNewDimension(padding, stride, filterSize, inputHeight);
+                outputWidth = computeNewDimension(padding, stride, filterSize, inputWidth);
+                outputHeight = computeNewDimension(padding, stride, filterSize, inputHeight);
+                layer = Optional.of(new MaxPoolingLayer(activationFunctionType, filterSize, padding, stride, inputChannelCount, outputWidth, outputHeight));
+                inputWidth = outputWidth;
+                inputHeight = outputHeight;
                 break;
             case POOLING_AVERAGE:
-                layer = Optional.of(new AveragePoolingLayer(activationFunctionType, filterSize, padding, stride));
-                inputWidth = computeNewDimension(padding, stride, filterSize, inputWidth);
-                inputHeight = computeNewDimension(padding, stride, filterSize, inputHeight);
+                outputWidth = computeNewDimension(padding, stride, filterSize, inputWidth);
+                outputHeight = computeNewDimension(padding, stride, filterSize, inputHeight);
+                layer = Optional.of(new AveragePoolingLayer(activationFunctionType, filterSize, padding, stride, inputChannelCount, outputWidth, outputHeight));
+                inputWidth = outputWidth;
+                inputHeight = outputHeight;
                 break;
             case FULLY_CONNECTED:
                 layer = Optional.empty();

@@ -10,7 +10,7 @@ public class WeightBiasData implements LayerTypeData {
         this.input = input;
     }
 
-    public DoubleMatrix getInput() {
+    public DoubleMatrix getData() {
         return input;
     }
 

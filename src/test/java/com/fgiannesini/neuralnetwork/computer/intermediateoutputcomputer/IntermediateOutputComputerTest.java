@@ -34,12 +34,12 @@ class IntermediateOutputComputerTest {
         List<IntermediateOutputResult> output = outputComputer
                 .compute(inputData);
 
-        DoubleMatrixAssertions.assertMatrices(inputData.getInput(), ((WeightBiasData) output.get(0).getResult()).getInput());
+        DoubleMatrixAssertions.assertMatrices(inputData.getData(), ((WeightBiasData) output.get(0).getResult()).getData());
         Assertions.assertNull(output.get(0).getMeanDeviation());
 
-        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(4, 1, 4, 4, 4, 4), ((WeightBiasData) output.get(1).getResult()).getInput());
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(4, 1, 4, 4, 4, 4), ((WeightBiasData) output.get(1).getResult()).getData());
 
-        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 17, 17), ((WeightBiasData) output.get(2).getResult()).getInput());
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 17, 17), ((WeightBiasData) output.get(2).getResult()).getData());
     }
 
     @Test
@@ -94,19 +94,19 @@ class IntermediateOutputComputerTest {
                 .buildIntermediateOutputComputer()
                 .compute(inputData);
 
-        DoubleMatrixAssertions.assertMatrices(inputData.getInput(), ((WeightBiasData) output.get(0).getResult()).getInput());
+        DoubleMatrixAssertions.assertMatrices(inputData.getData(), ((WeightBiasData) output.get(0).getResult()).getData());
         Assertions.assertNull(output.get(0).getMeanDeviation());
 
-        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 4, 4), ((WeightBiasData) output.get(1).getResult()).getInput());
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 4, 4), ((WeightBiasData) output.get(1).getResult()).getData());
         Assertions.assertNull(output.get(1).getMeanDeviation());
 
-        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 9, 9), ((WeightBiasData) output.get(2).getResult()).getInput());
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 9, 9), ((WeightBiasData) output.get(2).getResult()).getData());
         Assertions.assertNull(output.get(2).getMeanDeviation());
 
-        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 19, 19), ((WeightBiasData) output.get(3).getResult()).getInput());
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 19, 19), ((WeightBiasData) output.get(3).getResult()).getData());
         Assertions.assertNull(output.get(3).getMeanDeviation());
 
-        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 39, 39), ((WeightBiasData) output.get(4).getResult()).getInput());
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 39, 39), ((WeightBiasData) output.get(4).getResult()).getData());
         Assertions.assertNull(output.get(4).getMeanDeviation());
     }
 
@@ -128,19 +128,19 @@ class IntermediateOutputComputerTest {
                 .buildIntermediateOutputComputer()
                 .compute(inputData);
 
-        DoubleMatrixAssertions.assertMatrices(inputData.getInput(), ((WeightBiasData) output.get(0).getResult()).getInput());
+        DoubleMatrixAssertions.assertMatrices(inputData.getData(), ((WeightBiasData) output.get(0).getResult()).getData());
         Assertions.assertNull(output.get(0).getMeanDeviation());
 
-        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, 4, 4, 7, 7), ((WeightBiasData) output.get(1).getResult()).getInput());
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, 4, 4, 7, 7), ((WeightBiasData) output.get(1).getResult()).getData());
         Assertions.assertNull(output.get(1).getMeanDeviation());
 
-        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, 9, 9, 15, 15), ((WeightBiasData) output.get(2).getResult()).getInput());
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, 9, 9, 15, 15), ((WeightBiasData) output.get(2).getResult()).getData());
         Assertions.assertNull(output.get(2).getMeanDeviation());
 
-        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, 19, 19, 31, 31), ((WeightBiasData) output.get(3).getResult()).getInput());
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, 19, 19, 31, 31), ((WeightBiasData) output.get(3).getResult()).getData());
         Assertions.assertNull(output.get(3).getMeanDeviation());
 
-        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, 39, 39, 63, 63), ((WeightBiasData) output.get(4).getResult()).getInput());
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, 39, 39, 63, 63), ((WeightBiasData) output.get(4).getResult()).getData());
         Assertions.assertNull(output.get(4).getMeanDeviation());
     }
 
@@ -216,6 +216,6 @@ class IntermediateOutputComputerTest {
 
         DoubleMatrixAssertions.assertMatrices(Collections.singletonList(DoubleMatrix.ones(8, 8).muli(10)), ((ConvolutionData) output.get(1).getResult()).getDatas());
         DoubleMatrixAssertions.assertMatrices(Collections.singletonList(DoubleMatrix.ones(6, 6).muli(10)), ((ConvolutionData) output.get(2).getResult()).getDatas());
-        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 361, 361), ((WeightBiasData) output.get(3).getResult()).getInput());
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 361, 361), ((WeightBiasData) output.get(3).getResult()).getData());
     }
 }

@@ -52,17 +52,30 @@ public class DataAdapterVisitor implements LayerVisitor {
 
     @Override
     public void visit(AveragePoolingLayer layer) {
-        data = previousData;
+        if (previousData instanceof WeightBiasData) {
+            DoubleMatrix input = ((WeightBiasData) previousData).getData();
+
+        } else {
+            data = previousData;
+        }
     }
 
     @Override
     public void visit(MaxPoolingLayer layer) {
-        data = previousData;
+        if (previousData instanceof WeightBiasData) {
+
+        } else {
+            data = previousData;
+        }
     }
 
     @Override
     public void visit(ConvolutionLayer layer) {
-        data = previousData;
+        if (previousData instanceof WeightBiasData) {
+
+        } else {
+            data = previousData;
+        }
     }
 
     public LayerTypeData getData() {

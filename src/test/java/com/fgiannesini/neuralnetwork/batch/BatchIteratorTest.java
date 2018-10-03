@@ -17,20 +17,20 @@ class BatchIteratorTest {
 
         Assertions.assertTrue(batchIterator.hasNext());
 
-        checkBatchMatrix(((WeightBiasData) batchIterator.getSubInput()).getInput(), new double[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}, 4, 3);
-        checkBatchMatrix(((WeightBiasData) batchIterator.getSubOutput()).getInput(), new double[]{0, 1, 2, 3, 4, 5, 6, 7}, 4, 2);
+        checkBatchMatrix(((WeightBiasData) batchIterator.getSubInput()).getData(), new double[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}, 4, 3);
+        checkBatchMatrix(((WeightBiasData) batchIterator.getSubOutput()).getData(), new double[]{0, 1, 2, 3, 4, 5, 6, 7}, 4, 2);
 
         batchIterator.next();
         Assertions.assertTrue(batchIterator.hasNext());
 
-        checkBatchMatrix(((WeightBiasData) batchIterator.getSubInput()).getInput(), new double[]{12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23}, 4, 3);
-        checkBatchMatrix(((WeightBiasData) batchIterator.getSubOutput()).getInput(), new double[]{8, 9, 10, 11, 12, 13, 14, 15}, 4, 2);
+        checkBatchMatrix(((WeightBiasData) batchIterator.getSubInput()).getData(), new double[]{12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23}, 4, 3);
+        checkBatchMatrix(((WeightBiasData) batchIterator.getSubOutput()).getData(), new double[]{8, 9, 10, 11, 12, 13, 14, 15}, 4, 2);
 
         batchIterator.next();
         Assertions.assertTrue(batchIterator.hasNext());
 
-        checkBatchMatrix(((WeightBiasData) batchIterator.getSubInput()).getInput(), new double[]{24, 25, 26, 27, 28, 29}, 2, 3);
-        checkBatchMatrix(((WeightBiasData) batchIterator.getSubOutput()).getInput(), new double[]{16, 17, 18, 19}, 2, 2);
+        checkBatchMatrix(((WeightBiasData) batchIterator.getSubInput()).getData(), new double[]{24, 25, 26, 27, 28, 29}, 2, 3);
+        checkBatchMatrix(((WeightBiasData) batchIterator.getSubOutput()).getData(), new double[]{16, 17, 18, 19}, 2, 2);
 
         batchIterator.next();
         Assertions.assertFalse(batchIterator.hasNext());
@@ -44,14 +44,14 @@ class BatchIteratorTest {
 
         Assertions.assertTrue(batchIterator.hasNext());
 
-        checkBatchMatrix(((WeightBiasData) batchIterator.getSubInput()).getInput(), new double[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, 5, 2);
-        checkBatchMatrix(((WeightBiasData) batchIterator.getSubOutput()).getInput(), new double[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14}, 5, 3);
+        checkBatchMatrix(((WeightBiasData) batchIterator.getSubInput()).getData(), new double[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, 5, 2);
+        checkBatchMatrix(((WeightBiasData) batchIterator.getSubOutput()).getData(), new double[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14}, 5, 3);
 
         batchIterator.next();
         Assertions.assertTrue(batchIterator.hasNext());
 
-        checkBatchMatrix(((WeightBiasData) batchIterator.getSubInput()).getInput(), new double[]{10, 11, 12, 13, 14, 15, 16, 17, 18, 19}, 5, 2);
-        checkBatchMatrix(((WeightBiasData) batchIterator.getSubOutput()).getInput(), new double[]{15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29}, 5, 3);
+        checkBatchMatrix(((WeightBiasData) batchIterator.getSubInput()).getData(), new double[]{10, 11, 12, 13, 14, 15, 16, 17, 18, 19}, 5, 2);
+        checkBatchMatrix(((WeightBiasData) batchIterator.getSubOutput()).getData(), new double[]{15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29}, 5, 3);
 
         batchIterator.next();
         Assertions.assertFalse(batchIterator.hasNext());
@@ -65,8 +65,8 @@ class BatchIteratorTest {
 
         Assertions.assertTrue(batchIterator.hasNext());
 
-        checkBatchMatrix(((WeightBiasData) batchIterator.getSubInput()).getInput(), new double[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, 5, 2);
-        checkBatchMatrix(((WeightBiasData) batchIterator.getSubOutput()).getInput(), new double[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, 5, 2);
+        checkBatchMatrix(((WeightBiasData) batchIterator.getSubInput()).getData(), new double[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, 5, 2);
+        checkBatchMatrix(((WeightBiasData) batchIterator.getSubOutput()).getData(), new double[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, 5, 2);
 
         batchIterator.next();
         Assertions.assertFalse(batchIterator.hasNext());

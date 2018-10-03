@@ -1,5 +1,6 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider;
 
+import com.fgiannesini.neuralnetwork.computer.WeightBiasData;
 import com.fgiannesini.neuralnetwork.model.WeightBiasLayer;
 import org.jblas.DoubleMatrix;
 
@@ -7,8 +8,8 @@ public class GradientWeightBiasLayerProvider extends GradientLayerProvider {
 
     private final WeightBiasLayer previousLayer;
 
-    public GradientWeightBiasLayerProvider(WeightBiasLayer layer, WeightBiasLayer previousLayer, DoubleMatrix results, DoubleMatrix previousResult, int layerIndex) {
-        super(results, previousResult, layer.getActivationFunctionType(), layerIndex);
+    public GradientWeightBiasLayerProvider(WeightBiasLayer layer, WeightBiasLayer previousLayer, WeightBiasData results, WeightBiasData previousResult, int layerIndex) {
+        super(results, previousResult, layer, layerIndex, layer.getActivationFunctionType());
         this.previousLayer = previousLayer;
     }
 

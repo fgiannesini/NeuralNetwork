@@ -16,7 +16,7 @@ public class DataFunctionApplier implements DataVisitor {
 
     @Override
     public void visit(WeightBiasData data) {
-        layerTypeData = new WeightBiasData(dataApplier.apply(data.getInput()));
+        layerTypeData = new WeightBiasData(dataApplier.apply(data.getData()));
     }
 
     @Override

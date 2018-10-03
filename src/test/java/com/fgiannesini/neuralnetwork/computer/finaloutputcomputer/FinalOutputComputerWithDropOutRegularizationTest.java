@@ -37,7 +37,7 @@ class FinalOutputComputerWithDropOutRegularizationTest {
                 .withDropOutParameters(dropOutMatrices)
                 .buildFinalOutputComputer()
                 .compute(input);
-        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 10.6, 10.6), output.getInput());
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 10.6, 10.6), output.getData());
     }
 
     @Test
@@ -67,7 +67,7 @@ class FinalOutputComputerWithDropOutRegularizationTest {
                 .buildFinalOutputComputer()
                 .compute(input);
 
-        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 18.46, 18.46), output.getInput());
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 18.46, 18.46), output.getData());
     }
 
     @Test
@@ -96,6 +96,6 @@ class FinalOutputComputerWithDropOutRegularizationTest {
                 .buildFinalOutputComputer()
                 .compute(input);
 
-        DoubleMatrixAssertions.assertMatrices(output.getInput(), new DoubleMatrix(2, 2, 18.46, 18.46, 28.18, 28.18));
+        DoubleMatrixAssertions.assertMatrices(output.getData(), new DoubleMatrix(2, 2, 18.46, 18.46, 28.18, 28.18));
     }
 }

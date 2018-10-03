@@ -14,7 +14,7 @@ class MaxPoolingLayerComputerTest {
 
     @Test
     void convolution_layer_no_padding_no_stride_one_channel_one_input() {
-        MaxPoolingLayer layer = new MaxPoolingLayer(ActivationFunctionType.NONE, 3, 0, 1);
+        MaxPoolingLayer layer = new MaxPoolingLayer(ActivationFunctionType.NONE, 3, 0, 1, 1, 10, 10);
         ConvolutionData input = new ConvolutionData(Collections.singletonList(DoubleMatrix.ones(5, 5)));
         LayerComputerVisitor layerComputerVisitor = new LayerComputerVisitor(input);
         layer.accept(layerComputerVisitor);
@@ -23,7 +23,7 @@ class MaxPoolingLayerComputerTest {
 
     @Test
     void convolution_layer_padding_no_stride_one_channel_one_input() {
-        MaxPoolingLayer layer = new MaxPoolingLayer(ActivationFunctionType.NONE, 3, 1, 1);
+        MaxPoolingLayer layer = new MaxPoolingLayer(ActivationFunctionType.NONE, 3, 1, 1, 1, 10, 10);
         ConvolutionData input = new ConvolutionData(Collections.singletonList(DoubleMatrix.ones(5, 5)));
         LayerComputerVisitor layerComputerVisitor = new LayerComputerVisitor(input);
         layer.accept(layerComputerVisitor);
@@ -32,7 +32,7 @@ class MaxPoolingLayerComputerTest {
 
     @Test
     void convolution_layer_no_padding_stride_one_channel_one_input() {
-        MaxPoolingLayer layer = new MaxPoolingLayer(ActivationFunctionType.NONE, 3, 0, 2);
+        MaxPoolingLayer layer = new MaxPoolingLayer(ActivationFunctionType.NONE, 3, 0, 2, 1, 10, 10);
         ConvolutionData input = new ConvolutionData(Collections.singletonList(DoubleMatrix.ones(11, 11)));
         LayerComputerVisitor layerComputerVisitor = new LayerComputerVisitor(input);
         layer.accept(layerComputerVisitor);
@@ -41,7 +41,7 @@ class MaxPoolingLayerComputerTest {
 
     @Test
     void convolution_layer_no_padding_no_stride_three_channels_two_inputs() {
-        MaxPoolingLayer layer = new MaxPoolingLayer(ActivationFunctionType.NONE, 3, 0, 1);
+        MaxPoolingLayer layer = new MaxPoolingLayer(ActivationFunctionType.NONE, 3, 0, 1, 1, 10, 10);
         ConvolutionData input = new ConvolutionData(Arrays.asList(
                 DoubleMatrix.ones(5, 5),
                 DoubleMatrix.ones(5, 5).muli(2),

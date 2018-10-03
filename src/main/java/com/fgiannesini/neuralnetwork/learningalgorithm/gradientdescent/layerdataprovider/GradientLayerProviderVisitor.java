@@ -1,10 +1,10 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider;
 
-import com.fgiannesini.neuralnetwork.computer.BatchNormData;
+import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
 import com.fgiannesini.neuralnetwork.computer.WeightBiasData;
+import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.DataAdapterVisitor;
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IntermediateOutputResult;
 import com.fgiannesini.neuralnetwork.model.*;
-import org.jblas.DoubleMatrix;
 
 import java.util.List;
 
@@ -23,8 +23,9 @@ public class GradientLayerProviderVisitor implements LayerVisitor {
 
     @Override
     public void visit(WeightBiasLayer layer) {
-        DoubleMatrix result = ((WeightBiasData) intermediateOutputResult.get(layerIndex + 1).getResult()).getInput();
-        DoubleMatrix previousResult = ((WeightBiasData) intermediateOutputResult.get(layerIndex).getResult()).getInput();
+        WeightBiasData result = (WeightBiasData) this.intermediateOutputResult.get(layerIndex + 1).getResult();
+        WeightBiasData previousResult = (WeightBiasData) formatData(layer, this.intermediateOutputResult.get(layerIndex));
+
         WeightBiasLayer previousLayer = null;
         if (layerIndex + 1 < layers.size()) {
             previousLayer = (WeightBiasLayer) layers.get(layerIndex + 1);
@@ -35,29 +36,40 @@ public class GradientLayerProviderVisitor implements LayerVisitor {
     @Override
     public void visit(BatchNormLayer layer) {
         IntermediateOutputResult intermediateOutputResult = this.intermediateOutputResult.get(layerIndex + 1);
-        DoubleMatrix result = ((BatchNormData) intermediateOutputResult.getResult()).getInput();
-        DoubleMatrix previousResult = ((BatchNormData) this.intermediateOutputResult.get(layerIndex).getResult()).getInput();
+        LayerTypeData previousData = formatData(layer, this.intermediateOutputResult.get(layerIndex));
+
         BatchNormLayer previousLayer = null;
         if (layerIndex + 1 < layers.size()) {
             previousLayer = (BatchNormLayer) layers.get(layerIndex + 1);
         }
-        gradientLayerProvider = new GradientBatchNormLayerProvider(layer, previousLayer, result, previousResult, intermediateOutputResult.getBeforeNormalisationResult(), intermediateOutputResult.getMeanDeviation(), layerIndex);
-
+        gradientLayerProvider = new GradientBatchNormLayerProvider(layer, previousLayer, intermediateOutputResult.getResult(), previousData, intermediateOutputResult.getBeforeNormalisationResult(), intermediateOutputResult.getMeanDeviation(), layerIndex);
     }
 
     @Override
     public void visit(AveragePoolingLayer layer) {
-
+        this.gradientLayerProvider = createGradientConvolutionLayerProvider(layer);
     }
 
     @Override
     public void visit(MaxPoolingLayer layer) {
-
+        this.gradientLayerProvider = createGradientConvolutionLayerProvider(layer);
     }
 
     @Override
     public void visit(ConvolutionLayer layer) {
+        this.gradientLayerProvider = createGradientConvolutionLayerProvider(layer);
+    }
 
+    private GradientConvolutionLayerProvider createGradientConvolutionLayerProvider(Layer layer) {
+        IntermediateOutputResult intermediateOutputResult = this.intermediateOutputResult.get(layerIndex + 1);
+        IntermediateOutputResult previousIntermediateOutputResult = this.intermediateOutputResult.get(layerIndex);
+        return new GradientConvolutionLayerProvider(layer, intermediateOutputResult.getResult(), previousIntermediateOutputResult.getResult(), layerIndex);
+    }
+
+    private LayerTypeData formatData(Layer layer, IntermediateOutputResult intermediateOutputResult) {
+        DataAdapterVisitor adapterVisitor = new DataAdapterVisitor(intermediateOutputResult.getResult());
+        layer.accept(adapterVisitor);
+        return adapterVisitor.getData();
     }
 
     public GradientLayerProvider getGradientLayerProvider() {

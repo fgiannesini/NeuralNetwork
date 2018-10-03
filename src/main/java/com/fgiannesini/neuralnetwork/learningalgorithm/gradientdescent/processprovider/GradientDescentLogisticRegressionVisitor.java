@@ -18,22 +18,24 @@ public class GradientDescentLogisticRegressionVisitor implements DataVisitor {
 
     @Override
     public void visit(WeightBiasData previousError) {
-        DoubleMatrix error = computeError(previousError.getInput());
+        WeightBiasData currentResult = (WeightBiasData) provider.getCurrentResult();
+        DoubleMatrix error = computeError(previousError.getData(), currentResult.getData());
         errorData = new WeightBiasData(error);
     }
 
     @Override
     public void visit(BatchNormData previousError) {
-        DoubleMatrix error = computeError(previousError.getInput());
+        BatchNormData currentResult = (BatchNormData) provider.getCurrentResult();
+        DoubleMatrix error = computeError(previousError.getInput(), currentResult.getInput());
         errorData = new BatchNormData(error, previousError.getMeanDeviationProvider());
     }
 
-    private DoubleMatrix computeError(DoubleMatrix input) {
+    private DoubleMatrix computeError(DoubleMatrix input, DoubleMatrix currentResult) {
         //dZ2 = (A2 - Y)/A2(1-A2)) .* g2'(A2)
-        return provider.getCurrentResult().sub(input)
-                .divi(provider.getCurrentResult())
-                .divi(provider.getCurrentResult().neg().addi(1))
-                .muli(provider.getActivationFunction().derivate(provider.getCurrentResult()));
+        return currentResult.sub(input)
+                .divi(currentResult)
+                .divi(currentResult.neg().addi(1))
+                .muli(provider.getActivationFunction().derivate(currentResult));
     }
 
     LayerTypeData getErrorData() {

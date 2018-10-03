@@ -26,7 +26,7 @@ public class LayerComputerWithDropOutRegularizationVisitor implements LayerVisit
     public void visit(WeightBiasLayer layer) {
         //W.X + b
         WeightBiasData weightBiasData = (WeightBiasData) layerTypeData;
-        DoubleMatrix result = layer.getWeightMatrix().mmul(weightBiasData.getInput()).addiColumnVector(layer.getBiasMatrix());
+        DoubleMatrix result = layer.getWeightMatrix().mmul(weightBiasData.getData()).addiColumnVector(layer.getBiasMatrix());
         result.muliColumnVector(dropOutMatrix);
         ActivationFunctionApplier activationFunctionApplier = layer.getActivationFunctionType().getActivationFunction();
         DoubleMatrix activatedResult = activationFunctionApplier.apply(result);

@@ -20,18 +20,20 @@ public class GradientDescentErrorComputationVisitor implements DataVisitor {
     @Override
     public void visit(WeightBiasData previousError) {
         //dZ1 = W2t * dZ2 .* g1'(A1)
+        WeightBiasData currentResult = (WeightBiasData) provider.getCurrentResult();
         DoubleMatrix error = ((GradientWeightBiasLayerProvider) provider).getPreviousWeightMatrix().transpose()
-                .mmul(previousError.getInput())
-                .muli(provider.getActivationFunction().derivate(provider.getCurrentResult()));
+                .mmul(previousError.getData())
+                .muli(provider.getActivationFunction().derivate(currentResult.getData()));
         errorData = new WeightBiasData(error);
     }
 
     @Override
     public void visit(BatchNormData previousError) {
         //dZ1 = W2t * dZ2 .* g1'(A1)
+        BatchNormData currentResult = (BatchNormData) provider.getCurrentResult();
         DoubleMatrix error = ((GradientBatchNormLayerProvider) provider).getPreviousWeightMatrix().transpose()
                 .mmul(previousError.getInput())
-                .muli(provider.getActivationFunction().derivate(provider.getCurrentResult()));
+                .muli(provider.getActivationFunction().derivate(currentResult.getInput()));
         errorData = new BatchNormData(error, previousError.getMeanDeviationProvider());
     }
 

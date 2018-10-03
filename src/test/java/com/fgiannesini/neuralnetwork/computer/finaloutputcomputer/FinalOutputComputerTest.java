@@ -29,7 +29,7 @@ class FinalOutputComputerTest {
                 .withModel(model)
                 .buildFinalOutputComputer()
                 .compute(inputData);
-        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 17, 17), output.getInput());
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 17, 17), output.getData());
     }
 
     @Test
@@ -49,7 +49,7 @@ class FinalOutputComputerTest {
                 .withModel(model)
                 .buildFinalOutputComputer()
                 .compute(inputData);
-        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 39, 39), output.getInput());
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 39, 39), output.getData());
     }
 
     @Test
@@ -68,7 +68,7 @@ class FinalOutputComputerTest {
                 .withModel(model)
                 .buildFinalOutputComputer()
                 .compute(inputData);
-        DoubleMatrixAssertions.assertMatrices(output.getInput(), new DoubleMatrix(2, 2, 39, 39, 63, 63));
+        DoubleMatrixAssertions.assertMatrices(output.getData(), new DoubleMatrix(2, 2, 39, 39, 63, 63));
 
     }
 }

@@ -25,7 +25,7 @@ public class CostComputerWithL2RegularizationVisitor implements DataVisitor {
         double squaredWeightsSum = neuralNetworkModel.getLayers().stream()
                 .mapToDouble(layer -> MatrixFunctions.pow(((WeightBiasLayer) layer).getWeightMatrix(), 2).sum())
                 .sum();
-        double inputCount = data.getInput().getColumns();
+        double inputCount = data.getData().getColumns();
         cost = squaredWeightsSum * regularizationCoeff / 2d / inputCount;
     }
 

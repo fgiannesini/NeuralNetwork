@@ -10,7 +10,7 @@ public class InputCountVisitor implements DataVisitor {
 
     @Override
     public void visit(WeightBiasData data) {
-        inputCount = data.getInput().getColumns();
+        inputCount = data.getData().getColumns();
     }
 
     @Override

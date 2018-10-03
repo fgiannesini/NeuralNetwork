@@ -17,7 +17,7 @@ public class DropOutApplierVisitor implements DataVisitor {
 
     @Override
     public void visit(WeightBiasData data) {
-        layerTypeData = new WeightBiasData(data.getInput().mulColumnVector(dropOutMatrix));
+        layerTypeData = new WeightBiasData(data.getData().mulColumnVector(dropOutMatrix));
     }
 
     @Override

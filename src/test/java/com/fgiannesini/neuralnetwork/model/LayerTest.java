@@ -50,7 +50,7 @@ class LayerTest {
 
     @Test
     void test_convolutionLayer_clone() {
-        ConvolutionLayer layer = new ConvolutionLayer(ActivationFunctionType.NONE, InitializerType.ONES.getInitializer(), 1, 2, 3, 3, 4);
+        ConvolutionLayer layer = new ConvolutionLayer(ActivationFunctionType.NONE, InitializerType.ONES.getInitializer(), 1, 2, 3, 3, 4, 10, 10);
         ConvolutionLayer clone = layer.clone();
 
         Assertions.assertNotSame(clone, layer);
@@ -71,7 +71,7 @@ class LayerTest {
 
     @Test
     void test_MaxPoolingLayer_clone() {
-        MaxPoolingLayer layer = new MaxPoolingLayer(ActivationFunctionType.NONE, 1, 2, 3);
+        MaxPoolingLayer layer = new MaxPoolingLayer(ActivationFunctionType.NONE, 1, 2, 3, 4, 10, 10);
         MaxPoolingLayer clone = layer.clone();
 
         Assertions.assertNotSame(clone, layer);
@@ -85,7 +85,7 @@ class LayerTest {
 
     @Test
     void test_AveragePoolingLayer_clone() {
-        AveragePoolingLayer layer = new AveragePoolingLayer(ActivationFunctionType.NONE, 1, 2, 3);
+        AveragePoolingLayer layer = new AveragePoolingLayer(ActivationFunctionType.NONE, 1, 2, 3, 4, 10, 10);
         AveragePoolingLayer clone = layer.clone();
 
         Assertions.assertNotSame(clone, layer);

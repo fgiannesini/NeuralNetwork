@@ -19,7 +19,7 @@ public class BatchIteratorVisitor implements DataVisitor {
 
     @Override
     public void visit(WeightBiasData data) {
-        DoubleMatrix subMatrix = data.getInput().getColumns(new IntervalRange(lowerIndex, upperIndex));
+        DoubleMatrix subMatrix = data.getData().getColumns(new IntervalRange(lowerIndex, upperIndex));
         subData = new WeightBiasData(subMatrix);
     }
 

@@ -14,7 +14,7 @@ public class MeanAndDeviationNormalizerVisitor implements DataVisitor {
 
     @Override
     public void visit(WeightBiasData data) {
-        DoubleMatrix normalizedMatrix = normalizeInput(data.getInput());
+        DoubleMatrix normalizedMatrix = normalizeInput(data.getData());
         normalizedData = new WeightBiasData(normalizedMatrix);
     }
 

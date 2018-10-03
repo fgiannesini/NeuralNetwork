@@ -19,15 +19,19 @@ public class ConvolutionLayer extends Layer {
     private final int padding;
     private final int stride;
     private final int inputChannelCount;
+    private final int outputWidth;
+    private final int outputHeight;
     private final int outputChannelCount;
 
-    public ConvolutionLayer(ActivationFunctionType activationFunctionType, Initializer initializer, int filterSize, int padding, int stride, int outputChannelCount, int inputChannelCount) {
+    public ConvolutionLayer(ActivationFunctionType activationFunctionType, Initializer initializer, int filterSize, int padding, int stride, int outputChannelCount, int inputChannelCount, int outputWidth, int outputHeight) {
         super(activationFunctionType);
         this.padding = padding;
         this.stride = stride;
         this.filterSize = filterSize;
         this.outputChannelCount = outputChannelCount;
         this.inputChannelCount = inputChannelCount;
+        this.outputWidth = outputWidth;
+        this.outputHeight = outputHeight;
         weightMatrices = IntStream.range(0, outputChannelCount * this.inputChannelCount)
                 .mapToObj(i -> initializer.initDoubleMatrix(filterSize, filterSize))
                 .collect(Collectors.toList());
@@ -62,6 +66,15 @@ public class ConvolutionLayer extends Layer {
 
     public int getInputChannelCount() {
         return inputChannelCount;
+    }
+
+
+    public int getOutputWidth() {
+        return outputWidth;
+    }
+
+    public int getOutputHeight() {
+        return outputHeight;
     }
 
     @Override
