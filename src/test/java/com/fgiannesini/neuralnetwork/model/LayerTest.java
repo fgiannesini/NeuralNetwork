@@ -71,7 +71,7 @@ class LayerTest {
 
     @Test
     void test_MaxPoolingLayer_clone() {
-        MaxPoolingLayer layer = new MaxPoolingLayer(ActivationFunctionType.NONE, 1, 2, 3, channelCount);
+        MaxPoolingLayer layer = new MaxPoolingLayer(ActivationFunctionType.NONE, 1, 2, 3);
         MaxPoolingLayer clone = layer.clone();
 
         Assertions.assertNotSame(clone, layer);
@@ -85,7 +85,7 @@ class LayerTest {
 
     @Test
     void test_AveragePoolingLayer_clone() {
-        AveragePoolingLayer layer = new AveragePoolingLayer(ActivationFunctionType.NONE, 1, 2, 3, );
+        AveragePoolingLayer layer = new AveragePoolingLayer(ActivationFunctionType.NONE, 1, 2, 3);
         AveragePoolingLayer clone = layer.clone();
 
         Assertions.assertNotSame(clone, layer);

@@ -196,14 +196,14 @@ class IntermediateOutputComputerTest {
     @Test
     void compute_one_dimension_output_with_convolution_layer() {
         NeuralNetworkModel model = ConvolutionNeuralNetworkModelBuilder.init()
-                .input(6, 6, 1)
+                .input(10, 10, 1)
                 .addConvolutionLayer(3, 0, 1, 1, ActivationFunctionType.NONE)
                 .addAveragePoolingLayer(3, 0, 1, ActivationFunctionType.NONE)
                 .addFullyConnectedLayer(2, ActivationFunctionType.NONE)
                 .useInitializer(InitializerType.ONES)
                 .buildConvolutionNetworkModel();
 
-        ConvolutionData inputData = new ConvolutionData(Collections.singletonList(DoubleMatrix.ones(6, 6)));
+        ConvolutionData inputData = new ConvolutionData(Collections.singletonList(DoubleMatrix.ones(10, 10)));
 
         IIntermediateOutputComputer outputComputer = OutputComputerBuilder.init()
                 .withModel(model)
@@ -214,8 +214,8 @@ class IntermediateOutputComputerTest {
 
         DoubleMatrixAssertions.assertMatrices(inputData.getDatas(), ((ConvolutionData) output.get(0).getResult()).getDatas());
 
-        DoubleMatrixAssertions.assertMatrices(Collections.singletonList(new DoubleMatrix(3, 3, 1, 1, 1, 1, 1, 1)), ((ConvolutionData) output.get(1).getResult()).getDatas());
-        DoubleMatrixAssertions.assertMatrices(Collections.singletonList(new DoubleMatrix(3, 3, 1, 1, 1, 1, 1, 1)), ((ConvolutionData) output.get(2).getResult()).getDatas());
-        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 1, 1), ((WeightBiasData) output.get(3).getResult()).getInput());
+        DoubleMatrixAssertions.assertMatrices(Collections.singletonList(DoubleMatrix.ones(8, 8).muli(10)), ((ConvolutionData) output.get(1).getResult()).getDatas());
+        DoubleMatrixAssertions.assertMatrices(Collections.singletonList(DoubleMatrix.ones(6, 6).muli(10)), ((ConvolutionData) output.get(2).getResult()).getDatas());
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 361, 361), ((WeightBiasData) output.get(3).getResult()).getInput());
     }
 }

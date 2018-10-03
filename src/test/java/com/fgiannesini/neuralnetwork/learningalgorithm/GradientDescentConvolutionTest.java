@@ -37,7 +37,7 @@ public class GradientDescentConvolutionTest {
         void learn_with_one_hidden_layer_and_one_of_each_type_channel() {
             NeuralNetworkModel neuralNetworkModel = ConvolutionNeuralNetworkModelBuilder.init()
                     .useInitializer(InitializerType.ONES)
-                    .input(6, 6, 1)
+                    .input(10, 10, 1)
                     .addConvolutionLayer(3, 0, 1, 1, ActivationFunctionType.NONE)
                     .addAveragePoolingLayer(3, 0, 1, ActivationFunctionType.NONE)
                     .addFullyConnectedLayer(2, ActivationFunctionType.NONE)
