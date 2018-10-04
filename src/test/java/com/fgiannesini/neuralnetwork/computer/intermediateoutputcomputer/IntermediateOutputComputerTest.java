@@ -58,18 +58,18 @@ class IntermediateOutputComputerTest {
                 .buildIntermediateOutputComputer()
                 .compute(inputData);
 
-        DoubleMatrixAssertions.assertMatrices(inputData.getInput(), ((BatchNormData) output.get(0).getResult()).getInput());
+        DoubleMatrixAssertions.assertMatrices(inputData.getData(), ((BatchNormData) output.get(0).getResult()).getData());
         Assertions.assertNull(output.get(0).getMeanDeviation());
         Assertions.assertNull(output.get(0).getAfterMeanApplicationResult());
         Assertions.assertNull(output.get(0).getBeforeNormalisationResult());
 
-        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(4, 1, 1, 1, 1, 1), ((BatchNormData) output.get(1).getResult()).getInput());
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(4, 1, 1, 1, 1, 1), ((BatchNormData) output.get(1).getResult()).getData());
         DoubleMatrixAssertions.assertMatrices(DoubleMatrix.ones(4, 1).muli(3), output.get(1).getMeanDeviation().getMean());
         DoubleMatrixAssertions.assertMatrices(DoubleMatrix.zeros(4, 1), output.get(1).getMeanDeviation().getDeviation());
         DoubleMatrixAssertions.assertMatrices(DoubleMatrix.zeros(4, 1), output.get(1).getAfterMeanApplicationResult());
         DoubleMatrixAssertions.assertMatrices(DoubleMatrix.zeros(4, 1), output.get(1).getBeforeNormalisationResult());
 
-        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 1, 1), ((BatchNormData) output.get(2).getResult()).getInput());
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 1, 1), ((BatchNormData) output.get(2).getResult()).getData());
         DoubleMatrixAssertions.assertMatrices(DoubleMatrix.ones(2, 1).muli(4), output.get(2).getMeanDeviation().getMean());
         DoubleMatrixAssertions.assertMatrices(DoubleMatrix.zeros(2, 1), output.get(2).getMeanDeviation().getDeviation());
         DoubleMatrixAssertions.assertMatrices(DoubleMatrix.zeros(2, 1), output.get(2).getAfterMeanApplicationResult());
@@ -163,30 +163,30 @@ class IntermediateOutputComputerTest {
                 .buildIntermediateOutputComputer()
                 .compute(inputData);
 
-        DoubleMatrixAssertions.assertMatrices(inputData.getInput(), ((BatchNormData) output.get(0).getResult()).getInput());
+        DoubleMatrixAssertions.assertMatrices(inputData.getData(), ((BatchNormData) output.get(0).getResult()).getData());
         Assertions.assertNull(output.get(0).getMeanDeviation());
         Assertions.assertNull(output.get(0).getBeforeNormalisationResult());
         Assertions.assertNull(output.get(0).getAfterMeanApplicationResult());
 
-        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, 0, 0, 2, 2), ((BatchNormData) output.get(1).getResult()).getInput());
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, 0, 0, 2, 2), ((BatchNormData) output.get(1).getResult()).getData());
         DoubleMatrixAssertions.assertMatrices(DoubleMatrix.ones(2, 1).muli(4.5), output.get(1).getMeanDeviation().getMean());
         DoubleMatrixAssertions.assertMatrices(DoubleMatrix.ones(2, 1).muli(1.5), output.get(1).getMeanDeviation().getDeviation());
         DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, -1.5, -1.5, 1.5, 1.5), output.get(1).getAfterMeanApplicationResult());
         DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, -1, -1, 1, 1), output.get(1).getBeforeNormalisationResult());
 
-        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, 0, 0, 2, 2), ((BatchNormData) output.get(2).getResult()).getInput());
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, 0, 0, 2, 2), ((BatchNormData) output.get(2).getResult()).getData());
         DoubleMatrixAssertions.assertMatrices(DoubleMatrix.ones(2, 1).muli(2), output.get(2).getMeanDeviation().getMean());
         DoubleMatrixAssertions.assertMatrices(DoubleMatrix.ones(2, 1).muli(2), output.get(2).getMeanDeviation().getDeviation());
         DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, -2, -2, 2, 2), output.get(2).getAfterMeanApplicationResult());
         DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, -1, -1, 1, 1), output.get(2).getBeforeNormalisationResult());
 
-        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, 0, 0, 2, 2), ((BatchNormData) output.get(3).getResult()).getInput());
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, 0, 0, 2, 2), ((BatchNormData) output.get(3).getResult()).getData());
         DoubleMatrixAssertions.assertMatrices(DoubleMatrix.ones(2, 1).muli(2), output.get(3).getMeanDeviation().getMean());
         DoubleMatrixAssertions.assertMatrices(DoubleMatrix.ones(2, 1).muli(2), output.get(3).getMeanDeviation().getDeviation());
         DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, -2, -2, 2, 2), output.get(3).getAfterMeanApplicationResult());
         DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, -1, -1, 1, 1), output.get(3).getBeforeNormalisationResult());
 
-        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, 0, 0, 2, 2), ((BatchNormData) output.get(4).getResult()).getInput());
+        DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, 0, 0, 2, 2), ((BatchNormData) output.get(4).getResult()).getData());
         DoubleMatrixAssertions.assertMatrices(DoubleMatrix.ones(2, 1).muli(2), output.get(4).getMeanDeviation().getMean());
         DoubleMatrixAssertions.assertMatrices(DoubleMatrix.ones(2, 1).muli(2), output.get(4).getMeanDeviation().getDeviation());
         DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 2, -2, -2, 2, 2), output.get(4).getAfterMeanApplicationResult());

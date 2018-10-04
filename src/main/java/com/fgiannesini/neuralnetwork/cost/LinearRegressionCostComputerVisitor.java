@@ -30,8 +30,8 @@ public class LinearRegressionCostComputerVisitor implements DataVisitor {
     public void visit(BatchNormData data) {
         BatchNormData computedOutput = (BatchNormData) outputComputer.compute(data);
         BatchNormData output = (BatchNormData) this.output;
-        double inputCount = computedOutput.getInput().getColumns();
-        cost = computedOutput.getInput().squaredDistance(output.getInput()) / (inputCount * 2d);
+        double inputCount = computedOutput.getData().getColumns();
+        cost = computedOutput.getData().squaredDistance(output.getData()) / (inputCount * 2d);
     }
 
     public double getCost() {

@@ -22,7 +22,7 @@ public class DropOutApplierVisitor implements DataVisitor {
 
     @Override
     public void visit(BatchNormData data) {
-        layerTypeData = new BatchNormData(data.getInput().mulColumnVector(dropOutMatrix), data.getMeanDeviationProvider());
+        layerTypeData = new BatchNormData(data.getData().mulColumnVector(dropOutMatrix), data.getMeanDeviationProvider());
     }
 
     public LayerTypeData getLayerTypeData() {

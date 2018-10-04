@@ -32,8 +32,8 @@ public class GradientDescentErrorComputationVisitor implements DataVisitor {
         //dZ1 = W2t * dZ2 .* g1'(A1)
         BatchNormData currentResult = (BatchNormData) provider.getCurrentResult();
         DoubleMatrix error = ((GradientBatchNormLayerProvider) provider).getPreviousWeightMatrix().transpose()
-                .mmul(previousError.getInput())
-                .muli(provider.getActivationFunction().derivate(currentResult.getInput()));
+                .mmul(previousError.getData())
+                .muli(provider.getActivationFunction().derivate(currentResult.getData()));
         errorData = new BatchNormData(error, previousError.getMeanDeviationProvider());
     }
 

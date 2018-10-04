@@ -16,7 +16,7 @@ class BatchNormLayerComputerTest {
         LayerComputerVisitor layerComputerVisitor = new LayerComputerVisitor(input);
         layer.accept(layerComputerVisitor);
         BatchNormData result = (BatchNormData) layerComputerVisitor.getIntermediateOutputResult().getResult();
-        DoubleMatrixAssertions.assertMatrices(result.getInput(), new DoubleMatrix(2, 1, 1, 1));
+        DoubleMatrixAssertions.assertMatrices(result.getData(), new DoubleMatrix(2, 1, 1, 1));
     }
 
     @Test
@@ -28,7 +28,7 @@ class BatchNormLayerComputerTest {
         LayerComputerVisitor layerComputerVisitor = new LayerComputerVisitor(input);
         layer.accept(layerComputerVisitor);
         BatchNormData result = (BatchNormData) layerComputerVisitor.getIntermediateOutputResult().getResult();
-        DoubleMatrixAssertions.assertMatrices(result.getInput(), expectedOutput);
+        DoubleMatrixAssertions.assertMatrices(result.getData(), expectedOutput);
 
     }
 

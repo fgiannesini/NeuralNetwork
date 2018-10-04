@@ -88,8 +88,8 @@ public class GradientDescentConvolutionTest {
             BatchNormData input = new BatchNormData(DoubleMatrix.rand(2, 3), new MeanDeviationProvider());
             DoubleMatrix rand = DoubleMatrix.rand(1, 3);
             BatchNormData output = new BatchNormData(DoubleMatrix.zeros(2, 3), null);
-            output.getInput().putRow(0, DoubleMatrix.ones(1, 3).subi(rand));
-            output.getInput().putRow(1, rand);
+            output.getData().putRow(0, DoubleMatrix.ones(1, 3).subi(rand));
+            output.getData().putRow(1, rand);
 
             LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, new GradientDescentOnSoftMaxRegressionProcessProvider(new GradientDescentDefaultProcessProvider()));
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);

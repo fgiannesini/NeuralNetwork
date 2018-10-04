@@ -7,10 +7,7 @@ import com.fgiannesini.neuralnetwork.computer.ConvolutionData;
 import com.fgiannesini.neuralnetwork.computer.MeanDeviationProvider;
 import com.fgiannesini.neuralnetwork.computer.WeightBiasData;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
-import com.fgiannesini.neuralnetwork.model.AveragePoolingLayer;
-import com.fgiannesini.neuralnetwork.model.BatchNormLayer;
-import com.fgiannesini.neuralnetwork.model.MaxPoolingLayer;
-import com.fgiannesini.neuralnetwork.model.WeightBiasLayer;
+import com.fgiannesini.neuralnetwork.model.*;
 import org.jblas.DoubleMatrix;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -71,6 +68,33 @@ class DataAdapterVisitorTest {
         layer.accept(dataAdapterVisitor);
         DoubleMatrix expected = new DoubleMatrix(8, 2, 1, 1, 1, 1, 2, 2, 2, 2, 11, 11, 11, 11, 12, 12, 12, 12);
         DoubleMatrixAssertions.assertMatrices(expected, ((WeightBiasData) dataAdapterVisitor.getData()).getData());
+    }
+
+    @Test
+    void from_weightBias_to_averagePooling() {
+        AveragePoolingLayer layer = new AveragePoolingLayer(ActivationFunctionType.NONE, 3, 0, 1, 2, 2, 2);
+        from_weight_bias_to_pooling(layer);
+    }
+
+    @Test
+    void from_weightBias_to_maxPooling() {
+        MaxPoolingLayer layer = new MaxPoolingLayer(ActivationFunctionType.NONE, 3, 0, 1, 2, 2, 2);
+        from_weight_bias_to_pooling(layer);
+    }
+
+    private void from_weight_bias_to_pooling(Layer layer) {
+        DoubleMatrix input = new DoubleMatrix(8, 2, 1, 1, 1, 1, 2, 2, 2, 2, 11, 11, 11, 11, 12, 12, 12, 12);
+        WeightBiasData inputData = new WeightBiasData(input);
+        DataAdapterVisitor dataAdapterVisitor = new DataAdapterVisitor(inputData);
+        layer.accept(dataAdapterVisitor);
+
+        List<DoubleMatrix> expectedMatrices = Arrays.asList(
+                DoubleMatrix.ones(2, 2).muli(1),
+                DoubleMatrix.ones(2, 2).muli(2),
+                DoubleMatrix.ones(2, 2).muli(11),
+                DoubleMatrix.ones(2, 2).muli(12)
+        );
+        DoubleMatrixAssertions.assertMatrices(expectedMatrices, ((ConvolutionData) dataAdapterVisitor.getData()).getDatas());
     }
 
 }

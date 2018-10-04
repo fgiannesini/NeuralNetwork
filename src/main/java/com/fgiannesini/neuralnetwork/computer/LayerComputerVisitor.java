@@ -33,7 +33,7 @@ public class LayerComputerVisitor implements LayerVisitor {
     public void visit(BatchNormLayer layer) {
         //Z1 = W.X
         BatchNormData batchNormData = (BatchNormData) layerTypeData;
-        DoubleMatrix z = layer.getWeightMatrix().mmul(batchNormData.getInput());
+        DoubleMatrix z = layer.getWeightMatrix().mmul(batchNormData.getData());
 
         MeanDeviationProvider meanDeviationProvider = batchNormData.getMeanDeviationProvider();
         new BatchNormData(z, null).accept(meanDeviationProvider);

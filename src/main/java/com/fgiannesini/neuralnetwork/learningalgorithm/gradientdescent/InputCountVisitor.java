@@ -15,7 +15,7 @@ public class InputCountVisitor implements DataVisitor {
 
     @Override
     public void visit(BatchNormData data) {
-        inputCount = data.getInput().getColumns();
+        inputCount = data.getData().getColumns();
     }
 
     public int getInputCount() {

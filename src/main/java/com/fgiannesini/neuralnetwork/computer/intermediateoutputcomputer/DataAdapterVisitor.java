@@ -7,6 +7,7 @@ import com.fgiannesini.neuralnetwork.model.*;
 import org.jblas.DoubleMatrix;
 import org.jblas.ranges.IntervalRange;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DataAdapterVisitor implements LayerVisitor {
@@ -54,7 +55,8 @@ public class DataAdapterVisitor implements LayerVisitor {
     public void visit(AveragePoolingLayer layer) {
         if (previousData instanceof WeightBiasData) {
             DoubleMatrix input = ((WeightBiasData) previousData).getData();
-
+            List<DoubleMatrix> outputs = convertMatrixToMatrixList(input, layer.getOutputWidth(), layer.getOutputHeight(), layer.getChannelCount());
+            data = new ConvolutionData(outputs);
         } else {
             data = previousData;
         }
@@ -63,10 +65,26 @@ public class DataAdapterVisitor implements LayerVisitor {
     @Override
     public void visit(MaxPoolingLayer layer) {
         if (previousData instanceof WeightBiasData) {
-
+            DoubleMatrix input = ((WeightBiasData) previousData).getData();
+            List<DoubleMatrix> outputs = convertMatrixToMatrixList(input, layer.getOutputWidth(), layer.getOutputHeight(), layer.getChannelCount());
+            data = new ConvolutionData(outputs);
         } else {
             data = previousData;
         }
+    }
+
+    private List<DoubleMatrix> convertMatrixToMatrixList(DoubleMatrix input, int outputWidth, int outputHeight, int channelCount) {
+        int inputSize = input.getColumns();
+        int channelSize = outputHeight * outputWidth;
+        List<DoubleMatrix> outputs = new ArrayList<>();
+        for (int inputIndex = 0; inputIndex < inputSize; inputIndex++) {
+            for (int channelIndex = 0; channelIndex < channelCount; channelIndex++) {
+                DoubleMatrix output = input.get(new IntervalRange(channelIndex * channelSize, (channelIndex + 1) * channelSize), new IntervalRange(inputIndex, inputIndex + 1));
+                output.reshape(outputWidth, outputHeight);
+                outputs.add(output);
+            }
+        }
+        return outputs;
     }
 
     @Override

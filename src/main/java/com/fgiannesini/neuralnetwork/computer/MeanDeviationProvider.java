@@ -20,9 +20,9 @@ public class MeanDeviationProvider implements DataVisitor {
     @Override
     public void visit(BatchNormData data) {
         //mean
-        DoubleMatrix means = data.getInput().rowMeans();
+        DoubleMatrix means = data.getData().rowMeans();
         //sigma
-        DoubleMatrix standardDeviation = MatrixFunctions.sqrt(MatrixFunctions.pow(data.getInput().subColumnVector(means), 2).rowMeans()).addi(epsilon);
+        DoubleMatrix standardDeviation = MatrixFunctions.sqrt(MatrixFunctions.pow(data.getData().subColumnVector(means), 2).rowMeans()).addi(epsilon);
         meanDeviation = new BatchNormMeanDeviation(means, standardDeviation);
     }
 

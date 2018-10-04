@@ -12,7 +12,7 @@ public class BatchNormData implements LayerTypeData {
         this.meanDeviationProvider = meanDeviationProvider;
     }
 
-    public DoubleMatrix getInput() {
+    public DoubleMatrix getData() {
         return input;
     }
 

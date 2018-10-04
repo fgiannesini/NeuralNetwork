@@ -40,14 +40,14 @@ public class LogisticRegressionCostComputerVisitor implements DataVisitor {
 
     @Override
     public void visit(BatchNormData data) {
-        double inputCount = data.getInput().columns;
+        double inputCount = data.getData().columns;
         BatchNormData computedOutput = (BatchNormData) outputComputer.compute(data);
         BatchNormData output = (BatchNormData) this.output;
         //cost = -1/m sum(y * log(^y) + (1-y) * log (1-^y))
         double result = 0;
-        for (int index = 0; index < output.getInput().length; index++) {
-            double outputValue = output.getInput().get(index);
-            double computedOutputValue = computedOutput.getInput().get(index);
+        for (int index = 0; index < output.getData().length; index++) {
+            double outputValue = output.getData().get(index);
+            double computedOutputValue = computedOutput.getData().get(index);
             if (outputValue != 0) {
                 result += outputValue * Math.log(computedOutputValue);
             }

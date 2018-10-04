@@ -26,7 +26,7 @@ public class GradientDescentSoftMaxRegressionVisitor implements DataVisitor {
     @Override
     public void visit(BatchNormData previousError) {
         BatchNormData currentResult = (BatchNormData) provider.getCurrentResult();
-        DoubleMatrix error = computeError(previousError.getInput(), currentResult.getInput());
+        DoubleMatrix error = computeError(previousError.getData(), currentResult.getData());
         errorData = new BatchNormData(error, previousError.getMeanDeviationProvider());
     }
 

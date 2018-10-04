@@ -21,7 +21,7 @@ public class DataFunctionApplier implements DataVisitor {
 
     @Override
     public void visit(BatchNormData data) {
-        layerTypeData = new BatchNormData(dataApplier.apply(data.getInput()), data.getMeanDeviationProvider());
+        layerTypeData = new BatchNormData(dataApplier.apply(data.getData()), data.getMeanDeviationProvider());
     }
 
     @Override

@@ -20,7 +20,7 @@ public class MeanAndDeviationNormalizerVisitor implements DataVisitor {
 
     @Override
     public void visit(BatchNormData data) {
-        DoubleMatrix normalizedMatrix = normalizeInput(data.getInput());
+        DoubleMatrix normalizedMatrix = normalizeInput(data.getData());
         normalizedData = new BatchNormData(normalizedMatrix, data.getMeanDeviationProvider());
     }
 
