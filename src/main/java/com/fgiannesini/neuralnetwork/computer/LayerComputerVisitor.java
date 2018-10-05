@@ -1,14 +1,19 @@
 package com.fgiannesini.neuralnetwork.computer;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionApplier;
+import com.fgiannesini.neuralnetwork.computer.data.BatchNormData;
+import com.fgiannesini.neuralnetwork.computer.data.ConvolutionData;
+import com.fgiannesini.neuralnetwork.computer.data.LayerTypeData;
+import com.fgiannesini.neuralnetwork.computer.data.WeightBiasData;
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IntermediateOutputResult;
+import com.fgiannesini.neuralnetwork.math.ConvolutionComputer;
 import com.fgiannesini.neuralnetwork.model.*;
+import com.fgiannesini.neuralnetwork.normalizer.meandeviation.MeanDeviation;
+import com.fgiannesini.neuralnetwork.normalizer.meandeviation.MeanDeviationProvider;
 import org.jblas.DoubleMatrix;
-import org.jblas.ranges.IntervalRange;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 public class LayerComputerVisitor implements LayerVisitor {
 
@@ -56,7 +61,7 @@ public class LayerComputerVisitor implements LayerVisitor {
         List<DoubleMatrix> outputs = new ArrayList<>();
 
         for (DoubleMatrix input : inputs) {
-            DoubleMatrix output = computeConvolution(input, DoubleMatrix::mean, layer.getPadding(), layer.getStride(), layer.getFilterSize());
+            DoubleMatrix output = ConvolutionComputer.get().computeConvolution(input, DoubleMatrix::mean, layer.getPadding(), layer.getStride(), layer.getFilterSize());
             outputs.add(output);
         }
 
@@ -71,7 +76,7 @@ public class LayerComputerVisitor implements LayerVisitor {
         List<DoubleMatrix> outputs = new ArrayList<>();
 
         for (DoubleMatrix input : inputs) {
-            DoubleMatrix output = computeConvolution(input, DoubleMatrix::max, layer.getPadding(), layer.getStride(), layer.getFilterSize());
+            DoubleMatrix output = ConvolutionComputer.get().computeConvolution(input, DoubleMatrix::max, layer.getPadding(), layer.getStride(), layer.getFilterSize());
             outputs.add(output);
         }
 
@@ -92,7 +97,7 @@ public class LayerComputerVisitor implements LayerVisitor {
                 for (int inputChannelIndex = inputIndex * layer.getInputChannelCount(); inputChannelIndex < (inputIndex + 1) * layer.getInputChannelCount(); inputChannelIndex++, weightIndex++) {
                     DoubleMatrix input = inputs.get(inputChannelIndex);
                     DoubleMatrix weights = weightMatrices.get(weightIndex);
-                    DoubleMatrix convolutedMatrix = computeConvolution(input, inputPart -> inputPart.muli(weights).sum(), layer.getPadding(), layer.getStride(), layer.getFilterSize());
+                    DoubleMatrix convolutedMatrix = ConvolutionComputer.get().computeConvolution(input, inputPart -> inputPart.muli(weights).sum(), layer.getPadding(), layer.getStride(), layer.getFilterSize());
                     if (output == DoubleMatrix.EMPTY) {
                         output = convolutedMatrix;
                     } else {
@@ -104,23 +109,6 @@ public class LayerComputerVisitor implements LayerVisitor {
             }
         }
         intermediateOutputResult = new IntermediateOutputResult(new ConvolutionData(outputs));
-    }
-
-    private DoubleMatrix computeConvolution(DoubleMatrix input, Function<DoubleMatrix, Double> convolutionApplication, int padding, int stride, int filterSize) {
-        DoubleMatrix paddedInput = DoubleMatrix.zeros(input.rows + 2 * padding, input.columns + 2 * padding);
-        paddedInput.put(new IntervalRange(padding, paddedInput.getRows() - padding), new IntervalRange(padding, paddedInput.getColumns() - padding), input);
-
-        int outputRowCount = (input.getRows() + 2 * padding - filterSize) / stride + 1;
-        int outputColumnCount = (input.getColumns() + 2 * padding - filterSize) / stride + 1;
-        DoubleMatrix output = DoubleMatrix.zeros(outputRowCount, outputColumnCount);
-        for (int rowIndex = 0; rowIndex < paddedInput.getRows() - filterSize + 1; rowIndex += stride) {
-            for (int columnIndex = 0; columnIndex < paddedInput.getColumns() - filterSize + 1; columnIndex += stride) {
-                DoubleMatrix inputPart = paddedInput.get(new IntervalRange(rowIndex, rowIndex + filterSize), new IntervalRange(columnIndex, columnIndex + filterSize));
-                output.put(rowIndex / stride, columnIndex / stride, convolutionApplication.apply(inputPart));
-            }
-        }
-
-        return output;
     }
 
     public IntermediateOutputResult getIntermediateOutputResult() {

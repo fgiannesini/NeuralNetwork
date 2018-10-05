@@ -1,6 +1,6 @@
 package com.fgiannesini.neuralnetwork.batch;
 
-import com.fgiannesini.neuralnetwork.computer.WeightBiasData;
+import com.fgiannesini.neuralnetwork.computer.data.WeightBiasData;
 import org.jblas.DoubleMatrix;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

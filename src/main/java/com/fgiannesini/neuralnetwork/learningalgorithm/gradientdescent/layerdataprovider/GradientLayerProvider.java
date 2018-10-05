@@ -2,7 +2,7 @@ package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdat
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionApplier;
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
-import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
+import com.fgiannesini.neuralnetwork.computer.data.LayerTypeData;
 import com.fgiannesini.neuralnetwork.model.Layer;
 
 public abstract class GradientLayerProvider {

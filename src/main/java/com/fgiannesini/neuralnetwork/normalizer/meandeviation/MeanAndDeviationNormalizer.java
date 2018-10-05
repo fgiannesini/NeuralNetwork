@@ -1,8 +1,7 @@
-package com.fgiannesini.neuralnetwork.normalizer;
+package com.fgiannesini.neuralnetwork.normalizer.meandeviation;
 
-import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
-import com.fgiannesini.neuralnetwork.computer.MeanDeviation;
-import com.fgiannesini.neuralnetwork.computer.MeanDeviationProvider;
+import com.fgiannesini.neuralnetwork.computer.data.LayerTypeData;
+import com.fgiannesini.neuralnetwork.normalizer.INormalizer;
 
 public class MeanAndDeviationNormalizer implements INormalizer {
 

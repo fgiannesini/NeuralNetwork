@@ -1,8 +1,8 @@
 package com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer;
 
-import com.fgiannesini.neuralnetwork.computer.ConvolutionData;
-import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
-import com.fgiannesini.neuralnetwork.computer.WeightBiasData;
+import com.fgiannesini.neuralnetwork.computer.data.ConvolutionData;
+import com.fgiannesini.neuralnetwork.computer.data.LayerTypeData;
+import com.fgiannesini.neuralnetwork.computer.data.WeightBiasData;
 import com.fgiannesini.neuralnetwork.model.*;
 import org.jblas.DoubleMatrix;
 import org.jblas.ranges.IntervalRange;

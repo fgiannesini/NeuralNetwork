@@ -1,4 +1,4 @@
-package com.fgiannesini.neuralnetwork.computer;
+package com.fgiannesini.neuralnetwork.normalizer.meandeviation;
 
 import org.jblas.DoubleMatrix;
 

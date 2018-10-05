@@ -1,15 +1,12 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent;
 
-import com.fgiannesini.neuralnetwork.computer.BatchNormData;
-import com.fgiannesini.neuralnetwork.computer.DataVisitor;
-import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
-import com.fgiannesini.neuralnetwork.computer.WeightBiasData;
+import com.fgiannesini.neuralnetwork.computer.data.*;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container.GradientDescentCorrection;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientBatchNormLayerProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientLayerProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.BatchNormBackwardReturn;
-import com.fgiannesini.neuralnetwork.model.BatchNormLayer;
-import com.fgiannesini.neuralnetwork.model.WeightBiasLayer;
+import com.fgiannesini.neuralnetwork.math.ConvolutionComputer;
+import com.fgiannesini.neuralnetwork.model.*;
 import org.jblas.DoubleMatrix;
 
 public class LayerTypeCorrectionsVisitor implements DataVisitor {
@@ -85,6 +82,29 @@ public class LayerTypeCorrectionsVisitor implements DataVisitor {
         BatchNormData previousResult = (BatchNormData) gradientLayerProvider.getPreviousResult();
         DoubleMatrix weightCorrection = computeWeightCorrection(previousResult.getData(), dx, inputCount);
         return new BatchNormBackwardReturn(weightCorrection, dGamma, dBeta, dx);
+    }
+
+
+    @Override
+    public void visit(ConvolutionData error) {
+        Layer layer = gradientLayerProvider.getLayer();
+        ConvolutionData previousResult = (ConvolutionData) gradientLayerProvider.getPreviousResult();
+        if (layer instanceof ConvolutionLayer) {
+            getConvolutionLayerCorrections(error, previousResult, (ConvolutionLayer) layer);
+        } else if (layer instanceof AveragePoolingLayer) {
+
+        } else {
+
+        }
+    }
+
+    private GradientDescentCorrection getConvolutionLayerCorrections(ConvolutionData error, ConvolutionData previousResult, ConvolutionLayer layer) {
+        ConvolutionComputer.get();
+        //dB = sum(dZ) ./ m
+//        dz.rowSums()
+//                .divi(inputCount);
+
+        return new GradientDescentCorrection();
     }
 
     public GradientDescentCorrection getCorrection() {

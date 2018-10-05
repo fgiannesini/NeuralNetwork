@@ -1,12 +1,12 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
-import com.fgiannesini.neuralnetwork.computer.BatchNormData;
-import com.fgiannesini.neuralnetwork.computer.MeanDeviationProvider;
-import com.fgiannesini.neuralnetwork.computer.WeightBiasData;
+import com.fgiannesini.neuralnetwork.computer.data.BatchNormData;
+import com.fgiannesini.neuralnetwork.computer.data.WeightBiasData;
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IntermediateOutputResult;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
+import com.fgiannesini.neuralnetwork.normalizer.meandeviation.MeanDeviationProvider;
 import org.jblas.DoubleMatrix;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

@@ -1,9 +1,13 @@
 package com.fgiannesini.neuralnetwork.computer.finaloutputcomputer;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionApplier;
-import com.fgiannesini.neuralnetwork.computer.*;
+import com.fgiannesini.neuralnetwork.computer.data.BatchNormData;
+import com.fgiannesini.neuralnetwork.computer.data.LayerTypeData;
+import com.fgiannesini.neuralnetwork.computer.data.WeightBiasData;
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IntermediateOutputResult;
 import com.fgiannesini.neuralnetwork.model.*;
+import com.fgiannesini.neuralnetwork.normalizer.meandeviation.MeanDeviation;
+import com.fgiannesini.neuralnetwork.normalizer.meandeviation.MeanDeviationProvider;
 import org.jblas.DoubleMatrix;
 
 public class LayerComputerWithDropOutRegularizationVisitor implements LayerVisitor {

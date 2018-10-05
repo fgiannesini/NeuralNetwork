@@ -1,6 +1,7 @@
 package com.fgiannesini.neuralnetwork.computer;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
+import com.fgiannesini.neuralnetwork.computer.data.WeightBiasData;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 import com.fgiannesini.neuralnetwork.model.WeightBiasLayer;
 import org.jblas.DoubleMatrix;

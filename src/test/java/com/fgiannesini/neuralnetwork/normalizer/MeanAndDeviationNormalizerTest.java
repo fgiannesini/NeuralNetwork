@@ -1,7 +1,7 @@
 package com.fgiannesini.neuralnetwork.normalizer;
 
-import com.fgiannesini.neuralnetwork.computer.MeanDeviationProvider;
-import com.fgiannesini.neuralnetwork.computer.WeightBiasData;
+import com.fgiannesini.neuralnetwork.computer.data.WeightBiasData;
+import com.fgiannesini.neuralnetwork.normalizer.meandeviation.MeanDeviationProvider;
 import org.jblas.DoubleMatrix;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

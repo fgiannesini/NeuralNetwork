@@ -1,6 +1,6 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.container;
 
-import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
+import com.fgiannesini.neuralnetwork.computer.data.LayerTypeData;
 import com.fgiannesini.neuralnetwork.cost.CostComputer;
 import com.fgiannesini.neuralnetwork.cost.CostType;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;

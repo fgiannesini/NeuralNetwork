@@ -1,6 +1,6 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation;
 
-import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
+import com.fgiannesini.neuralnetwork.computer.data.LayerTypeData;
 import com.fgiannesini.neuralnetwork.cost.CostType;
 import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithm;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.InputCountVisitor;

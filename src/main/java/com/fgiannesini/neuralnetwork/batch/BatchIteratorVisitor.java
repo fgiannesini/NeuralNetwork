@@ -1,9 +1,9 @@
 package com.fgiannesini.neuralnetwork.batch;
 
-import com.fgiannesini.neuralnetwork.computer.BatchNormData;
-import com.fgiannesini.neuralnetwork.computer.DataVisitor;
-import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
-import com.fgiannesini.neuralnetwork.computer.WeightBiasData;
+import com.fgiannesini.neuralnetwork.computer.data.BatchNormData;
+import com.fgiannesini.neuralnetwork.computer.data.DataVisitor;
+import com.fgiannesini.neuralnetwork.computer.data.LayerTypeData;
+import com.fgiannesini.neuralnetwork.computer.data.WeightBiasData;
 import org.jblas.DoubleMatrix;
 import org.jblas.ranges.IntervalRange;
 

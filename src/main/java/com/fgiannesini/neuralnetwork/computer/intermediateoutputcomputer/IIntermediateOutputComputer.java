@@ -1,6 +1,6 @@
 package com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer;
 
-import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
+import com.fgiannesini.neuralnetwork.computer.data.LayerTypeData;
 
 import java.util.List;
 

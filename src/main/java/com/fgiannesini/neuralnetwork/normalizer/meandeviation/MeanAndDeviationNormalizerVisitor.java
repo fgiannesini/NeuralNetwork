@@ -1,6 +1,9 @@
-package com.fgiannesini.neuralnetwork.normalizer;
+package com.fgiannesini.neuralnetwork.normalizer.meandeviation;
 
-import com.fgiannesini.neuralnetwork.computer.*;
+import com.fgiannesini.neuralnetwork.computer.data.BatchNormData;
+import com.fgiannesini.neuralnetwork.computer.data.DataVisitor;
+import com.fgiannesini.neuralnetwork.computer.data.LayerTypeData;
+import com.fgiannesini.neuralnetwork.computer.data.WeightBiasData;
 import org.jblas.DoubleMatrix;
 
 public class MeanAndDeviationNormalizerVisitor implements DataVisitor {

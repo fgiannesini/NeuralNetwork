@@ -2,9 +2,8 @@ package com.fgiannesini.neuralnetwork.learningalgorithm;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import com.fgiannesini.neuralnetwork.assertions.NeuralNetworkAssertions;
-import com.fgiannesini.neuralnetwork.computer.BatchNormData;
-import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
-import com.fgiannesini.neuralnetwork.computer.MeanDeviationProvider;
+import com.fgiannesini.neuralnetwork.computer.data.BatchNormData;
+import com.fgiannesini.neuralnetwork.computer.data.LayerTypeData;
 import com.fgiannesini.neuralnetwork.converter.DataFormatConverter;
 import com.fgiannesini.neuralnetwork.cost.CostType;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
@@ -17,6 +16,7 @@ import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderiva
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.processprovider.GradientDescentWithDerivationProcessProvider;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
+import com.fgiannesini.neuralnetwork.normalizer.meandeviation.MeanDeviationProvider;
 import org.jblas.DoubleMatrix;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

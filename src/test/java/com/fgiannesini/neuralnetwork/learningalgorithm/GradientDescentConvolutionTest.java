@@ -2,7 +2,10 @@ package com.fgiannesini.neuralnetwork.learningalgorithm;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import com.fgiannesini.neuralnetwork.assertions.NeuralNetworkAssertions;
-import com.fgiannesini.neuralnetwork.computer.*;
+import com.fgiannesini.neuralnetwork.computer.data.BatchNormData;
+import com.fgiannesini.neuralnetwork.computer.data.ConvolutionData;
+import com.fgiannesini.neuralnetwork.computer.data.LayerTypeData;
+import com.fgiannesini.neuralnetwork.computer.data.WeightBiasData;
 import com.fgiannesini.neuralnetwork.converter.DataFormatConverter;
 import com.fgiannesini.neuralnetwork.cost.CostType;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
@@ -16,6 +19,7 @@ import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderiva
 import com.fgiannesini.neuralnetwork.model.ConvolutionNeuralNetworkModelBuilder;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
+import com.fgiannesini.neuralnetwork.normalizer.meandeviation.MeanDeviationProvider;
 import org.jblas.DoubleMatrix;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -44,22 +48,22 @@ public class GradientDescentConvolutionTest {
                     .buildConvolutionNetworkModel();
 
             LayerTypeData input = new ConvolutionData(Collections.singletonList(DoubleMatrix.ones(10, 10)));
-            LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 1, 3, 5));
+            LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 1, 250, 200));
 
             double[][] expectedConvolutionWeightMatrix = {
-                    {1, 1, 1},
-                    {1, 1, 1},
-                    {1, 1, 1}
+                    {-6.32, -6.32, -6.32},
+                    {-6.32, -6.32, -6.32},
+                    {-6.32, -6.32, -6.32}
             };
 
-            double[] expectedConvolutionBiasMatrix = {1};
+            double[] expectedConvolutionBiasMatrix = {-6.32};
 
             double[][] expectedConnectedWeightMatrix = {
-                    {1, 1, 1, 1},
-                    {1, 1, 1, 1}
+                    {-2.05, -2.05, -2.05, -2.05},
+                    {-2.05, -2.05, -2.05, -2.05}
             };
 
-            double[] expectedConnectedBiasMatrix = {1, 1};
+            double[] expectedConnectedBiasMatrix = {1.05, 1.05};
 
             LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, getGradientDescentProvider());
             NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);

@@ -2,9 +2,9 @@ package com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import com.fgiannesini.neuralnetwork.assertions.DoubleMatrixAssertions;
-import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
 import com.fgiannesini.neuralnetwork.computer.OutputComputerBuilder;
-import com.fgiannesini.neuralnetwork.computer.WeightBiasData;
+import com.fgiannesini.neuralnetwork.computer.data.LayerTypeData;
+import com.fgiannesini.neuralnetwork.computer.data.WeightBiasData;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;

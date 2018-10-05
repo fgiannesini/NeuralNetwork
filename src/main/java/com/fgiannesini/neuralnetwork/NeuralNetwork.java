@@ -1,8 +1,8 @@
 package com.fgiannesini.neuralnetwork;
 
 import com.fgiannesini.neuralnetwork.batch.BatchIterator;
-import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
 import com.fgiannesini.neuralnetwork.computer.OutputComputerBuilder;
+import com.fgiannesini.neuralnetwork.computer.data.LayerTypeData;
 import com.fgiannesini.neuralnetwork.cost.CostComputer;
 import com.fgiannesini.neuralnetwork.cost.CostComputerBuilder;
 import com.fgiannesini.neuralnetwork.cost.CostType;

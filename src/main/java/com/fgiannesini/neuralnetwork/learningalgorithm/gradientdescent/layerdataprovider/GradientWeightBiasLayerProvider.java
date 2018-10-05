@@ -1,6 +1,6 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider;
 
-import com.fgiannesini.neuralnetwork.computer.WeightBiasData;
+import com.fgiannesini.neuralnetwork.computer.data.WeightBiasData;
 import com.fgiannesini.neuralnetwork.model.WeightBiasLayer;
 
 public class GradientWeightBiasLayerProvider extends GradientLayerProvider {

@@ -1,6 +1,6 @@
 package com.fgiannesini.neuralnetwork.cost;
 
-import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
+import com.fgiannesini.neuralnetwork.computer.data.LayerTypeData;
 import com.fgiannesini.neuralnetwork.computer.finaloutputcomputer.IFinalOutputComputer;
 
 public class LinearRegressionCostComputer implements CostComputer {

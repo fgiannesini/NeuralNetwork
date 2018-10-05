@@ -1,6 +1,6 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm;
 
-import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
+import com.fgiannesini.neuralnetwork.computer.data.LayerTypeData;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 
 public interface LearningAlgorithm {

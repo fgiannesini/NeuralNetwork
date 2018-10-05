@@ -1,5 +1,6 @@
 package com.fgiannesini.neuralnetwork.computer;
 
+import com.fgiannesini.neuralnetwork.computer.data.*;
 import org.jblas.DoubleMatrix;
 
 import java.util.function.Function;

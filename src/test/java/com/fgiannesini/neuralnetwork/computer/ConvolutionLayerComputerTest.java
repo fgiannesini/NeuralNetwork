@@ -2,6 +2,7 @@ package com.fgiannesini.neuralnetwork.computer;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import com.fgiannesini.neuralnetwork.assertions.DoubleMatrixAssertions;
+import com.fgiannesini.neuralnetwork.computer.data.ConvolutionData;
 import com.fgiannesini.neuralnetwork.converter.DataFormatConverter;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 import com.fgiannesini.neuralnetwork.model.ConvolutionLayer;

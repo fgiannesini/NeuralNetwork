@@ -1,6 +1,9 @@
 package com.fgiannesini.neuralnetwork.computer;
 
 import com.fgiannesini.neuralnetwork.assertions.DoubleMatrixAssertions;
+import com.fgiannesini.neuralnetwork.computer.data.WeightBiasData;
+import com.fgiannesini.neuralnetwork.normalizer.meandeviation.MeanDeviation;
+import com.fgiannesini.neuralnetwork.normalizer.meandeviation.MeanDeviationProvider;
 import org.jblas.DoubleMatrix;
 import org.junit.jupiter.api.Test;
 

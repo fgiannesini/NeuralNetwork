@@ -2,7 +2,7 @@ package com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer;
 
 import com.fgiannesini.neuralnetwork.computer.DataFunctionApplier;
 import com.fgiannesini.neuralnetwork.computer.LayerComputerVisitor;
-import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
+import com.fgiannesini.neuralnetwork.computer.data.LayerTypeData;
 import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;

@@ -1,7 +1,7 @@
 package com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer;
 
-import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
-import com.fgiannesini.neuralnetwork.computer.MeanDeviation;
+import com.fgiannesini.neuralnetwork.computer.data.LayerTypeData;
+import com.fgiannesini.neuralnetwork.normalizer.meandeviation.MeanDeviation;
 import org.jblas.DoubleMatrix;
 
 public class IntermediateOutputResult {

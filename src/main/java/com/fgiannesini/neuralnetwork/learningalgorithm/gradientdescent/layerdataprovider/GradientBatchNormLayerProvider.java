@@ -1,8 +1,8 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider;
 
-import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
-import com.fgiannesini.neuralnetwork.computer.MeanDeviation;
+import com.fgiannesini.neuralnetwork.computer.data.LayerTypeData;
 import com.fgiannesini.neuralnetwork.model.BatchNormLayer;
+import com.fgiannesini.neuralnetwork.normalizer.meandeviation.MeanDeviation;
 import org.jblas.DoubleMatrix;
 
 public class GradientBatchNormLayerProvider extends GradientLayerProvider {

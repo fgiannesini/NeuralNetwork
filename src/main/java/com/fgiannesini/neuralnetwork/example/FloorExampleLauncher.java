@@ -2,10 +2,9 @@ package com.fgiannesini.neuralnetwork.example;
 
 import com.fgiannesini.neuralnetwork.*;
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
-import com.fgiannesini.neuralnetwork.computer.BatchNormData;
-import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
-import com.fgiannesini.neuralnetwork.computer.MeanDeviationProvider;
-import com.fgiannesini.neuralnetwork.computer.WeightBiasData;
+import com.fgiannesini.neuralnetwork.computer.data.BatchNormData;
+import com.fgiannesini.neuralnetwork.computer.data.LayerTypeData;
+import com.fgiannesini.neuralnetwork.computer.data.WeightBiasData;
 import com.fgiannesini.neuralnetwork.cost.CostType;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithmType;
@@ -14,6 +13,7 @@ import com.fgiannesini.neuralnetwork.model.LayerType;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
 import com.fgiannesini.neuralnetwork.normalizer.NormalizerType;
+import com.fgiannesini.neuralnetwork.normalizer.meandeviation.MeanDeviationProvider;
 import org.jblas.DoubleMatrix;
 
 import java.util.function.Consumer;

@@ -1,5 +1,6 @@
-package com.fgiannesini.neuralnetwork.computer;
+package com.fgiannesini.neuralnetwork.computer.data;
 
+import com.fgiannesini.neuralnetwork.normalizer.meandeviation.MeanDeviationProvider;
 import org.jblas.DoubleMatrix;
 
 public class BatchNormData implements LayerTypeData {

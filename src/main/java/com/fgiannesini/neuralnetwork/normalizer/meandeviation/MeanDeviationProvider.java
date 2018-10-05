@@ -1,5 +1,8 @@
-package com.fgiannesini.neuralnetwork.computer;
+package com.fgiannesini.neuralnetwork.normalizer.meandeviation;
 
+import com.fgiannesini.neuralnetwork.computer.data.BatchNormData;
+import com.fgiannesini.neuralnetwork.computer.data.DataVisitor;
+import com.fgiannesini.neuralnetwork.computer.data.WeightBiasData;
 import org.jblas.DoubleMatrix;
 import org.jblas.MatrixFunctions;
 

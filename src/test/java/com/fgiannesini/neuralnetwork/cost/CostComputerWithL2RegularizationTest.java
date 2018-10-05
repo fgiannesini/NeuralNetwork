@@ -1,7 +1,7 @@
 package com.fgiannesini.neuralnetwork.cost;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
-import com.fgiannesini.neuralnetwork.computer.WeightBiasData;
+import com.fgiannesini.neuralnetwork.computer.data.WeightBiasData;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModelBuilder;
