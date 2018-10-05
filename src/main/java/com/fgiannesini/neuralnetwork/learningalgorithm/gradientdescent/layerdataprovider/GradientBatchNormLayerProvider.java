@@ -8,14 +8,12 @@ import org.jblas.DoubleMatrix;
 public class GradientBatchNormLayerProvider extends GradientLayerProvider {
 
     private final BatchNormLayer layer;
-    private final BatchNormLayer previousLayer;
     private final MeanDeviation meanDeviation;
     private final DoubleMatrix beforeNormalisationResults;
 
-    public GradientBatchNormLayerProvider(BatchNormLayer layer, BatchNormLayer previousLayer, LayerTypeData results, LayerTypeData previousResults, DoubleMatrix beforeNormalisationResults, MeanDeviation meanDeviation, int layerIndex) {
+    public GradientBatchNormLayerProvider(BatchNormLayer layer, LayerTypeData results, LayerTypeData previousResults, DoubleMatrix beforeNormalisationResults, MeanDeviation meanDeviation, int layerIndex) {
         super(results, previousResults, layer, layerIndex, layer.getActivationFunctionType());
         this.layer = layer;
-        this.previousLayer = previousLayer;
         this.meanDeviation = meanDeviation;
         this.beforeNormalisationResults = beforeNormalisationResults;
     }
@@ -30,10 +28,6 @@ public class GradientBatchNormLayerProvider extends GradientLayerProvider {
 
     public DoubleMatrix getBeforeNormalisationCurrentResult() {
         return beforeNormalisationResults;
-    }
-
-    public DoubleMatrix getPreviousWeightMatrix() {
-        return previousLayer.getWeightMatrix();
     }
 
 }

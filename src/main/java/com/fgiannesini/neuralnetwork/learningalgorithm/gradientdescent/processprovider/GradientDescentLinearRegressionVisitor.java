@@ -18,7 +18,6 @@ public class GradientDescentLinearRegressionVisitor implements DataVisitor {
 
     @Override
     public void visit(WeightBiasData previousError) {
-
         WeightBiasData currentResult = (WeightBiasData) provider.getCurrentResult();
         DoubleMatrix error = computeError(previousError.getData(), currentResult.getData());
         errorData = new WeightBiasData(error);

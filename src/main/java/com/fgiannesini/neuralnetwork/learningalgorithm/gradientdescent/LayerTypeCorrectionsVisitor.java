@@ -8,6 +8,8 @@ import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientBatchNormLayerProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientLayerProvider;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider.BatchNormBackwardReturn;
+import com.fgiannesini.neuralnetwork.model.BatchNormLayer;
+import com.fgiannesini.neuralnetwork.model.WeightBiasLayer;
 import org.jblas.DoubleMatrix;
 
 public class LayerTypeCorrectionsVisitor implements DataVisitor {
@@ -26,8 +28,13 @@ public class LayerTypeCorrectionsVisitor implements DataVisitor {
         WeightBiasData previousResult = (WeightBiasData) gradientLayerProvider.getPreviousResult();
         DoubleMatrix weightCorrection = computeWeightCorrection(previousResult.getData(), errorInput, inputCount);
         DoubleMatrix biasCorrection = computeBiasCorrection(errorInput, inputCount);
-        nextGradientLayerProvider = new WeightBiasData(error.getData());
         correction = new GradientDescentCorrection(weightCorrection, biasCorrection);
+
+        //dZ1 = W2t * dZ2
+        WeightBiasLayer layer = (WeightBiasLayer) gradientLayerProvider.getLayer();
+        DoubleMatrix nextError = layer.getWeightMatrix().transpose()
+                .mmul(error.getData());
+        nextGradientLayerProvider = new WeightBiasData(nextError);
     }
 
     private DoubleMatrix computeBiasCorrection(DoubleMatrix dz, int inputCount) {
@@ -48,8 +55,14 @@ public class LayerTypeCorrectionsVisitor implements DataVisitor {
         DoubleMatrix errorInput = error.getData();
         int inputCount = errorInput.getColumns();
         BatchNormBackwardReturn batchNormBackwardReturn = getBatchNormBackwardReturn(inputCount, (GradientBatchNormLayerProvider) gradientLayerProvider, errorInput);
-        nextGradientLayerProvider = new BatchNormData(batchNormBackwardReturn.getNextError(), error.getMeanDeviationProvider());
         correction = batchNormBackwardReturn.getCorrections();
+
+        //dZ1 = W2t * dZ2
+        BatchNormLayer layer = (BatchNormLayer) gradientLayerProvider.getLayer();
+        DoubleMatrix nextError = layer.getWeightMatrix().transpose()
+                .mmul(batchNormBackwardReturn.getNextError());
+
+        nextGradientLayerProvider = new BatchNormData(nextError, error.getMeanDeviationProvider());
     }
 
     private BatchNormBackwardReturn getBatchNormBackwardReturn(int inputCount, GradientBatchNormLayerProvider gradientLayerProvider, DoubleMatrix dz) {

@@ -90,7 +90,9 @@ public class DataAdapterVisitor implements LayerVisitor {
     @Override
     public void visit(ConvolutionLayer layer) {
         if (previousData instanceof WeightBiasData) {
-
+            DoubleMatrix input = ((WeightBiasData) previousData).getData();
+            List<DoubleMatrix> outputs = convertMatrixToMatrixList(input, layer.getOutputWidth(), layer.getOutputHeight(), layer.getOutputChannelCount());
+            data = new ConvolutionData(outputs);
         } else {
             data = previousData;
         }

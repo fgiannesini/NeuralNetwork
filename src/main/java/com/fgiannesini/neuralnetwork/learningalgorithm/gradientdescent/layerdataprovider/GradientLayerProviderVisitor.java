@@ -25,24 +25,14 @@ public class GradientLayerProviderVisitor implements LayerVisitor {
     public void visit(WeightBiasLayer layer) {
         WeightBiasData result = (WeightBiasData) this.intermediateOutputResult.get(layerIndex + 1).getResult();
         WeightBiasData previousResult = (WeightBiasData) formatData(layer, this.intermediateOutputResult.get(layerIndex));
-
-        WeightBiasLayer previousLayer = null;
-        if (layerIndex + 1 < layers.size()) {
-            previousLayer = (WeightBiasLayer) layers.get(layerIndex + 1);
-        }
-        gradientLayerProvider = new GradientWeightBiasLayerProvider(layer, previousLayer, result, previousResult, layerIndex);
+        gradientLayerProvider = new GradientWeightBiasLayerProvider(layer, result, previousResult, layerIndex);
     }
 
     @Override
     public void visit(BatchNormLayer layer) {
         IntermediateOutputResult intermediateOutputResult = this.intermediateOutputResult.get(layerIndex + 1);
         LayerTypeData previousData = formatData(layer, this.intermediateOutputResult.get(layerIndex));
-
-        BatchNormLayer previousLayer = null;
-        if (layerIndex + 1 < layers.size()) {
-            previousLayer = (BatchNormLayer) layers.get(layerIndex + 1);
-        }
-        gradientLayerProvider = new GradientBatchNormLayerProvider(layer, previousLayer, intermediateOutputResult.getResult(), previousData, intermediateOutputResult.getBeforeNormalisationResult(), intermediateOutputResult.getMeanDeviation(), layerIndex);
+        gradientLayerProvider = new GradientBatchNormLayerProvider(layer, intermediateOutputResult.getResult(), previousData, intermediateOutputResult.getBeforeNormalisationResult(), intermediateOutputResult.getMeanDeviation(), layerIndex);
     }
 
     @Override

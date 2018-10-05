@@ -1,13 +1,7 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processprovider;
 
-import com.fgiannesini.neuralnetwork.computer.BatchNormData;
-import com.fgiannesini.neuralnetwork.computer.DataVisitor;
-import com.fgiannesini.neuralnetwork.computer.LayerTypeData;
-import com.fgiannesini.neuralnetwork.computer.WeightBiasData;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientBatchNormLayerProvider;
+import com.fgiannesini.neuralnetwork.computer.*;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientLayerProvider;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientWeightBiasLayerProvider;
-import org.jblas.DoubleMatrix;
 
 public class GradientDescentErrorComputationVisitor implements DataVisitor {
     private final GradientLayerProvider provider;
@@ -18,23 +12,19 @@ public class GradientDescentErrorComputationVisitor implements DataVisitor {
     }
 
     @Override
-    public void visit(WeightBiasData previousError) {
-        //dZ1 = W2t * dZ2 .* g1'(A1)
+    public void visit(WeightBiasData error) {
         WeightBiasData currentResult = (WeightBiasData) provider.getCurrentResult();
-        DoubleMatrix error = ((GradientWeightBiasLayerProvider) provider).getPreviousWeightMatrix().transpose()
-                .mmul(previousError.getData())
-                .muli(provider.getActivationFunction().derivate(currentResult.getData()));
-        errorData = new WeightBiasData(error);
+        DataFunctionApplier dataFunctionApplier = new DataFunctionApplier(matrix -> matrix.mul(provider.getLayer().getActivationFunctionType().getActivationFunction().derivate(currentResult.getData())));
+        error.accept(dataFunctionApplier);
+        errorData = dataFunctionApplier.getLayerTypeData();
     }
 
     @Override
-    public void visit(BatchNormData previousError) {
-        //dZ1 = W2t * dZ2 .* g1'(A1)
+    public void visit(BatchNormData error) {
         BatchNormData currentResult = (BatchNormData) provider.getCurrentResult();
-        DoubleMatrix error = ((GradientBatchNormLayerProvider) provider).getPreviousWeightMatrix().transpose()
-                .mmul(previousError.getData())
-                .muli(provider.getActivationFunction().derivate(currentResult.getData()));
-        errorData = new BatchNormData(error, previousError.getMeanDeviationProvider());
+        DataFunctionApplier dataFunctionApplier = new DataFunctionApplier(matrix -> matrix.mul(provider.getLayer().getActivationFunctionType().getActivationFunction().derivate(currentResult.getData())));
+        error.accept(dataFunctionApplier);
+        errorData = dataFunctionApplier.getLayerTypeData();
     }
 
     LayerTypeData getErrorData() {
