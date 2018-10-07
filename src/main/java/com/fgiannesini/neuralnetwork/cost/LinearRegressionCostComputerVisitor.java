@@ -1,37 +1,42 @@
 package com.fgiannesini.neuralnetwork.cost;
 
-import com.fgiannesini.neuralnetwork.computer.data.BatchNormData;
-import com.fgiannesini.neuralnetwork.computer.data.DataVisitor;
-import com.fgiannesini.neuralnetwork.computer.data.LayerTypeData;
-import com.fgiannesini.neuralnetwork.computer.data.WeightBiasData;
+import com.fgiannesini.neuralnetwork.computer.data.*;
 import com.fgiannesini.neuralnetwork.computer.finaloutputcomputer.IFinalOutputComputer;
+
+import java.util.stream.IntStream;
 
 public class LinearRegressionCostComputerVisitor implements DataVisitor {
 
-
-    private final LayerTypeData output;
+    private final LayerTypeData input;
     private final IFinalOutputComputer outputComputer;
     private double cost;
 
-    public LinearRegressionCostComputerVisitor(LayerTypeData output, IFinalOutputComputer outputComputer) {
-        this.output = output;
+    public LinearRegressionCostComputerVisitor(LayerTypeData input, IFinalOutputComputer outputComputer) {
+        this.input = input;
         this.outputComputer = outputComputer;
     }
 
     @Override
-    public void visit(WeightBiasData data) {
-        WeightBiasData computedOutput = (WeightBiasData) outputComputer.compute(data);
-        WeightBiasData output = (WeightBiasData) this.output;
+    public void visit(WeightBiasData output) {
+        WeightBiasData computedOutput = (WeightBiasData) outputComputer.compute(this.input);
         double inputCount = computedOutput.getData().getColumns();
         cost = computedOutput.getData().squaredDistance(output.getData()) / (inputCount * 2d);
     }
 
     @Override
-    public void visit(BatchNormData data) {
-        BatchNormData computedOutput = (BatchNormData) outputComputer.compute(data);
-        BatchNormData output = (BatchNormData) this.output;
+    public void visit(BatchNormData output) {
+        BatchNormData computedOutput = (BatchNormData) outputComputer.compute(input);
         double inputCount = computedOutput.getData().getColumns();
         cost = computedOutput.getData().squaredDistance(output.getData()) / (inputCount * 2d);
+    }
+
+    @Override
+    public void visit(ConvolutionData output) {
+        ConvolutionData computedOutput = (ConvolutionData) outputComputer.compute(input);
+        int inputCount = computedOutput.getDatas().size();
+        cost = IntStream.range(0, inputCount)
+                .mapToDouble(i -> computedOutput.getDatas().get(i).squaredDistance(output.getDatas().get(i)))
+                .sum() / (inputCount * 2d);
     }
 
     public double getCost() {

@@ -13,8 +13,8 @@ public class LogisticRegressionCostComputer implements CostComputer {
 
     @Override
     public double compute(LayerTypeData input, LayerTypeData output) {
-        LogisticRegressionCostComputerVisitor computerVisitor = new LogisticRegressionCostComputerVisitor(output, outputComputer);
-        input.accept(computerVisitor);
+        LogisticRegressionCostComputerVisitor computerVisitor = new LogisticRegressionCostComputerVisitor(input, outputComputer);
+        output.accept(computerVisitor);
         return computerVisitor.getCost();
     }
 }

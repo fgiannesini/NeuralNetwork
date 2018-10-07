@@ -38,6 +38,87 @@ public class GradientDescentConvolutionTest {
     class VariationOnInputAndLayerSize {
 
         @Test
+        void learn_with_one_fully_connected_layer() {
+            NeuralNetworkModel neuralNetworkModel = ConvolutionNeuralNetworkModelBuilder.init()
+                    .useInitializer(InitializerType.RANDOM)
+                    .input(10, 10, 1)
+                    .addFullyConnectedLayer(2, ActivationFunctionType.RELU)
+                    .buildConvolutionNetworkModel();
+
+            LayerTypeData input = new WeightBiasData(DoubleMatrix.rand(100, 1));
+            LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 1, 1, 0));
+
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, getGradientDescentProvider());
+            NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
+
+            LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LINEAR_REGRESSION, new GradientDescentWithDerivationProcessProvider());
+            NeuralNetworkModel gradientWithDerivativeNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);
+            NeuralNetworkAssertions.checkSameNeuralNetworks(gradientNeuralNetworkModel, gradientWithDerivativeNeuralNetworkModel);
+        }
+
+        @Test
+        void learn_with_one_convolution_layer_and_one_fully_connected_layer() {
+            NeuralNetworkModel neuralNetworkModel = ConvolutionNeuralNetworkModelBuilder.init()
+                    .useInitializer(InitializerType.RANDOM)
+                    .input(10, 10, 1)
+                    .addConvolutionLayer(3, 0, 1, 1, ActivationFunctionType.RELU)
+                    .addFullyConnectedLayer(2, ActivationFunctionType.RELU)
+                    .buildConvolutionNetworkModel();
+
+            LayerTypeData input = new ConvolutionData(Collections.singletonList(DoubleMatrix.rand(10, 10)));
+            LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 1, 1, 0));
+
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, getGradientDescentProvider());
+            NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
+
+            LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LINEAR_REGRESSION, new GradientDescentWithDerivationProcessProvider());
+            NeuralNetworkModel gradientWithDerivativeNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);
+            NeuralNetworkAssertions.checkSameNeuralNetworks(gradientNeuralNetworkModel, gradientWithDerivativeNeuralNetworkModel);
+        }
+
+        @Test
+        void learn_with_one_average_pooling_layer_and_one_fully_connected_layer() {
+            NeuralNetworkModel neuralNetworkModel = ConvolutionNeuralNetworkModelBuilder.init()
+                    .useInitializer(InitializerType.RANDOM)
+                    .input(10, 10, 1)
+                    .addConvolutionLayer(3, 0, 1, 1, ActivationFunctionType.NONE)
+                    .addAveragePoolingLayer(3, 0, 1, ActivationFunctionType.NONE)
+                    .addFullyConnectedLayer(2, ActivationFunctionType.NONE)
+                    .buildConvolutionNetworkModel();
+
+            LayerTypeData input = new ConvolutionData(Collections.singletonList(DoubleMatrix.rand(10, 10)));
+            LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 1, 250, 200));
+
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, getGradientDescentProvider());
+            NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
+
+            LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LINEAR_REGRESSION, new GradientDescentWithDerivationProcessProvider());
+            NeuralNetworkModel gradientWithDerivativeNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);
+            NeuralNetworkAssertions.checkSameNeuralNetworks(gradientNeuralNetworkModel, gradientWithDerivativeNeuralNetworkModel);
+        }
+
+        @Test
+        void learn_with_one_max_pooling_layer_and_one_fully_connected_layer() {
+            NeuralNetworkModel neuralNetworkModel = ConvolutionNeuralNetworkModelBuilder.init()
+                    .useInitializer(InitializerType.RANDOM)
+                    .input(10, 10, 1)
+                    .addConvolutionLayer(3, 0, 1, 1, ActivationFunctionType.NONE)
+                    .addMaxPoolingLayer(3, 0, 1, ActivationFunctionType.NONE)
+                    .addFullyConnectedLayer(2, ActivationFunctionType.NONE)
+                    .buildConvolutionNetworkModel();
+
+            LayerTypeData input = new ConvolutionData(Collections.singletonList(DoubleMatrix.rand(10, 10)));
+            LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 1, 250, 200));
+
+            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, getGradientDescentProvider());
+            NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
+
+            LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LINEAR_REGRESSION, new GradientDescentWithDerivationProcessProvider());
+            NeuralNetworkModel gradientWithDerivativeNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);
+            NeuralNetworkAssertions.checkSameNeuralNetworks(gradientNeuralNetworkModel, gradientWithDerivativeNeuralNetworkModel);
+        }
+
+        @Test
         void learn_with_one_hidden_layer_and_one_of_each_type_channel() {
             NeuralNetworkModel neuralNetworkModel = ConvolutionNeuralNetworkModelBuilder.init()
                     .useInitializer(InitializerType.ONES)
@@ -48,36 +129,76 @@ public class GradientDescentConvolutionTest {
                     .buildConvolutionNetworkModel();
 
             LayerTypeData input = new ConvolutionData(Collections.singletonList(DoubleMatrix.ones(10, 10)));
-            LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 1, 250, 200));
+            LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 1, 350, 370));
 
             double[][] expectedConvolutionWeightMatrix = {
-                    {-6.32, -6.32, -6.32},
-                    {-6.32, -6.32, -6.32},
-                    {-6.32, -6.32, -6.32}
+                    {0.28, 0.28, 0.28},
+                    {0.28, 0.28, 0.28},
+                    {0.28, 0.28, 0.28}
             };
 
-            double[] expectedConvolutionBiasMatrix = {-6.32};
+            double[] expectedConvolutionBiasMatrix = {0.28};
 
             double[][] expectedConnectedWeightMatrix = {
-                    {-2.05, -2.05, -2.05, -2.05},
-                    {-2.05, -2.05, -2.05, -2.05}
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0},
+                    {-0.1, 0}
             };
 
-            double[] expectedConnectedBiasMatrix = {1.05, 1.05};
+            double[] expectedConnectedBiasMatrix = {0.89, 1.09};
 
-            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, getGradientDescentProvider());
-            NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
+//            LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, getGradientDescentProvider());
+//            NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
+
+            LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LINEAR_REGRESSION, new GradientDescentWithDerivationProcessProvider());
+            NeuralNetworkModel gradientNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);
+
             NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 0,
                     Arrays.asList(DataFormatConverter.fromDoubleTabToDoubleMatrix(expectedConvolutionWeightMatrix),
                             DataFormatConverter.fromTabToDoubleMatrix(expectedConvolutionBiasMatrix)));
 
-            NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 3,
+            NeuralNetworkAssertions.checkNeuralNetworksLayer(gradientNeuralNetworkModel, 2,
                     Arrays.asList(DataFormatConverter.fromDoubleTabToDoubleMatrix(expectedConnectedWeightMatrix),
-                            DataFormatConverter.fromTabToDoubleMatrix(expectedConnectedBiasMatrix)));
+                            DataFormatConverter.fromTabToDoubleMatrix(expectedConnectedBiasMatrix)
+                    )
+            );
 
-            LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LINEAR_REGRESSION, new GradientDescentWithDerivationProcessProvider());
-            NeuralNetworkModel gradientWithDerivativeNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);
-            NeuralNetworkAssertions.checkSameNeuralNetworks(gradientNeuralNetworkModel, gradientWithDerivativeNeuralNetworkModel);
+//            LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.LINEAR_REGRESSION, new GradientDescentWithDerivationProcessProvider());
+//            NeuralNetworkModel gradientWithDerivativeNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);
+//            NeuralNetworkAssertions.checkSameNeuralNetworks(gradientNeuralNetworkModel, gradientWithDerivativeNeuralNetworkModel);
         }
 
         @Test

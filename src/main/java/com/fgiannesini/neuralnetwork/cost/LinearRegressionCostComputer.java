@@ -13,8 +13,8 @@ public class LinearRegressionCostComputer implements CostComputer {
 
     @Override
     public double compute(LayerTypeData input, LayerTypeData output) {
-        LinearRegressionCostComputerVisitor computerVisitor = new LinearRegressionCostComputerVisitor(output, outputComputer);
-        input.accept(computerVisitor);
+        LinearRegressionCostComputerVisitor computerVisitor = new LinearRegressionCostComputerVisitor(input, outputComputer);
+        output.accept(computerVisitor);
         return computerVisitor.getCost();
     }
 }

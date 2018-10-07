@@ -13,8 +13,8 @@ public class SoftMaxRegressionCostComputer implements CostComputer {
 
     @Override
     public double compute(LayerTypeData input, LayerTypeData output) {
-        SoftMaxRegressionCostComputerVisitor computerVisitor = new SoftMaxRegressionCostComputerVisitor(output, outputComputer);
-        input.accept(computerVisitor);
+        SoftMaxRegressionCostComputerVisitor computerVisitor = new SoftMaxRegressionCostComputerVisitor(input, outputComputer);
+        output.accept(computerVisitor);
         return computerVisitor.getCost();
     }
 }

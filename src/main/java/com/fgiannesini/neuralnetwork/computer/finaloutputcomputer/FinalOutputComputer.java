@@ -3,6 +3,7 @@ package com.fgiannesini.neuralnetwork.computer.finaloutputcomputer;
 import com.fgiannesini.neuralnetwork.computer.DataFunctionApplier;
 import com.fgiannesini.neuralnetwork.computer.LayerComputerVisitor;
 import com.fgiannesini.neuralnetwork.computer.data.LayerTypeData;
+import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.DataAdapterVisitor;
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IntermediateOutputResult;
 import com.fgiannesini.neuralnetwork.model.Layer;
 import org.jblas.DoubleMatrix;
@@ -25,7 +26,10 @@ public class FinalOutputComputer implements IFinalOutputComputer {
 
         IntermediateOutputResult intermediateOutputResult = new IntermediateOutputResult(firstData);
         for (Layer layer : layers) {
-            LayerComputerVisitor layerComputerVisitor = new LayerComputerVisitor(intermediateOutputResult.getResult());
+            LayerTypeData previousResult = intermediateOutputResult.getResult();
+            DataAdapterVisitor dataAdaptorVisitor = new DataAdapterVisitor(previousResult);
+            layer.accept(dataAdaptorVisitor);
+            LayerComputerVisitor layerComputerVisitor = new LayerComputerVisitor(dataAdaptorVisitor.getData());
             layer.accept(layerComputerVisitor);
             intermediateOutputResult = layerComputerVisitor.getIntermediateOutputResult();
         }
