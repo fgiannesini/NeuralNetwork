@@ -100,9 +100,11 @@ public class LayerTypeCorrectionsVisitor implements DataVisitor {
             nextGradientLayerProvider = getNextConvolutionLayerProvider(error, convolutionLayer);
         } else if (layer instanceof AveragePoolingLayer) {
             AveragePoolingLayer averagePoolingLayer = (AveragePoolingLayer) layer;
+            correction = new GradientDescentCorrection(IntStream.range(0, averagePoolingLayer.getChannelCount()).mapToObj(i -> DoubleMatrix.EMPTY).collect(Collectors.toList()));
             nextGradientLayerProvider = getNextAveragePoolingLayerProvider(error, averagePoolingLayer);
         } else if (layer instanceof MaxPoolingLayer) {
             MaxPoolingLayer maxPoolingLayer = (MaxPoolingLayer) layer;
+            correction = new GradientDescentCorrection(IntStream.range(0, maxPoolingLayer.getChannelCount()).mapToObj(i -> DoubleMatrix.EMPTY).collect(Collectors.toList()));
             nextGradientLayerProvider = getNextMaxPoolingLayerProvider(error, maxPoolingLayer);
         }
     }
@@ -208,13 +210,13 @@ public class LayerTypeCorrectionsVisitor implements DataVisitor {
                 for (int j = 0; j < layer.getOutputChannelCount(); j++) {
                     int errorIndex = inputIndex * layer.getOutputChannelCount() + j;
                     DoubleMatrix errorData = errorDatas.get(errorIndex);
-                    weightCorrections.get(i + j).addi(ConvolutionComputer.get().computeConvolution(previousResultDatas.get(previousResultIndex), inputPart -> inputPart.muli(errorData).sum(), layer.getPadding(), layer.getStride(), errorData.getRows()));
+                    weightCorrections.get(i + j * layer.getInputChannelCount()).addi(ConvolutionComputer.get().computeConvolution(previousResultDatas.get(previousResultIndex), inputPart -> inputPart.muli(errorData).sum(), layer.getPadding(), layer.getStride(), errorData.getRows()));
                     biasCorrections.get(j).addi(errorData.sum());
                 }
             }
         }
         weightCorrections.forEach(m -> m.divi(inputCount));
-        biasCorrections.forEach(m -> m.divi(inputCount));
+        biasCorrections.forEach(m -> m.divi(inputCount * layer.getInputChannelCount()));
 
         GradientDescentCorrection gradientDescentCorrection = new GradientDescentCorrection(weightCorrections);
         gradientDescentCorrection.addCorrectionResults(biasCorrections);
