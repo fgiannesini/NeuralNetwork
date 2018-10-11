@@ -18,8 +18,8 @@ public class ConvolutionComputer {
         DoubleMatrix paddedInput = DoubleMatrix.zeros(input.rows + 2 * padding, input.columns + 2 * padding);
         paddedInput.put(new IntervalRange(padding, paddedInput.getRows() - padding), new IntervalRange(padding, paddedInput.getColumns() - padding), input);
 
-        int outputRowCount = (input.getRows() + 2 * padding - filterSize) / stride + 1;
-        int outputColumnCount = (input.getColumns() + 2 * padding - filterSize) / stride + 1;
+        int outputRowCount = (int) Math.ceil((input.getRows() + 2 * padding - filterSize) / (double) stride + 1);
+        int outputColumnCount = (int) Math.ceil((input.getColumns() + 2 * padding - filterSize) / (double) stride + 1);
         DoubleMatrix output = DoubleMatrix.zeros(outputRowCount, outputColumnCount);
         for (int rowIndex = 0; rowIndex < paddedInput.getRows() - filterSize + 1; rowIndex += stride) {
             for (int columnIndex = 0; columnIndex < paddedInput.getColumns() - filterSize + 1; columnIndex += stride) {

@@ -182,10 +182,10 @@ public class LayerTypeCorrectionsVisitor implements DataVisitor {
     }
 
     private DoubleMatrix applyStride(DoubleMatrix input, int stride) {
-        if (stride == 0) {
+        if (stride == 1) {
             return input;
         }
-        DoubleMatrix output = DoubleMatrix.zeros(input.getRows() * stride, input.getColumns() * stride);
+        DoubleMatrix output = DoubleMatrix.zeros(input.getRows() * stride - 1, input.getColumns() * stride - 1);
         for (int i = 0; i < input.getRows(); i++) {
             for (int j = 0; j < input.getColumns(); j++) {
                 output.put(i * stride, j * stride, input.get(i, j));
@@ -210,7 +210,9 @@ public class LayerTypeCorrectionsVisitor implements DataVisitor {
                 for (int j = 0; j < layer.getOutputChannelCount(); j++) {
                     int errorIndex = inputIndex * layer.getOutputChannelCount() + j;
                     DoubleMatrix errorData = errorDatas.get(errorIndex);
-                    weightCorrections.get(i + j * layer.getInputChannelCount()).addi(ConvolutionComputer.get().computeConvolution(previousResultDatas.get(previousResultIndex), inputPart -> inputPart.muli(errorData).sum(), layer.getPadding(), layer.getStride(), errorData.getRows()));
+                    DoubleMatrix stridedErrorData = applyStride(errorData, layer.getStride());
+                    DoubleMatrix weightCorrection = ConvolutionComputer.get().computeConvolution(previousResultDatas.get(previousResultIndex), inputPart -> inputPart.muli(stridedErrorData).sum(), layer.getPadding(), 1, stridedErrorData.getRows());
+                    weightCorrections.get(i + j * layer.getInputChannelCount()).addi(weightCorrection);
                     biasCorrections.get(j).addi(errorData.sum());
                 }
             }

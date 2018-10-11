@@ -152,7 +152,7 @@ public class ConvolutionNeuralNetworkModelBuilder {
     }
 
     private int computeNewDimension(Integer padding, Integer stride, Integer filterSize, int input) {
-        return (input + 2 * padding - filterSize) / stride + 1;
+        return (int) Math.ceil((input + 2 * padding - filterSize) / (double) stride + 1);
     }
 
     private void checkInputs() {
