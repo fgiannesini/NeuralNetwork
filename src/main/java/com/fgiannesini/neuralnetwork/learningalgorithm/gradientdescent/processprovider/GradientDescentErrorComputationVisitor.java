@@ -34,17 +34,34 @@ public class GradientDescentErrorComputationVisitor implements DataVisitor {
 
     }
 
-
     @Override
     public void visit(ConvolutionData error) {
         ConvolutionData currentResult = (ConvolutionData) provider.getCurrentResult();
+        List<DoubleMatrix> result = visitMatrixList(currentResult.getDatas(), error.getDatas());
+        errorData = new ConvolutionData(result);
+    }
+
+    @Override
+    public void visit(AveragePoolingData error) {
+        AveragePoolingData currentResult = (AveragePoolingData) provider.getCurrentResult();
+        List<DoubleMatrix> result = visitMatrixList(currentResult.getDatas(), error.getDatas());
+        errorData = new AveragePoolingData(result);
+    }
+
+    @Override
+    public void visit(MaxPoolingData error) {
+        MaxPoolingData currentResult = (MaxPoolingData) provider.getCurrentResult();
+        List<DoubleMatrix> result = visitMatrixList(currentResult.getDatas(), error.getDatas());
+        errorData = new MaxPoolingData(result, error.getMaxIndexes());
+    }
+
+    private List<DoubleMatrix> visitMatrixList(List<DoubleMatrix> currentResultList, List<DoubleMatrix> errorDatas) {
         ActivationFunctionApplier activationFunction = provider.getLayer().getActivationFunctionType().getActivationFunction();
-        List<DoubleMatrix> currentResultList = currentResult.getDatas();
         List<DoubleMatrix> result = new ArrayList<>();
         for (int matrixIndex = 0; matrixIndex < currentResultList.size(); matrixIndex++) {
-            result.add(activationFunction.derivate(currentResultList.get(matrixIndex)).muli(error.getDatas().get(matrixIndex)));
+            result.add(activationFunction.derivate(currentResultList.get(matrixIndex)).muli(errorDatas.get(matrixIndex)));
         }
-        errorData = new ConvolutionData(result);
+        return result;
     }
 
     LayerTypeData getErrorData() {

@@ -2,7 +2,7 @@ package com.fgiannesini.neuralnetwork.computer;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import com.fgiannesini.neuralnetwork.assertions.DoubleMatrixAssertions;
-import com.fgiannesini.neuralnetwork.computer.data.ConvolutionData;
+import com.fgiannesini.neuralnetwork.computer.data.AveragePoolingData;
 import com.fgiannesini.neuralnetwork.converter.DataFormatConverter;
 import com.fgiannesini.neuralnetwork.model.AveragePoolingLayer;
 import org.jblas.DoubleMatrix;
@@ -17,19 +17,19 @@ class AveragePoolingLayerComputerTest {
     @Test
     void convolution_layer_no_padding_no_stride_one_channel_one_input() {
         AveragePoolingLayer layer = new AveragePoolingLayer(ActivationFunctionType.NONE, 3, 0, 1, 1, 5, 5, 3, 3);
-        ConvolutionData input = new ConvolutionData(Collections.singletonList(DoubleMatrix.ones(5, 5)));
+        AveragePoolingData input = new AveragePoolingData(Collections.singletonList(DoubleMatrix.ones(5, 5)));
         LayerComputerVisitor layerComputerVisitor = new LayerComputerVisitor(input);
         layer.accept(layerComputerVisitor);
-        DoubleMatrixAssertions.assertMatrices(((ConvolutionData) layerComputerVisitor.getIntermediateOutputResult().getResult()).getDatas(), Collections.singletonList(DoubleMatrix.ones(3, 3)));
+        DoubleMatrixAssertions.assertMatrices(((AveragePoolingData) layerComputerVisitor.getIntermediateOutputResult().getResult()).getDatas(), Collections.singletonList(DoubleMatrix.ones(3, 3)));
     }
 
     @Test
     void convolution_layer_padding_no_stride_one_channel_one_input() {
         AveragePoolingLayer layer = new AveragePoolingLayer(ActivationFunctionType.NONE, 3, 1, 1, 1, 5, 5, 5, 5);
-        ConvolutionData input = new ConvolutionData(Collections.singletonList(DoubleMatrix.ones(5, 5)));
+        AveragePoolingData input = new AveragePoolingData(Collections.singletonList(DoubleMatrix.ones(5, 5)));
         LayerComputerVisitor layerComputerVisitor = new LayerComputerVisitor(input);
         layer.accept(layerComputerVisitor);
-        DoubleMatrixAssertions.assertMatrices(((ConvolutionData) layerComputerVisitor.getIntermediateOutputResult().getResult()).getDatas(), Collections.singletonList(DataFormatConverter.fromDoubleTabToDoubleMatrix(new double[][]{
+        DoubleMatrixAssertions.assertMatrices(((AveragePoolingData) layerComputerVisitor.getIntermediateOutputResult().getResult()).getDatas(), Collections.singletonList(DataFormatConverter.fromDoubleTabToDoubleMatrix(new double[][]{
                 {0.44444, 0.66666, 0.66666, 0.66666, 0.44444},
                 {0.66666, 1, 1, 1, 0.66666},
                 {0.66666, 1, 1, 1, 0.66666},
@@ -41,16 +41,16 @@ class AveragePoolingLayerComputerTest {
     @Test
     void convolution_layer_no_padding_stride_one_channel_one_input() {
         AveragePoolingLayer layer = new AveragePoolingLayer(ActivationFunctionType.NONE, 3, 0, 2, 1, 11, 11, 5, 5);
-        ConvolutionData input = new ConvolutionData(Collections.singletonList(DoubleMatrix.ones(11, 11)));
+        AveragePoolingData input = new AveragePoolingData(Collections.singletonList(DoubleMatrix.ones(11, 11)));
         LayerComputerVisitor layerComputerVisitor = new LayerComputerVisitor(input);
         layer.accept(layerComputerVisitor);
-        DoubleMatrixAssertions.assertMatrices(((ConvolutionData) layerComputerVisitor.getIntermediateOutputResult().getResult()).getDatas(), Collections.singletonList(DoubleMatrix.ones(5, 5)));
+        DoubleMatrixAssertions.assertMatrices(((AveragePoolingData) layerComputerVisitor.getIntermediateOutputResult().getResult()).getDatas(), Collections.singletonList(DoubleMatrix.ones(5, 5)));
     }
 
     @Test
     void convolution_layer_no_padding_no_stride_three_channels_two_inputs() {
         AveragePoolingLayer layer = new AveragePoolingLayer(ActivationFunctionType.NONE, 3, 0, 1, 1, 5, 5, 3, 3);
-        ConvolutionData input = new ConvolutionData(Arrays.asList(
+        AveragePoolingData input = new AveragePoolingData(Arrays.asList(
                 DoubleMatrix.ones(5, 5),
                 DoubleMatrix.ones(5, 5).muli(2),
                 DoubleMatrix.ones(5, 5).muli(3),
@@ -69,6 +69,6 @@ class AveragePoolingLayerComputerTest {
                 DoubleMatrix.ones(3, 3).muli(5),
                 DoubleMatrix.ones(3, 3).muli(6)
         );
-        DoubleMatrixAssertions.assertMatrices(((ConvolutionData) layerComputerVisitor.getIntermediateOutputResult().getResult()).getDatas(), expectedMatrix);
+        DoubleMatrixAssertions.assertMatrices(((AveragePoolingData) layerComputerVisitor.getIntermediateOutputResult().getResult()).getDatas(), expectedMatrix);
     }
 }

@@ -9,4 +9,12 @@ public interface DataVisitor {
     default void visit(ConvolutionData convolutionData) {
         throw new UnsupportedOperationException("Need to be implemented");
     }
+
+    default void visit(AveragePoolingData averagePoolingData) {
+        throw new UnsupportedOperationException("Need to be implemented");
+    }
+
+    default void visit(MaxPoolingData maxPoolingData) {
+        throw new UnsupportedOperationException("Need to be implemented");
+    }
 }

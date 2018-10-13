@@ -30,6 +30,16 @@ public class DataFunctionApplier implements DataVisitor {
         layerTypeData = new ConvolutionData(convolutionData.getDatas().stream().map(dataApplier).collect(Collectors.toList()));
     }
 
+    @Override
+    public void visit(AveragePoolingData averagePoolingData) {
+        layerTypeData = new AveragePoolingData(averagePoolingData.getDatas().stream().map(dataApplier).collect(Collectors.toList()));
+    }
+
+    @Override
+    public void visit(MaxPoolingData maxPoolingData) {
+        layerTypeData = new MaxPoolingData(maxPoolingData.getDatas().stream().map(dataApplier).collect(Collectors.toList()), maxPoolingData.getMaxIndexes());
+    }
+
     public LayerTypeData getLayerTypeData() {
         return layerTypeData;
     }

@@ -2,9 +2,7 @@ package com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import com.fgiannesini.neuralnetwork.assertions.DoubleMatrixAssertions;
-import com.fgiannesini.neuralnetwork.computer.data.BatchNormData;
-import com.fgiannesini.neuralnetwork.computer.data.ConvolutionData;
-import com.fgiannesini.neuralnetwork.computer.data.WeightBiasData;
+import com.fgiannesini.neuralnetwork.computer.data.*;
 import com.fgiannesini.neuralnetwork.computer.data.adapter.ForwardDataAdapterVisitor;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 import com.fgiannesini.neuralnetwork.model.*;
@@ -43,7 +41,7 @@ class ForwardDataAdapterVisitorTest {
         ForwardDataAdapterVisitor forwardDataAdapterVisitor = new ForwardDataAdapterVisitor(inputData);
         AveragePoolingLayer layer = new AveragePoolingLayer(ActivationFunctionType.NONE, 3, 0, 1, 1, 10, 10, 8, 8);
         layer.accept(forwardDataAdapterVisitor);
-        DoubleMatrixAssertions.assertMatrices(inputData.getDatas(), ((ConvolutionData) forwardDataAdapterVisitor.getData()).getDatas());
+        DoubleMatrixAssertions.assertMatrices(inputData.getDatas(), ((AveragePoolingData) forwardDataAdapterVisitor.getData()).getDatas());
     }
 
     @Test
@@ -52,7 +50,7 @@ class ForwardDataAdapterVisitorTest {
         ForwardDataAdapterVisitor forwardDataAdapterVisitor = new ForwardDataAdapterVisitor(inputData);
         MaxPoolingLayer layer = new MaxPoolingLayer(ActivationFunctionType.NONE, 3, 0, 1, 1, 10, 10, 8, 8);
         layer.accept(forwardDataAdapterVisitor);
-        DoubleMatrixAssertions.assertMatrices(inputData.getDatas(), ((ConvolutionData) forwardDataAdapterVisitor.getData()).getDatas());
+        DoubleMatrixAssertions.assertMatrices(inputData.getDatas(), ((MaxPoolingData) forwardDataAdapterVisitor.getData()).getDatas());
     }
 
     @Test

@@ -92,45 +92,20 @@ public class LayerTypeCorrectionsVisitor implements DataVisitor {
 
     @Override
     public void visit(ConvolutionData error) {
-        Layer layer = gradientLayerProvider.getLayer();
         ConvolutionData previousResult = (ConvolutionData) gradientLayerProvider.getPreviousResult();
-        if (layer instanceof ConvolutionLayer) {
-            ConvolutionLayer convolutionLayer = (ConvolutionLayer) layer;
+        ConvolutionLayer convolutionLayer = (ConvolutionLayer) gradientLayerProvider.getLayer();
             correction = getConvolutionLayerCorrections(error, previousResult, convolutionLayer);
             nextGradientLayerProvider = getNextConvolutionLayerProvider(error, convolutionLayer);
-        } else if (layer instanceof AveragePoolingLayer) {
-            AveragePoolingLayer averagePoolingLayer = (AveragePoolingLayer) layer;
-            correction = new GradientDescentCorrection(IntStream.range(0, averagePoolingLayer.getChannelCount()).mapToObj(i -> DoubleMatrix.EMPTY).collect(Collectors.toList()));
-            nextGradientLayerProvider = getNextAveragePoolingLayerProvider(error, averagePoolingLayer);
-        } else if (layer instanceof MaxPoolingLayer) {
-            MaxPoolingLayer maxPoolingLayer = (MaxPoolingLayer) layer;
-            correction = new GradientDescentCorrection(IntStream.range(0, maxPoolingLayer.getChannelCount()).mapToObj(i -> DoubleMatrix.EMPTY).collect(Collectors.toList()));
-            nextGradientLayerProvider = getNextMaxPoolingLayerProvider(error, maxPoolingLayer);
-        }
     }
 
-    //Mauvaise implem
-    private LayerTypeData getNextMaxPoolingLayerProvider(ConvolutionData input, MaxPoolingLayer maxPoolingLayer) {
-        List<DoubleMatrix> inputDatas = input.getDatas();
-        List<DoubleMatrix> outputs = inputDatas.stream()
-                .map(m -> {
-                    int filterAddedColumn = maxPoolingLayer.getFilterSize() - maxPoolingLayer.getFilterSize() % 2;
-                    int outputRow = m.getRows() + filterAddedColumn;
-                    int outputColumn = m.getColumns() + filterAddedColumn;
-                    DoubleMatrix output = DoubleMatrix.zeros(outputRow, outputColumn);
-                    output.put(
-                            new IntervalRange(maxPoolingLayer.getFilterSize() / 2, outputRow - maxPoolingLayer.getFilterSize() / 2),
-                            new IntervalRange(maxPoolingLayer.getFilterSize() / 2, outputColumn - maxPoolingLayer.getFilterSize() / 2),
-                            m
-                    );
-//                    output.divi(maxPoolingLayer.getFilterSize() * maxPoolingLayer.getFilterSize());
-                    return applyStride(output, maxPoolingLayer.getStride());
-                })
-                .collect(Collectors.toList());
-        return new ConvolutionData(outputs);
+    @Override
+    public void visit(AveragePoolingData error) {
+        AveragePoolingLayer averagePoolingLayer = (AveragePoolingLayer) gradientLayerProvider.getLayer();
+        correction = new GradientDescentCorrection(IntStream.range(0, averagePoolingLayer.getChannelCount()).mapToObj(i -> DoubleMatrix.EMPTY).collect(Collectors.toList()));
+        nextGradientLayerProvider = getNextAveragePoolingLayerProvider(error, averagePoolingLayer);
     }
 
-    private LayerTypeData getNextAveragePoolingLayerProvider(ConvolutionData input, AveragePoolingLayer averagePoolingLayer) {
+    private LayerTypeData getNextAveragePoolingLayerProvider(AveragePoolingData input, AveragePoolingLayer averagePoolingLayer) {
         List<DoubleMatrix> inputDatas = input.getDatas();
         List<DoubleMatrix> outputs = inputDatas.stream()
                 .map(m -> {
@@ -145,6 +120,34 @@ public class LayerTypeCorrectionsVisitor implements DataVisitor {
                     );
 //                    output.divi(averagePoolingLayer.getFilterSize() * averagePoolingLayer.getFilterSize());
                     return applyStride(output, averagePoolingLayer.getStride());
+                })
+                .collect(Collectors.toList());
+        return new ConvolutionData(outputs);
+    }
+
+    @Override
+    public void visit(MaxPoolingData error) {
+        MaxPoolingLayer maxPoolingLayer = (MaxPoolingLayer) gradientLayerProvider.getLayer();
+        correction = new GradientDescentCorrection(IntStream.range(0, maxPoolingLayer.getChannelCount()).mapToObj(i -> DoubleMatrix.EMPTY).collect(Collectors.toList()));
+        nextGradientLayerProvider = getNextMaxPoolingLayerProvider(error, maxPoolingLayer);
+    }
+    //Mauvaise implem
+
+    private LayerTypeData getNextMaxPoolingLayerProvider(MaxPoolingData input, MaxPoolingLayer maxPoolingLayer) {
+        List<DoubleMatrix> inputDatas = input.getDatas();
+        List<DoubleMatrix> outputs = inputDatas.stream()
+                .map(m -> {
+                    int filterAddedColumn = maxPoolingLayer.getFilterSize() - maxPoolingLayer.getFilterSize() % 2;
+                    int outputRow = m.getRows() + filterAddedColumn;
+                    int outputColumn = m.getColumns() + filterAddedColumn;
+                    DoubleMatrix output = DoubleMatrix.zeros(outputRow, outputColumn);
+                    output.put(
+                            new IntervalRange(maxPoolingLayer.getFilterSize() / 2, outputRow - maxPoolingLayer.getFilterSize() / 2),
+                            new IntervalRange(maxPoolingLayer.getFilterSize() / 2, outputColumn - maxPoolingLayer.getFilterSize() / 2),
+                            m
+                    );
+//                    output.divi(maxPoolingLayer.getFilterSize() * maxPoolingLayer.getFilterSize());
+                    return applyStride(output, maxPoolingLayer.getStride());
                 })
                 .collect(Collectors.toList());
         return new ConvolutionData(outputs);
@@ -165,7 +168,7 @@ public class LayerTypeCorrectionsVisitor implements DataVisitor {
                 for (int inputChannelIndex = inputIndex * layer.getInputChannelCount(); inputChannelIndex < (inputIndex + 1) * layer.getInputChannelCount(); inputChannelIndex++, weightIndex++) {
                     DoubleMatrix input = inputs.get(inputChannelIndex);
                     DoubleMatrix weights = weightMatrices.get(weightIndex);
-                    DoubleMatrix convolutedMatrix = ConvolutionComputer.get().computeConvolution(input, inputPart -> inputPart.muli(weights).sum(), layer.getFilterSize() / 2, 1, layer.getFilterSize());
+                    DoubleMatrix convolutedMatrix = ConvolutionComputer.get().computeConvolution(input, (inputPart, coord) -> inputPart.muli(weights).sum(), layer.getFilterSize() / 2, 1, layer.getFilterSize());
                     convolutedMatrix = applyStride(convolutedMatrix, layer.getStride());
                     if (output == DoubleMatrix.EMPTY) {
                         output = convolutedMatrix;
@@ -211,7 +214,7 @@ public class LayerTypeCorrectionsVisitor implements DataVisitor {
                     int errorIndex = inputIndex * layer.getOutputChannelCount() + j;
                     DoubleMatrix errorData = errorDatas.get(errorIndex);
                     DoubleMatrix stridedErrorData = applyStride(errorData, layer.getStride());
-                    DoubleMatrix weightCorrection = ConvolutionComputer.get().computeConvolution(previousResultDatas.get(previousResultIndex), inputPart -> inputPart.muli(stridedErrorData).sum(), layer.getPadding(), 1, stridedErrorData.getRows());
+                    DoubleMatrix weightCorrection = ConvolutionComputer.get().computeConvolution(previousResultDatas.get(previousResultIndex), (inputPart, coord) -> inputPart.muli(stridedErrorData).sum(), layer.getPadding(), 1, stridedErrorData.getRows());
                     weightCorrections.get(i + j * layer.getInputChannelCount()).addi(weightCorrection);
                     biasCorrections.get(j).addi(errorData.sum());
                 }

@@ -54,14 +54,15 @@ public class GradientDescentConvolutionTest {
 
         @Test
         void learn_with_one_convolution_layer_and_one_fully_connected_layer_and_stride() {
+            int inputSize = 10;
             NeuralNetworkModel neuralNetworkModel = ConvolutionNeuralNetworkModelBuilder.init()
                     .useInitializer(InitializerType.RANDOM)
-                    .input(10, 10, 1)
+                    .input(inputSize, inputSize, 1)
                     .addConvolutionLayer(3, 0, 2, 1, ActivationFunctionType.RELU)
                     .addFullyConnectedLayer(2, ActivationFunctionType.RELU)
                     .buildConvolutionNetworkModel();
 
-            LayerTypeData input = new ConvolutionData(Collections.singletonList(DoubleMatrix.rand(10, 10)));
+            LayerTypeData input = new ConvolutionData(Collections.singletonList(DoubleMatrix.rand(inputSize, inputSize)));
             LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 1, 1, 0));
 
             LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, getGradientDescentProvider());

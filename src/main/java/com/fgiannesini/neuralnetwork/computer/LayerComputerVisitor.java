@@ -1,11 +1,9 @@
 package com.fgiannesini.neuralnetwork.computer;
 
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionApplier;
-import com.fgiannesini.neuralnetwork.computer.data.BatchNormData;
-import com.fgiannesini.neuralnetwork.computer.data.ConvolutionData;
-import com.fgiannesini.neuralnetwork.computer.data.LayerTypeData;
-import com.fgiannesini.neuralnetwork.computer.data.WeightBiasData;
+import com.fgiannesini.neuralnetwork.computer.data.*;
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IntermediateOutputResult;
+import com.fgiannesini.neuralnetwork.math.ConvCoords;
 import com.fgiannesini.neuralnetwork.math.ConvolutionComputer;
 import com.fgiannesini.neuralnetwork.model.*;
 import com.fgiannesini.neuralnetwork.normalizer.meandeviation.MeanDeviation;
@@ -14,6 +12,7 @@ import org.jblas.DoubleMatrix;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiFunction;
 
 public class LayerComputerVisitor implements LayerVisitor {
 
@@ -56,31 +55,40 @@ public class LayerComputerVisitor implements LayerVisitor {
 
     @Override
     public void visit(AveragePoolingLayer layer) {
-        ConvolutionData data = (ConvolutionData) layerTypeData;
+        AveragePoolingData data = (AveragePoolingData) layerTypeData;
         List<DoubleMatrix> inputs = data.getDatas();
         List<DoubleMatrix> outputs = new ArrayList<>();
 
         for (DoubleMatrix input : inputs) {
-            DoubleMatrix output = ConvolutionComputer.get().computeConvolution(input, DoubleMatrix::mean, layer.getPadding(), layer.getStride(), layer.getFilterSize());
+            DoubleMatrix output = ConvolutionComputer.get().computeConvolution(input, (in, coord) -> in.mean(), layer.getPadding(), layer.getStride(), layer.getFilterSize());
             outputs.add(output);
         }
 
-        intermediateOutputResult = new IntermediateOutputResult(new ConvolutionData(outputs));
+        intermediateOutputResult = new IntermediateOutputResult(new AveragePoolingData(outputs));
     }
 
     @Override
     public void visit(MaxPoolingLayer layer) {
 
-        ConvolutionData data = (ConvolutionData) layerTypeData;
+        MaxPoolingData data = (MaxPoolingData) layerTypeData;
         List<DoubleMatrix> inputs = data.getDatas();
         List<DoubleMatrix> outputs = new ArrayList<>();
+        List<DoubleMatrix> maxIndexes = new ArrayList<>();
 
         for (DoubleMatrix input : inputs) {
-            DoubleMatrix output = ConvolutionComputer.get().computeConvolution(input, DoubleMatrix::max, layer.getPadding(), layer.getStride(), layer.getFilterSize());
+            ConvolutionComputer convolutionComputer = ConvolutionComputer.get();
+            int indexesRowCount = convolutionComputer.computeOutputSize(layer.getPadding(), layer.getStride(), layer.getFilterSize(), input.getRows());
+            int indexesColumnsCount = convolutionComputer.computeOutputSize(layer.getPadding(), layer.getStride(), layer.getFilterSize(), input.getColumns());
+            DoubleMatrix indexes = DoubleMatrix.zeros(indexesRowCount, indexesColumnsCount);
+            BiFunction<DoubleMatrix, ConvCoords, Double> convolutionApplication = (in, coord) -> {
+                indexes.put(coord.getX(), coord.getY(), in.argmax());
+                return in.max();
+            };
+            DoubleMatrix output = convolutionComputer.computeConvolution(input, convolutionApplication, layer.getPadding(), layer.getStride(), layer.getFilterSize());
             outputs.add(output);
         }
 
-        intermediateOutputResult = new IntermediateOutputResult(new ConvolutionData(outputs));
+        intermediateOutputResult = new IntermediateOutputResult(new MaxPoolingData(outputs, maxIndexes));
     }
 
     @Override
@@ -97,7 +105,7 @@ public class LayerComputerVisitor implements LayerVisitor {
                 for (int inputChannelIndex = inputIndex * layer.getInputChannelCount(); inputChannelIndex < (inputIndex + 1) * layer.getInputChannelCount(); inputChannelIndex++, weightIndex++) {
                     DoubleMatrix input = inputs.get(inputChannelIndex);
                     DoubleMatrix weights = weightMatrices.get(weightIndex);
-                    DoubleMatrix convolutedMatrix = ConvolutionComputer.get().computeConvolution(input, inputPart -> inputPart.muli(weights).sum(), layer.getPadding(), layer.getStride(), layer.getFilterSize());
+                    DoubleMatrix convolutedMatrix = ConvolutionComputer.get().computeConvolution(input, (inputPart, coord) -> inputPart.muli(weights).sum(), layer.getPadding(), layer.getStride(), layer.getFilterSize());
                     if (output == DoubleMatrix.EMPTY) {
                         output = convolutedMatrix;
                     } else {

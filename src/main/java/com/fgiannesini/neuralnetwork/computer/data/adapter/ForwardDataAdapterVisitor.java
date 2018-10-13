@@ -1,8 +1,6 @@
 package com.fgiannesini.neuralnetwork.computer.data.adapter;
 
-import com.fgiannesini.neuralnetwork.computer.data.ConvolutionData;
-import com.fgiannesini.neuralnetwork.computer.data.LayerTypeData;
-import com.fgiannesini.neuralnetwork.computer.data.WeightBiasData;
+import com.fgiannesini.neuralnetwork.computer.data.*;
 import com.fgiannesini.neuralnetwork.model.*;
 import org.jblas.DoubleMatrix;
 
@@ -20,6 +18,14 @@ public class ForwardDataAdapterVisitor implements LayerVisitor {
     public void visit(WeightBiasLayer layer) {
         if (previousData instanceof ConvolutionData) {
             List<DoubleMatrix> inputList = ((ConvolutionData) previousData).getDatas();
+            DoubleMatrix output = DataAdapterComputer.get().convertMatrixListToMatrix(layer, inputList);
+            data = new WeightBiasData(output);
+        } else if (previousData instanceof AveragePoolingData) {
+            List<DoubleMatrix> inputList = ((AveragePoolingData) previousData).getDatas();
+            DoubleMatrix output = DataAdapterComputer.get().convertMatrixListToMatrix(layer, inputList);
+            data = new WeightBiasData(output);
+        } else if (previousData instanceof MaxPoolingData) {
+            List<DoubleMatrix> inputList = ((MaxPoolingData) previousData).getDatas();
             DoubleMatrix output = DataAdapterComputer.get().convertMatrixListToMatrix(layer, inputList);
             data = new WeightBiasData(output);
         } else {
@@ -40,7 +46,14 @@ public class ForwardDataAdapterVisitor implements LayerVisitor {
             data = new ConvolutionData(outputs);
         } else if (previousData instanceof ConvolutionData) {
             List<DoubleMatrix> outputs = DataAdapterComputer.get().adaptMatrices(layer.getInputWidth(), layer.getInputHeight(), ((ConvolutionData) previousData).getDatas());
-            data = new ConvolutionData(outputs);
+            data = new AveragePoolingData(outputs);
+        } else if (previousData instanceof AveragePoolingData) {
+            List<DoubleMatrix> outputs = DataAdapterComputer.get().adaptMatrices(layer.getInputWidth(), layer.getInputHeight(), ((AveragePoolingData) previousData).getDatas());
+            data = new AveragePoolingData(outputs);
+        } else if (previousData instanceof MaxPoolingData) {
+            MaxPoolingData maxPoolingData = (MaxPoolingData) this.previousData;
+            List<DoubleMatrix> outputs = DataAdapterComputer.get().adaptMatrices(layer.getInputWidth(), layer.getInputHeight(), maxPoolingData.getDatas());
+            data = new AveragePoolingData(outputs);
         }
     }
 
@@ -52,7 +65,14 @@ public class ForwardDataAdapterVisitor implements LayerVisitor {
             data = new ConvolutionData(outputs);
         } else if (previousData instanceof ConvolutionData) {
             List<DoubleMatrix> outputs = DataAdapterComputer.get().adaptMatrices(layer.getInputWidth(), layer.getInputHeight(), ((ConvolutionData) previousData).getDatas());
-            data = new ConvolutionData(outputs);
+            data = new MaxPoolingData(outputs, null);
+        } else if (previousData instanceof AveragePoolingData) {
+            List<DoubleMatrix> outputs = DataAdapterComputer.get().adaptMatrices(layer.getInputWidth(), layer.getInputHeight(), ((AveragePoolingData) previousData).getDatas());
+            data = new MaxPoolingData(outputs, null);
+        } else if (previousData instanceof MaxPoolingData) {
+            MaxPoolingData maxPoolingData = (MaxPoolingData) this.previousData;
+            List<DoubleMatrix> outputs = DataAdapterComputer.get().adaptMatrices(layer.getInputWidth(), layer.getInputHeight(), maxPoolingData.getDatas());
+            data = new MaxPoolingData(outputs, maxPoolingData.getMaxIndexes());
         }
     }
 
@@ -64,6 +84,13 @@ public class ForwardDataAdapterVisitor implements LayerVisitor {
             data = new ConvolutionData(outputs);
         } else if (previousData instanceof ConvolutionData) {
             List<DoubleMatrix> outputs = DataAdapterComputer.get().adaptMatrices(layer.getInputWidth(), layer.getInputHeight(), ((ConvolutionData) previousData).getDatas());
+            data = new ConvolutionData(outputs);
+        } else if (previousData instanceof AveragePoolingData) {
+            List<DoubleMatrix> outputs = DataAdapterComputer.get().adaptMatrices(layer.getInputWidth(), layer.getInputHeight(), ((AveragePoolingData) previousData).getDatas());
+            data = new ConvolutionData(outputs);
+        } else if (previousData instanceof MaxPoolingData) {
+            MaxPoolingData maxPoolingData = (MaxPoolingData) this.previousData;
+            List<DoubleMatrix> outputs = DataAdapterComputer.get().adaptMatrices(layer.getInputWidth(), layer.getInputHeight(), maxPoolingData.getDatas());
             data = new ConvolutionData(outputs);
         }
     }

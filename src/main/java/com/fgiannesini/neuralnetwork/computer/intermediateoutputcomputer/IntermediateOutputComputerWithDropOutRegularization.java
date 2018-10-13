@@ -2,6 +2,7 @@ package com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer;
 
 import com.fgiannesini.neuralnetwork.computer.DataFunctionApplier;
 import com.fgiannesini.neuralnetwork.computer.data.LayerTypeData;
+import com.fgiannesini.neuralnetwork.computer.data.adapter.ForwardDataAdapterVisitor;
 import com.fgiannesini.neuralnetwork.computer.finaloutputcomputer.LayerComputerWithDropOutRegularizationVisitor;
 import com.fgiannesini.neuralnetwork.model.Layer;
 import org.jblas.DoubleMatrix;
@@ -25,7 +26,9 @@ public class IntermediateOutputComputerWithDropOutRegularization implements IInt
         DataFunctionApplier dataVisitor = new DataFunctionApplier(matrix -> matrix.dup().muliColumnVector(dropOutMatrixList.get(0)));
         data.accept(dataVisitor);
         LayerTypeData regularizedInput = dataVisitor.getLayerTypeData();
-        IntermediateOutputResult intermediateOutputResult = new IntermediateOutputResult(regularizedInput);
+        ForwardDataAdapterVisitor firstDataAdaptorVisitor = new ForwardDataAdapterVisitor(regularizedInput);
+        layers.get(0).accept(firstDataAdaptorVisitor);
+        IntermediateOutputResult intermediateOutputResult = new IntermediateOutputResult(firstDataAdaptorVisitor.getData());
         intermediateOutputResults.add(intermediateOutputResult);
 
         for (int layerIndex = 0, dropOutIndex = 1; layerIndex < layers.size(); layerIndex++, dropOutIndex++) {

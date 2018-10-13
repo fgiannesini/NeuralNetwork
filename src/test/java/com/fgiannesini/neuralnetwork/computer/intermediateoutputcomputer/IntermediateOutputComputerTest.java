@@ -3,6 +3,7 @@ package com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer;
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import com.fgiannesini.neuralnetwork.assertions.DoubleMatrixAssertions;
 import com.fgiannesini.neuralnetwork.computer.OutputComputerBuilder;
+import com.fgiannesini.neuralnetwork.computer.data.AveragePoolingData;
 import com.fgiannesini.neuralnetwork.computer.data.BatchNormData;
 import com.fgiannesini.neuralnetwork.computer.data.ConvolutionData;
 import com.fgiannesini.neuralnetwork.computer.data.WeightBiasData;
@@ -219,7 +220,7 @@ class IntermediateOutputComputerTest {
         DoubleMatrixAssertions.assertMatrices(inputData.getDatas(), ((ConvolutionData) output.get(0).getResult()).getDatas());
 
         DoubleMatrixAssertions.assertMatrices(Collections.singletonList(DoubleMatrix.ones(8, 8).muli(10)), ((ConvolutionData) output.get(1).getResult()).getDatas());
-        DoubleMatrixAssertions.assertMatrices(Collections.singletonList(DoubleMatrix.ones(6, 6).muli(10)), ((ConvolutionData) output.get(2).getResult()).getDatas());
+        DoubleMatrixAssertions.assertMatrices(Collections.singletonList(DoubleMatrix.ones(6, 6).muli(10)), ((AveragePoolingData) output.get(2).getResult()).getDatas());
         DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 361, 361), ((WeightBiasData) output.get(3).getResult()).getData());
     }
 }
