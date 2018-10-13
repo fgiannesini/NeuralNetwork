@@ -2,7 +2,7 @@ package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdat
 
 import com.fgiannesini.neuralnetwork.computer.data.LayerTypeData;
 import com.fgiannesini.neuralnetwork.computer.data.WeightBiasData;
-import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.DataAdapterVisitor;
+import com.fgiannesini.neuralnetwork.computer.data.adapter.ForwardDataAdapterVisitor;
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IntermediateOutputResult;
 import com.fgiannesini.neuralnetwork.model.*;
 
@@ -10,13 +10,11 @@ import java.util.List;
 
 public class GradientLayerProviderVisitor implements LayerVisitor {
 
-    private final List<Layer> layers;
     private final List<IntermediateOutputResult> intermediateOutputResult;
     private final int layerIndex;
     private GradientLayerProvider gradientLayerProvider;
 
-    public GradientLayerProviderVisitor(List<Layer> layers, List<IntermediateOutputResult> intermediateOutputResult, int layerIndex) {
-        this.layers = layers;
+    public GradientLayerProviderVisitor(List<IntermediateOutputResult> intermediateOutputResult, int layerIndex) {
         this.intermediateOutputResult = intermediateOutputResult;
         this.layerIndex = layerIndex;
     }
@@ -57,7 +55,7 @@ public class GradientLayerProviderVisitor implements LayerVisitor {
     }
 
     private LayerTypeData formatData(Layer layer, IntermediateOutputResult intermediateOutputResult) {
-        DataAdapterVisitor adapterVisitor = new DataAdapterVisitor(intermediateOutputResult.getResult());
+        ForwardDataAdapterVisitor adapterVisitor = new ForwardDataAdapterVisitor(intermediateOutputResult.getResult());
         layer.accept(adapterVisitor);
         return adapterVisitor.getData();
     }

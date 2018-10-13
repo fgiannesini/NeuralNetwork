@@ -1,7 +1,7 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent;
 
 import com.fgiannesini.neuralnetwork.computer.data.LayerTypeData;
-import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.DataAdapterVisitor;
+import com.fgiannesini.neuralnetwork.computer.data.adapter.BackwardDataAdapterVisitor;
 import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithm;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.container.*;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.layerdataprovider.GradientLayerProvider;
@@ -43,10 +43,10 @@ public class GradientDescent implements LearningAlgorithm {
         LayerTypeData nextError = firstLayerTypeCorrectionsVisitor.getNextGradientLayerProvider();
         for (int i = 1; i < providers.size(); i++) {
             GradientLayerProvider provider = providers.get(i);
-            DataAdapterVisitor dataAdapterVisitor = new DataAdapterVisitor(nextError);
-            provider.getLayer().accept(dataAdapterVisitor);
+            BackwardDataAdapterVisitor backwardDataAdapterVisitor = new BackwardDataAdapterVisitor(nextError);
+            provider.getLayer().accept(backwardDataAdapterVisitor);
             LayerTypeData activatedError = gradientDescentProcessProvider.getErrorComputationLauncher()
-                    .apply(new ErrorComputationContainer(provider, dataAdapterVisitor.getData()))
+                    .apply(new ErrorComputationContainer(provider, backwardDataAdapterVisitor.getData()))
                     .getPreviousError();
             LayerTypeCorrectionsVisitor layerTypeCorrectionsVisitor = new LayerTypeCorrectionsVisitor(provider);
             activatedError.accept(layerTypeCorrectionsVisitor);

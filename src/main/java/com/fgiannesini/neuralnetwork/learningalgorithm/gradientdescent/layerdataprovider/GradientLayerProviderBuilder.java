@@ -32,7 +32,7 @@ public class GradientLayerProviderBuilder {
 
         List<Layer> layers = neuralNetworkModel.getLayers();
         for (int i = 0; i < layers.size(); i++) {
-            GradientLayerProviderVisitor layerProviderVisitor = new GradientLayerProviderVisitor(layers, intermediateOutputResultList, i);
+            GradientLayerProviderVisitor layerProviderVisitor = new GradientLayerProviderVisitor(intermediateOutputResultList, i);
             layers.get(i).accept(layerProviderVisitor);
             gradientLayerProviders.add(layerProviderVisitor.getGradientLayerProvider());
         }

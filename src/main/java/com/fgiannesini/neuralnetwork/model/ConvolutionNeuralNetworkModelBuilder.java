@@ -119,26 +119,35 @@ public class ConvolutionNeuralNetworkModelBuilder {
         Optional<Layer> layer;
         int outputWidth;
         int outputHeight;
+        int realInputWidth;
+        int realInputHeight;
+
         switch (layerType) {
             case CONVOLUTION:
-                outputWidth = computeNewDimension(padding, stride, filterSize, inputWidth);
-                outputHeight = computeNewDimension(padding, stride, filterSize, inputHeight);
-                layer = Optional.of(new ConvolutionLayer(activationFunctionType, initializer, filterSize, padding, stride, channelCount, inputChannelCount, outputWidth, outputHeight));
+                outputWidth = computeOutputDimension(padding, stride, filterSize, inputWidth);
+                outputHeight = computeOutputDimension(padding, stride, filterSize, inputHeight);
+                realInputWidth = computeInputDimension(padding, stride, filterSize, outputWidth);
+                realInputHeight = computeInputDimension(padding, stride, filterSize, outputHeight);
+                layer = Optional.of(new ConvolutionLayer(activationFunctionType, initializer, filterSize, padding, stride, channelCount, inputChannelCount, realInputWidth, realInputHeight, outputWidth, outputHeight));
                 inputChannelCount = channelCount;
                 inputWidth = outputWidth;
                 inputHeight = outputHeight;
                 break;
             case POOLING_MAX:
-                outputWidth = computeNewDimension(padding, stride, filterSize, inputWidth);
-                outputHeight = computeNewDimension(padding, stride, filterSize, inputHeight);
-                layer = Optional.of(new MaxPoolingLayer(activationFunctionType, filterSize, padding, stride, inputChannelCount, outputWidth, outputHeight));
+                outputWidth = computeOutputDimension(padding, stride, filterSize, inputWidth);
+                outputHeight = computeOutputDimension(padding, stride, filterSize, inputHeight);
+                realInputWidth = computeInputDimension(padding, stride, filterSize, outputWidth);
+                realInputHeight = computeInputDimension(padding, stride, filterSize, outputHeight);
+                layer = Optional.of(new MaxPoolingLayer(activationFunctionType, filterSize, padding, stride, inputChannelCount, realInputWidth, realInputHeight, outputWidth, outputHeight));
                 inputWidth = outputWidth;
                 inputHeight = outputHeight;
                 break;
             case POOLING_AVERAGE:
-                outputWidth = computeNewDimension(padding, stride, filterSize, inputWidth);
-                outputHeight = computeNewDimension(padding, stride, filterSize, inputHeight);
-                layer = Optional.of(new AveragePoolingLayer(activationFunctionType, filterSize, padding, stride, inputChannelCount, outputWidth, outputHeight));
+                outputWidth = computeOutputDimension(padding, stride, filterSize, inputWidth);
+                outputHeight = computeOutputDimension(padding, stride, filterSize, inputHeight);
+                realInputWidth = computeInputDimension(padding, stride, filterSize, outputWidth);
+                realInputHeight = computeInputDimension(padding, stride, filterSize, outputHeight);
+                layer = Optional.of(new AveragePoolingLayer(activationFunctionType, filterSize, padding, stride, inputChannelCount, realInputWidth, realInputHeight, outputWidth, outputHeight));
                 inputWidth = outputWidth;
                 inputHeight = outputHeight;
                 break;
@@ -151,7 +160,11 @@ public class ConvolutionNeuralNetworkModelBuilder {
         return layer;
     }
 
-    private int computeNewDimension(Integer padding, Integer stride, Integer filterSize, int input) {
+    private int computeInputDimension(Integer padding, Integer stride, Integer filterSize, int output) {
+        return (output - 1) * stride + filterSize - 2 * padding;
+    }
+
+    private int computeOutputDimension(Integer padding, Integer stride, Integer filterSize, int input) {
         return (int) Math.ceil((input + 2 * padding - filterSize) / (double) stride + 1);
     }
 

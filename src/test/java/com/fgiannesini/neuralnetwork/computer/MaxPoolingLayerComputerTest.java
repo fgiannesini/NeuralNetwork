@@ -15,7 +15,7 @@ class MaxPoolingLayerComputerTest {
 
     @Test
     void convolution_layer_no_padding_no_stride_one_channel_one_input() {
-        MaxPoolingLayer layer = new MaxPoolingLayer(ActivationFunctionType.NONE, 3, 0, 1, 1, 10, 10);
+        MaxPoolingLayer layer = new MaxPoolingLayer(ActivationFunctionType.NONE, 3, 0, 1, 1, 10, 10, 8, 8);
         ConvolutionData input = new ConvolutionData(Collections.singletonList(DoubleMatrix.ones(5, 5)));
         LayerComputerVisitor layerComputerVisitor = new LayerComputerVisitor(input);
         layer.accept(layerComputerVisitor);
@@ -24,7 +24,7 @@ class MaxPoolingLayerComputerTest {
 
     @Test
     void convolution_layer_padding_no_stride_one_channel_one_input() {
-        MaxPoolingLayer layer = new MaxPoolingLayer(ActivationFunctionType.NONE, 3, 1, 1, 1, 10, 10);
+        MaxPoolingLayer layer = new MaxPoolingLayer(ActivationFunctionType.NONE, 3, 1, 1, 1, 10, 10, 8, 8);
         ConvolutionData input = new ConvolutionData(Collections.singletonList(DoubleMatrix.ones(5, 5)));
         LayerComputerVisitor layerComputerVisitor = new LayerComputerVisitor(input);
         layer.accept(layerComputerVisitor);
@@ -33,16 +33,16 @@ class MaxPoolingLayerComputerTest {
 
     @Test
     void convolution_layer_no_padding_stride_one_channel_one_input() {
-        MaxPoolingLayer layer = new MaxPoolingLayer(ActivationFunctionType.NONE, 3, 0, 2, 1, 10, 10);
-        ConvolutionData input = new ConvolutionData(Collections.singletonList(DoubleMatrix.ones(11, 11)));
+        MaxPoolingLayer layer = new MaxPoolingLayer(ActivationFunctionType.NONE, 3, 0, 2, 1, 15, 15, 7, 7);
+        ConvolutionData input = new ConvolutionData(Collections.singletonList(DoubleMatrix.ones(15, 15)));
         LayerComputerVisitor layerComputerVisitor = new LayerComputerVisitor(input);
         layer.accept(layerComputerVisitor);
-        DoubleMatrixAssertions.assertMatrices(((ConvolutionData) layerComputerVisitor.getIntermediateOutputResult().getResult()).getDatas(), Collections.singletonList(DoubleMatrix.ones(5, 5)));
+        DoubleMatrixAssertions.assertMatrices(((ConvolutionData) layerComputerVisitor.getIntermediateOutputResult().getResult()).getDatas(), Collections.singletonList(DoubleMatrix.ones(7, 7)));
     }
 
     @Test
     void convolution_layer_no_padding_no_stride_three_channels_two_inputs() {
-        MaxPoolingLayer layer = new MaxPoolingLayer(ActivationFunctionType.NONE, 3, 0, 1, 1, 10, 10);
+        MaxPoolingLayer layer = new MaxPoolingLayer(ActivationFunctionType.NONE, 3, 0, 1, 1, 10, 10, 8, 8);
         ConvolutionData input = new ConvolutionData(Arrays.asList(
                 DoubleMatrix.ones(5, 5),
                 DoubleMatrix.ones(5, 5).muli(2),

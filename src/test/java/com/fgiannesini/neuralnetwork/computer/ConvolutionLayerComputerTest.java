@@ -17,7 +17,7 @@ class ConvolutionLayerComputerTest {
 
     @Test
     void convolution_layer_no_padding_no_stride_one_channel_one_input() {
-        ConvolutionLayer layer = new ConvolutionLayer(ActivationFunctionType.NONE, InitializerType.ONES.getInitializer(), 3, 0, 1, 1, 1, 10, 10);
+        ConvolutionLayer layer = new ConvolutionLayer(ActivationFunctionType.NONE, InitializerType.ONES.getInitializer(), 3, 0, 1, 1, 1, 10, 10, 8, 8);
         ConvolutionData input = new ConvolutionData(Collections.singletonList(DoubleMatrix.ones(5, 5)));
         LayerComputerVisitor layerComputerVisitor = new LayerComputerVisitor(input);
         layer.accept(layerComputerVisitor);
@@ -26,7 +26,7 @@ class ConvolutionLayerComputerTest {
 
     @Test
     void convolution_layer_padding_no_stride_one_channel_one_input() {
-        ConvolutionLayer layer = new ConvolutionLayer(ActivationFunctionType.NONE, InitializerType.ONES.getInitializer(), 3, 1, 1, 1, 1, 10, 10);
+        ConvolutionLayer layer = new ConvolutionLayer(ActivationFunctionType.NONE, InitializerType.ONES.getInitializer(), 3, 1, 1, 1, 1, 10, 10, 10, 10);
         ConvolutionData input = new ConvolutionData(Collections.singletonList(DoubleMatrix.ones(5, 5)));
         LayerComputerVisitor layerComputerVisitor = new LayerComputerVisitor(input);
         layer.accept(layerComputerVisitor);
@@ -41,16 +41,16 @@ class ConvolutionLayerComputerTest {
 
     @Test
     void convolution_layer_no_padding_stride_one_channel_one_input() {
-        ConvolutionLayer layer = new ConvolutionLayer(ActivationFunctionType.NONE, InitializerType.ONES.getInitializer(), 3, 0, 2, 1, 1, 10, 10);
-        ConvolutionData input = new ConvolutionData(Collections.singletonList(DoubleMatrix.ones(11, 11)));
+        ConvolutionLayer layer = new ConvolutionLayer(ActivationFunctionType.NONE, InitializerType.ONES.getInitializer(), 3, 0, 2, 1, 1, 15, 15, 7, 7);
+        ConvolutionData input = new ConvolutionData(Collections.singletonList(DoubleMatrix.ones(15, 15)));
         LayerComputerVisitor layerComputerVisitor = new LayerComputerVisitor(input);
         layer.accept(layerComputerVisitor);
-        DoubleMatrixAssertions.assertMatrices(((ConvolutionData) layerComputerVisitor.getIntermediateOutputResult().getResult()).getDatas(), Collections.singletonList(DoubleMatrix.ones(5, 5).muli(10)));
+        DoubleMatrixAssertions.assertMatrices(((ConvolutionData) layerComputerVisitor.getIntermediateOutputResult().getResult()).getDatas(), Collections.singletonList(DoubleMatrix.ones(7, 7).muli(10)));
     }
 
     @Test
     void convolution_layer_no_padding_no_stride_three_channels_one_input() {
-        ConvolutionLayer layer = new ConvolutionLayer(ActivationFunctionType.NONE, InitializerType.ONES.getInitializer(), 3, 0, 1, 1, 3, 10, 10);
+        ConvolutionLayer layer = new ConvolutionLayer(ActivationFunctionType.NONE, InitializerType.ONES.getInitializer(), 3, 0, 1, 1, 3, 10, 10, 8, 8);
         ConvolutionData input = new ConvolutionData(Arrays.asList(
                 DoubleMatrix.ones(5, 5),
                 DoubleMatrix.ones(5, 5).muli(2),
@@ -68,7 +68,7 @@ class ConvolutionLayerComputerTest {
 
     @Test
     void convolution_layer_no_padding_no_stride_three_channels_two_inputs() {
-        ConvolutionLayer layer = new ConvolutionLayer(ActivationFunctionType.NONE, InitializerType.ONES.getInitializer(), 3, 0, 1, 2, 3, 10, 10);
+        ConvolutionLayer layer = new ConvolutionLayer(ActivationFunctionType.NONE, InitializerType.ONES.getInitializer(), 3, 0, 1, 2, 3, 10, 10, 8, 8);
         ConvolutionData input = new ConvolutionData(Arrays.asList(
                 DoubleMatrix.ones(5, 5),
                 DoubleMatrix.ones(5, 5).muli(2),

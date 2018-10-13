@@ -12,15 +12,19 @@ public class AveragePoolingLayer extends Layer {
     private final int padding;
     private final int stride;
     private final int channelCount;
+    private final int inputWidth;
+    private final int inputHeight;
     private final int outputWidth;
     private final int outputHeight;
 
-    public AveragePoolingLayer(ActivationFunctionType activationFunctionType, int filterSize, int padding, int stride, int channelCount, int outputWidth, int outputHeight) {
+    public AveragePoolingLayer(ActivationFunctionType activationFunctionType, int filterSize, int padding, int stride, int channelCount, int inputWidth, int inputHeight, int outputWidth, int outputHeight) {
         super(activationFunctionType);
         this.filterSize = filterSize;
         this.padding = padding;
         this.stride = stride;
         this.channelCount = channelCount;
+        this.inputWidth = inputWidth;
+        this.inputHeight = inputHeight;
         this.outputWidth = outputWidth;
         this.outputHeight = outputHeight;
     }
@@ -47,6 +51,14 @@ public class AveragePoolingLayer extends Layer {
 
     public int getOutputHeight() {
         return outputHeight;
+    }
+
+    public int getInputWidth() {
+        return inputWidth;
+    }
+
+    public int getInputHeight() {
+        return inputHeight;
     }
 
     @Override

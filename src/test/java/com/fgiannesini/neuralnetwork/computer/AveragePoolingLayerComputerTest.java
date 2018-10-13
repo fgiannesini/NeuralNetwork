@@ -16,7 +16,7 @@ class AveragePoolingLayerComputerTest {
 
     @Test
     void convolution_layer_no_padding_no_stride_one_channel_one_input() {
-        AveragePoolingLayer layer = new AveragePoolingLayer(ActivationFunctionType.NONE, 3, 0, 1, 1, 10, 10);
+        AveragePoolingLayer layer = new AveragePoolingLayer(ActivationFunctionType.NONE, 3, 0, 1, 1, 5, 5, 3, 3);
         ConvolutionData input = new ConvolutionData(Collections.singletonList(DoubleMatrix.ones(5, 5)));
         LayerComputerVisitor layerComputerVisitor = new LayerComputerVisitor(input);
         layer.accept(layerComputerVisitor);
@@ -25,7 +25,7 @@ class AveragePoolingLayerComputerTest {
 
     @Test
     void convolution_layer_padding_no_stride_one_channel_one_input() {
-        AveragePoolingLayer layer = new AveragePoolingLayer(ActivationFunctionType.NONE, 3, 1, 1, 1, 10, 10);
+        AveragePoolingLayer layer = new AveragePoolingLayer(ActivationFunctionType.NONE, 3, 1, 1, 1, 5, 5, 5, 5);
         ConvolutionData input = new ConvolutionData(Collections.singletonList(DoubleMatrix.ones(5, 5)));
         LayerComputerVisitor layerComputerVisitor = new LayerComputerVisitor(input);
         layer.accept(layerComputerVisitor);
@@ -40,7 +40,7 @@ class AveragePoolingLayerComputerTest {
 
     @Test
     void convolution_layer_no_padding_stride_one_channel_one_input() {
-        AveragePoolingLayer layer = new AveragePoolingLayer(ActivationFunctionType.NONE, 3, 0, 2, 1, 10, 10);
+        AveragePoolingLayer layer = new AveragePoolingLayer(ActivationFunctionType.NONE, 3, 0, 2, 1, 11, 11, 5, 5);
         ConvolutionData input = new ConvolutionData(Collections.singletonList(DoubleMatrix.ones(11, 11)));
         LayerComputerVisitor layerComputerVisitor = new LayerComputerVisitor(input);
         layer.accept(layerComputerVisitor);
@@ -49,7 +49,7 @@ class AveragePoolingLayerComputerTest {
 
     @Test
     void convolution_layer_no_padding_no_stride_three_channels_two_inputs() {
-        AveragePoolingLayer layer = new AveragePoolingLayer(ActivationFunctionType.NONE, 3, 0, 1, 1, 10, 10);
+        AveragePoolingLayer layer = new AveragePoolingLayer(ActivationFunctionType.NONE, 3, 0, 1, 1, 5, 5, 3, 3);
         ConvolutionData input = new ConvolutionData(Arrays.asList(
                 DoubleMatrix.ones(5, 5),
                 DoubleMatrix.ones(5, 5).muli(2),

@@ -6,7 +6,7 @@ import java.util.List;
 
 public class ConvolutionData implements LayerTypeData {
 
-    private List<DoubleMatrix> datas;
+    private final List<DoubleMatrix> datas;
 
     public ConvolutionData(List<DoubleMatrix> datas) {
         this.datas = datas;
