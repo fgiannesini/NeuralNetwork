@@ -65,14 +65,14 @@ public class ForwardDataAdapterVisitor implements LayerVisitor {
             data = new ConvolutionData(outputs);
         } else if (previousData instanceof ConvolutionData) {
             List<DoubleMatrix> outputs = DataAdapterComputer.get().adaptMatrices(layer.getInputWidth(), layer.getInputHeight(), ((ConvolutionData) previousData).getDatas());
-            data = new MaxPoolingData(outputs, null);
+            data = new MaxPoolingData(outputs, null, null);
         } else if (previousData instanceof AveragePoolingData) {
             List<DoubleMatrix> outputs = DataAdapterComputer.get().adaptMatrices(layer.getInputWidth(), layer.getInputHeight(), ((AveragePoolingData) previousData).getDatas());
-            data = new MaxPoolingData(outputs, null);
+            data = new MaxPoolingData(outputs, null, null);
         } else if (previousData instanceof MaxPoolingData) {
             MaxPoolingData maxPoolingData = (MaxPoolingData) this.previousData;
             List<DoubleMatrix> outputs = DataAdapterComputer.get().adaptMatrices(layer.getInputWidth(), layer.getInputHeight(), maxPoolingData.getDatas());
-            data = new MaxPoolingData(outputs, maxPoolingData.getMaxIndexes());
+            data = new MaxPoolingData(outputs, maxPoolingData.getMaxXIndexes(), null);
         }
     }
 

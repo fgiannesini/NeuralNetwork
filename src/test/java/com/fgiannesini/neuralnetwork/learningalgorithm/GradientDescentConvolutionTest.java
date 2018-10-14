@@ -97,14 +97,16 @@ public class GradientDescentConvolutionTest {
         @Test
         void learn_with_one_max_pooling_layer_and_one_fully_connected_layer() {
             NeuralNetworkModel neuralNetworkModel = ConvolutionNeuralNetworkModelBuilder.init()
-                    .useInitializer(InitializerType.RANDOM)
-                    .input(10, 10, 1)
+                    .useInitializer(InitializerType.ONES)
+                    .input(7, 7, 1)
                     .addConvolutionLayer(3, 0, 1, 1, ActivationFunctionType.NONE)
                     .addMaxPoolingLayer(3, 0, 1, ActivationFunctionType.NONE)
                     .addFullyConnectedLayer(2, ActivationFunctionType.NONE)
                     .buildConvolutionNetworkModel();
 
-            LayerTypeData input = new ConvolutionData(Collections.singletonList(DoubleMatrix.rand(10, 10)));
+            DoubleMatrix inputData = DoubleMatrix.ones(7, 7);
+            inputData.put(5, 5, 5);
+            LayerTypeData input = new ConvolutionData(Collections.singletonList(inputData));
             LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 1, 250, 200));
 
             LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, getGradientDescentProvider());
@@ -118,7 +120,7 @@ public class GradientDescentConvolutionTest {
         @Test
         void learn_with_one_of_each_type_one_channel_one_input() {
             NeuralNetworkModel neuralNetworkModel = ConvolutionNeuralNetworkModelBuilder.init()
-                    .useInitializer(InitializerType.ONES)
+                    .useInitializer(InitializerType.RANDOM)
                     .input(10, 10, 1)
                     .addConvolutionLayer(3, 0, 1, 1, ActivationFunctionType.NONE)
                     .addAveragePoolingLayer(3, 0, 1, ActivationFunctionType.NONE)

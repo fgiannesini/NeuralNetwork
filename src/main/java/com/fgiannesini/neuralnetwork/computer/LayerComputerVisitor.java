@@ -73,22 +73,40 @@ public class LayerComputerVisitor implements LayerVisitor {
         MaxPoolingData data = (MaxPoolingData) layerTypeData;
         List<DoubleMatrix> inputs = data.getDatas();
         List<DoubleMatrix> outputs = new ArrayList<>();
-        List<DoubleMatrix> maxIndexes = new ArrayList<>();
+        List<DoubleMatrix> maxXIndexes = new ArrayList<>();
+        List<DoubleMatrix> maxYIndexes = new ArrayList<>();
 
         for (DoubleMatrix input : inputs) {
             ConvolutionComputer convolutionComputer = ConvolutionComputer.get();
             int indexesRowCount = convolutionComputer.computeOutputSize(layer.getPadding(), layer.getStride(), layer.getFilterSize(), input.getRows());
             int indexesColumnsCount = convolutionComputer.computeOutputSize(layer.getPadding(), layer.getStride(), layer.getFilterSize(), input.getColumns());
-            DoubleMatrix indexes = DoubleMatrix.zeros(indexesRowCount, indexesColumnsCount);
+            DoubleMatrix maxXIndex = DoubleMatrix.zeros(indexesRowCount, indexesColumnsCount);
+            DoubleMatrix maxYIndex = DoubleMatrix.zeros(indexesRowCount, indexesColumnsCount);
             BiFunction<DoubleMatrix, ConvCoords, Double> convolutionApplication = (in, coord) -> {
-                indexes.put(coord.getX(), coord.getY(), in.argmax());
+                int maxX = 0;
+                int maxY = 0;
+                double max = Double.NEGATIVE_INFINITY;
+                for (int i = 0; i < layer.getFilterSize(); i++) {
+                    for (int j = 0; j < layer.getFilterSize(); j++) {
+                        double value = in.get(i, j);
+                        if (value > max) {
+                            maxX = coord.getX() + i;
+                            maxY = coord.getY() + j;
+                            max = value;
+                        }
+                    }
+                }
+                maxXIndex.put(coord.getX(), coord.getY(), maxX);
+                maxYIndex.put(coord.getX(), coord.getY(), maxY);
                 return in.max();
             };
             DoubleMatrix output = convolutionComputer.computeConvolution(input, convolutionApplication, layer.getPadding(), layer.getStride(), layer.getFilterSize());
             outputs.add(output);
+            maxXIndexes.add(maxXIndex);
+            maxYIndexes.add(maxYIndex);
         }
 
-        intermediateOutputResult = new IntermediateOutputResult(new MaxPoolingData(outputs, maxIndexes));
+        intermediateOutputResult = new IntermediateOutputResult(new MaxPoolingData(outputs, maxXIndexes, maxYIndexes));
     }
 
     @Override

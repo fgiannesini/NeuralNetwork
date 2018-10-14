@@ -128,27 +128,27 @@ public class LayerTypeCorrectionsVisitor implements DataVisitor {
     @Override
     public void visit(MaxPoolingData error) {
         MaxPoolingLayer maxPoolingLayer = (MaxPoolingLayer) gradientLayerProvider.getLayer();
+        MaxPoolingData currentResult = (MaxPoolingData) gradientLayerProvider.getCurrentResult();
         correction = new GradientDescentCorrection(IntStream.range(0, maxPoolingLayer.getChannelCount()).mapToObj(i -> DoubleMatrix.EMPTY).collect(Collectors.toList()));
-        nextGradientLayerProvider = getNextMaxPoolingLayerProvider(error, maxPoolingLayer);
+        nextGradientLayerProvider = getNextMaxPoolingLayerProvider(error, maxPoolingLayer, currentResult.getMaxXIndexes(), currentResult.getMaxYIndexes());
     }
-    //Mauvaise implem
 
-    private LayerTypeData getNextMaxPoolingLayerProvider(MaxPoolingData input, MaxPoolingLayer maxPoolingLayer) {
-        List<DoubleMatrix> inputDatas = input.getDatas();
-        List<DoubleMatrix> outputs = inputDatas.stream()
-                .map(m -> {
-                    int filterAddedColumn = maxPoolingLayer.getFilterSize() - maxPoolingLayer.getFilterSize() % 2;
-                    int outputRow = m.getRows() + filterAddedColumn;
-                    int outputColumn = m.getColumns() + filterAddedColumn;
-                    DoubleMatrix output = DoubleMatrix.zeros(outputRow, outputColumn);
-                    output.put(
-                            new IntervalRange(maxPoolingLayer.getFilterSize() / 2, outputRow - maxPoolingLayer.getFilterSize() / 2),
-                            new IntervalRange(maxPoolingLayer.getFilterSize() / 2, outputColumn - maxPoolingLayer.getFilterSize() / 2),
-                            m
-                    );
-//                    output.divi(maxPoolingLayer.getFilterSize() * maxPoolingLayer.getFilterSize());
-                    return applyStride(output, maxPoolingLayer.getStride());
-                })
+    private LayerTypeData getNextMaxPoolingLayerProvider(MaxPoolingData maxPoolingData, MaxPoolingLayer maxPoolingLayer, List<DoubleMatrix> maxXIndexes, List<DoubleMatrix> maxYIndexes) {
+        List<DoubleMatrix> outputs = IntStream.range(0, maxPoolingData.getDatas().size()).mapToObj(i -> {
+            DoubleMatrix input = maxPoolingData.getDatas().get(i);
+            DoubleMatrix xIndexMatrix = maxXIndexes.get(i);
+            DoubleMatrix yIndexMatrix = maxYIndexes.get(i);
+            DoubleMatrix output = DoubleMatrix.zeros(maxPoolingLayer.getInputWidth(), maxPoolingLayer.getInputHeight());
+            for (int row = 0; row < input.getRows(); row++) {
+                for (int column = 0; column < input.getColumns(); column++) {
+                    int rowIndex = (int) xIndexMatrix.get(row, column);
+                    int columnIndex = (int) yIndexMatrix.get(row, column);
+                    double oldValue = output.get(rowIndex, columnIndex);
+                    output.put(rowIndex, columnIndex, input.get(row, column) + oldValue);
+                }
+            }
+            return output;
+        })
                 .collect(Collectors.toList());
         return new ConvolutionData(outputs);
     }
@@ -161,14 +161,15 @@ public class LayerTypeCorrectionsVisitor implements DataVisitor {
                 .collect(Collectors.toList());
         int inputCount = inputs.size() / layer.getInputChannelCount();
         List<DoubleMatrix> outputs = new ArrayList<>();
+        ConvolutionComputer convolutionComputer = ConvolutionComputer.get();
 
         for (int inputIndex = 0; inputIndex < inputCount; inputIndex++) {
             for (int channel = 0, weightIndex = 0; channel < layer.getOutputChannelCount(); channel++) {
                 DoubleMatrix output = DoubleMatrix.EMPTY;
                 for (int inputChannelIndex = inputIndex * layer.getInputChannelCount(); inputChannelIndex < (inputIndex + 1) * layer.getInputChannelCount(); inputChannelIndex++, weightIndex++) {
                     DoubleMatrix input = inputs.get(inputChannelIndex);
-                    DoubleMatrix weights = weightMatrices.get(weightIndex);
-                    DoubleMatrix convolutedMatrix = ConvolutionComputer.get().computeConvolution(input, (inputPart, coord) -> inputPart.muli(weights).sum(), layer.getFilterSize() / 2, 1, layer.getFilterSize());
+                    DoubleMatrix weights = weightMatrices.get(weightIndex).transpose();
+                    DoubleMatrix convolutedMatrix = convolutionComputer.computeConvolution(input, (inputPart, coord) -> inputPart.muli(weights).sum(), layer.getFilterSize() / 2, 1, layer.getFilterSize());
                     convolutedMatrix = applyStride(convolutedMatrix, layer.getStride());
                     if (output == DoubleMatrix.EMPTY) {
                         output = convolutedMatrix;
