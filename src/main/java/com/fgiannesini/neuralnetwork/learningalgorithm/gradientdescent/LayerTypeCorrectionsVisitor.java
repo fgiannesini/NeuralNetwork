@@ -172,16 +172,16 @@ public class LayerTypeCorrectionsVisitor implements DataVisitor {
                 DoubleMatrix output = DoubleMatrix.EMPTY;
                 for (int inputChannelIndex = inputIndex * layer.getInputChannelCount(); inputChannelIndex < (inputIndex + 1) * layer.getInputChannelCount(); inputChannelIndex++, weightIndex++) {
                     DoubleMatrix input = inputs.get(inputChannelIndex);
-                    DoubleMatrix weights = weightMatrices.get(weightIndex).transpose();
-                    DoubleMatrix convolutedMatrix = convolutionComputer.computeConvolution(input, (inputPart, coord) -> inputPart.muli(weights).sum(), layer.getFilterSize() / 2, 1, layer.getFilterSize());
-                    convolutedMatrix = applyStride(convolutedMatrix, layer.getStride());
+                    DoubleMatrix weights = weightMatrices.get(weightIndex);
+                    DoubleMatrix stridedInput = applyStride(input, layer.getStride());
+                    DoubleMatrix convolutedMatrix = convolutionComputer.computeConvolution(stridedInput, (inputPart, coord) -> inputPart.muli(weights).sum(), layer.getFilterSize() / 2, 1, layer.getFilterSize());
                     if (output == DoubleMatrix.EMPTY) {
                         output = convolutedMatrix;
                     } else {
                         output.addi(convolutedMatrix);
                     }
                 }
-                output.addi(layer.getBiasMatrices().get(channel));
+//                output.addi(layer.getBiasMatrices().get(channel));
                 outputs.add(output);
             }
         }
