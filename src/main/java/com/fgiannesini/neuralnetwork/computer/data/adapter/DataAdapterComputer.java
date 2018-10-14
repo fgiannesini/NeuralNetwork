@@ -40,12 +40,16 @@ class DataAdapterComputer {
 
     List<DoubleMatrix> adaptMatrices(int width, int height, List<DoubleMatrix> inputs) {
         List<DoubleMatrix> outputs;
-        if (width != inputs.get(0).getRows() || height == inputs.get(0).getColumns()) {
+        int rowsCount = inputs.get(0).getRows();
+        int columnsCount = inputs.get(0).getColumns();
+        if (width > rowsCount || height > columnsCount) {
             outputs = inputs.stream().map(input -> {
                 DoubleMatrix output = DoubleMatrix.zeros(width, height);
                 output.put(new IntervalRange(0, input.getRows()), new IntervalRange(0, input.getColumns()), input);
                 return output;
             }).collect(Collectors.toList());
+        } else if (width < rowsCount || height < columnsCount) {
+            outputs = inputs.stream().map(input -> input.get(new IntervalRange(0, width), new IntervalRange(0, height))).collect(Collectors.toList());
         } else {
             outputs = inputs;
         }

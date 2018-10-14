@@ -8,7 +8,6 @@ import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processpr
 import com.fgiannesini.neuralnetwork.math.ConvolutionComputer;
 import com.fgiannesini.neuralnetwork.model.*;
 import org.jblas.DoubleMatrix;
-import org.jblas.ranges.IntervalRange;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,24 +104,29 @@ public class LayerTypeCorrectionsVisitor implements DataVisitor {
         nextGradientLayerProvider = getNextAveragePoolingLayerProvider(error, averagePoolingLayer);
     }
 
-    private LayerTypeData getNextAveragePoolingLayerProvider(AveragePoolingData input, AveragePoolingLayer averagePoolingLayer) {
-        List<DoubleMatrix> inputDatas = input.getDatas();
-        List<DoubleMatrix> outputs = inputDatas.stream()
-                .map(m -> {
-                    int filterAddedColumn = averagePoolingLayer.getFilterSize() - averagePoolingLayer.getFilterSize() % 2;
-                    int outputRow = m.getRows() + filterAddedColumn;
-                    int outputColumn = m.getColumns() + filterAddedColumn;
-                    DoubleMatrix output = DoubleMatrix.zeros(outputRow, outputColumn);
-                    output.put(
-                            new IntervalRange(averagePoolingLayer.getFilterSize() / 2, outputRow - averagePoolingLayer.getFilterSize() / 2),
-                            new IntervalRange(averagePoolingLayer.getFilterSize() / 2, outputColumn - averagePoolingLayer.getFilterSize() / 2),
-                            m
-                    );
-//                    output.divi(averagePoolingLayer.getFilterSize() * averagePoolingLayer.getFilterSize());
-                    return applyStride(output, averagePoolingLayer.getStride());
-                })
+    private LayerTypeData getNextAveragePoolingLayerProvider(AveragePoolingData averagePoolingData, AveragePoolingLayer averagePoolingLayer) {
+        List<DoubleMatrix> inputDatas = averagePoolingData.getDatas();
+        ConvolutionComputer convolutionComputer = ConvolutionComputer.get();
+        List<DoubleMatrix> outputs = inputDatas.stream().map(inputData -> {
+            DoubleMatrix output = DoubleMatrix.zeros(averagePoolingLayer.getInputWidth(), averagePoolingLayer.getInputHeight());
+            DoubleMatrix paddedOutput = convolutionComputer.applyPadding(output, averagePoolingLayer.getPadding());
+            int filterSize = averagePoolingLayer.getFilterSize();
+            int stride = averagePoolingLayer.getStride();
+            for (int rowIndex = 0; rowIndex < paddedOutput.getRows() - filterSize + 1; rowIndex += stride) {
+                for (int columnIndex = 0; columnIndex < paddedOutput.getColumns() - filterSize + 1; columnIndex += stride) {
+                    double errorValue = inputData.get(rowIndex / stride, columnIndex / stride) / ((double) filterSize * filterSize);
+                    for (int maskRow = 0; maskRow < filterSize; maskRow++) {
+                        for (int maskColumn = 0; maskColumn < filterSize; maskColumn++) {
+                            double oldValue = paddedOutput.get(rowIndex + maskRow, columnIndex + maskColumn);
+                            paddedOutput.put(rowIndex + maskRow, columnIndex + maskColumn, oldValue + errorValue);
+                        }
+                    }
+                }
+            }
+            return convolutionComputer.removePadding(paddedOutput, averagePoolingLayer.getPadding());
+        })
                 .collect(Collectors.toList());
-        return new ConvolutionData(outputs);
+        return new AveragePoolingData(outputs);
     }
 
     @Override

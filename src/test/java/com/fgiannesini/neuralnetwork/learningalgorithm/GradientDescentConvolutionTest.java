@@ -120,7 +120,7 @@ public class GradientDescentConvolutionTest {
         @Test
         void learn_with_one_of_each_type_one_channel_one_input() {
             NeuralNetworkModel neuralNetworkModel = ConvolutionNeuralNetworkModelBuilder.init()
-                    .useInitializer(InitializerType.RANDOM)
+                    .useInitializer(InitializerType.ONES)
                     .input(10, 10, 1)
                     .addConvolutionLayer(3, 0, 1, 1, ActivationFunctionType.NONE)
                     .addAveragePoolingLayer(3, 0, 1, ActivationFunctionType.NONE)

@@ -40,6 +40,13 @@ public class ConvolutionComputer {
         return input;
     }
 
+    public DoubleMatrix removePadding(DoubleMatrix input, int padding) {
+        if (padding != 0) {
+            return input.get(new IntervalRange(padding, input.getRows() - padding), new IntervalRange(padding, input.getColumns() - padding));
+        }
+        return input;
+    }
+
     public int computeOutputSize(int padding, int stride, int filterSize, int rows) {
         return (rows + 2 * padding - filterSize) / stride + 1;
     }
