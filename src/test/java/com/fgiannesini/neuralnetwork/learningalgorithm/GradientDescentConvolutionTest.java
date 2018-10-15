@@ -240,4 +240,27 @@ public class GradientDescentConvolutionTest {
         }
     }
 
+    @Test
+    void learn_complete_system() {
+        int size = 32;
+        NeuralNetworkModel neuralNetworkModel = ConvolutionNeuralNetworkModelBuilder.init()
+                .useInitializer(InitializerType.RANDOM)
+                .input(size, size, 1)
+                .addConvolutionLayer(3, 0, 1, 3, ActivationFunctionType.RELU)
+                .addMaxPoolingLayer(3, 0, 1, ActivationFunctionType.RELU)
+                .addConvolutionLayer(3, 0, 1, 1, ActivationFunctionType.RELU)
+                .addFullyConnectedLayer(10, ActivationFunctionType.SOFT_MAX)
+                .buildConvolutionNetworkModel();
+
+        DoubleMatrix inputData = DoubleMatrix.rand(size, size).mul(255);
+        LayerTypeData input = new ConvolutionData(Collections.singletonList(inputData));
+        LayerTypeData output = new WeightBiasData(new DoubleMatrix(10, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0));
+
+        LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, getGradientDescentProvider());
+        NeuralNetworkModel gradientNeuralNetworkModel = gradientDescent.learn(input, output);
+
+        LearningAlgorithm gradientDescentWithDerivation = new GradientDescentWithDerivation(neuralNetworkModel, CostType.SOFT_MAX_REGRESSION, new GradientDescentWithDerivationProcessProvider());
+        NeuralNetworkModel gradientWithDerivativeNeuralNetworkModel = gradientDescentWithDerivation.learn(input, output);
+        NeuralNetworkAssertions.checkSameNeuralNetworks(gradientNeuralNetworkModel, gradientWithDerivativeNeuralNetworkModel);
+    }
 }
