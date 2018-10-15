@@ -93,8 +93,8 @@ public class LayerTypeCorrectionsVisitor implements DataVisitor {
     public void visit(ConvolutionData error) {
         ConvolutionData previousResult = (ConvolutionData) gradientLayerProvider.getPreviousResult();
         ConvolutionLayer convolutionLayer = (ConvolutionLayer) gradientLayerProvider.getLayer();
-            correction = getConvolutionLayerCorrections(error, previousResult, convolutionLayer);
-            nextGradientLayerProvider = getNextConvolutionLayerProvider(error, convolutionLayer);
+        correction = getConvolutionLayerCorrections(error, previousResult, convolutionLayer);
+        nextGradientLayerProvider = getNextConvolutionLayerProvider(error, convolutionLayer);
     }
 
     @Override
@@ -174,7 +174,7 @@ public class LayerTypeCorrectionsVisitor implements DataVisitor {
                     DoubleMatrix input = inputs.get(inputChannelIndex);
                     DoubleMatrix weights = weightMatrices.get(weightIndex);
                     DoubleMatrix stridedInput = applyStride(input, layer.getStride());
-                    DoubleMatrix convolutedMatrix = convolutionComputer.computeConvolution(stridedInput, (inputPart, coord) -> inputPart.muli(weights).sum(), layer.getFilterSize() / 2, 1, layer.getFilterSize());
+                    DoubleMatrix convolutedMatrix = convolutionComputer.computeConvolution(stridedInput, (inputPart, coord) -> inputPart.muli(weights).sum(), layer.getFilterSize() - 1, 1, layer.getFilterSize());
                     if (output == DoubleMatrix.EMPTY) {
                         output = convolutedMatrix;
                     } else {

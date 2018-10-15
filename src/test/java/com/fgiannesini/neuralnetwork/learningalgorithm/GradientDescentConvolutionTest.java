@@ -120,7 +120,7 @@ public class GradientDescentConvolutionTest {
         void learn_with_two_convolution_layers_and_one_fully_connected_layer() {
             NeuralNetworkModel neuralNetworkModel = ConvolutionNeuralNetworkModelBuilder.init()
                     .useInitializer(InitializerType.ONES)
-                    .input(10, 10, 1)
+                    .input(7, 7, 1)
                     .addConvolutionLayer(3, 0, 1, 1, ActivationFunctionType.NONE)
                     .addConvolutionLayer(3, 0, 1, 1, ActivationFunctionType.NONE)
                     .addFullyConnectedLayer(2, ActivationFunctionType.NONE)
