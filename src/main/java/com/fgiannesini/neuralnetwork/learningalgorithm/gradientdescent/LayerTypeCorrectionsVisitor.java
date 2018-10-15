@@ -160,18 +160,20 @@ public class LayerTypeCorrectionsVisitor implements DataVisitor {
     private LayerTypeData getNextConvolutionLayerProvider(ConvolutionData error, ConvolutionLayer layer) {
 
         List<DoubleMatrix> inputs = error.getDatas();
-        List<DoubleMatrix> weightMatrices = layer.getWeightMatrices();
-//                .stream()
-//                .map(weight -> {
-//                    DoubleMatrix newWeight = new DoubleMatrix(weight.getRows(), weight.getColumns());
-//                    for (int i = 0; i < weight.getRows(); i++) {
-//                        for (int j = 0; j < weight.getColumns(); j++) {
-//                            newWeight.put(j, i, weight.get(i, j));
-//                        }
-//                    }
-//                    return newWeight;
-//                })
-//                .collect(Collectors.toList());
+        List<DoubleMatrix> weightMatrices = layer.getWeightMatrices()
+                .stream()
+                .map(weight -> {
+                    int weightRows = weight.getRows();
+                    int weightColumns = weight.getColumns();
+                    DoubleMatrix newWeight = new DoubleMatrix(weightRows, weightColumns);
+                    for (int i = 0; i < weightRows; i++) {
+                        for (int j = 0; j < weightColumns; j++) {
+                            newWeight.put(i, j, weight.get(weightRows - 1 - i, weightColumns - 1 - j));
+                        }
+                    }
+                    return newWeight;
+                })
+                .collect(Collectors.toList());
         int inputCount = inputs.size() / layer.getInputChannelCount();
         List<DoubleMatrix> outputs = new ArrayList<>();
         ConvolutionComputer convolutionComputer = ConvolutionComputer.get();

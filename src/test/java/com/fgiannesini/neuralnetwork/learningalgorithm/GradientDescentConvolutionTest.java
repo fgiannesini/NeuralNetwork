@@ -15,17 +15,14 @@ import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.processpr
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.GradientDescentWithDerivation;
 import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescentwithderivation.processprovider.GradientDescentWithDerivationProcessProvider;
 import com.fgiannesini.neuralnetwork.model.ConvolutionNeuralNetworkModelBuilder;
-import com.fgiannesini.neuralnetwork.model.Layer;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import org.jblas.DoubleMatrix;
-import org.jblas.ranges.IntervalRange;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.IntStream;
 
 public class GradientDescentConvolutionTest {
 
@@ -122,22 +119,14 @@ public class GradientDescentConvolutionTest {
         @Test
         void learn_with_two_convolution_layers_and_one_fully_connected_layer() {
             NeuralNetworkModel neuralNetworkModel = ConvolutionNeuralNetworkModelBuilder.init()
-                    .useInitializer(InitializerType.ONES)
+                    .useInitializer(InitializerType.RANDOM)
                     .input(7, 7, 1)
                     .addConvolutionLayer(3, 0, 1, 1, ActivationFunctionType.NONE)
                     .addConvolutionLayer(3, 0, 1, 1, ActivationFunctionType.NONE)
                     .addFullyConnectedLayer(2, ActivationFunctionType.NONE)
                     .buildConvolutionNetworkModel();
 
-            Layer firstLayer = neuralNetworkModel.getLayers().get(0);
-            DoubleMatrix weightMatrix = new DoubleMatrix(3, 3, IntStream.range(0, 9).asDoubleStream().map(i -> i / 10).toArray());
-            firstLayer.getParametersMatrix().get(0).put(new IntervalRange(0, 3), new IntervalRange(0, 3), weightMatrix.dup());
-            firstLayer.getParametersMatrix().get(1).put(0, 0, 1);
-            Layer secondLayer = neuralNetworkModel.getLayers().get(1);
-            secondLayer.getParametersMatrix().get(0).put(new IntervalRange(0, 3), new IntervalRange(0, 3), weightMatrix.dup());
-            secondLayer.getParametersMatrix().get(1).put(0, 0, 1);
-
-            DoubleMatrix inputData = new DoubleMatrix(7, 7, IntStream.range(0, 49).asDoubleStream().toArray());
+            DoubleMatrix inputData = DoubleMatrix.rand(7, 7);
             LayerTypeData input = new ConvolutionData(Collections.singletonList(inputData));
             LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 1, 3700, 3690));
 
