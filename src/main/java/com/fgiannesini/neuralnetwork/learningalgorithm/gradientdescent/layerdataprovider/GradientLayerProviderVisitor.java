@@ -50,8 +50,8 @@ public class GradientLayerProviderVisitor implements LayerVisitor {
 
     private GradientConvolutionLayerProvider createGradientConvolutionLayerProvider(Layer layer) {
         IntermediateOutputResult intermediateOutputResult = this.intermediateOutputResult.get(layerIndex + 1);
-        IntermediateOutputResult previousIntermediateOutputResult = this.intermediateOutputResult.get(layerIndex);
-        return new GradientConvolutionLayerProvider(layer, intermediateOutputResult.getResult(), previousIntermediateOutputResult.getResult(), layerIndex);
+        LayerTypeData previousData = formatData(layer, this.intermediateOutputResult.get(layerIndex));
+        return new GradientConvolutionLayerProvider(layer, intermediateOutputResult.getResult(), previousData, layerIndex);
     }
 
     private LayerTypeData formatData(Layer layer, IntermediateOutputResult intermediateOutputResult) {
