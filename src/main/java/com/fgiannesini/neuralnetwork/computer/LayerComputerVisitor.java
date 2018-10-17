@@ -96,8 +96,9 @@ public class LayerComputerVisitor implements LayerVisitor {
                         }
                     }
                 }
-                maxXIndex.put(coord.getX(), coord.getY(), maxX);
-                maxYIndex.put(coord.getX(), coord.getY(), maxY);
+                int stride = layer.getStride();
+                maxXIndex.put(coord.getX() / stride, coord.getY() / stride, maxX);
+                maxYIndex.put(coord.getX() / stride, coord.getY() / stride, maxY);
                 return in.max();
             };
             DoubleMatrix output = convolutionComputer.computeConvolution(input, convolutionApplication, layer.getPadding(), layer.getStride(), layer.getFilterSize());

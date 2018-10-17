@@ -23,8 +23,8 @@ public class ConvolutionComputer {
         for (int rowIndex = 0; rowIndex < paddedInput.getRows() - filterSize + 1; rowIndex += stride) {
             for (int columnIndex = 0; columnIndex < paddedInput.getColumns() - filterSize + 1; columnIndex += stride) {
                 DoubleMatrix inputPart = paddedInput.get(new IntervalRange(rowIndex, rowIndex + filterSize), new IntervalRange(columnIndex, columnIndex + filterSize));
-                ConvCoords coords = new ConvCoords(rowIndex / stride, columnIndex / stride);
-                output.put(coords.getX(), coords.getY(), convolutionApplication.apply(inputPart, coords));
+                ConvCoords coords = new ConvCoords(rowIndex, columnIndex);
+                output.put(rowIndex / stride, columnIndex / stride, convolutionApplication.apply(inputPart, coords));
             }
         }
 

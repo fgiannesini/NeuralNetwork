@@ -3,10 +3,7 @@ package com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer;
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import com.fgiannesini.neuralnetwork.assertions.DoubleMatrixAssertions;
 import com.fgiannesini.neuralnetwork.computer.OutputComputerBuilder;
-import com.fgiannesini.neuralnetwork.computer.data.AveragePoolingData;
-import com.fgiannesini.neuralnetwork.computer.data.BatchNormData;
-import com.fgiannesini.neuralnetwork.computer.data.ConvolutionData;
-import com.fgiannesini.neuralnetwork.computer.data.WeightBiasData;
+import com.fgiannesini.neuralnetwork.computer.data.*;
 import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 import com.fgiannesini.neuralnetwork.model.ConvolutionNeuralNetworkModelBuilder;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
@@ -18,6 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.IntStream;
 
 class IntermediateOutputComputerTest {
 
@@ -199,13 +197,13 @@ class IntermediateOutputComputerTest {
     }
 
     @Test
-    void compute_one_dimension_output_with_convolution_layer() {
+    void compute_one_dimension_output_with_average_and_convolution_layer() {
         NeuralNetworkModel model = ConvolutionNeuralNetworkModelBuilder.init()
+                .useInitializer(InitializerType.ONES)
                 .input(10, 10, 1)
                 .addConvolutionLayer(3, 0, 1, 1, ActivationFunctionType.NONE)
                 .addAveragePoolingLayer(3, 0, 1, ActivationFunctionType.NONE)
                 .addFullyConnectedLayer(2, ActivationFunctionType.NONE)
-                .useInitializer(InitializerType.ONES)
                 .buildConvolutionNetworkModel();
 
         ConvolutionData inputData = new ConvolutionData(Collections.singletonList(DoubleMatrix.ones(10, 10)));
@@ -222,5 +220,101 @@ class IntermediateOutputComputerTest {
         DoubleMatrixAssertions.assertMatrices(Collections.singletonList(DoubleMatrix.ones(8, 8).muli(10)), ((ConvolutionData) output.get(1).getResult()).getDatas());
         DoubleMatrixAssertions.assertMatrices(Collections.singletonList(DoubleMatrix.ones(6, 6).muli(10)), ((AveragePoolingData) output.get(2).getResult()).getDatas());
         DoubleMatrixAssertions.assertMatrices(new DoubleMatrix(2, 1, 361, 361), ((WeightBiasData) output.get(3).getResult()).getData());
+    }
+
+    @Test
+    void compute_one_dimension_output_with_max_layer_and_striding() {
+        NeuralNetworkModel model = ConvolutionNeuralNetworkModelBuilder.init()
+                .useInitializer(InitializerType.ONES)
+                .input(6, 6, 1)
+                .addMaxPoolingLayer(2, 0, 2, ActivationFunctionType.NONE)
+                .buildConvolutionNetworkModel();
+
+        MaxPoolingData inputData = new MaxPoolingData(Collections.singletonList(new DoubleMatrix(6, 6, IntStream.range(1, 37).asDoubleStream().toArray())), null, null);
+
+        IIntermediateOutputComputer outputComputer = OutputComputerBuilder.init()
+                .withModel(model)
+                .buildIntermediateOutputComputer();
+
+        List<IntermediateOutputResult> output = outputComputer.compute(inputData);
+
+        MaxPoolingData firstResult = (MaxPoolingData) output.get(0).getResult();
+        DoubleMatrixAssertions.assertMatrices(inputData.getDatas(), firstResult.getDatas());
+
+        MaxPoolingData secondResult = (MaxPoolingData) output.get(1).getResult();
+        DoubleMatrixAssertions.assertMatrices(Collections.singletonList(new DoubleMatrix(3, 3, 8, 10, 12, 20, 22, 24, 32, 34, 36)), secondResult.getDatas());
+        DoubleMatrixAssertions.assertMatrices(Collections.singletonList(new DoubleMatrix(3, 3, 1, 3, 5, 1, 3, 5, 1, 3, 5)), secondResult.getMaxXIndexes());
+        DoubleMatrixAssertions.assertMatrices(Collections.singletonList(new DoubleMatrix(3, 3, 1, 1, 1, 3, 3, 3, 5, 5, 5)), secondResult.getMaxYIndexes());
+    }
+
+    @Test
+    void compute_one_dimension_output_with_max_layer_and_padding() {
+        NeuralNetworkModel model = ConvolutionNeuralNetworkModelBuilder.init()
+                .useInitializer(InitializerType.ONES)
+                .input(3, 3, 1)
+                .addMaxPoolingLayer(3, 1, 1, ActivationFunctionType.NONE)
+                .buildConvolutionNetworkModel();
+
+        MaxPoolingData inputData = new MaxPoolingData(Collections.singletonList(new DoubleMatrix(3, 3, IntStream.range(1, 10).asDoubleStream().toArray())), null, null);
+
+        IIntermediateOutputComputer outputComputer = OutputComputerBuilder.init()
+                .withModel(model)
+                .buildIntermediateOutputComputer();
+
+        List<IntermediateOutputResult> output = outputComputer.compute(inputData);
+
+        MaxPoolingData firstResult = (MaxPoolingData) output.get(0).getResult();
+        DoubleMatrixAssertions.assertMatrices(inputData.getDatas(), firstResult.getDatas());
+
+        MaxPoolingData secondResult = (MaxPoolingData) output.get(1).getResult();
+        DoubleMatrixAssertions.assertMatrices(Collections.singletonList(new DoubleMatrix(3, 3, 5, 6, 6, 8, 9, 9, 8, 9, 9)), secondResult.getDatas());
+        DoubleMatrixAssertions.assertMatrices(Collections.singletonList(new DoubleMatrix(3, 3, 2, 3, 3, 2, 3, 3, 2, 3, 3)), secondResult.getMaxXIndexes());
+        DoubleMatrixAssertions.assertMatrices(Collections.singletonList(new DoubleMatrix(3, 3, 2, 2, 2, 3, 3, 3, 3, 3, 3)), secondResult.getMaxYIndexes());
+    }
+
+    @Test
+    void compute_one_dimension_output_with_average_layer_and_striding() {
+        NeuralNetworkModel model = ConvolutionNeuralNetworkModelBuilder.init()
+                .useInitializer(InitializerType.ONES)
+                .input(6, 6, 1)
+                .addAveragePoolingLayer(2, 0, 2, ActivationFunctionType.NONE)
+                .buildConvolutionNetworkModel();
+
+        AveragePoolingData inputData = new AveragePoolingData(Collections.singletonList(new DoubleMatrix(6, 6, IntStream.range(1, 37).asDoubleStream().toArray())));
+
+        IIntermediateOutputComputer outputComputer = OutputComputerBuilder.init()
+                .withModel(model)
+                .buildIntermediateOutputComputer();
+
+        List<IntermediateOutputResult> output = outputComputer.compute(inputData);
+
+        AveragePoolingData firstResult = (AveragePoolingData) output.get(0).getResult();
+        DoubleMatrixAssertions.assertMatrices(inputData.getDatas(), firstResult.getDatas());
+
+        AveragePoolingData secondResult = (AveragePoolingData) output.get(1).getResult();
+        DoubleMatrixAssertions.assertMatrices(Collections.singletonList(new DoubleMatrix(3, 3, 4.5, 6.5, 8.5, 16.5, 18.5, 20.5, 28.5, 30.5, 32.5)), secondResult.getDatas());
+    }
+
+    @Test
+    void compute_one_dimension_output_with_average_layer_and_padding() {
+        NeuralNetworkModel model = ConvolutionNeuralNetworkModelBuilder.init()
+                .useInitializer(InitializerType.ONES)
+                .input(3, 3, 1)
+                .addAveragePoolingLayer(3, 1, 1, ActivationFunctionType.NONE)
+                .buildConvolutionNetworkModel();
+
+        AveragePoolingData inputData = new AveragePoolingData(Collections.singletonList(new DoubleMatrix(3, 3, IntStream.range(1, 10).asDoubleStream().toArray())));
+
+        IIntermediateOutputComputer outputComputer = OutputComputerBuilder.init()
+                .withModel(model)
+                .buildIntermediateOutputComputer();
+
+        List<IntermediateOutputResult> output = outputComputer.compute(inputData);
+
+        AveragePoolingData firstResult = (AveragePoolingData) output.get(0).getResult();
+        DoubleMatrixAssertions.assertMatrices(inputData.getDatas(), firstResult.getDatas());
+
+        AveragePoolingData secondResult = (AveragePoolingData) output.get(1).getResult();
+        DoubleMatrixAssertions.assertMatrices(Collections.singletonList(new DoubleMatrix(3, 3, 1.33333, 2.33333, 1.77777, 3, 5, 3.66666, 2.66666, 4.33333, 3.11111)), secondResult.getDatas());
     }
 }

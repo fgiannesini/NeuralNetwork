@@ -106,11 +106,13 @@ public class ConvolutionNeuralNetworkModelBuilder {
             layer.ifPresent(layers::add);
         });
 
-        List<Layer> fullyConnectedLayers = neuralNetworkModelBuilder
-                .input(inputWidth * inputHeight * inputChannelCount)
-                .useInitializer(initializerType)
-                .buildLayers();
-        layers.addAll(fullyConnectedLayers);
+        if (layerTypes.contains(LayerType.FULLY_CONNECTED)) {
+            List<Layer> fullyConnectedLayers = neuralNetworkModelBuilder
+                    .input(inputWidth * inputHeight * inputChannelCount)
+                    .useInitializer(initializerType)
+                    .buildLayers();
+            layers.addAll(fullyConnectedLayers);
+        }
 
         return new NeuralNetworkModel(layers);
     }
