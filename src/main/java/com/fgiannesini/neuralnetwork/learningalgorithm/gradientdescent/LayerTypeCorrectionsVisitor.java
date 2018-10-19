@@ -157,9 +157,9 @@ public class LayerTypeCorrectionsVisitor implements DataVisitor {
         return new ConvolutionData(outputs);
     }
 
-    private LayerTypeData getNextConvolutionLayerProvider(ConvolutionData error, ConvolutionLayer layer) {
+    private LayerTypeData getNextConvolutionLayerProvider(ConvolutionData errorData, ConvolutionLayer layer) {
 
-        List<DoubleMatrix> errorDatas = error.getDatas();
+        List<DoubleMatrix> errorDatas = errorData.getDatas();
         List<DoubleMatrix> weightMatrices = layer.getWeightMatrices()
                 .stream()
                 .map(weight -> {
@@ -179,17 +179,19 @@ public class LayerTypeCorrectionsVisitor implements DataVisitor {
         ConvolutionComputer convolutionComputer = ConvolutionComputer.get();
 
         for (int outputIndex = 0; outputIndex < outputCount; outputIndex++) {
-            for (int inputChannelIndex = 0, weightIndex = 0; inputChannelIndex < layer.getInputChannelCount(); inputChannelIndex++) {
+            for (int inputChannelIndex = 0; inputChannelIndex < layer.getInputChannelCount(); inputChannelIndex++) {
                 DoubleMatrix output = DoubleMatrix.EMPTY;
-                for (int outputChannelIndex = outputIndex * layer.getOutputChannelCount(); outputChannelIndex < (outputIndex + 1) * layer.getOutputChannelCount(); outputChannelIndex++, weightIndex++) {
-                    DoubleMatrix input = errorDatas.get(outputChannelIndex);
+                for (int outputChannelIndex = 0; outputChannelIndex < layer.getOutputChannelCount(); outputChannelIndex++) {
+                    DoubleMatrix error = errorDatas.get(outputIndex * layer.getOutputChannelCount() + outputChannelIndex);
+                    int weightIndex = inputChannelIndex + outputChannelIndex * layer.getInputChannelCount();
                     DoubleMatrix weights = weightMatrices.get(weightIndex);
-                    DoubleMatrix stridedInput = applyStride(input, layer.getStride());
+                    DoubleMatrix stridedInput = applyStride(error, layer.getStride());
                     DoubleMatrix convolutedMatrix = convolutionComputer.computeConvolution(stridedInput, (inputPart, coord) -> inputPart.muli(weights).sum(), layer.getFilterSize() - 1, 1, layer.getFilterSize());
+                    DoubleMatrix unpaddedError = convolutionComputer.removePadding(convolutedMatrix, layer.getPadding());
                     if (output == DoubleMatrix.EMPTY) {
-                        output = convolutedMatrix;
+                        output = unpaddedError;
                     } else {
-                        output.addi(convolutedMatrix);
+                        output.addi(unpaddedError);
                     }
                 }
                 outputs.add(output);
