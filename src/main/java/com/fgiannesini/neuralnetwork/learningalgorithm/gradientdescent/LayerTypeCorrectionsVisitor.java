@@ -134,19 +134,19 @@ public class LayerTypeCorrectionsVisitor implements DataVisitor {
         MaxPoolingLayer maxPoolingLayer = (MaxPoolingLayer) gradientLayerProvider.getLayer();
         MaxPoolingData currentResult = (MaxPoolingData) gradientLayerProvider.getCurrentResult();
         correction = new GradientDescentCorrection(IntStream.range(0, maxPoolingLayer.getChannelCount()).mapToObj(i -> DoubleMatrix.EMPTY).collect(Collectors.toList()));
-        nextGradientLayerProvider = getNextMaxPoolingLayerProvider(error, maxPoolingLayer, currentResult.getMaxXIndexes(), currentResult.getMaxYIndexes());
+        nextGradientLayerProvider = getNextMaxPoolingLayerProvider(error, maxPoolingLayer, currentResult.getMaxRowIndexes(), currentResult.getMaxColumnIndexes());
     }
 
-    private LayerTypeData getNextMaxPoolingLayerProvider(MaxPoolingData maxPoolingData, MaxPoolingLayer maxPoolingLayer, List<DoubleMatrix> maxXIndexes, List<DoubleMatrix> maxYIndexes) {
+    private LayerTypeData getNextMaxPoolingLayerProvider(MaxPoolingData maxPoolingData, MaxPoolingLayer maxPoolingLayer, List<DoubleMatrix> maxRowIndexes, List<DoubleMatrix> maxColumnIndexes) {
         List<DoubleMatrix> outputs = IntStream.range(0, maxPoolingData.getDatas().size()).mapToObj(i -> {
             DoubleMatrix input = maxPoolingData.getDatas().get(i);
-            DoubleMatrix xIndexMatrix = maxXIndexes.get(i);
-            DoubleMatrix yIndexMatrix = maxYIndexes.get(i);
+            DoubleMatrix rowIndexMatrix = maxRowIndexes.get(i);
+            DoubleMatrix columnIndexMatrix = maxColumnIndexes.get(i);
             DoubleMatrix output = DoubleMatrix.zeros(maxPoolingLayer.getInputWidth(), maxPoolingLayer.getInputHeight());
             for (int row = 0; row < input.getRows(); row++) {
                 for (int column = 0; column < input.getColumns(); column++) {
-                    int rowIndex = (int) xIndexMatrix.get(row, column);
-                    int columnIndex = (int) yIndexMatrix.get(row, column);
+                    int rowIndex = (int) rowIndexMatrix.get(row, column);
+                    int columnIndex = (int) columnIndexMatrix.get(row, column);
                     double oldValue = output.get(rowIndex, columnIndex);
                     output.put(rowIndex, columnIndex, input.get(row, column) + oldValue);
                 }
@@ -154,7 +154,7 @@ public class LayerTypeCorrectionsVisitor implements DataVisitor {
             return output;
         })
                 .collect(Collectors.toList());
-        return new ConvolutionData(outputs);
+        return new MaxPoolingData(outputs, null, null);
     }
 
     private LayerTypeData getNextConvolutionLayerProvider(ConvolutionData errorData, ConvolutionLayer layer) {

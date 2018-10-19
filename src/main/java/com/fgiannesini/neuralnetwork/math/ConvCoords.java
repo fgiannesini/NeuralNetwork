@@ -2,19 +2,19 @@ package com.fgiannesini.neuralnetwork.math;
 
 public class ConvCoords {
 
-    private final int x;
-    private final int y;
+    private final int rowIndex;
+    private final int columnIndex;
 
-    public ConvCoords(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public ConvCoords(int rowIndex, int columnIndex) {
+        this.rowIndex = rowIndex;
+        this.columnIndex = columnIndex;
     }
 
-    public int getX() {
-        return x;
+    public int getRowIndex() {
+        return rowIndex;
     }
 
-    public int getY() {
-        return y;
+    public int getColumnIndex() {
+        return columnIndex;
     }
 }

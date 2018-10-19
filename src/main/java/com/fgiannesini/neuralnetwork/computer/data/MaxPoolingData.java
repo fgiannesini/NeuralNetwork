@@ -7,13 +7,13 @@ import java.util.List;
 public class MaxPoolingData implements LayerTypeData {
 
     private final List<DoubleMatrix> datas;
-    private List<DoubleMatrix> maxXIndexes;
-    private List<DoubleMatrix> maxYIndexes;
+    private List<DoubleMatrix> maxRowIndexes;
+    private List<DoubleMatrix> maxColumnIndexes;
 
-    public MaxPoolingData(List<DoubleMatrix> datas, List<DoubleMatrix> maxXIndexes, List<DoubleMatrix> maxYIndexes) {
+    public MaxPoolingData(List<DoubleMatrix> datas, List<DoubleMatrix> maxRowIndexes, List<DoubleMatrix> maxColumnIndexes) {
         this.datas = datas;
-        this.maxXIndexes = maxXIndexes;
-        this.maxYIndexes = maxYIndexes;
+        this.maxRowIndexes = maxRowIndexes;
+        this.maxColumnIndexes = maxColumnIndexes;
     }
 
     @Override
@@ -25,11 +25,11 @@ public class MaxPoolingData implements LayerTypeData {
         return datas;
     }
 
-    public List<DoubleMatrix> getMaxXIndexes() {
-        return maxXIndexes;
+    public List<DoubleMatrix> getMaxRowIndexes() {
+        return maxRowIndexes;
     }
 
-    public List<DoubleMatrix> getMaxYIndexes() {
-        return maxYIndexes;
+    public List<DoubleMatrix> getMaxColumnIndexes() {
+        return maxColumnIndexes;
     }
 }

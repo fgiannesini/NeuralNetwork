@@ -72,7 +72,7 @@ public class BackwardDataAdapterVisitor implements LayerVisitor {
         } else if (previousData instanceof MaxPoolingData) {
             MaxPoolingData maxPoolingData = (MaxPoolingData) this.previousData;
             List<DoubleMatrix> outputs = DataAdapterComputer.get().adaptMatrices(layer.getOutputWidth(), layer.getOutputHeight(), maxPoolingData.getDatas());
-            data = new MaxPoolingData(outputs, maxPoolingData.getMaxXIndexes(), null);
+            data = new MaxPoolingData(outputs, maxPoolingData.getMaxRowIndexes(), null);
         }
     }
 

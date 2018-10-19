@@ -21,8 +21,8 @@ class MaxPoolingLayerComputerTest {
         layer.accept(layerComputerVisitor);
         MaxPoolingData result = (MaxPoolingData) layerComputerVisitor.getIntermediateOutputResult().getResult();
         DoubleMatrixAssertions.assertMatrices(result.getDatas(), Collections.singletonList(DoubleMatrix.ones(3, 3)));
-        DoubleMatrixAssertions.assertMatrices(result.getMaxXIndexes(), Collections.singletonList(new DoubleMatrix(3, 3, 0, 1, 2, 0, 1, 2, 0, 1, 2)));
-        DoubleMatrixAssertions.assertMatrices(result.getMaxYIndexes(), Collections.singletonList(new DoubleMatrix(3, 3, 0, 0, 0, 1, 1, 1, 2, 2, 2)));
+        DoubleMatrixAssertions.assertMatrices(result.getMaxRowIndexes(), Collections.singletonList(new DoubleMatrix(3, 3, 0, 1, 2, 0, 1, 2, 0, 1, 2)));
+        DoubleMatrixAssertions.assertMatrices(result.getMaxColumnIndexes(), Collections.singletonList(new DoubleMatrix(3, 3, 0, 0, 0, 1, 1, 1, 2, 2, 2)));
     }
 
     @Test

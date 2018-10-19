@@ -37,7 +37,7 @@ public class DataFunctionApplier implements DataVisitor {
 
     @Override
     public void visit(MaxPoolingData maxPoolingData) {
-        layerTypeData = new MaxPoolingData(maxPoolingData.getDatas().stream().map(dataApplier).collect(Collectors.toList()), maxPoolingData.getMaxXIndexes(), maxPoolingData.getMaxYIndexes());
+        layerTypeData = new MaxPoolingData(maxPoolingData.getDatas().stream().map(dataApplier).collect(Collectors.toList()), maxPoolingData.getMaxRowIndexes(), maxPoolingData.getMaxColumnIndexes());
     }
 
     public LayerTypeData getLayerTypeData() {

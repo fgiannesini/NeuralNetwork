@@ -52,7 +52,7 @@ public class GradientDescentErrorComputationVisitor implements DataVisitor {
     public void visit(MaxPoolingData error) {
         MaxPoolingData currentResult = (MaxPoolingData) provider.getCurrentResult();
         List<DoubleMatrix> result = visitMatrixList(currentResult.getDatas(), error.getDatas());
-        errorData = new MaxPoolingData(result, error.getMaxXIndexes(), error.getMaxYIndexes());
+        errorData = new MaxPoolingData(result, error.getMaxRowIndexes(), error.getMaxColumnIndexes());
     }
 
     private List<DoubleMatrix> visitMatrixList(List<DoubleMatrix> currentResultList, List<DoubleMatrix> errorDatas) {

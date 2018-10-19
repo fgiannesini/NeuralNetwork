@@ -73,41 +73,41 @@ public class LayerComputerVisitor implements LayerVisitor {
         MaxPoolingData data = (MaxPoolingData) layerTypeData;
         List<DoubleMatrix> inputs = data.getDatas();
         List<DoubleMatrix> outputs = new ArrayList<>();
-        List<DoubleMatrix> maxXIndexes = new ArrayList<>();
-        List<DoubleMatrix> maxYIndexes = new ArrayList<>();
+        List<DoubleMatrix> maxRowIndexes = new ArrayList<>();
+        List<DoubleMatrix> maxColumnIndexes = new ArrayList<>();
 
         for (DoubleMatrix input : inputs) {
             ConvolutionComputer convolutionComputer = ConvolutionComputer.get();
             int indexesRowCount = convolutionComputer.computeOutputSize(layer.getPadding(), layer.getStride(), layer.getFilterSize(), input.getRows());
             int indexesColumnsCount = convolutionComputer.computeOutputSize(layer.getPadding(), layer.getStride(), layer.getFilterSize(), input.getColumns());
-            DoubleMatrix maxXIndex = DoubleMatrix.zeros(indexesRowCount, indexesColumnsCount);
-            DoubleMatrix maxYIndex = DoubleMatrix.zeros(indexesRowCount, indexesColumnsCount);
+            DoubleMatrix maxRowIndex = DoubleMatrix.zeros(indexesRowCount, indexesColumnsCount);
+            DoubleMatrix maxColumnIndex = DoubleMatrix.zeros(indexesRowCount, indexesColumnsCount);
             BiFunction<DoubleMatrix, ConvCoords, Double> convolutionApplication = (in, coord) -> {
-                int maxX = 0;
-                int maxY = 0;
+                int maxRow = 0;
+                int maxColumn = 0;
                 double max = Double.NEGATIVE_INFINITY;
                 for (int i = 0; i < layer.getFilterSize(); i++) {
                     for (int j = 0; j < layer.getFilterSize(); j++) {
                         double value = in.get(i, j);
                         if (value > max) {
-                            maxX = coord.getX() + i;
-                            maxY = coord.getY() + j;
+                            maxRow = coord.getRowIndex() + i;
+                            maxColumn = coord.getColumnIndex() + j;
                             max = value;
                         }
                     }
                 }
                 int stride = layer.getStride();
-                maxXIndex.put(coord.getX() / stride, coord.getY() / stride, maxX);
-                maxYIndex.put(coord.getX() / stride, coord.getY() / stride, maxY);
+                maxRowIndex.put(coord.getRowIndex() / stride, coord.getColumnIndex() / stride, maxRow);
+                maxColumnIndex.put(coord.getRowIndex() / stride, coord.getColumnIndex() / stride, maxColumn);
                 return in.max();
             };
             DoubleMatrix output = convolutionComputer.computeConvolution(input, convolutionApplication, layer.getPadding(), layer.getStride(), layer.getFilterSize());
             outputs.add(output);
-            maxXIndexes.add(maxXIndex);
-            maxYIndexes.add(maxYIndex);
+            maxRowIndexes.add(maxRowIndex);
+            maxColumnIndexes.add(maxColumnIndex);
         }
 
-        intermediateOutputResult = new IntermediateOutputResult(new MaxPoolingData(outputs, maxXIndexes, maxYIndexes));
+        intermediateOutputResult = new IntermediateOutputResult(new MaxPoolingData(outputs, maxRowIndexes, maxColumnIndexes));
     }
 
     @Override
