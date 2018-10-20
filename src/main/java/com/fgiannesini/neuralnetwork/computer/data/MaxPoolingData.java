@@ -7,8 +7,8 @@ import java.util.List;
 public class MaxPoolingData implements LayerTypeData {
 
     private final List<DoubleMatrix> datas;
-    private List<DoubleMatrix> maxRowIndexes;
-    private List<DoubleMatrix> maxColumnIndexes;
+    private final List<DoubleMatrix> maxRowIndexes;
+    private final List<DoubleMatrix> maxColumnIndexes;
 
     public MaxPoolingData(List<DoubleMatrix> datas, List<DoubleMatrix> maxRowIndexes, List<DoubleMatrix> maxColumnIndexes) {
         this.datas = datas;
