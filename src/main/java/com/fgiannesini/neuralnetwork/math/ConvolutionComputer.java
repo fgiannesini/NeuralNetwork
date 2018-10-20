@@ -24,7 +24,7 @@ public class ConvolutionComputer {
             for (int columnIndex = 0; columnIndex < paddedInput.getColumns() - filterSize + 1; columnIndex += stride) {
                 DoubleMatrix inputPart = paddedInput.get(new IntervalRange(rowIndex, rowIndex + filterSize), new IntervalRange(columnIndex, columnIndex + filterSize));
                 ConvCoords coords = new ConvCoords(rowIndex, columnIndex);
-                output.put(columnIndex / stride, rowIndex / stride, convolutionApplication.apply(inputPart, coords));
+                output.put(rowIndex / stride, columnIndex / stride, convolutionApplication.apply(inputPart, coords));
             }
         }
 

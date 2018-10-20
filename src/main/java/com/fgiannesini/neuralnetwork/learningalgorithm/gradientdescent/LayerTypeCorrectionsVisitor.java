@@ -143,6 +143,8 @@ public class LayerTypeCorrectionsVisitor implements DataVisitor {
             DoubleMatrix rowIndexMatrix = maxRowIndexes.get(i);
             DoubleMatrix columnIndexMatrix = maxColumnIndexes.get(i);
             DoubleMatrix output = DoubleMatrix.zeros(maxPoolingLayer.getInputWidth(), maxPoolingLayer.getInputHeight());
+            ConvolutionComputer convolutionComputer = ConvolutionComputer.get();
+            output = convolutionComputer.applyPadding(output, maxPoolingLayer.getPadding());
             for (int row = 0; row < input.getRows(); row++) {
                 for (int column = 0; column < input.getColumns(); column++) {
                     int rowIndex = (int) rowIndexMatrix.get(row, column);
@@ -151,7 +153,7 @@ public class LayerTypeCorrectionsVisitor implements DataVisitor {
                     output.put(rowIndex, columnIndex, input.get(row, column) + oldValue);
                 }
             }
-            return output;
+            return convolutionComputer.removePadding(output, maxPoolingLayer.getPadding());
         })
                 .collect(Collectors.toList());
         return new MaxPoolingData(outputs, null, null);
