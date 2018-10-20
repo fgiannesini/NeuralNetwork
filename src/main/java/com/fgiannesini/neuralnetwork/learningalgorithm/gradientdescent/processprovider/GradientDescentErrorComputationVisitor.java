@@ -38,21 +38,21 @@ public class GradientDescentErrorComputationVisitor implements DataVisitor {
     public void visit(ConvolutionData error) {
         ConvolutionData currentResult = (ConvolutionData) provider.getCurrentResult();
         List<DoubleMatrix> result = visitMatrixList(currentResult.getDatas(), error.getDatas());
-        errorData = new ConvolutionData(result);
+        errorData = new ConvolutionData(result, error.getChannelCount());
     }
 
     @Override
     public void visit(AveragePoolingData error) {
         AveragePoolingData currentResult = (AveragePoolingData) provider.getCurrentResult();
         List<DoubleMatrix> result = visitMatrixList(currentResult.getDatas(), error.getDatas());
-        errorData = new AveragePoolingData(result);
+        errorData = new AveragePoolingData(result, error.getChannelCount());
     }
 
     @Override
     public void visit(MaxPoolingData error) {
         MaxPoolingData currentResult = (MaxPoolingData) provider.getCurrentResult();
         List<DoubleMatrix> result = visitMatrixList(currentResult.getDatas(), error.getDatas());
-        errorData = new MaxPoolingData(result, error.getMaxRowIndexes(), error.getMaxColumnIndexes());
+        errorData = new MaxPoolingData(result, error.getMaxRowIndexes(), error.getMaxColumnIndexes(), error.getChannelCount());
     }
 
     private List<DoubleMatrix> visitMatrixList(List<DoubleMatrix> currentResultList, List<DoubleMatrix> errorDatas) {

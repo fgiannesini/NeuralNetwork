@@ -1,7 +1,6 @@
 package com.fgiannesini.neuralnetwork.batch;
 
 import com.fgiannesini.neuralnetwork.computer.data.LayerTypeData;
-import com.fgiannesini.neuralnetwork.learningalgorithm.gradientdescent.InputCountVisitor;
 
 public class BatchIterator {
 
@@ -18,9 +17,7 @@ public class BatchIterator {
         this.input = input;
         this.output = output;
         lowerIndex = 0;
-        InputCountVisitor countVisitor = new InputCountVisitor();
-        input.accept(countVisitor);
-        inputCount = countVisitor.getInputCount();
+        inputCount = input.getInputCount();
         upperIndex = Math.min(batchSize, inputCount);
         batchNumber = 1;
     }

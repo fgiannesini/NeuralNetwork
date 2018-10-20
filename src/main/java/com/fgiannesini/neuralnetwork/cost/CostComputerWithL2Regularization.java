@@ -18,9 +18,15 @@ public class CostComputerWithL2Regularization implements CostComputer {
     @Override
     public double compute(LayerTypeData input, LayerTypeData output) {
         double costWithoutLinearRegression = costComputer.compute(input, output);
-        CostComputerWithL2RegularizationVisitor regularizationVisitor = new CostComputerWithL2RegularizationVisitor(neuralNetworkModel, regularizationCoeff);
-        input.accept(regularizationVisitor);
-        return costWithoutLinearRegression + regularizationVisitor.getCost();
+        double regularizationCost = neuralNetworkModel.getLayers().stream()
+                .mapToDouble(layer -> {
+                    CostComputerWithL2RegularizationVisitor regularizationVisitor = new CostComputerWithL2RegularizationVisitor(input.getInputCount(), regularizationCoeff);
+                    layer.accept(regularizationVisitor);
+                    return regularizationVisitor.getCost();
+                })
+                .sum();
+
+        return costWithoutLinearRegression + regularizationCost;
     }
 
 }

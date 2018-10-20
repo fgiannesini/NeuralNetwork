@@ -206,7 +206,7 @@ class IntermediateOutputComputerTest {
                 .addFullyConnectedLayer(2, ActivationFunctionType.NONE)
                 .buildConvolutionNetworkModel();
 
-        ConvolutionData inputData = new ConvolutionData(Collections.singletonList(DoubleMatrix.ones(10, 10)));
+        ConvolutionData inputData = new ConvolutionData(Collections.singletonList(DoubleMatrix.ones(10, 10)), 1);
 
         IIntermediateOutputComputer outputComputer = OutputComputerBuilder.init()
                 .withModel(model)
@@ -230,7 +230,7 @@ class IntermediateOutputComputerTest {
                 .addMaxPoolingLayer(2, 0, 2, ActivationFunctionType.NONE)
                 .buildConvolutionNetworkModel();
 
-        MaxPoolingData inputData = new MaxPoolingData(Collections.singletonList(new DoubleMatrix(6, 6, IntStream.range(1, 37).asDoubleStream().toArray())), null, null);
+        MaxPoolingData inputData = new MaxPoolingData(Collections.singletonList(new DoubleMatrix(6, 6, IntStream.range(1, 37).asDoubleStream().toArray())), null, null, 1);
 
         IIntermediateOutputComputer outputComputer = OutputComputerBuilder.init()
                 .withModel(model)
@@ -255,7 +255,7 @@ class IntermediateOutputComputerTest {
                 .addMaxPoolingLayer(3, 1, 1, ActivationFunctionType.NONE)
                 .buildConvolutionNetworkModel();
 
-        MaxPoolingData inputData = new MaxPoolingData(Collections.singletonList(new DoubleMatrix(3, 3, IntStream.range(1, 10).asDoubleStream().toArray())), null, null);
+        MaxPoolingData inputData = new MaxPoolingData(Collections.singletonList(new DoubleMatrix(3, 3, IntStream.range(1, 10).asDoubleStream().toArray())), null, null, 1);
 
         IIntermediateOutputComputer outputComputer = OutputComputerBuilder.init()
                 .withModel(model)
@@ -280,7 +280,7 @@ class IntermediateOutputComputerTest {
                 .addAveragePoolingLayer(2, 0, 2, ActivationFunctionType.NONE)
                 .buildConvolutionNetworkModel();
 
-        AveragePoolingData inputData = new AveragePoolingData(Collections.singletonList(new DoubleMatrix(6, 6, IntStream.range(1, 37).asDoubleStream().toArray())));
+        AveragePoolingData inputData = new AveragePoolingData(Collections.singletonList(new DoubleMatrix(6, 6, IntStream.range(1, 37).asDoubleStream().toArray())), 1);
 
         IIntermediateOutputComputer outputComputer = OutputComputerBuilder.init()
                 .withModel(model)
@@ -303,7 +303,7 @@ class IntermediateOutputComputerTest {
                 .addAveragePoolingLayer(3, 1, 1, ActivationFunctionType.NONE)
                 .buildConvolutionNetworkModel();
 
-        AveragePoolingData inputData = new AveragePoolingData(Collections.singletonList(new DoubleMatrix(3, 3, IntStream.range(1, 10).asDoubleStream().toArray())));
+        AveragePoolingData inputData = new AveragePoolingData(Collections.singletonList(new DoubleMatrix(3, 3, IntStream.range(1, 10).asDoubleStream().toArray())), 1);
 
         IIntermediateOutputComputer outputComputer = OutputComputerBuilder.init()
                 .withModel(model)

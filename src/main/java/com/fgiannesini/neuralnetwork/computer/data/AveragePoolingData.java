@@ -7,9 +7,11 @@ import java.util.List;
 public class AveragePoolingData implements LayerTypeData {
 
     private final List<DoubleMatrix> datas;
+    private int channelCount;
 
-    public AveragePoolingData(List<DoubleMatrix> datas) {
+    public AveragePoolingData(List<DoubleMatrix> datas, int channelCount) {
         this.datas = datas;
+        this.channelCount = channelCount;
     }
 
     @Override
@@ -19,5 +21,14 @@ public class AveragePoolingData implements LayerTypeData {
 
     public List<DoubleMatrix> getDatas() {
         return datas;
+    }
+
+    @Override
+    public int getInputCount() {
+        return datas.size() / channelCount;
+    }
+
+    public int getChannelCount() {
+        return channelCount;
     }
 }

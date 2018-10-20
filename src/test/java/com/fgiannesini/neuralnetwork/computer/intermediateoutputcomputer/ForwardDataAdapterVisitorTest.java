@@ -37,7 +37,7 @@ class ForwardDataAdapterVisitorTest {
 
     @Test
     void from_convolution_to_averagePooling() {
-        ConvolutionData inputData = new ConvolutionData(Collections.singletonList(DoubleMatrix.rand(10, 10)));
+        ConvolutionData inputData = new ConvolutionData(Collections.singletonList(DoubleMatrix.rand(10, 10)), 1);
         ForwardDataAdapterVisitor forwardDataAdapterVisitor = new ForwardDataAdapterVisitor(inputData);
         AveragePoolingLayer layer = new AveragePoolingLayer(ActivationFunctionType.NONE, 3, 0, 1, 1, 10, 10, 8, 8);
         layer.accept(forwardDataAdapterVisitor);
@@ -46,7 +46,7 @@ class ForwardDataAdapterVisitorTest {
 
     @Test
     void from_convolution_to_maxPooling() {
-        ConvolutionData inputData = new ConvolutionData(Collections.singletonList(DoubleMatrix.rand(10, 10)));
+        ConvolutionData inputData = new ConvolutionData(Collections.singletonList(DoubleMatrix.rand(10, 10)), 1);
         ForwardDataAdapterVisitor forwardDataAdapterVisitor = new ForwardDataAdapterVisitor(inputData);
         MaxPoolingLayer layer = new MaxPoolingLayer(ActivationFunctionType.NONE, 3, 0, 1, 1, 10, 10, 8, 8);
         layer.accept(forwardDataAdapterVisitor);
@@ -55,13 +55,8 @@ class ForwardDataAdapterVisitorTest {
 
     @Test
     void from_averagePooling_to_weightBias() {
-        List<DoubleMatrix> inputMatrices = Arrays.asList(
-                DoubleMatrix.ones(2, 2).muli(1),
-                DoubleMatrix.ones(2, 2).muli(2),
-                DoubleMatrix.ones(2, 2).muli(11),
-                DoubleMatrix.ones(2, 2).muli(12)
-        );
-        ConvolutionData inputData = new ConvolutionData(inputMatrices);
+        List<DoubleMatrix> inputMatrices = getExpectedData();
+        ConvolutionData inputData = new ConvolutionData(inputMatrices, 1);
         ForwardDataAdapterVisitor forwardDataAdapterVisitor = new ForwardDataAdapterVisitor(inputData);
         WeightBiasLayer layer = new WeightBiasLayer(8, 3, InitializerType.ONES.getInitializer(), ActivationFunctionType.NONE);
         layer.accept(forwardDataAdapterVisitor);
@@ -72,28 +67,33 @@ class ForwardDataAdapterVisitorTest {
     @Test
     void from_weightBias_to_averagePooling() {
         AveragePoolingLayer layer = new AveragePoolingLayer(ActivationFunctionType.NONE, 3, 0, 1, 2, 3, 3, 2, 2);
-        from_weight_bias_to_pooling(layer);
+        AveragePoolingData layerTypeData = (AveragePoolingData) from_weight_bias_to_pooling(layer);
+        DoubleMatrixAssertions.assertMatrices(getExpectedData(), layerTypeData.getDatas());
     }
 
     @Test
     void from_weightBias_to_maxPooling() {
         MaxPoolingLayer layer = new MaxPoolingLayer(ActivationFunctionType.NONE, 3, 0, 1, 2, 3, 3, 2, 2);
-        from_weight_bias_to_pooling(layer);
+        MaxPoolingData layerTypeData = (MaxPoolingData) from_weight_bias_to_pooling(layer);
+        DoubleMatrixAssertions.assertMatrices(getExpectedData(), layerTypeData.getDatas());
     }
 
-    private void from_weight_bias_to_pooling(Layer layer) {
+    private LayerTypeData from_weight_bias_to_pooling(Layer layer) {
         DoubleMatrix input = new DoubleMatrix(8, 2, 1, 1, 1, 1, 2, 2, 2, 2, 11, 11, 11, 11, 12, 12, 12, 12);
         WeightBiasData inputData = new WeightBiasData(input);
         ForwardDataAdapterVisitor forwardDataAdapterVisitor = new ForwardDataAdapterVisitor(inputData);
         layer.accept(forwardDataAdapterVisitor);
 
-        List<DoubleMatrix> expectedMatrices = Arrays.asList(
+        return forwardDataAdapterVisitor.getData();
+    }
+
+    private List<DoubleMatrix> getExpectedData() {
+        return Arrays.asList(
                 DoubleMatrix.ones(2, 2).muli(1),
                 DoubleMatrix.ones(2, 2).muli(2),
                 DoubleMatrix.ones(2, 2).muli(11),
                 DoubleMatrix.ones(2, 2).muli(12)
         );
-        DoubleMatrixAssertions.assertMatrices(expectedMatrices, ((ConvolutionData) forwardDataAdapterVisitor.getData()).getDatas());
     }
 
 }

@@ -64,7 +64,7 @@ public class LayerComputerVisitor implements LayerVisitor {
             outputs.add(output);
         }
 
-        intermediateOutputResult = new IntermediateOutputResult(new AveragePoolingData(outputs));
+        intermediateOutputResult = new IntermediateOutputResult(new AveragePoolingData(outputs, data.getChannelCount()));
     }
 
     @Override
@@ -107,7 +107,7 @@ public class LayerComputerVisitor implements LayerVisitor {
             maxColumnIndexes.add(maxColumnIndex);
         }
 
-        intermediateOutputResult = new IntermediateOutputResult(new MaxPoolingData(outputs, maxRowIndexes, maxColumnIndexes));
+        intermediateOutputResult = new IntermediateOutputResult(new MaxPoolingData(outputs, maxRowIndexes, maxColumnIndexes, data.getChannelCount()));
     }
 
     @Override
@@ -135,7 +135,7 @@ public class LayerComputerVisitor implements LayerVisitor {
                 outputs.add(output);
             }
         }
-        intermediateOutputResult = new IntermediateOutputResult(new ConvolutionData(outputs));
+        intermediateOutputResult = new IntermediateOutputResult(new ConvolutionData(outputs, layer.getOutputChannelCount()));
     }
 
     public IntermediateOutputResult getIntermediateOutputResult() {

@@ -7,9 +7,11 @@ import java.util.List;
 public class ConvolutionData implements LayerTypeData {
 
     private final List<DoubleMatrix> datas;
+    private int channelCount;
 
-    public ConvolutionData(List<DoubleMatrix> datas) {
+    public ConvolutionData(List<DoubleMatrix> datas, int channelCount) {
         this.datas = datas;
+        this.channelCount = channelCount;
     }
 
     @Override
@@ -19,5 +21,13 @@ public class ConvolutionData implements LayerTypeData {
 
     public List<DoubleMatrix> getDatas() {
         return datas;
+    }
+
+    public int getInputCount() {
+        return datas.size() / channelCount;
+    }
+
+    public int getChannelCount() {
+        return channelCount;
     }
 }

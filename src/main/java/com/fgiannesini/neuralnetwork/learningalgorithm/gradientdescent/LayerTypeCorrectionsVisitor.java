@@ -126,7 +126,7 @@ public class LayerTypeCorrectionsVisitor implements DataVisitor {
             return convolutionComputer.removePadding(paddedOutput, averagePoolingLayer.getPadding());
         })
                 .collect(Collectors.toList());
-        return new AveragePoolingData(outputs);
+        return new AveragePoolingData(outputs, averagePoolingData.getChannelCount());
     }
 
     @Override
@@ -156,7 +156,7 @@ public class LayerTypeCorrectionsVisitor implements DataVisitor {
             return convolutionComputer.removePadding(output, maxPoolingLayer.getPadding());
         })
                 .collect(Collectors.toList());
-        return new MaxPoolingData(outputs, null, null);
+        return new MaxPoolingData(outputs, null, null, maxPoolingData.getChannelCount());
     }
 
     private LayerTypeData getNextConvolutionLayerProvider(ConvolutionData errorData, ConvolutionLayer layer) {
@@ -200,7 +200,7 @@ public class LayerTypeCorrectionsVisitor implements DataVisitor {
             }
         }
 
-        return new ConvolutionData(outputs);
+        return new ConvolutionData(outputs, layer.getInputChannelCount());
     }
 
     private DoubleMatrix applyStride(DoubleMatrix input, int stride) {

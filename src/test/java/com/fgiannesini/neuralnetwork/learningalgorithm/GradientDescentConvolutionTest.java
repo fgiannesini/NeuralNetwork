@@ -55,7 +55,7 @@ public class GradientDescentConvolutionTest {
                 DoubleMatrix.rand(size, size).mul(255),
                 DoubleMatrix.rand(size, size).mul(255),
                 DoubleMatrix.rand(size, size).mul(255)
-        ));
+        ), 3);
         LayerTypeData output = new WeightBiasData(new DoubleMatrix(10, 3,
                 0, 0, 0,
                 0, 0, 1,
@@ -109,7 +109,7 @@ public class GradientDescentConvolutionTest {
                     .addFullyConnectedLayer(2, ActivationFunctionType.RELU)
                     .buildConvolutionNetworkModel();
 
-            LayerTypeData input = new ConvolutionData(Collections.singletonList(DoubleMatrix.rand(inputSize, inputSize)));
+            LayerTypeData input = new ConvolutionData(Collections.singletonList(DoubleMatrix.rand(inputSize, inputSize)), 1);
             LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 1, 1, 0));
 
             LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, getGradientDescentProvider());
@@ -130,7 +130,7 @@ public class GradientDescentConvolutionTest {
                     .addFullyConnectedLayer(2, ActivationFunctionType.NONE)
                     .buildConvolutionNetworkModel();
 
-            LayerTypeData input = new ConvolutionData(Collections.singletonList(DoubleMatrix.rand(10, 10)));
+            LayerTypeData input = new ConvolutionData(Collections.singletonList(DoubleMatrix.rand(10, 10)), 1);
             LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 1, 250, 200));
 
             LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, getGradientDescentProvider());
@@ -153,7 +153,7 @@ public class GradientDescentConvolutionTest {
 
             DoubleMatrix inputData = DoubleMatrix.rand(10, 10);
 
-            LayerTypeData input = new ConvolutionData(Collections.singletonList(inputData));
+            LayerTypeData input = new ConvolutionData(Collections.singletonList(inputData), 1);
             LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 1, 25, 20));
 
             LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, getGradientDescentProvider());
@@ -175,7 +175,7 @@ public class GradientDescentConvolutionTest {
                     .buildConvolutionNetworkModel();
 
             DoubleMatrix inputData = DoubleMatrix.rand(7, 7);
-            LayerTypeData input = new ConvolutionData(Collections.singletonList(inputData));
+            LayerTypeData input = new ConvolutionData(Collections.singletonList(inputData), 1);
             LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 1, 3700, 3690));
 
             LearningAlgorithm gradientDescent = new GradientDescent(neuralNetworkModel, getGradientDescentProvider());
@@ -196,7 +196,7 @@ public class GradientDescentConvolutionTest {
                     .addFullyConnectedLayer(2, ActivationFunctionType.NONE)
                     .buildConvolutionNetworkModel();
 
-            LayerTypeData input = new ConvolutionData(Collections.singletonList(DoubleMatrix.ones(10, 10)));
+            LayerTypeData input = new ConvolutionData(Collections.singletonList(DoubleMatrix.ones(10, 10)), 1);
             LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 1, 350, 370));
 
             double[][] expectedConvolutionWeightMatrix = {
@@ -249,7 +249,7 @@ public class GradientDescentConvolutionTest {
                     DoubleMatrix.ones(10, 10).muli(11),
                     DoubleMatrix.ones(10, 10).muli(12),
                     DoubleMatrix.ones(10, 10).muli(13)
-            ));
+            ), 3);
 
             LayerTypeData output = new WeightBiasData(new DoubleMatrix(2, 2, 3950, 3970, 23375, 23450));
 

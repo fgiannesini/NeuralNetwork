@@ -57,10 +57,8 @@ public class GradientDescent implements LearningAlgorithm {
 
         Collections.reverse(gradientDescentCorrections);
 
-        InputCountVisitor inputCountVisitor = new InputCountVisitor();
-        dataContainer.getOutput().accept(inputCountVisitor);
         correctedNeuralNetworkModel = gradientDescentProcessProvider.getGradientDescentCorrectionsLauncher()
-                .apply(new GradientDescentCorrectionsContainer(this.correctedNeuralNetworkModel, gradientDescentCorrections, inputCountVisitor.getInputCount(), learningRate))
+                .apply(new GradientDescentCorrectionsContainer(this.correctedNeuralNetworkModel, gradientDescentCorrections, dataContainer.getOutput().getInputCount(), learningRate))
                 .getCorrectedNeuralNetworkModel();
         return correctedNeuralNetworkModel;
     }

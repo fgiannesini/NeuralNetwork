@@ -18,4 +18,9 @@ public class WeightBiasData implements LayerTypeData {
     public void accept(DataVisitor dataVisitor) {
         dataVisitor.visit(this);
     }
+
+    @Override
+    public int getInputCount() {
+        return input.getColumns();
+    }
 }

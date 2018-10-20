@@ -37,11 +37,11 @@ class LayerTypeCorrectionsVisitorTest {
                     .buildConvolutionNetworkModel();
 
             neuralNetworkModel.getLayers().get(0).getParametersMatrix().get(0).muli(createMatrix(3, d -> d / 100));
-            ConvolutionData previousResults = new ConvolutionData(Collections.singletonList(createMatrix(5, DoubleUnaryOperator.identity())));
-            ConvolutionData results = new ConvolutionData(Collections.singletonList(createMatrix(3, DoubleUnaryOperator.identity())));
+            ConvolutionData previousResults = new ConvolutionData(Collections.singletonList(createMatrix(5, DoubleUnaryOperator.identity())), 1);
+            ConvolutionData results = new ConvolutionData(Collections.singletonList(createMatrix(3, DoubleUnaryOperator.identity())), 1);
             GradientConvolutionLayerProvider layerProvider = new GradientConvolutionLayerProvider(neuralNetworkModel.getLayers().get(0), results, previousResults, 1);
 
-            ConvolutionData error = new ConvolutionData(Collections.singletonList(createMatrix(3, d -> d / 10)));
+            ConvolutionData error = new ConvolutionData(Collections.singletonList(createMatrix(3, d -> d / 10)), 1);
             LayerTypeCorrectionsVisitor dataVisitor = new LayerTypeCorrectionsVisitor(layerProvider);
             error.accept(dataVisitor);
 
@@ -64,11 +64,11 @@ class LayerTypeCorrectionsVisitorTest {
                     .buildConvolutionNetworkModel();
 
             neuralNetworkModel.getLayers().get(0).getParametersMatrix().get(0).muli(createMatrix(3, d -> d / 100));
-            ConvolutionData previousResults = new ConvolutionData(Collections.singletonList(createMatrix(4, DoubleUnaryOperator.identity())));
-            ConvolutionData results = new ConvolutionData(Collections.singletonList(createMatrix(4, d -> d / 2)));
+            ConvolutionData previousResults = new ConvolutionData(Collections.singletonList(createMatrix(4, DoubleUnaryOperator.identity())), 1);
+            ConvolutionData results = new ConvolutionData(Collections.singletonList(createMatrix(4, d -> d / 2)), 1);
             GradientConvolutionLayerProvider layerProvider = new GradientConvolutionLayerProvider(neuralNetworkModel.getLayers().get(0), results, previousResults, 1);
 
-            ConvolutionData error = new ConvolutionData(Collections.singletonList(createMatrix(4, d -> d / 10)));
+            ConvolutionData error = new ConvolutionData(Collections.singletonList(createMatrix(4, d -> d / 10)), 1);
             LayerTypeCorrectionsVisitor dataVisitor = new LayerTypeCorrectionsVisitor(layerProvider);
             error.accept(dataVisitor);
 
@@ -91,11 +91,11 @@ class LayerTypeCorrectionsVisitorTest {
                     .buildConvolutionNetworkModel();
 
             neuralNetworkModel.getLayers().get(0).getParametersMatrix().get(0).muli(createMatrix(3, d -> d / 100));
-            ConvolutionData previousResults = new ConvolutionData(Collections.singletonList(new DoubleMatrix(5, 5, IntStream.range(1, 26).asDoubleStream().toArray())));
-            ConvolutionData results = new ConvolutionData(Collections.singletonList(createMatrix(2, d -> d / 2)));
+            ConvolutionData previousResults = new ConvolutionData(Collections.singletonList(new DoubleMatrix(5, 5, IntStream.range(1, 26).asDoubleStream().toArray())), 1);
+            ConvolutionData results = new ConvolutionData(Collections.singletonList(createMatrix(2, d -> d / 2)), 1);
             GradientConvolutionLayerProvider layerProvider = new GradientConvolutionLayerProvider(neuralNetworkModel.getLayers().get(0), results, previousResults, 1);
 
-            ConvolutionData error = new ConvolutionData(Collections.singletonList(createMatrix(2, d -> d / 10)));
+            ConvolutionData error = new ConvolutionData(Collections.singletonList(createMatrix(2, d -> d / 10)), 1);
             LayerTypeCorrectionsVisitor dataVisitor = new LayerTypeCorrectionsVisitor(layerProvider);
             error.accept(dataVisitor);
 
@@ -126,17 +126,17 @@ class LayerTypeCorrectionsVisitorTest {
             ConvolutionData previousResults = new ConvolutionData(Arrays.asList(
                     createMatrix(4, DoubleUnaryOperator.identity()),
                     createMatrix(4, d -> d * 2)
-            ));
+            ), 2);
             ConvolutionData results = new ConvolutionData(Arrays.asList(
                     createMatrix(2, d -> d / 2),
                     createMatrix(2, d -> d / 4)
-            ));
+            ), 2);
             GradientConvolutionLayerProvider layerProvider = new GradientConvolutionLayerProvider(neuralNetworkModel.getLayers().get(0), results, previousResults, 1);
 
             ConvolutionData error = new ConvolutionData(Arrays.asList(
                     createMatrix(2, d -> d / 10),
                     createMatrix(2, d -> d / 5)
-            ));
+            ), 2);
 
             LayerTypeCorrectionsVisitor dataVisitor = new LayerTypeCorrectionsVisitor(layerProvider);
             error.accept(dataVisitor);
@@ -178,16 +178,19 @@ class LayerTypeCorrectionsVisitorTest {
             MaxPoolingData previousResults = new MaxPoolingData(
                     Collections.singletonList(new DoubleMatrix(5, 5, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3, 1, 1, 1, 4, 4, 5, 6, 8, 7, 1, 5, 6, 8, 7, 1)),
                     null,
-                    null
+                    null,
+                    1
             );
             MaxPoolingData results = new MaxPoolingData(Collections.singletonList(new DoubleMatrix(3, 3, 2, 4, 4, 8, 8, 8, 8, 8, 8)),
                     Collections.singletonList(new DoubleMatrix(3, 3, 0, 3, 3, 2, 2, 2, 2, 2, 2)),
-                    Collections.singletonList(new DoubleMatrix(3, 3, 1, 2, 2, 3, 3, 3, 3, 3, 3)));
+                    Collections.singletonList(new DoubleMatrix(3, 3, 1, 2, 2, 3, 3, 3, 3, 3, 3)),
+                    1);
             GradientConvolutionLayerProvider layerProvider = new GradientConvolutionLayerProvider(neuralNetworkModel.getLayers().get(0), results, previousResults, 1);
 
             MaxPoolingData error = new MaxPoolingData(Collections.singletonList(createMatrix(3, d -> d / 10)),
                     null,
-                    null);
+                    null,
+                    1);
             LayerTypeCorrectionsVisitor dataVisitor = new LayerTypeCorrectionsVisitor(layerProvider);
             error.accept(dataVisitor);
 
@@ -210,16 +213,19 @@ class LayerTypeCorrectionsVisitorTest {
             MaxPoolingData previousResults = new MaxPoolingData(
                     Collections.singletonList(new DoubleMatrix(4, 4, 5, 4, 2, 3, 7, 4, 2, 3, 9, 1, 1, 5, 1, 2, 3, 8)),
                     null,
-                    null
+                    null,
+                    1
             );
             MaxPoolingData results = new MaxPoolingData(Collections.singletonList(new DoubleMatrix(4, 4, 7, 7, 4, 3, 9, 9, 5, 5, 9, 9, 8, 8, 9, 9, 8, 8)),
                     Collections.singletonList(new DoubleMatrix(4, 4, 1, 1, 2, 4, 1, 1, 4, 4, 1, 1, 4, 4, 1, 1, 4, 4)),
-                    Collections.singletonList(new DoubleMatrix(4, 4, 2, 2, 1, 1, 3, 3, 4, 4, 3, 3, 4, 4, 3, 3, 4, 4)));
+                    Collections.singletonList(new DoubleMatrix(4, 4, 2, 2, 1, 1, 3, 3, 4, 4, 3, 3, 4, 4, 3, 3, 4, 4)),
+                    1);
             GradientConvolutionLayerProvider layerProvider = new GradientConvolutionLayerProvider(neuralNetworkModel.getLayers().get(0), results, previousResults, 1);
 
             MaxPoolingData error = new MaxPoolingData(Collections.singletonList(createMatrix(4, d -> d / 10)),
                     null,
-                    null);
+                    null,
+                    1);
             LayerTypeCorrectionsVisitor dataVisitor = new LayerTypeCorrectionsVisitor(layerProvider);
             error.accept(dataVisitor);
 
@@ -242,16 +248,19 @@ class LayerTypeCorrectionsVisitorTest {
             MaxPoolingData previousResults = new MaxPoolingData(
                     Collections.singletonList(new DoubleMatrix(5, 5, 6, 4, 1, 3, 5, 5, 5, 4, 2, 3, 2, 7, 4, 2, 3, 3, 9, 1, 1, 5, 7, 1, 2, 3, 8)),
                     null,
-                    null
+                    null,
+                    1
             );
             MaxPoolingData results = new MaxPoolingData(Collections.singletonList(new DoubleMatrix(2, 2, 7, 5, 9, 8)),
                     Collections.singletonList(new DoubleMatrix(2, 2, 1, 0, 1, 4)),
-                    Collections.singletonList(new DoubleMatrix(2, 2, 2, 1, 3, 4)));
+                    Collections.singletonList(new DoubleMatrix(2, 2, 2, 1, 3, 4)),
+                    1);
             GradientConvolutionLayerProvider layerProvider = new GradientConvolutionLayerProvider(neuralNetworkModel.getLayers().get(0), results, previousResults, 1);
 
             MaxPoolingData error = new MaxPoolingData(Collections.singletonList(new DoubleMatrix(2, 2, 0.1, 0.2, 0.5, 0.6)),
                     null,
-                    null);
+                    null,
+                    1);
             LayerTypeCorrectionsVisitor dataVisitor = new LayerTypeCorrectionsVisitor(layerProvider);
             error.accept(dataVisitor);
 
@@ -277,11 +286,12 @@ class LayerTypeCorrectionsVisitorTest {
 
             AveragePoolingData previousResults = new AveragePoolingData(
                     Collections.singletonList(DoubleMatrix.zeros(5, 5))
+                    , 1
             );
-            AveragePoolingData results = new AveragePoolingData(Collections.singletonList(DoubleMatrix.zeros(3, 3)));
+            AveragePoolingData results = new AveragePoolingData(Collections.singletonList(DoubleMatrix.zeros(3, 3)), 1);
             GradientConvolutionLayerProvider layerProvider = new GradientConvolutionLayerProvider(neuralNetworkModel.getLayers().get(0), results, previousResults, 1);
 
-            AveragePoolingData error = new AveragePoolingData(Collections.singletonList(createMatrix(3, d -> d / 10)));
+            AveragePoolingData error = new AveragePoolingData(Collections.singletonList(createMatrix(3, d -> d / 10)), 1);
             LayerTypeCorrectionsVisitor dataVisitor = new LayerTypeCorrectionsVisitor(layerProvider);
             error.accept(dataVisitor);
 
@@ -302,12 +312,12 @@ class LayerTypeCorrectionsVisitorTest {
                     .buildConvolutionNetworkModel();
 
             AveragePoolingData previousResults = new AveragePoolingData(
-                    Collections.singletonList(DoubleMatrix.zeros(4, 4))
+                    Collections.singletonList(DoubleMatrix.zeros(4, 4)), 1
             );
-            AveragePoolingData results = new AveragePoolingData(Collections.singletonList(DoubleMatrix.zeros(3, 3)));
+            AveragePoolingData results = new AveragePoolingData(Collections.singletonList(DoubleMatrix.zeros(3, 3)), 1);
             GradientConvolutionLayerProvider layerProvider = new GradientConvolutionLayerProvider(neuralNetworkModel.getLayers().get(0), results, previousResults, 1);
 
-            AveragePoolingData error = new AveragePoolingData(Collections.singletonList(createMatrix(4, d -> d / 10)));
+            AveragePoolingData error = new AveragePoolingData(Collections.singletonList(createMatrix(4, d -> d / 10)), 1);
             LayerTypeCorrectionsVisitor dataVisitor = new LayerTypeCorrectionsVisitor(layerProvider);
             error.accept(dataVisitor);
 
@@ -328,12 +338,13 @@ class LayerTypeCorrectionsVisitorTest {
                     .buildConvolutionNetworkModel();
 
             AveragePoolingData previousResults = new AveragePoolingData(
-                    Collections.singletonList(DoubleMatrix.zeros(5, 5))
+                    Collections.singletonList(DoubleMatrix.zeros(5, 5)),
+                    1
             );
-            AveragePoolingData results = new AveragePoolingData(Collections.singletonList(DoubleMatrix.zeros(3, 3)));
+            AveragePoolingData results = new AveragePoolingData(Collections.singletonList(DoubleMatrix.zeros(3, 3)), 1);
             GradientConvolutionLayerProvider layerProvider = new GradientConvolutionLayerProvider(neuralNetworkModel.getLayers().get(0), results, previousResults, 1);
 
-            AveragePoolingData error = new AveragePoolingData(Collections.singletonList(createMatrix(2, d -> d / 10)));
+            AveragePoolingData error = new AveragePoolingData(Collections.singletonList(createMatrix(2, d -> d / 10)), 1);
             LayerTypeCorrectionsVisitor dataVisitor = new LayerTypeCorrectionsVisitor(layerProvider);
             error.accept(dataVisitor);
 

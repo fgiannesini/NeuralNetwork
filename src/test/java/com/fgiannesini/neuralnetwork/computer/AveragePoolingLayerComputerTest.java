@@ -17,7 +17,7 @@ class AveragePoolingLayerComputerTest {
     @Test
     void convolution_layer_no_padding_no_stride_one_channel_one_input() {
         AveragePoolingLayer layer = new AveragePoolingLayer(ActivationFunctionType.NONE, 3, 0, 1, 1, 5, 5, 3, 3);
-        AveragePoolingData input = new AveragePoolingData(Collections.singletonList(DoubleMatrix.ones(5, 5)));
+        AveragePoolingData input = new AveragePoolingData(Collections.singletonList(DoubleMatrix.ones(5, 5)), 1);
         LayerComputerVisitor layerComputerVisitor = new LayerComputerVisitor(input);
         layer.accept(layerComputerVisitor);
         DoubleMatrixAssertions.assertMatrices(((AveragePoolingData) layerComputerVisitor.getIntermediateOutputResult().getResult()).getDatas(), Collections.singletonList(DoubleMatrix.ones(3, 3)));
@@ -26,7 +26,7 @@ class AveragePoolingLayerComputerTest {
     @Test
     void convolution_layer_padding_no_stride_one_channel_one_input() {
         AveragePoolingLayer layer = new AveragePoolingLayer(ActivationFunctionType.NONE, 3, 1, 1, 1, 5, 5, 5, 5);
-        AveragePoolingData input = new AveragePoolingData(Collections.singletonList(DoubleMatrix.ones(5, 5)));
+        AveragePoolingData input = new AveragePoolingData(Collections.singletonList(DoubleMatrix.ones(5, 5)), 1);
         LayerComputerVisitor layerComputerVisitor = new LayerComputerVisitor(input);
         layer.accept(layerComputerVisitor);
         DoubleMatrixAssertions.assertMatrices(((AveragePoolingData) layerComputerVisitor.getIntermediateOutputResult().getResult()).getDatas(), Collections.singletonList(DataFormatConverter.fromDoubleTabToDoubleMatrix(new double[][]{
@@ -41,7 +41,7 @@ class AveragePoolingLayerComputerTest {
     @Test
     void convolution_layer_no_padding_stride_one_channel_one_input() {
         AveragePoolingLayer layer = new AveragePoolingLayer(ActivationFunctionType.NONE, 3, 0, 2, 1, 11, 11, 5, 5);
-        AveragePoolingData input = new AveragePoolingData(Collections.singletonList(DoubleMatrix.ones(11, 11)));
+        AveragePoolingData input = new AveragePoolingData(Collections.singletonList(DoubleMatrix.ones(11, 11)), 1);
         LayerComputerVisitor layerComputerVisitor = new LayerComputerVisitor(input);
         layer.accept(layerComputerVisitor);
         DoubleMatrixAssertions.assertMatrices(((AveragePoolingData) layerComputerVisitor.getIntermediateOutputResult().getResult()).getDatas(), Collections.singletonList(DoubleMatrix.ones(5, 5)));
@@ -57,7 +57,7 @@ class AveragePoolingLayerComputerTest {
                 DoubleMatrix.ones(5, 5).muli(4),
                 DoubleMatrix.ones(5, 5).muli(5),
                 DoubleMatrix.ones(5, 5).muli(6)
-        ));
+        ), 1);
 
         LayerComputerVisitor layerComputerVisitor = new LayerComputerVisitor(input);
         layer.accept(layerComputerVisitor);
