@@ -1,6 +1,5 @@
 package com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer;
 
-import com.fgiannesini.neuralnetwork.computer.DataFunctionApplier;
 import com.fgiannesini.neuralnetwork.computer.data.LayerTypeData;
 import com.fgiannesini.neuralnetwork.computer.data.adapter.ForwardDataAdapterVisitor;
 import com.fgiannesini.neuralnetwork.computer.finaloutputcomputer.LayerComputerWithDropOutRegularizationVisitor;
@@ -23,17 +22,21 @@ public class IntermediateOutputComputerWithDropOutRegularization implements IInt
     public List<IntermediateOutputResult> compute(LayerTypeData data) {
         List<IntermediateOutputResult> intermediateOutputResults = new ArrayList<>();
 
-        DataFunctionApplier dataVisitor = new DataFunctionApplier(matrix -> matrix.dup().muliColumnVector(dropOutMatrixList.get(0)));
-        data.accept(dataVisitor);
-        LayerTypeData regularizedInput = dataVisitor.getLayerTypeData();
+        InputDropOutRegularizationVisitor inputVisitor = new InputDropOutRegularizationVisitor(dropOutMatrixList.get(0));
+        data.accept(inputVisitor);
+        LayerTypeData regularizedInput = inputVisitor.getRegularizedData();
         ForwardDataAdapterVisitor firstDataAdaptorVisitor = new ForwardDataAdapterVisitor(regularizedInput);
         layers.get(0).accept(firstDataAdaptorVisitor);
         IntermediateOutputResult intermediateOutputResult = new IntermediateOutputResult(firstDataAdaptorVisitor.getData());
         intermediateOutputResults.add(intermediateOutputResult);
 
         for (int layerIndex = 0, dropOutIndex = 1; layerIndex < layers.size(); layerIndex++, dropOutIndex++) {
-            LayerComputerWithDropOutRegularizationVisitor computerVisitor = new LayerComputerWithDropOutRegularizationVisitor(dropOutMatrixList.get(dropOutIndex), intermediateOutputResult.getResult());
-            layers.get(layerIndex).accept(computerVisitor);
+            Layer layer = layers.get(layerIndex);
+            LayerTypeData previousResult = intermediateOutputResult.getResult();
+            ForwardDataAdapterVisitor dataAdaptorVisitor = new ForwardDataAdapterVisitor(previousResult);
+            layer.accept(dataAdaptorVisitor);
+            LayerComputerWithDropOutRegularizationVisitor computerVisitor = new LayerComputerWithDropOutRegularizationVisitor(dropOutMatrixList.get(dropOutIndex), dataAdaptorVisitor.getData());
+            layer.accept(computerVisitor);
             intermediateOutputResult = computerVisitor.getIntermediateOutputResult();
             intermediateOutputResults.add(intermediateOutputResult);
         }

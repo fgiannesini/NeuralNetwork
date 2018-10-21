@@ -61,7 +61,9 @@ public class LayerComputerVisitor implements LayerVisitor {
 
         for (DoubleMatrix input : inputs) {
             DoubleMatrix output = ConvolutionComputer.get().computeConvolution(input, (in, coord) -> in.mean(), layer.getPadding(), layer.getStride(), layer.getFilterSize());
-            outputs.add(output);
+            ActivationFunctionApplier activationFunctionApplier = layer.getActivationFunctionType().getActivationFunction();
+            DoubleMatrix activatedResult = activationFunctionApplier.apply(output);
+            outputs.add(activatedResult);
         }
 
         intermediateOutputResult = new IntermediateOutputResult(new AveragePoolingData(outputs, data.getChannelCount()));
@@ -102,7 +104,9 @@ public class LayerComputerVisitor implements LayerVisitor {
                 return in.max();
             };
             DoubleMatrix output = convolutionComputer.computeConvolution(input, convolutionApplication, layer.getPadding(), layer.getStride(), layer.getFilterSize());
-            outputs.add(output);
+            ActivationFunctionApplier activationFunctionApplier = layer.getActivationFunctionType().getActivationFunction();
+            DoubleMatrix activatedResult = activationFunctionApplier.apply(output);
+            outputs.add(activatedResult);
             maxRowIndexes.add(maxRowIndex);
             maxColumnIndexes.add(maxColumnIndex);
         }
@@ -132,7 +136,9 @@ public class LayerComputerVisitor implements LayerVisitor {
                     }
                 }
                 output.addi(layer.getBiasMatrices().get(channel));
-                outputs.add(output);
+                ActivationFunctionApplier activationFunctionApplier = layer.getActivationFunctionType().getActivationFunction();
+                DoubleMatrix activatedResult = activationFunctionApplier.apply(output);
+                outputs.add(activatedResult);
             }
         }
         intermediateOutputResult = new IntermediateOutputResult(new ConvolutionData(outputs, layer.getOutputChannelCount()));

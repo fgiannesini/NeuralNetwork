@@ -28,17 +28,17 @@ public class FirstDropOutMatrixGeneratorVisitor implements LayerVisitor {
 
     @Override
     public void visit(AveragePoolingLayer layer) {
-
+        firstDropOutMatrix = DoubleMatrix.EMPTY;
     }
 
     @Override
     public void visit(MaxPoolingLayer layer) {
-
+        firstDropOutMatrix = DoubleMatrix.EMPTY;
     }
 
     @Override
     public void visit(ConvolutionLayer layer) {
-
+        firstDropOutMatrix = DoubleMatrix.rand(layer.getInputHeight(), layer.getInputWidth()).lei(firstDropOutParameter).divi(firstDropOutParameter);
     }
 
     public DoubleMatrix getFirstDropOutMatrix() {

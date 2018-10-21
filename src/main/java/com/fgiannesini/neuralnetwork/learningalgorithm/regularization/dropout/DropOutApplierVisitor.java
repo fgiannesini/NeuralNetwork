@@ -1,10 +1,10 @@
 package com.fgiannesini.neuralnetwork.learningalgorithm.regularization.dropout;
 
-import com.fgiannesini.neuralnetwork.computer.data.BatchNormData;
-import com.fgiannesini.neuralnetwork.computer.data.DataVisitor;
-import com.fgiannesini.neuralnetwork.computer.data.LayerTypeData;
-import com.fgiannesini.neuralnetwork.computer.data.WeightBiasData;
+import com.fgiannesini.neuralnetwork.computer.data.*;
 import org.jblas.DoubleMatrix;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class DropOutApplierVisitor implements DataVisitor {
 
@@ -23,6 +23,24 @@ public class DropOutApplierVisitor implements DataVisitor {
     @Override
     public void visit(BatchNormData data) {
         layerTypeData = new BatchNormData(data.getData().mulColumnVector(dropOutMatrix), data.getMeanDeviationProvider());
+    }
+
+    @Override
+    public void visit(ConvolutionData data) {
+        List<DoubleMatrix> result = data.getDatas().stream()
+                .map(matrix -> matrix.mul(dropOutMatrix))
+                .collect(Collectors.toList());
+        layerTypeData = new ConvolutionData(result, data.getChannelCount());
+    }
+
+    @Override
+    public void visit(AveragePoolingData averagePoolingData) {
+        layerTypeData = averagePoolingData;
+    }
+
+    @Override
+    public void visit(MaxPoolingData maxPoolingData) {
+        layerTypeData = maxPoolingData;
     }
 
     public LayerTypeData getLayerTypeData() {
