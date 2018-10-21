@@ -3,7 +3,7 @@ package com.fgiannesini.neuralnetwork.example.tune;
 import com.fgiannesini.neuralnetwork.HyperParameters;
 import com.fgiannesini.neuralnetwork.NeuralNetworkStats;
 import com.fgiannesini.neuralnetwork.RegularizationCoeffs;
-import com.fgiannesini.neuralnetwork.example.FloorExampleLauncher;
+import com.fgiannesini.neuralnetwork.example.floor.FloorExampleLauncher;
 import com.fgiannesini.neuralnetwork.learningrate.ILearningRateUpdater;
 import com.fgiannesini.neuralnetwork.learningrate.LearningRateUpdaterType;
 import com.fgiannesini.neuralnetwork.model.LayerType;

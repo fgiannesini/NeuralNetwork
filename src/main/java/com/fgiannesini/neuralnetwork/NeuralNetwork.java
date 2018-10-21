@@ -45,17 +45,22 @@ public class NeuralNetwork {
                 LayerTypeData subOutput = batchIterator.getSubOutput();
 
                 neuralNetworkModel = learningAlgorithm.learn(subInput, subOutput);
-                CostComputer costComputer = CostComputerBuilder.init()
-                        .withNeuralNetworkModel(neuralNetworkModel)
-                        .withType(costType)
-                        .build();
-                double learningCost = costComputer.compute(subInput, subOutput);
 
-                CostComputer testCostComputer = CostComputerBuilder.init()
-                        .withNeuralNetworkModel(neuralNetworkModel)
-                        .withType(costType)
-                        .build();
-                double testCost = testCostComputer.compute(normalizedTestInput, testOutpout);
+                double learningCost = 0;
+//                CostComputer costComputer = CostComputerBuilder.init()
+//                        .withNeuralNetworkModel(neuralNetworkModel)
+//                        .withType(costType)
+//                        .build();
+//                double learningCost = costComputer.compute(subInput, subOutput);
+
+                double testCost = 0;
+                if (normalizedTestInput != null && testOutpout != null) {
+                    CostComputer testCostComputer = CostComputerBuilder.init()
+                            .withNeuralNetworkModel(neuralNetworkModel)
+                            .withType(costType)
+                            .build();
+                    testCost = testCostComputer.compute(normalizedTestInput, testOutpout);
+                }
 
                 NeuralNetworkStats stats = new NeuralNetworkStats(learningCost, testCost, batchIterator.getBatchNumber(), epochNumber);
                 statsUpdateAction.accept(stats);
