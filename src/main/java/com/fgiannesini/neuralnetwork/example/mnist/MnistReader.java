@@ -80,6 +80,14 @@ public class MnistReader {
         return handledCount;
     }
 
+    public int getImageWidth() {
+        return mnistImageProvider.getImageWidth();
+    }
+
+    public int getImageHeight() {
+        return mnistImageProvider.getImageHeight();
+    }
+
     // === public interfaces ===
 
     public interface DataArrayImageHandler {

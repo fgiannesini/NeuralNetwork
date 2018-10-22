@@ -16,7 +16,6 @@ import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.normalizer.NormalizerType;
 import org.jblas.DoubleMatrix;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -44,7 +43,7 @@ public class MnistExampleLauncher {
         };
         HyperParameters parameters = new HyperParameters()
                 .learningRateUpdater(LearningRateUpdaterType.CONSTANT.get(0.01))
-                .batchSize(50)
+                .batchSize(1)
                 .epochCount(1)
                 .momentumCoeff(null)
                 .rmsStopCoeff(null)
@@ -60,15 +59,9 @@ public class MnistExampleLauncher {
         MnistReader testMnistReader = new MnistReader(getFile("t10k-labels.idx1-ubyte"), getFile("t10k-images.idx3-ubyte"));
         List<DoubleMatrix> testInputMatrices = new ArrayList<>();
         List<Integer> testOutput = new ArrayList<>();
-        testMnistReader.handleSome(1_000,
+        testMnistReader.handleSome(100,
                 (index, data, item) -> {
-                    final BufferedImage image = testMnistReader.getDataAsBufferedImage(data);
-                    DoubleMatrix inputMatrix = new DoubleMatrix(image.getHeight(), image.getWidth());
-                    for (int i = 0; i < image.getWidth(); i++) {
-                        for (int j = 0; j < image.getHeight(); j++) {
-                            inputMatrix.put(j, i, image.getRGB(i, j));
-                        }
-                    }
+                    DoubleMatrix inputMatrix = convertDataToDoubleMatrix(testMnistReader, data);
                     testInputMatrices.add(inputMatrix);
                     testOutput.add((int) item);
                 }
@@ -80,15 +73,9 @@ public class MnistExampleLauncher {
         MnistReader mnistReader = new MnistReader(getFile("train-labels.idx1-ubyte"), getFile("train-images.idx3-ubyte"));
         List<DoubleMatrix> inputMatrices = new ArrayList<>();
         List<Integer> output = new ArrayList<>();
-        mnistReader.handleSome(6_000,
+        mnistReader.handleSome(1_000,
                 (index, data, item) -> {
-                    final BufferedImage image = mnistReader.getDataAsBufferedImage(data);
-                    DoubleMatrix inputMatrix = new DoubleMatrix(image.getHeight(), image.getWidth());
-                    for (int i = 0; i < image.getWidth(); i++) {
-                        for (int j = 0; j < image.getHeight(); j++) {
-                            inputMatrix.put(j, i, image.getRGB(i, j));
-                        }
-                    }
+                    DoubleMatrix inputMatrix = convertDataToDoubleMatrix(mnistReader, data);
                     inputMatrices.add(inputMatrix);
                     output.add((int) item);
                 }
@@ -108,6 +95,15 @@ public class MnistExampleLauncher {
         DataExtractorVisitor dataVisitor = new DataExtractorVisitor();
         testOutputPredictionMatrix.accept(dataVisitor);
         return ExampleDataManager.computeSuccessRate(outputTestData.getData(), dataVisitor.getData());
+    }
+
+    private DoubleMatrix convertDataToDoubleMatrix(MnistReader mnistReader, byte[] data) {
+        double[] grayData = new double[data.length];
+        for (int i = 0; i < data.length; i++) {
+            int gray = 255 - (((int) data[i]) & 0xFF);
+            grayData[i] = gray;
+        }
+        return new DoubleMatrix(mnistReader.getImageHeight(), mnistReader.getImageWidth(), grayData);
     }
 
     public File getFile(String fileName) {

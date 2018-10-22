@@ -46,24 +46,23 @@ public class NeuralNetwork {
 
                 neuralNetworkModel = learningAlgorithm.learn(subInput, subOutput);
 
-                double learningCost = 0;
-//                CostComputer costComputer = CostComputerBuilder.init()
-//                        .withNeuralNetworkModel(neuralNetworkModel)
-//                        .withType(costType)
-//                        .build();
-//                double learningCost = costComputer.compute(subInput, subOutput);
-
-                double testCost = 0;
-                if (normalizedTestInput != null && testOutpout != null) {
-                    CostComputer testCostComputer = CostComputerBuilder.init()
+                if (batchIterator.getBatchNumber() % 10 == 0) {
+                    CostComputer costComputer = CostComputerBuilder.init()
                             .withNeuralNetworkModel(neuralNetworkModel)
                             .withType(costType)
                             .build();
-                    testCost = testCostComputer.compute(normalizedTestInput, testOutpout);
+                    double learningCost = costComputer.compute(subInput, subOutput);
+                    double testCost = 0;
+                    if (normalizedTestInput != null && testOutpout != null) {
+                        CostComputer testCostComputer = CostComputerBuilder.init()
+                                .withNeuralNetworkModel(neuralNetworkModel)
+                                .withType(costType)
+                                .build();
+                        testCost = testCostComputer.compute(normalizedTestInput, testOutpout);
+                    }
+                    NeuralNetworkStats stats = new NeuralNetworkStats(learningCost, testCost, batchIterator.getBatchNumber(), epochNumber);
+                    statsUpdateAction.accept(stats);
                 }
-
-                NeuralNetworkStats stats = new NeuralNetworkStats(learningCost, testCost, batchIterator.getBatchNumber(), epochNumber);
-                statsUpdateAction.accept(stats);
             }
         }
     }
