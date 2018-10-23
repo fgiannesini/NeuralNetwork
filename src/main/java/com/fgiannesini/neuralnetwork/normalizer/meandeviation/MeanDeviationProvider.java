@@ -64,7 +64,7 @@ public class MeanDeviationProvider implements DataVisitor {
             DoubleMatrix mean = means.get(channelIndex);
             deviations.get(channelIndex).addi(MatrixFunctions.pow(data.sub(mean), 2));
         }
-        deviations.forEach(m -> MatrixFunctions.sqrt(m.divi(inputCount)).addi(epsilon));
+        deviations.forEach(m -> MatrixFunctions.sqrti(m.divi(inputCount)).addi(epsilon));
         meanDeviation = new ConvolutionMeanDeviation(means, deviations);
     }
 

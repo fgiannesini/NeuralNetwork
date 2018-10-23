@@ -34,7 +34,7 @@ public class MnistExampleLauncherWithStatsDisplay extends Application {
             @Override
             protected NeuralNetworkStats call() throws IOException {
                 HyperParameters parameters = new HyperParameters()
-                        .batchSize(1)
+                        .batchSize(100)
                         .epochCount(1)
                         .rmsStopCoeff(null)
                         .momentumCoeff(null)

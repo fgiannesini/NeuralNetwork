@@ -60,6 +60,7 @@ public class NeuralNetwork {
                                 .build();
                         testCost = testCostComputer.compute(normalizedTestInput, testOutpout);
                     }
+
                     NeuralNetworkStats stats = new NeuralNetworkStats(learningCost, testCost, batchIterator.getBatchNumber(), epochNumber);
                     statsUpdateAction.accept(stats);
                 }

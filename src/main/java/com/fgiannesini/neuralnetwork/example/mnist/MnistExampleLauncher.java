@@ -44,7 +44,7 @@ public class MnistExampleLauncher {
         };
         HyperParameters parameters = new HyperParameters()
                 .learningRateUpdater(LearningRateUpdaterType.CONSTANT.get(0.01))
-                .batchSize(50)
+                .batchSize(100)
                 .epochCount(1)
                 .momentumCoeff(null)
                 .rmsStopCoeff(null)
@@ -60,7 +60,7 @@ public class MnistExampleLauncher {
         MnistReader testMnistReader = new MnistReader(getFile("t10k-labels.idx1-ubyte"), getFile("t10k-images.idx3-ubyte"));
         List<DoubleMatrix> testInputMatrices = new ArrayList<>();
         List<Integer> testOutput = new ArrayList<>();
-        testMnistReader.handleSome(100,
+        testMnistReader.handleSome(10_000,
                 (index, data, item) -> {
                     DoubleMatrix inputMatrix = convertDataToDoubleMatrix(testMnistReader, data);
                     testInputMatrices.add(inputMatrix);
@@ -74,7 +74,7 @@ public class MnistExampleLauncher {
         MnistReader mnistReader = new MnistReader(getFile("train-labels.idx1-ubyte"), getFile("train-images.idx3-ubyte"));
         List<DoubleMatrix> inputMatrices = new ArrayList<>();
         List<Integer> output = new ArrayList<>();
-        mnistReader.handleSome(1_000,
+        mnistReader.handleSome(60_000,
                 (index, data, item) -> {
                     DoubleMatrix inputMatrix = convertDataToDoubleMatrix(mnistReader, data);
                     inputMatrices.add(inputMatrix);
@@ -88,8 +88,8 @@ public class MnistExampleLauncher {
         neuralNetwork.learn(
                 inputData,
                 outputData,
-                null,
-                null
+                inputTestData,
+                outputTestData
         );
 
         LayerTypeData testOutputPredictionMatrix = neuralNetwork.apply(inputTestData);
