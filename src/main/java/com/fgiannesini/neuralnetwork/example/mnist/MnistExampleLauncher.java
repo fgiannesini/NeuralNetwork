@@ -44,7 +44,7 @@ public class MnistExampleLauncher {
         };
         HyperParameters parameters = new HyperParameters()
                 .learningRateUpdater(LearningRateUpdaterType.CONSTANT.get(0.01))
-                .batchSize(1)
+                .batchSize(50)
                 .epochCount(1)
                 .momentumCoeff(null)
                 .rmsStopCoeff(null)
@@ -119,9 +119,9 @@ public class MnistExampleLauncher {
         ConvolutionNeuralNetworkModelBuilder neuralNetworkModelBuilder = ConvolutionNeuralNetworkModelBuilder.init()
                 .useInitializer(InitializerType.XAVIER)
                 .input(28, 28, 1)
-                .addConvolutionLayer(5, 0, 1, 32, ActivationFunctionType.RELU)
+                .addConvolutionLayer(5, 0, 1, 16, ActivationFunctionType.RELU)
                 .addMaxPoolingLayer(2, 0, 2, ActivationFunctionType.RELU)
-                .addConvolutionLayer(5, 0, 1, 64, ActivationFunctionType.RELU)
+                .addConvolutionLayer(5, 0, 1, 16, ActivationFunctionType.RELU)
                 .addMaxPoolingLayer(2, 0, 2, ActivationFunctionType.RELU)
                 .addFullyConnectedLayer(10, ActivationFunctionType.SOFT_MAX);
 

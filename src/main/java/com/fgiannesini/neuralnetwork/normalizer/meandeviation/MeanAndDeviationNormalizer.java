@@ -14,6 +14,9 @@ public class MeanAndDeviationNormalizer implements INormalizer {
 
     @Override
     public LayerTypeData normalize(LayerTypeData input) {
+        if (input == null) {
+            return null;
+        }
 
         if (meanDeviation == null) {
             input.accept(meanDeviationProvider);

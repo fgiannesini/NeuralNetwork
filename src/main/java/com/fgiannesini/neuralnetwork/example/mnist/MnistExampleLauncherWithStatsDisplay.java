@@ -39,7 +39,7 @@ public class MnistExampleLauncherWithStatsDisplay extends Application {
                         .rmsStopCoeff(null)
                         .momentumCoeff(null)
                         .regularizationCoeff(new RegularizationCoeffs())
-                        .learningRateUpdater(LearningRateUpdaterType.CONSTANT.get(0.05));
+                        .learningRateUpdater(LearningRateUpdaterType.CONSTANT.get(0.01));
                 MnistExampleLauncher mnistExampleLauncher = new MnistExampleLauncher(this::updateValue, parameters);
                 double successRate = mnistExampleLauncher.launch();
                 System.out.println("Success Rate: " + successRate + "%");
