@@ -14,6 +14,7 @@ import com.fgiannesini.neuralnetwork.learningrate.LearningRateUpdaterType;
 import com.fgiannesini.neuralnetwork.model.ConvolutionNeuralNetworkModelBuilder;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.normalizer.NormalizerType;
+import com.fgiannesini.neuralnetwork.normalizer.meandeviation.MeanDeviationProvider;
 import org.jblas.DoubleMatrix;
 
 import java.io.File;
@@ -131,7 +132,7 @@ public class MnistExampleLauncher {
                 .withCostType(CostType.SOFT_MAX_REGRESSION)
                 .withNeuralNetworkStatsConsumer(statsUpdateAction)
                 .withHyperParameters(hyperParameters)
-                .withNormalizer(NormalizerType.NONE.get())
+                .withNormalizer(NormalizerType.MEAN_AND_DEVIATION.get(new MeanDeviationProvider()))
                 .build();
     }
 }

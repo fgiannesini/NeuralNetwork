@@ -9,7 +9,7 @@ import com.fgiannesini.neuralnetwork.computer.data.WeightBiasData;
 import com.fgiannesini.neuralnetwork.computer.intermediateoutputcomputer.IntermediateOutputResult;
 import com.fgiannesini.neuralnetwork.math.ConvolutionComputer;
 import com.fgiannesini.neuralnetwork.model.*;
-import com.fgiannesini.neuralnetwork.normalizer.meandeviation.MeanDeviation;
+import com.fgiannesini.neuralnetwork.normalizer.meandeviation.BatchNormMeanDeviation;
 import com.fgiannesini.neuralnetwork.normalizer.meandeviation.MeanDeviationProvider;
 import org.jblas.DoubleMatrix;
 
@@ -51,7 +51,7 @@ public class LayerComputerWithDropOutRegularizationVisitor implements LayerVisit
 
         MeanDeviationProvider meanDeviationProvider = batchNormData.getMeanDeviationProvider();
         new BatchNormData(z, null).accept(meanDeviationProvider);
-        MeanDeviation meanDeviation = meanDeviationProvider.getMeanDeviation();
+        BatchNormMeanDeviation meanDeviation = (BatchNormMeanDeviation) meanDeviationProvider.getMeanDeviation();
 
         //Z2 = (Z1 - mean) / sigma * gamma + beta
         DoubleMatrix afterMeanApplicationResult = z.subColumnVector(meanDeviation.getMean());
