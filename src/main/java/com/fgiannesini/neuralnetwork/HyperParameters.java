@@ -15,6 +15,7 @@ public class HyperParameters implements Cloneable {
     private Double rmsStopCoeff;
     private LayerType layerType;
     private RegularizationCoeffs regularizationCoeffs;
+    private int[] convolutionLayers;
 
     public HyperParameters() {
     }
@@ -59,6 +60,11 @@ public class HyperParameters implements Cloneable {
         return this;
     }
 
+    public HyperParameters convolutionLayers(int[] convolutionLayers) {
+        this.convolutionLayers = convolutionLayers;
+        return this;
+    }
+
     public int getEpochCount() {
         return epochCount;
     }
@@ -91,6 +97,10 @@ public class HyperParameters implements Cloneable {
         return regularizationCoeffs;
     }
 
+    public int[] getConvolutionLayers() {
+        return convolutionLayers;
+    }
+
     @Override
     public HyperParameters clone() {
         try {
@@ -106,6 +116,7 @@ public class HyperParameters implements Cloneable {
                 "epochCount=" + epochCount +
                 ", batchSize=" + batchSize +
                 ", hiddenLayerSize=" + Arrays.toString(hiddenLayerSize) +
+                ", convolutionLayers=" + Arrays.toString(convolutionLayers) +
                 ", layerType=" + layerType +
                 ", learningRateUpdater=" + learningRateUpdater.getClass().getSimpleName() + " " + learningRateUpdater.get(0) +
                 ", momentumCoeff=" + momentumCoeff +

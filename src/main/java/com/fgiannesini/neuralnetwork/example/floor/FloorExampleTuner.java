@@ -1,9 +1,9 @@
-package com.fgiannesini.neuralnetwork.example.tune;
+package com.fgiannesini.neuralnetwork.example.floor;
 
 import com.fgiannesini.neuralnetwork.HyperParameters;
 import com.fgiannesini.neuralnetwork.NeuralNetworkStats;
 import com.fgiannesini.neuralnetwork.RegularizationCoeffs;
-import com.fgiannesini.neuralnetwork.example.floor.FloorExampleLauncher;
+import com.fgiannesini.neuralnetwork.example.tune.TuneState;
 import com.fgiannesini.neuralnetwork.learningrate.ILearningRateUpdater;
 import com.fgiannesini.neuralnetwork.learningrate.LearningRateUpdaterType;
 import com.fgiannesini.neuralnetwork.model.LayerType;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 
-public class Tuner {
+public class FloorExampleTuner {
 
     private static final int PARAMETER_COUNT = 7;
     private static final int POPULATION = PARAMETER_COUNT * 3;

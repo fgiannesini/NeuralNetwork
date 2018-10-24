@@ -12,6 +12,7 @@ import com.fgiannesini.neuralnetwork.initializer.InitializerType;
 import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithmType;
 import com.fgiannesini.neuralnetwork.learningrate.LearningRateUpdaterType;
 import com.fgiannesini.neuralnetwork.model.ConvolutionNeuralNetworkModelBuilder;
+import com.fgiannesini.neuralnetwork.model.LayerType;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.normalizer.NormalizerType;
 import com.fgiannesini.neuralnetwork.normalizer.meandeviation.MeanDeviationProvider;
@@ -60,7 +61,7 @@ public class MnistExampleLauncher {
         MnistReader testMnistReader = new MnistReader(getFile("t10k-labels.idx1-ubyte"), getFile("t10k-images.idx3-ubyte"));
         List<DoubleMatrix> testInputMatrices = new ArrayList<>();
         List<Integer> testOutput = new ArrayList<>();
-        testMnistReader.handleSome(10_000,
+        testMnistReader.handleSome(2_000,
                 (index, data, item) -> {
                     DoubleMatrix inputMatrix = convertDataToDoubleMatrix(testMnistReader, data);
                     testInputMatrices.add(inputMatrix);
@@ -74,7 +75,7 @@ public class MnistExampleLauncher {
         MnistReader mnistReader = new MnistReader(getFile("train-labels.idx1-ubyte"), getFile("train-images.idx3-ubyte"));
         List<DoubleMatrix> inputMatrices = new ArrayList<>();
         List<Integer> output = new ArrayList<>();
-        mnistReader.handleSome(60_000,
+        mnistReader.handleSome(20_000,
                 (index, data, item) -> {
                     DoubleMatrix inputMatrix = convertDataToDoubleMatrix(mnistReader, data);
                     inputMatrices.add(inputMatrix);
@@ -118,12 +119,22 @@ public class MnistExampleLauncher {
     private NeuralNetwork prepare() {
         ConvolutionNeuralNetworkModelBuilder neuralNetworkModelBuilder = ConvolutionNeuralNetworkModelBuilder.init()
                 .useInitializer(InitializerType.XAVIER)
-                .input(28, 28, 1)
-                .addConvolutionLayer(5, 0, 1, 16, ActivationFunctionType.RELU)
-                .addMaxPoolingLayer(2, 0, 2, ActivationFunctionType.RELU)
-                .addConvolutionLayer(5, 0, 1, 16, ActivationFunctionType.RELU)
-                .addMaxPoolingLayer(2, 0, 2, ActivationFunctionType.RELU)
-                .addFullyConnectedLayer(10, ActivationFunctionType.SOFT_MAX);
+                .input(28, 28, 1);
+        int[] convolutionLayers = hyperParameters.getConvolutionLayers();
+        for (int convolutionLayer : convolutionLayers) {
+            neuralNetworkModelBuilder.addConvolutionLayer(5, 0, 1, convolutionLayer, ActivationFunctionType.RELU);
+            if (hyperParameters.getLayerType().equals(LayerType.POOLING_AVERAGE)) {
+                neuralNetworkModelBuilder.addAveragePoolingLayer(2, 0, 2, ActivationFunctionType.RELU);
+            } else {
+                neuralNetworkModelBuilder.addMaxPoolingLayer(2, 0, 2, ActivationFunctionType.RELU);
+            }
+        }
+
+        int[] hiddenLayerSize = hyperParameters.getHiddenLayerSize();
+        for (int i = 0; i < hiddenLayerSize.length - 1; i++) {
+            neuralNetworkModelBuilder.addFullyConnectedLayer(hiddenLayerSize[i], ActivationFunctionType.RELU);
+        }
+        neuralNetworkModelBuilder.addFullyConnectedLayer(10, ActivationFunctionType.SOFT_MAX);
 
         NeuralNetworkModel neuralNetworkModel = neuralNetworkModelBuilder.buildConvolutionNetworkModel();
         return NeuralNetworkBuilder.init()
