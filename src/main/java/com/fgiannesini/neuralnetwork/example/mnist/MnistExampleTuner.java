@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 
 public class MnistExampleTuner {
@@ -224,8 +225,10 @@ public class MnistExampleTuner {
     }
 
     private static int[] generateHiddenLayerSize(Random random) {
-        int size = random.nextInt(4);
-        return random.ints(size, 10, 784).toArray();
+        int size = random.nextInt(4) + 1;
+        int[] ints = random.ints(size, 10, 784).toArray();
+        ints[size - 1] = 10;
+        return ints;
     }
 
     private static int[] generateConvolutionLayer(Random random) {
@@ -241,7 +244,7 @@ public class MnistExampleTuner {
         return (random.nextInt(200) + 1) * 50;
     }
 
-    private static RegularizationCoeffs generateRegularizationCoeffs(Random random, int[] layerSize, int[] hiddenLayerSize) {
+    private static RegularizationCoeffs generateRegularizationCoeffs(Random random, int[] hiddenLayers, int[] convolutionLayers) {
         int regularizationMethod = random.nextInt(3);
         RegularizationCoeffs regularizationCoeffs = new RegularizationCoeffs();
         switch (regularizationMethod) {
@@ -249,7 +252,7 @@ public class MnistExampleTuner {
                 regularizationCoeffs.setL2RegularizationCoeff(random.nextDouble());
                 break;
             case 1:
-                double[] dropOutRegularizationCoeffs = random.doubles(hiddenLayerSize.length).toArray();
+                double[] dropOutRegularizationCoeffs = DoubleStream.concat(DoubleStream.of(1d), DoubleStream.concat(random.doubles(convolutionLayers.length + hiddenLayers.length), DoubleStream.of(1d))).toArray();
                 regularizationCoeffs.setDropOutRegularizationCoeffs(dropOutRegularizationCoeffs);
                 break;
             default:
