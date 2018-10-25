@@ -3,9 +3,10 @@ package com.fgiannesini.neuralnetwork.model;
 import com.fgiannesini.neuralnetwork.activationfunctions.ActivationFunctionType;
 import org.jblas.DoubleMatrix;
 
+import java.io.Serializable;
 import java.util.List;
 
-public abstract class Layer implements Cloneable {
+public abstract class Layer implements Cloneable, Serializable {
 
     private final ActivationFunctionType activationFunctionType;
 

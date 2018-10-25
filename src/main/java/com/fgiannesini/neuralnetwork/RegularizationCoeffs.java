@@ -1,8 +1,9 @@
 package com.fgiannesini.neuralnetwork;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class RegularizationCoeffs {
+public class RegularizationCoeffs implements Serializable {
 
     private Double l2RegularizationCoeff;
 

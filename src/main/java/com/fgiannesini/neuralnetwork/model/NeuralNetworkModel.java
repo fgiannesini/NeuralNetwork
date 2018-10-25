@@ -1,9 +1,10 @@
 package com.fgiannesini.neuralnetwork.model;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class NeuralNetworkModel implements Cloneable {
+public class NeuralNetworkModel implements Cloneable, Serializable {
 
     private List<Layer> layers;
 

@@ -158,6 +158,7 @@ public class MnistExampleTuner {
 
         tuneStates.stream()
                 .forEach(tuneState -> {
+                    System.out.println("Start computation of " + tuneState.getHyperParameters());
                             MnistExampleLauncher mnistExampleLauncher = new MnistExampleLauncher(neuralNetworkStatsConsumer, tuneState.getHyperParameters());
                             long start = System.nanoTime();
                             double successRate = 0;

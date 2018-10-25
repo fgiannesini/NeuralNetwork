@@ -3,9 +3,10 @@ package com.fgiannesini.neuralnetwork;
 import com.fgiannesini.neuralnetwork.learningrate.ILearningRateUpdater;
 import com.fgiannesini.neuralnetwork.model.LayerType;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class HyperParameters implements Cloneable {
+public class HyperParameters implements Cloneable, Serializable {
 
     private int epochCount;
     private int batchSize;
