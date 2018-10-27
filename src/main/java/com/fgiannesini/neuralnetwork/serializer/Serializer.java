@@ -4,8 +4,6 @@ import java.io.*;
 
 public class Serializer {
 
-    static final String SERIALIZATION_EXTENSION = ".serialized";
-
     private Serializer() {
     }
 
@@ -13,8 +11,7 @@ public class Serializer {
         return new Serializer();
     }
 
-    public <T extends Serializable> void serialize(T t, String name) {
-        File file = new File(name + SERIALIZATION_EXTENSION);
+    public <T extends Serializable> void serialize(T t, File file) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
             oos.writeObject(t);
         } catch (IOException e) {
@@ -22,8 +19,7 @@ public class Serializer {
         }
     }
 
-    public <T extends Serializable> T deserialize(String name) {
-        File file = new File(name + SERIALIZATION_EXTENSION);
+    public <T extends Serializable> T deserialize(File file) {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             return (T) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {

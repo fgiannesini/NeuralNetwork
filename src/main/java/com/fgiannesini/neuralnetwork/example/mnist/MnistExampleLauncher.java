@@ -45,8 +45,8 @@ public class MnistExampleLauncher {
         };
         HyperParameters parameters = new HyperParameters()
                 .learningRateUpdater(LearningRateUpdaterType.SQUARED.get(0.01))
-                .batchSize(100)
-                .epochCount(3)
+                .batchSize(1000)
+                .epochCount(5)
                 .momentumCoeff(null)
                 .rmsStopCoeff(null)
                 .layerType(LayerType.POOLING_AVERAGE)
@@ -58,8 +58,64 @@ public class MnistExampleLauncher {
         System.out.println("Success Rate: " + successRate + "%");
     }
 
+    private static NeuralNetwork prepare(HyperParameters hyperParameters, Consumer<NeuralNetworkStats> statsUpdateAction) {
+        NeuralNetworkModel neuralNetworkModel = buildNeuralNetworkModel(hyperParameters);
+        return prepare(hyperParameters, statsUpdateAction, neuralNetworkModel);
+    }
+
+    private static NeuralNetwork prepare(HyperParameters hyperParameters, Consumer<NeuralNetworkStats> statsUpdateAction, NeuralNetworkModel neuralNetworkModel) {
+
+        return NeuralNetworkBuilder.init()
+                .withNeuralNetworkModel(neuralNetworkModel)
+                .withLearningAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT)
+                .withCostType(CostType.SOFT_MAX_REGRESSION)
+                .withNeuralNetworkStatsConsumer(statsUpdateAction)
+                .withHyperParameters(hyperParameters)
+                .withNormalizer(NormalizerType.MEAN_AND_DEVIATION.get(new MeanDeviationProvider()))
+                .build();
+    }
+
+    private static NeuralNetworkModel buildNeuralNetworkModel(HyperParameters hyperParameters) {
+        ConvolutionNeuralNetworkModelBuilder neuralNetworkModelBuilder = ConvolutionNeuralNetworkModelBuilder.init()
+                .useInitializer(InitializerType.XAVIER)
+                .input(28, 28, 1);
+        int[] convolutionLayers = hyperParameters.getConvolutionLayers();
+        for (int convolutionLayer : convolutionLayers) {
+            neuralNetworkModelBuilder.addConvolutionLayer(5, 0, 1, convolutionLayer, ActivationFunctionType.RELU);
+            if (hyperParameters.getLayerType().equals(LayerType.POOLING_AVERAGE)) {
+                neuralNetworkModelBuilder.addAveragePoolingLayer(2, 0, 2, ActivationFunctionType.RELU);
+            } else {
+                neuralNetworkModelBuilder.addMaxPoolingLayer(2, 0, 2, ActivationFunctionType.RELU);
+            }
+        }
+
+        int[] hiddenLayerSize = hyperParameters.getHiddenLayerSize();
+        for (int i = 0; i < hiddenLayerSize.length - 1; i++) {
+            neuralNetworkModelBuilder.addFullyConnectedLayer(hiddenLayerSize[i], ActivationFunctionType.RELU);
+        }
+        neuralNetworkModelBuilder.addFullyConnectedLayer(10, ActivationFunctionType.SOFT_MAX);
+        return neuralNetworkModelBuilder.buildConvolutionNetworkModel();
+    }
+
+    private DoubleMatrix convertDataToDoubleMatrix(MnistReader mnistReader, byte[] data) {
+        double[] grayData = new double[data.length];
+        for (int i = 0; i < data.length; i++) {
+            int gray = 255 - (((int) data[i]) & 0xFF);
+            grayData[i] = gray;
+        }
+        return new DoubleMatrix(mnistReader.getImageHeight(), mnistReader.getImageWidth(), grayData);
+    }
+
+    public File getFile(String fileName) {
+        try {
+            return new File(this.getClass().getClassLoader().getResource("mnist/" + fileName).toURI());
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public double launch() throws IOException {
-        NeuralNetwork neuralNetwork = prepare();
+        NeuralNetwork neuralNetwork = prepare(hyperParameters, statsUpdateAction);
 
         MnistReader testMnistReader = new MnistReader(getFile("t10k-labels.idx1-ubyte"), getFile("t10k-images.idx3-ubyte"));
         List<DoubleMatrix> testInputMatrices = new ArrayList<>();
@@ -100,53 +156,5 @@ public class MnistExampleLauncher {
         DataExtractorVisitor dataVisitor = new DataExtractorVisitor();
         testOutputPredictionMatrix.accept(dataVisitor);
         return ExampleDataManager.computeSuccessRate(outputTestData.getData(), dataVisitor.getData());
-    }
-
-    private DoubleMatrix convertDataToDoubleMatrix(MnistReader mnistReader, byte[] data) {
-        double[] grayData = new double[data.length];
-        for (int i = 0; i < data.length; i++) {
-            int gray = 255 - (((int) data[i]) & 0xFF);
-            grayData[i] = gray;
-        }
-        return new DoubleMatrix(mnistReader.getImageHeight(), mnistReader.getImageWidth(), grayData);
-    }
-
-    public File getFile(String fileName) {
-        try {
-            return new File(this.getClass().getClassLoader().getResource("mnist/" + fileName).toURI());
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private NeuralNetwork prepare() {
-        ConvolutionNeuralNetworkModelBuilder neuralNetworkModelBuilder = ConvolutionNeuralNetworkModelBuilder.init()
-                .useInitializer(InitializerType.XAVIER)
-                .input(28, 28, 1);
-        int[] convolutionLayers = hyperParameters.getConvolutionLayers();
-        for (int convolutionLayer : convolutionLayers) {
-            neuralNetworkModelBuilder.addConvolutionLayer(5, 0, 1, convolutionLayer, ActivationFunctionType.RELU);
-            if (hyperParameters.getLayerType().equals(LayerType.POOLING_AVERAGE)) {
-                neuralNetworkModelBuilder.addAveragePoolingLayer(2, 0, 2, ActivationFunctionType.RELU);
-            } else {
-                neuralNetworkModelBuilder.addMaxPoolingLayer(2, 0, 2, ActivationFunctionType.RELU);
-            }
-        }
-
-        int[] hiddenLayerSize = hyperParameters.getHiddenLayerSize();
-        for (int i = 0; i < hiddenLayerSize.length - 1; i++) {
-            neuralNetworkModelBuilder.addFullyConnectedLayer(hiddenLayerSize[i], ActivationFunctionType.RELU);
-        }
-        neuralNetworkModelBuilder.addFullyConnectedLayer(10, ActivationFunctionType.SOFT_MAX);
-
-        NeuralNetworkModel neuralNetworkModel = neuralNetworkModelBuilder.buildConvolutionNetworkModel();
-        return NeuralNetworkBuilder.init()
-                .withNeuralNetworkModel(neuralNetworkModel)
-                .withLearningAlgorithmType(LearningAlgorithmType.GRADIENT_DESCENT)
-                .withCostType(CostType.SOFT_MAX_REGRESSION)
-                .withNeuralNetworkStatsConsumer(statsUpdateAction)
-                .withHyperParameters(hyperParameters)
-                .withNormalizer(NormalizerType.MEAN_AND_DEVIATION.get(new MeanDeviationProvider()))
-                .build();
     }
 }

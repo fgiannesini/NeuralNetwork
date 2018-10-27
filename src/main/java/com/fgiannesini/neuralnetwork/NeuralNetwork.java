@@ -10,7 +10,10 @@ import com.fgiannesini.neuralnetwork.learningalgorithm.LearningAlgorithm;
 import com.fgiannesini.neuralnetwork.learningrate.ILearningRateUpdater;
 import com.fgiannesini.neuralnetwork.model.NeuralNetworkModel;
 import com.fgiannesini.neuralnetwork.normalizer.INormalizer;
+import com.fgiannesini.neuralnetwork.serializer.Serializer;
 
+import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.function.Consumer;
 
 public class NeuralNetwork {
@@ -32,6 +35,7 @@ public class NeuralNetwork {
         batchSize = hyperParameters.getBatchSize();
         this.epochCount = hyperParameters.getEpochCount();
         this.learningRateUpdater = hyperParameters.getLearningRateUpdater();
+        Serializer.get().serialize(hyperParameters, Paths.get("serialized", hyperParameters.getClass().getSimpleName() + "_" + LocalDate.now()).toFile());
     }
 
     public void learn(LayerTypeData input, LayerTypeData outpout, LayerTypeData testInput, LayerTypeData testOutpout) {
@@ -65,6 +69,7 @@ public class NeuralNetwork {
                     statsUpdateAction.accept(stats);
                 }
             }
+            Serializer.get().serialize(neuralNetworkModel, Paths.get("serialized", neuralNetworkModel.getClass().getSimpleName() + "_" + LocalDate.now()).toFile());
         }
     }
 

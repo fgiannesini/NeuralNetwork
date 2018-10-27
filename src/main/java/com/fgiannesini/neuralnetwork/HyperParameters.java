@@ -5,6 +5,7 @@ import com.fgiannesini.neuralnetwork.model.LayerType;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class HyperParameters implements Cloneable, Serializable {
 
@@ -124,5 +125,29 @@ public class HyperParameters implements Cloneable, Serializable {
                 ", rmsStopCoeff=" + rmsStopCoeff +
                 ", regularizationCoeffs=" + regularizationCoeffs +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof HyperParameters)) return false;
+        HyperParameters that = (HyperParameters) o;
+        return epochCount == that.epochCount &&
+                batchSize == that.batchSize &&
+                Arrays.equals(hiddenLayerSize, that.hiddenLayerSize) &&
+                Objects.equals(learningRateUpdater, that.learningRateUpdater) &&
+                Objects.equals(momentumCoeff, that.momentumCoeff) &&
+                Objects.equals(rmsStopCoeff, that.rmsStopCoeff) &&
+                layerType == that.layerType &&
+                Objects.equals(regularizationCoeffs, that.regularizationCoeffs) &&
+                Arrays.equals(convolutionLayers, that.convolutionLayers);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(epochCount, batchSize, learningRateUpdater, momentumCoeff, rmsStopCoeff, layerType, regularizationCoeffs);
+        result = 31 * result + Arrays.hashCode(hiddenLayerSize);
+        result = 31 * result + Arrays.hashCode(convolutionLayers);
+        return result;
     }
 }

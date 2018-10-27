@@ -2,6 +2,7 @@ package com.fgiannesini.neuralnetwork;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class RegularizationCoeffs implements Serializable {
 
@@ -31,5 +32,21 @@ public class RegularizationCoeffs implements Serializable {
                 "l2RegularizationCoeff=" + l2RegularizationCoeff +
                 ", dropOutRegularizationCoeffs=" + Arrays.toString(dropOutRegularizationCoeffs) +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RegularizationCoeffs)) return false;
+        RegularizationCoeffs that = (RegularizationCoeffs) o;
+        return Objects.equals(l2RegularizationCoeff, that.l2RegularizationCoeff) &&
+                Arrays.equals(dropOutRegularizationCoeffs, that.dropOutRegularizationCoeffs);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(l2RegularizationCoeff);
+        result = 31 * result + Arrays.hashCode(dropOutRegularizationCoeffs);
+        return result;
     }
 }
