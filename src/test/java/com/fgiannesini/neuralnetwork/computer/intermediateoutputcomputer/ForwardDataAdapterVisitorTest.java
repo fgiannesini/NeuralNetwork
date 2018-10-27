@@ -66,14 +66,14 @@ class ForwardDataAdapterVisitorTest {
 
     @Test
     void from_weightBias_to_averagePooling() {
-        AveragePoolingLayer layer = new AveragePoolingLayer(ActivationFunctionType.NONE, 3, 0, 1, 2, 3, 3, 2, 2);
+        AveragePoolingLayer layer = new AveragePoolingLayer(ActivationFunctionType.NONE, 3, 1, 1, 2, 2, 2, 2, 2);
         AveragePoolingData layerTypeData = (AveragePoolingData) from_weight_bias_to_pooling(layer);
         DoubleMatrixAssertions.assertMatrices(getExpectedData(), layerTypeData.getDatas());
     }
 
     @Test
     void from_weightBias_to_maxPooling() {
-        MaxPoolingLayer layer = new MaxPoolingLayer(ActivationFunctionType.NONE, 3, 0, 1, 2, 3, 3, 2, 2);
+        MaxPoolingLayer layer = new MaxPoolingLayer(ActivationFunctionType.NONE, 3, 1, 1, 2, 2, 2, 2, 2);
         MaxPoolingData layerTypeData = (MaxPoolingData) from_weight_bias_to_pooling(layer);
         DoubleMatrixAssertions.assertMatrices(getExpectedData(), layerTypeData.getDatas());
     }

@@ -44,14 +44,14 @@ public class MnistExampleLauncher {
             System.out.println();
         };
         HyperParameters parameters = new HyperParameters()
-                .learningRateUpdater(LearningRateUpdaterType.SQUARED.get(0.01))
-                .batchSize(1000)
-                .epochCount(5)
+                .learningRateUpdater(LearningRateUpdaterType.CONSTANT.get(0.01))
+                .batchSize(100)
+                .epochCount(1)
                 .momentumCoeff(null)
                 .rmsStopCoeff(null)
                 .layerType(LayerType.POOLING_AVERAGE)
-                .hiddenLayerSize(new int[]{120, 84})
                 .convolutionLayers(new int[]{6, 16})
+                .hiddenLayerSize(new int[]{120, 84})
                 .regularizationCoeff(new RegularizationCoeffs());
         MnistExampleLauncher mnistExampleLauncher = new MnistExampleLauncher(statsUpdateAction, parameters);
         double successRate = mnistExampleLauncher.launch();
@@ -72,12 +72,13 @@ public class MnistExampleLauncher {
                 .withNeuralNetworkStatsConsumer(statsUpdateAction)
                 .withHyperParameters(hyperParameters)
                 .withNormalizer(NormalizerType.MEAN_AND_DEVIATION.get(new MeanDeviationProvider()))
+//                .withNormalizer(NormalizerType.NONE.get())
                 .build();
     }
 
     private static NeuralNetworkModel buildNeuralNetworkModel(HyperParameters hyperParameters) {
         ConvolutionNeuralNetworkModelBuilder neuralNetworkModelBuilder = ConvolutionNeuralNetworkModelBuilder.init()
-                .useInitializer(InitializerType.XAVIER)
+                .useInitializer(InitializerType.RANDOM)
                 .input(28, 28, 1);
         int[] convolutionLayers = hyperParameters.getConvolutionLayers();
         for (int convolutionLayer : convolutionLayers) {
@@ -90,7 +91,7 @@ public class MnistExampleLauncher {
         }
 
         int[] hiddenLayerSize = hyperParameters.getHiddenLayerSize();
-        for (int i = 0; i < hiddenLayerSize.length - 1; i++) {
+        for (int i = 0; i < hiddenLayerSize.length; i++) {
             neuralNetworkModelBuilder.addFullyConnectedLayer(hiddenLayerSize[i], ActivationFunctionType.RELU);
         }
         neuralNetworkModelBuilder.addFullyConnectedLayer(10, ActivationFunctionType.SOFT_MAX);
@@ -134,7 +135,7 @@ public class MnistExampleLauncher {
         MnistReader mnistReader = new MnistReader(getFile("train-labels.idx1-ubyte"), getFile("train-images.idx3-ubyte"));
         List<DoubleMatrix> inputMatrices = new ArrayList<>();
         List<Integer> output = new ArrayList<>();
-        mnistReader.handleSome(60_000,
+        mnistReader.handleSome(10_000,
                 (index, data, item) -> {
                     DoubleMatrix inputMatrix = convertDataToDoubleMatrix(mnistReader, data);
                     inputMatrices.add(inputMatrix);

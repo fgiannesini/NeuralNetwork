@@ -4,6 +4,7 @@ import com.fgiannesini.neuralnetwork.HyperParameters;
 import com.fgiannesini.neuralnetwork.NeuralNetworkStats;
 import com.fgiannesini.neuralnetwork.RegularizationCoeffs;
 import com.fgiannesini.neuralnetwork.learningrate.LearningRateUpdaterType;
+import com.fgiannesini.neuralnetwork.model.LayerType;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,12 +35,15 @@ public class MnistExampleLauncherWithStatsDisplay extends Application {
             @Override
             protected NeuralNetworkStats call() throws IOException {
                 HyperParameters parameters = new HyperParameters()
+                        .learningRateUpdater(LearningRateUpdaterType.CONSTANT.get(0.01))
                         .batchSize(100)
                         .epochCount(1)
-                        .rmsStopCoeff(null)
                         .momentumCoeff(null)
-                        .regularizationCoeff(new RegularizationCoeffs())
-                        .learningRateUpdater(LearningRateUpdaterType.CONSTANT.get(0.01));
+                        .rmsStopCoeff(null)
+                        .layerType(LayerType.POOLING_AVERAGE)
+                        .hiddenLayerSize(new int[]{120, 84})
+                        .convolutionLayers(new int[]{6, 16})
+                        .regularizationCoeff(new RegularizationCoeffs());
                 MnistExampleLauncher mnistExampleLauncher = new MnistExampleLauncher(this::updateValue, parameters);
                 double successRate = mnistExampleLauncher.launch();
                 System.out.println("Success Rate: " + successRate + "%");
